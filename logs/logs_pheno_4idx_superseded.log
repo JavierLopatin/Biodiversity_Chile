@@ -1,0 +1,144 @@
+# logs_pheno_4idx_superseded.log -> 02_extract_phenology.py (4 indices - SUPERSEDED)
+#
+# Log condensado para versionarlo. Original: 5685 lineas, 0.4 MB.
+# Solo se colapsaron los bloques de advertencia (linea de Warning + su eco de codigo),
+# contabilizados al final. Ninguna linea de salida del script fue eliminada.
+
+parcelas: 1082 | cargas (celda x año): 294
+dask: 4 workers
+[1/294] 25_1184 2013: 1/1 parcelas, 80 obs, 35s
+[2/294] 26_1184 2013: 1/1 parcelas, 80 obs, 33s
+[3/294] 29_1162 2012: 1/1 parcelas, 129 obs, 34s
+[4/294] 29_1182 2013: 1/1 parcelas, 79 obs, 25s
+[5/294] 30_1160 2013: 2/2 parcelas, 153 obs, 43s
+[6/294] 30_1161 2006: 2/2 parcelas, 204 obs, 71s
+[7/294] 30_1162 2013: 1/1 parcelas, 153 obs, 41s
+[8/294] 30_1185 2013: 1/1 parcelas, 81 obs, 35s
+[9/294] 31_1182 2013: 1/1 parcelas, 149 obs, 39s
+[10/294] 31_1206 2013: 1/1 parcelas, 78 obs, 20s
+[11/294] 33_1163 2013: 1/1 parcelas, 153 obs, 39s
+[12/294] 33_1193 2013: 1/1 parcelas, 143 obs, 41s
+[13/294] 33_1202 2013: 1/1 parcelas, 80 obs, 19s
+[14/294] 34_1198 2013: 1/1 parcelas, 131 obs, 31s
+[15/294] 34_1201 2023: 6/6 parcelas, 120 obs, 45s
+[16/294] 34_1202 2006: 5/5 parcelas, 98 obs, 36s
+[17/294] 34_1202 2013: 1/1 parcelas, 80 obs, 20s
+[18/294] 34_1202 2025: 1/1 parcelas, 117 obs, 38s
+[19/294] 35_1197 2013: 1/1 parcelas, 160 obs, 41s
+[20/294] 35_1197 2019: 10/10 parcelas, 226 obs, 84s
+[21/294] 35_1197 2020: 4/4 parcelas, 204 obs, 59s
+[22/294] 35_1197 2021: 4/4 parcelas, 196 obs, 55s
+[23/294] 35_1197 2023: 4/4 parcelas, 225 obs, 67s
+[24/294] 35_1201 2023: 4/4 parcelas, 224 obs, 62s
+[25/294] 36_1199 2013: 3/3 parcelas, 160 obs, 46s
+[26/294] 36_1200 2013: 3/3 parcelas, 160 obs, 40s
+[27/294] 36_1200 2019: 4/4 parcelas, 234 obs, 68s
+[28/294] 36_1200 2022: 5/5 parcelas, 234 obs, 68s
+[29/294] 36_1201 2022: 2/2 parcelas, 228 obs, 55s
+[30/294] 36_1201 2023: 2/2 parcelas, 225 obs, 55s
+[31/294] 36_1206 2019: 1/1 parcelas, 164 obs, 42s
+[32/294] 37_1196 2013: 2/2 parcelas, 159 obs, 41s
+[33/294] 37_1196 2019: 3/3 parcelas, 234 obs, 60s
+[34/294] 37_1200 2013: 1/1 parcelas, 159 obs, 38s
+[35/294] 37_1200 2019: 3/3 parcelas, 234 obs, 59s
+[36/294] 37_1201 2019: 3/3 parcelas, 234 obs, 59s
+[37/294] 37_1202 2013: 3/3 parcelas, 159 obs, 41s
+[38/294] 37_1202 2019: 6/6 parcelas, 234 obs, 62s
+[39/294] 37_1203 2019: 4/4 parcelas, 234 obs, 60s
+[40/294] 37_1203 2022: 4/4 parcelas, 248 obs, 75s
+[41/294] 37_1206 2006: 6/6 parcelas, 197 obs, 68s
+[42/294] 37_1206 2013: 1/1 parcelas, 160 obs, 41s
+[43/294] 37_1206 2023: 1/1 parcelas, 233 obs, 65s
+[44/294] 37_1206 2025: 1/1 parcelas, 240 obs, 73s
+[45/294] 38_1199 2013: 1/1 parcelas, 159 obs, 39s
+[46/294] 38_1201 2013: 1/1 parcelas, 159 obs, 38s
+[47/294] 38_1203 2019: 9/9 parcelas, 234 obs, 70s
+[48/294] 38_1203 2022: 5/5 parcelas, 253 obs, 72s
+[49/294] 38_1205 2019: 1/1 parcelas, 234 obs, 58s
+[50/294] 38_1205 2021: 4/4 parcelas, 243 obs, 62s
+[51/294] 38_1206 2019: 7/7 parcelas, 234 obs, 59s
+[52/294] 38_1206 2021: 5/5 parcelas, 243 obs, 62s
+[53/294] 38_1206 2022: 3/3 parcelas, 254 obs, 62s
+[54/294] 38_1206 2025: 2/2 parcelas, 240 obs, 71s
+[55/294] 38_1207 2025: 1/1 parcelas, 240 obs, 62s
+[56/294] 39_1199 2013: 3/3 parcelas, 159 obs, 45s
+[57/294] 39_1202 2013: 1/1 parcelas, 159 obs, 37s
+[58/294] 39_1203 2013: 1/1 parcelas, 159 obs, 36s
+[59/294] 39_1205 2021: 1/1 parcelas, 243 obs, 62s
+[60/294] 39_1206 2019: 4/4 parcelas, 234 obs, 63s
+[61/294] 39_1206 2021: 2/2 parcelas, 243 obs, 59s
+[62/294] 39_1206 2025: 2/2 parcelas, 240 obs, 65s
+[63/294] 39_1207 2019: 4/4 parcelas, 234 obs, 57s
+[64/294] 39_1207 2020: 2/2 parcelas, 238 obs, 53s
+[65/294] 39_1207 2021: 3/3 parcelas, 243 obs, 55s
+[66/294] 39_1207 2025: 1/1 parcelas, 240 obs, 60s
+[67/294] 39_1211 2013: 2/2 parcelas, 159 obs, 46s
+[68/294] 40_1199 2013: 1/1 parcelas, 159 obs, 41s
+[69/294] 40_1214 2013: 3/3 parcelas, 165 obs, 64s
+[70/294] 40_1215 2013: 3/3 parcelas, 165 obs, 58s
+[71/294] 41_1214 2013: 2/2 parcelas, 165 obs, 56s
+[72/294] 41_1215 2013: 2/2 parcelas, 165 obs, 54s
+[73/294] 42_1214 2013: 1/1 parcelas, 165 obs, 52s
+[74/294] 43_1211 2013: 2/2 parcelas, 159 obs, 42s
+[75/294] 43_1212 2013: 1/1 parcelas, 159 obs, 41s
+[76/294] 44_1209 2021: 8/8 parcelas, 242 obs, 76s
+[77/294] 44_1211 2013: 1/1 parcelas, 159 obs, 40s
+[78/294] 44_1213 2013: 2/2 parcelas, 161 obs, 43s
+[79/294] 46_1239 2013: 1/1 parcelas, 158 obs, 51s
+[80/294] 46_1243 2013: 1/1 parcelas, 158 obs, 41s
+[81/294] 47_1213 2019: 1/1 parcelas, 240 obs, 104s
+[82/294] 47_1223 2017: 11/11 parcelas, 239 obs, 104s
+[83/294] 49_1321 2003: 2/2 parcelas, 96 obs, 35s
+[84/294] 49_1321 2013: 1/1 parcelas, 81 obs, 29s
+[85/294] 50_1179 2013: 1/1 parcelas, 82 obs, 26s
+[86/294] 50_1261 2013: 1/1 parcelas, 150 obs, 54s
+[87/294] 51_1165 2013: 1/1 parcelas, 82 obs, 25s
+[88/294] 51_1166 2013: 1/1 parcelas, 82 obs, 19s
+[89/294] 51_1250 2014: 4/4 parcelas, 182 obs, 89s
+[90/294] 51_1261 2014: 3/3 parcelas, 180 obs, 52s
+[91/294] 51_1267 2013: 1/1 parcelas, 150 obs, 41s
+[92/294] 52_1169 2013: 1/1 parcelas, 82 obs, 23s
+[93/294] 52_1266 2018: 3/3 parcelas, 240 obs, 87s
+[94/294] 53_1172 2013: 1/1 parcelas, 82 obs, 22s
+[95/294] 53_1177 2013: 1/1 parcelas, 82 obs, 19s
+[96/294] 53_1183 2013: 1/1 parcelas, 82 obs, 22s
+[97/294] 53_1184 2013: 1/1 parcelas, 84 obs, 22s
+[98/294] 53_1265 2013: 1/1 parcelas, 150 obs, 40s
+[99/294] 53_1272 2014: 1/1 parcelas, 180 obs, 47s
+[100/294] 53_1272 2022: 4/4 parcelas, 265 obs, 93s
+[101/294] 53_1288 2013: 1/1 parcelas, 153 obs, 54s
+[102/294] 53_1290 2013: 2/2 parcelas, 95 obs, 25s
+[103/294] 53_1293 2013: 1/1 parcelas, 88 obs, 20s
+[104/294] 53_1296 2013: 1/1 parcelas, 88 obs, 20s
+[105/294] 54_1251 2014: 3/3 parcelas, 181 obs, 77s
+[106/294] 54_1252 2014: 1/1 parcelas, 181 obs, 68s
+[107/294] 54_1257 2014: 2/2 parcelas, 180 obs, 46s
+[108/294] 54_1263 2014: 4/4 parcelas, 180 obs, 46s
+[109/294] 54_1264 2014: 3/3 parcelas, 180 obs, 45s
+[110/294] 54_1269 2014: 5/5 parcelas, 180 obs, 46s
+[111/294] 54_1271 2022: 2/2 parcelas, 265 obs, 81s
+[112/294] 54_1272 2014: 2/2 parcelas, 180 obs, 44s
+[113/294] 54_1273 2014: 2/2 parcelas, 180 obs, 44s
+[114/294] 54_1278 2010: 3/3 parcelas, 187 obs, 86s
+[115/294] 54_1287 2010: 17/17 parcelas, 189 obs, 67s
+[116/294] 54_1287 2014: 4/4 parcelas, 198 obs, 72s
+[117/294] 55_1190 2013: 1/1 parcelas, 82 obs, 25s
+[118/294] 55_1253 2014: 1/1 parcelas, 179 obs, 55s
+[119/294] 55_1259 2022: 11/11 parcelas, 265 obs, 85s
+[120/294] 55_1260 2014: 4/4 parcelas, 179 obs, 45s
+[121/294] 55_1274 2014: 1/1 parcelas, 180 obs, 44s
+[122/294] 55_1276 2014: 1/1 parcelas, 185 obs, 51s
+[123/294] 55_1277 2019: 11/11 parcelas, 253 obs, 103s
+[124/294] 55_1278 2010: 10/10 parcelas, 187 obs, 77s
+[125/294] 55_1278 2014: 3/3 parcelas, 198 obs, 71s
+[126/294] 55_1278 2021: 1/1 parcelas, 269 obs, 117s
+[127/294] 55_1279 2010: 6/6 parcelas, 187 obs, 65s
+
+==============================================================
+ADVERTENCIAS COLAPSADAS (clase @ origen: conteo)
+==============================================================
+    941  RuntimeWarning @ fromnumeric.py: Mean of empty slice.
+    941  RuntimeWarning @ _methods.py: invalid value encountered in scalar divide
+    891  RuntimeWarning @ utils.py: invalid value encountered in divide
+      4  NotGeoreferencedWarning @ warp.py: Dataset has no geotransform, gcps, or rpcs. The identity matrix will be returned.
+      1  UserWarning @ resource_tracker.py: resource_tracker: There appear to be 24 leaked semaphore objects to clean up at shutdown

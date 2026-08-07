@@ -19,6 +19,17 @@ paper_examples/
 *.pdf
 !docs/**/*.pdf
 
+# --- Repos propios clonados dentro del arbol de trabajo ---
+# Tienen su propio remote y su propia historia; se referencian por commit en
+# docs/run_manifest.json, no se anidan aqui.
+/PhenoSensing/
+/Trait_2DCNN/
+
+# --- Logs crudos ---
+# Los logs al nivel raiz son 99% advertencias repetidas de numpy (logs_lsp.log: 13 MB
+# -> 25 lineas de senal). La version condensada y versionada esta en logs/.
+/logs_*.log
+
 # --- Salidas de modelos ---
 cache/
 results/

@@ -1,0 +1,7 @@
+step,n_plots
+"0. Parcelas-CL, all plots",1485
+1. + year known,1443
+2. + latitude 30.0-38.0S,1254
+3. + year >= 1999,1253
+4. + unique coordinate,1082
+5. (flag) richness >= 2,969

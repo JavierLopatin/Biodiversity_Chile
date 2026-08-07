@@ -1,0 +1,5881 @@
+{
+ "schema": "biodiversity-chile/run-manifest/1",
+ "code": {
+  "Biodiversity_Chile": {
+   "commit": "5f248b33150d878f9b6c1122f15b74753a276834",
+   "clean": false
+  },
+  "PhenoSensing_vendored": {
+   "commit": "1a800a89df171a12129c431bd1d45330a1cd5547",
+   "clean": true
+  },
+  "Trait_2DCNN_vendored": {
+   "commit": "4d2caed8294564fd3890619a1292c0f9c6ceb37a",
+   "clean": true
+  },
+  "PhenoSensing_on_sys_path": "/home/jovyan/PhenoSensing"
+ },
+ "environment": {
+  "python": "3.12.13",
+  "numpy": "2.3.5",
+  "pandas": "3.0.3",
+  "xarray": "2026.4.0",
+  "scipy": "1.17.1",
+  "matplotlib": "3.10.9",
+  "geopandas": "1.1.3",
+  "rasterio": "1.5.0",
+  "datacube": "1.9.18",
+  "netCDF4": "1.7.4",
+  "sklearn": "1.8.0",
+  "dask": "2026.3.0",
+  "pyarrow": "23.0.1",
+  "statsmodels": "0.14.6",
+  "shapely": "2.1.2"
+ },
+ "scripts": [
+  {
+   "path": "scripts/01_build_subset.py",
+   "bytes": 8071,
+   "sha256": "91d9b58ac68fb994c0396c75a59b957e6c984455a5f313d7192cebf94c1b0ff6"
+  },
+  {
+   "path": "scripts/02_extract_phenology.py",
+   "bytes": 12526,
+   "sha256": "37183b8776d7bc306c702b202d0a31eacaae1b594e7360fa89342de9a19970b6"
+  },
+  {
+   "path": "scripts/03_extract_topography.py",
+   "bytes": 7699,
+   "sha256": "55c546c918221d20ea30cbfa14fc9265c887d42fdf8faf48c3922470b4b81de0"
+  },
+  {
+   "path": "scripts/04_recompute_lsp.py",
+   "bytes": 21770,
+   "sha256": "3e75d3e308d7d638e2648e3c6bcbb266a9e412abe2777f0d3c2bfe40fd0c3976"
+  },
+  {
+   "path": "scripts/06_paper_figures.py",
+   "bytes": 20163,
+   "sha256": "9fd2eacda21e8689122202c53e371180d3f7ecf9b413bb78b5df67f4f2bf645f"
+  }
+ ],
+ "src": [
+  {
+   "path": "src/biodiv/__init__.py",
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "src/biodiv/cube.py",
+   "bytes": 7958,
+   "sha256": "4fb4c12d27451517ba9c7a37b37e5cdfcd7884bdc8c35f0b4c6f3e7293d8f254"
+  },
+  {
+   "path": "src/biodiv/cv_groups.py",
+   "bytes": 9416,
+   "sha256": "b5e8037eaeb183caaa09aea9de892316b7ead45e6e8cf229ea38ba51136c2c13"
+  },
+  {
+   "path": "src/biodiv/figures.py",
+   "bytes": 8493,
+   "sha256": "ee0ca637a930757168b89c8dc1df9c4687a9f097468664ce15bfcd57a4df75be"
+  },
+  {
+   "path": "src/biodiv/io_parcelas.py",
+   "bytes": 4760,
+   "sha256": "15c84002346c3ea9f15eb55fd9064499a01707689263c34969d2dac2ee045272"
+  }
+ ],
+ "derived_tabular": [
+  {
+   "path": "data/derived/cv_fold_report.csv",
+   "bytes": 1444,
+   "sha256": "983cc11c6cadb30d84d8730a9acaa8697e0ae808cbed9dffb771c943f79be92a"
+  },
+  {
+   "path": "data/derived/cv_folds.parquet",
+   "bytes": 25829,
+   "sha256": "d434e30f4f12439c191a6b154c0a0ac7aa7aed0243662e9e67ba1182e266e31a"
+  },
+  {
+   "path": "data/derived/filter_cascade.csv",
+   "bytes": 176,
+   "sha256": "ddacc6d3e8617494a768eef37ac420ccfd17c9df92167f1c3af4c9c391206844"
+  },
+  {
+   "path": "data/derived/groups_dataset.csv",
+   "bytes": 1207,
+   "sha256": "4048bc96d5c849dfd382324bd586eb62d3c77e58d0a24acf31f9e9a79562439d"
+  },
+  {
+   "path": "data/derived/groups_location.csv",
+   "bytes": 9238,
+   "sha256": "6c6b9dc9af4d204290a9b8d0da570b231779092465474a7f877fff5f14e1fb7b"
+  },
+  {
+   "path": "data/derived/lsp_all_auto.parquet",
+   "bytes": 1511521,
+   "sha256": "14b7e0fb7fff56c9c8ef44d50253f58f2352e14f8fd4aabc6fc105f8d4f63bd7"
+  },
+  {
+   "path": "data/derived/lsp_all_by_phase.parquet",
+   "bytes": 1035180,
+   "sha256": "acced1ffa112f58a56bf60d1d8cc3c1312ee4c555e3c3bed8b06817206862a04"
+  },
+  {
+   "path": "data/derived/phase_audit_full.csv",
+   "bytes": 138156,
+   "sha256": "208157771e56b7931f6611233ae9de354bd57c9f69781b5b0ac7d9d064385c9b"
+  },
+  {
+   "path": "data/derived/plots_subset.parquet",
+   "bytes": 73897,
+   "sha256": "df381107556e748a66a396f22a695fb5b6cebfe1e529776d1ce3e622b0531cd2"
+  },
+  {
+   "path": "data/derived/topography/topography.parquet",
+   "bytes": 237649,
+   "sha256": "f5934f358886fb62421bbf1b03716aaf22f49f06a92300359856c1e70b7535fd"
+  },
+  {
+   "path": "data/derived/topography/topography_patches.nc",
+   "bytes": 1037876,
+   "sha256": "4b29a908d0664a4a3c070c4ca961fb47971d3a41262d90922f6b18b064ce8489"
+  }
+ ],
+ "figures": [
+  {
+   "path": "results/figures/fig01_study_area.pdf",
+   "bytes": 492309,
+   "sha256": "1b9e9e5f52fbb36bab9e6be6b136bab25fead19d20cdcd987422385cfba990fe"
+  },
+  {
+   "path": "results/figures/fig02_sampling.pdf",
+   "bytes": 23550,
+   "sha256": "f98ad4e41b5164803f4ec5c9eee6fac9d46f96ec11234d8a29e6ab7f5ee90235"
+  },
+  {
+   "path": "results/figures/fig03_predictor_quality.pdf",
+   "bytes": 25844,
+   "sha256": "a0b74d716a67bffeda746323c5b595906ce696c30cd099ece91cebfec74c3175"
+  },
+  {
+   "path": "results/figures/fig04_curves_by_index.pdf",
+   "bytes": 31593,
+   "sha256": "2ec59e8fbc5dae88fafc4b967f5d870b8285883de968cece37748f2d6e0df13b"
+  },
+  {
+   "path": "results/figures/fig05_seasonal_phase.pdf",
+   "bytes": 77835,
+   "sha256": "86b2f92adfcfe3141de5e643ae9b6cc42a3a00970833199d98fdc7ebec716bf5"
+  },
+  {
+   "path": "results/figures/fig06_lsp_distributions.pdf",
+   "bytes": 22123,
+   "sha256": "67ba5e2638434d7fc86d96adcead08f8c562e266876960acd9a54f70a8dae6cd"
+  },
+  {
+   "path": "results/figures/fig07_lsp_topography.pdf",
+   "bytes": 28728,
+   "sha256": "187ab68eb3df64eeed36e3fca2d7902b21de48b6c3eef7bdf1ffcf0a5cfcaf88"
+  },
+  {
+   "path": "results/figures/figS1_example_plot.png",
+   "bytes": 402480,
+   "sha256": "704de1f4adf7bd278c9ae9f3b27aa31ad40267072152b4009158ead908ac1f34"
+  },
+  {
+   "path": "results/figures/figS2_cv_folds.pdf",
+   "bytes": 22636,
+   "sha256": "5dc7c9ff02e316078788391c4dd88bb434433bc3619a2b0b76fc27880e402f6d"
+  },
+  {
+   "path": "results/figures/figS3_project_effect.pdf",
+   "bytes": 27538,
+   "sha256": "1db6ec0bf9ef2e41722fa26d08419caabc39239776e6855e7e6c613606355b78"
+  },
+  {
+   "path": "results/figures/figS4_environment_maps.pdf",
+   "bytes": 572576,
+   "sha256": "e8074c84eff019d62561fc1651b2ad4754f5f7bfe9f65ffa218885577ffd4e30"
+  }
+ ],
+ "phenology_cubes": {
+  "dir": "data/derived/phenology",
+  "n_files": 1082,
+  "total_bytes": 359754551,
+  "manifest_csv": {
+   "path": "data/derived/phenology/manifest.csv",
+   "bytes": 265506,
+   "sha256": "b77528fb8ace2b8624103e3b5d9652771de8e8573ce35ffac156fb1124c25976"
+  },
+  "files": [
+   {
+    "path": "data/derived/phenology/32477.nc",
+    "bytes": 254129,
+    "sha256": "03955a97bfde251dd2ebcae725f935836e4545209431636318185f402b0280e6"
+   },
+   {
+    "path": "data/derived/phenology/32479.nc",
+    "bytes": 253306,
+    "sha256": "2eee1db56e3edc323c3ee413b277d8c656fd36b6b3ab89b62fcc9aacb1c1496e"
+   },
+   {
+    "path": "data/derived/phenology/32532.nc",
+    "bytes": 295262,
+    "sha256": "1e9858f9395a8467d585d30054d68de95b56e52465a171d66d8a9d8445996e83"
+   },
+   {
+    "path": "data/derived/phenology/32644.nc",
+    "bytes": 379562,
+    "sha256": "9b3489cab5973b434398cb125cbfc77baa46e1137bb03d96326ac9f0d8f6ab5b"
+   },
+   {
+    "path": "data/derived/phenology/32645.nc",
+    "bytes": 379562,
+    "sha256": "0ccf08b81618633adf3310e7e842eaeb97105daabdea3ff550a598025227747e"
+   },
+   {
+    "path": "data/derived/phenology/32660.nc",
+    "bytes": 371694,
+    "sha256": "f96ef75db6f7550b871a7477a714e76dc071d72fdb3c2252d839de4ce78c43f0"
+   },
+   {
+    "path": "data/derived/phenology/32661.nc",
+    "bytes": 371694,
+    "sha256": "2ecf3af106ed5f158e870028badff5a45e8e4edc977be92c087fa9260f5383ff"
+   },
+   {
+    "path": "data/derived/phenology/32662.nc",
+    "bytes": 372517,
+    "sha256": "cada5154145e029bf651a5e61234f50e47db38b89213bc98bbe501af10f51044"
+   },
+   {
+    "path": "data/derived/phenology/32665.nc",
+    "bytes": 372517,
+    "sha256": "f8a43ed66e27bed8fda3cdfe23c5a65d6d4b5f36f044053026a79dc6cdec14a8"
+   },
+   {
+    "path": "data/derived/phenology/32666.nc",
+    "bytes": 371694,
+    "sha256": "779cdc6889a05695113c502a53ab6d145adc4a056597a67656309ead0c01a2ee"
+   },
+   {
+    "path": "data/derived/phenology/32668.nc",
+    "bytes": 372517,
+    "sha256": "32857286246329626f2829b0f289bb9a8fd513bcdc2da9824117d744568ae5fa"
+   },
+   {
+    "path": "data/derived/phenology/32673.nc",
+    "bytes": 255538,
+    "sha256": "a7975d86b0f5d27207b37e2cffe34ad070b63a2e38247b6d22ad53bda3e6bea0"
+   },
+   {
+    "path": "data/derived/phenology/32674.nc",
+    "bytes": 255538,
+    "sha256": "1b3636f8a811dd94f3ca6bfeede8a92246cd825661a49a09960f1a4dc07c7e99"
+   },
+   {
+    "path": "data/derived/phenology/32675.nc",
+    "bytes": 255538,
+    "sha256": "563990065aaf01da324c4beba00cc7e36c49773b2202dead6dfd2fa35834c669"
+   },
+   {
+    "path": "data/derived/phenology/32678.nc",
+    "bytes": 255538,
+    "sha256": "04322723384f13c82cb792722f66173569a9d351110f9a47777945f075753b89"
+   },
+   {
+    "path": "data/derived/phenology/32679.nc",
+    "bytes": 255538,
+    "sha256": "9a98b83918ed2b8bafb662b784679027d7063d3f86a88642d5b177ef0d313ae0"
+   },
+   {
+    "path": "data/derived/phenology/32683.nc",
+    "bytes": 393050,
+    "sha256": "8e02f11fde15e2be7d51be02cde39082f9de91a7fd9bc7455ee078243da3ce10"
+   },
+   {
+    "path": "data/derived/phenology/32695.nc",
+    "bytes": 377314,
+    "sha256": "43ff9d9335d9ae74821d254aae3fb1f5f38e38cbc4bf3dbf0d7a677e328a0aab"
+   },
+   {
+    "path": "data/derived/phenology/32742.nc",
+    "bytes": 279722,
+    "sha256": "587117c93de20ea2502a16f0dd3d88ef71c0da10c8b65e5e57fbd6561bd54473"
+   },
+   {
+    "path": "data/derived/phenology/32745.nc",
+    "bytes": 411034,
+    "sha256": "75c80383438ec342428de029be630267678942b195df0aa5f30601b2ae5cb3af"
+   },
+   {
+    "path": "data/derived/phenology/32759.nc",
+    "bytes": 397546,
+    "sha256": "4460d43bde4d6204e207f9379f38b80c4b0ce07c75c75f2d7293768051a7d4c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0161.nc",
+    "bytes": 234700,
+    "sha256": "49dd560822f5026c049a96d86169a38ad8adffa4883965bc9dc4d9435c7925cd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0162.nc",
+    "bytes": 234700,
+    "sha256": "0ef4b52ed9bb48757e99cbf253ce25a05c2368de4ebbb0725b7d02c3736bc3d0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0163.nc",
+    "bytes": 234700,
+    "sha256": "56012e853b121a1841653194b4855149917283265926d6c6ec73c1cd06bf48bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0164.nc",
+    "bytes": 234700,
+    "sha256": "475bd602af6ddf396a25f768375e389d10817a8006af6c28625a726a27017671"
+   },
+   {
+    "path": "data/derived/phenology/PCL0165.nc",
+    "bytes": 234700,
+    "sha256": "e69a3dec227f23ab6c846b636e140f71af0b8c62f4ae143855d7fb88a3207a30"
+   },
+   {
+    "path": "data/derived/phenology/PCL0166.nc",
+    "bytes": 234700,
+    "sha256": "7f3286f8139978f748ebca2e4a9e5219f3110da732089ba7e09b3d741a64f722"
+   },
+   {
+    "path": "data/derived/phenology/PCL0167.nc",
+    "bytes": 234700,
+    "sha256": "a764fa19cef4b0ce743aba7dcade4d5bd655e528f5e6e0351b3792de92651349"
+   },
+   {
+    "path": "data/derived/phenology/PCL0168.nc",
+    "bytes": 234700,
+    "sha256": "673896ad6df3fb30455d8bed2b80c94596e85295e6aad70c2b4927000d9f8833"
+   },
+   {
+    "path": "data/derived/phenology/PCL0169.nc",
+    "bytes": 234700,
+    "sha256": "ecd659965886179c4ccc423a32dbd037a40c98c081a67db0c0171ac4f5b17b23"
+   },
+   {
+    "path": "data/derived/phenology/PCL0170.nc",
+    "bytes": 234700,
+    "sha256": "8bdf82474dba97f1dfcea35616ca8bd02b27fc1acc7a59cc55d05c4d4f2b29cb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0171.nc",
+    "bytes": 234700,
+    "sha256": "b845436e7e611ceb3d0aa25f7b7a7a9a539ecbb85c151a53ccd2677cd5d80104"
+   },
+   {
+    "path": "data/derived/phenology/PCL0172.nc",
+    "bytes": 234700,
+    "sha256": "838b3959bbe6e02931bdccd745647e7015535777921961e0684c4dcbe5985186"
+   },
+   {
+    "path": "data/derived/phenology/PCL0173.nc",
+    "bytes": 234700,
+    "sha256": "7bd5ab7125ae1361cf9060caf88781f4f2c1d3fb56f20fae7c8ba68a2ced6e29"
+   },
+   {
+    "path": "data/derived/phenology/PCL0174.nc",
+    "bytes": 234700,
+    "sha256": "19d4c2a100579c1fdf546daca4406958ad66aee9a4b19bb40e4187352b6041f7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0175.nc",
+    "bytes": 234700,
+    "sha256": "84721a82e4ecfce9109e0748875523e171b6b3866f1e4f75382fef09e4f7544d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0176.nc",
+    "bytes": 234700,
+    "sha256": "add88ac9639176330956683b3b52cda15050e825166603c675ef42c432684efe"
+   },
+   {
+    "path": "data/derived/phenology/PCL0177.nc",
+    "bytes": 234700,
+    "sha256": "7e535ab1134f6b17b4117523e4030e16dfa5c1fd3dfadb3910f8ba56ae9b3b21"
+   },
+   {
+    "path": "data/derived/phenology/PCL0178.nc",
+    "bytes": 233877,
+    "sha256": "04e3995b9f13861d0ba8afb19bf48e97387bb7866f9d17e33b1d9fb36f318aea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0179.nc",
+    "bytes": 234700,
+    "sha256": "7a470cfbf69f5f3eda6962bc7c4489edd82347cbf97f49a0161f66d1025f67e6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0180.nc",
+    "bytes": 234700,
+    "sha256": "8576dc107bb03012b0a2c5c1caa9bdbdfb8e18fb72a8d32f41698dfa4e3a38e3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0181.nc",
+    "bytes": 234700,
+    "sha256": "dc0ef3b9ff06c1642c62678498d4ed35d7c339c50d4a4f27aeb8fef947c9b657"
+   },
+   {
+    "path": "data/derived/phenology/PCL0182.nc",
+    "bytes": 234700,
+    "sha256": "95b7c862e09583f4c52be8798d8661e4f3bacd4b0b763827192f8aa949a5dd8d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0183.nc",
+    "bytes": 234700,
+    "sha256": "535fd5b5b79bd38941e4044f8555b496a3de5734abc2a91e7b9e8a9949cbaa56"
+   },
+   {
+    "path": "data/derived/phenology/PCL0184.nc",
+    "bytes": 234700,
+    "sha256": "420068263d974cd3b347db598c14ef297ecb8474d3da7860fa76284c7c076d31"
+   },
+   {
+    "path": "data/derived/phenology/PCL0185.nc",
+    "bytes": 234700,
+    "sha256": "df67d42ec1779b35d4face82d1a64d41c705b09f4b6ba783f2f76d3c998c0966"
+   },
+   {
+    "path": "data/derived/phenology/PCL0186.nc",
+    "bytes": 234700,
+    "sha256": "c85fda3d03b0ece77e180ec535d55804d303088e79764552900f81c3ab0a5016"
+   },
+   {
+    "path": "data/derived/phenology/PCL0187.nc",
+    "bytes": 234700,
+    "sha256": "5fb9652261cf90811eb0b8555f72e4fb0ea171b6186c028ff2b1e939b249881b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0188.nc",
+    "bytes": 234700,
+    "sha256": "2fcffc6542a6603e1d9a9377572d9f6b18fd92e7decb5e0b6d3d01d215702c29"
+   },
+   {
+    "path": "data/derived/phenology/PCL0189.nc",
+    "bytes": 234700,
+    "sha256": "4069b3b48d14471dd6c80bcbc4b5b3794615235e84a305fa7568859baf0cb162"
+   },
+   {
+    "path": "data/derived/phenology/PCL0190.nc",
+    "bytes": 234700,
+    "sha256": "57570d43932edd06cef7bef244d22750b47dfe338b87900e0f8cca9ad302f3ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0191.nc",
+    "bytes": 330108,
+    "sha256": "0e35769ce835bfe8901a76cce393ddf9b55d1a9a4733101c2a291afcd6d9b6d3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0192.nc",
+    "bytes": 328984,
+    "sha256": "af55b9a4a7e9297c8a8a9512f4618d8b1c445f51f962c9e86d9d63afcf259372"
+   },
+   {
+    "path": "data/derived/phenology/PCL0193.nc",
+    "bytes": 330108,
+    "sha256": "5dbde5676be14cd4971b047bc118835014f8003f0e93e23e98e74b73557a07de"
+   },
+   {
+    "path": "data/derived/phenology/PCL0194.nc",
+    "bytes": 328984,
+    "sha256": "a0c695d5ded45bde820390628a657c0c41486120b2a783b3a48d006d69921cc2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0195.nc",
+    "bytes": 328984,
+    "sha256": "92b0cc437ed1cf1199e11a361fcb3e808bbf5ea358b5870167146154fc757f1b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0196.nc",
+    "bytes": 328984,
+    "sha256": "6086af4ccf065b4c7ebcffd829777563a64aff67978fcbadb64ca4ab0d0b7b03"
+   },
+   {
+    "path": "data/derived/phenology/PCL0197.nc",
+    "bytes": 328984,
+    "sha256": "09320c637152dc60b39f4b6101625f95a24614d948779725269cc75a1282a4f5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0198.nc",
+    "bytes": 330108,
+    "sha256": "d175edfa25efe2c714a5f8f8b24d892e93e05a971c53d3ebf1ad19a3988bbae6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0199.nc",
+    "bytes": 330108,
+    "sha256": "114ae3d4164e178f0b6578d5da83290901bb5bd44d931a24fc5937d9200f0d67"
+   },
+   {
+    "path": "data/derived/phenology/PCL0200.nc",
+    "bytes": 298335,
+    "sha256": "568a73545d312ae4e771c3dba6d3b6fcbd884f1f15aea7e74bf95439339514c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0201.nc",
+    "bytes": 328984,
+    "sha256": "c633195e4703d32e33d97cbe080afcf439f83b1acfdbcdfaadb7650940828528"
+   },
+   {
+    "path": "data/derived/phenology/PCL0202.nc",
+    "bytes": 330800,
+    "sha256": "036aa9b9eddbeef9a376a8e5e340f1bb8d7898826e6e92317bad64e4ab515aa4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0203.nc",
+    "bytes": 328984,
+    "sha256": "66e36df4cd7aed094b70bee243325667d5a4ccbd22e6d378ff502a1fa7c30604"
+   },
+   {
+    "path": "data/derived/phenology/PCL0204.nc",
+    "bytes": 328984,
+    "sha256": "9f9d9828c6ebb3054e29f8bf097ad08d487afb284d0a9036b28eff4153d76919"
+   },
+   {
+    "path": "data/derived/phenology/PCL0205.nc",
+    "bytes": 330108,
+    "sha256": "ad64148b32e073261281db1b3e5f6ec21a005ee033d170100a8c8df422c8694f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0206.nc",
+    "bytes": 328984,
+    "sha256": "3c7a6140d6c92f3a5bf34b408bf963548c4da43fa57e7a892bc2bcbebde56742"
+   },
+   {
+    "path": "data/derived/phenology/PCL0207.nc",
+    "bytes": 329676,
+    "sha256": "7c0d6262e3e8e69b1fc66d7458eb5db4a3a33739475d3f729ce9fee3ab9ff632"
+   },
+   {
+    "path": "data/derived/phenology/PCL0208.nc",
+    "bytes": 328984,
+    "sha256": "f59b96e01021af1c02371f4b1ab73e17ac0d4a3781c06049177fb1c55d9a2932"
+   },
+   {
+    "path": "data/derived/phenology/PCL0209.nc",
+    "bytes": 328984,
+    "sha256": "f21309e1a8e1357f3ce70ad569337904830db3a38f4dd1d2668e4a40e5005eb4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0210.nc",
+    "bytes": 328984,
+    "sha256": "2c685c8400d31f5dfce782a36b7636c0d93ff3c47d9674ee85727341e5f62adc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0211.nc",
+    "bytes": 328984,
+    "sha256": "703ed1a2da7222c06eacb85474034f8e1709e0cafb3e2fcccc23bdda3335a0a8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0212.nc",
+    "bytes": 330108,
+    "sha256": "cd98a855267c0b8f34457330412de3ca90ea97699d84d2c174c49fa71f7a5450"
+   },
+   {
+    "path": "data/derived/phenology/PCL0213.nc",
+    "bytes": 335728,
+    "sha256": "c8818a650875608037bbf6f543098a9dd43530ce7fe65ee13e16b5272f5964e7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0214.nc",
+    "bytes": 331232,
+    "sha256": "838a04e359674f5ea58511c81f6a11b3626833eb63fcd4964458180bf337153a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0215.nc",
+    "bytes": 335728,
+    "sha256": "f724414b268df54d95706356266126dee6d4479940b088eb2b21e27173c039a6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0216.nc",
+    "bytes": 335728,
+    "sha256": "6496ca41f45c76fbee1ee79fa85b47e1ff5ea1f035f6a54ead0cbbe5cc091500"
+   },
+   {
+    "path": "data/derived/phenology/PCL0217.nc",
+    "bytes": 335728,
+    "sha256": "994c6ba6a44f97b17da1ec66108b4eadb57a801ba0de2b1ccbf7f499463d3968"
+   },
+   {
+    "path": "data/derived/phenology/PCL0218.nc",
+    "bytes": 335728,
+    "sha256": "685ee2294805abfe07e8278618c03962cda3986880be63dbc2a469f03add9089"
+   },
+   {
+    "path": "data/derived/phenology/PCL0219.nc",
+    "bytes": 336420,
+    "sha256": "0e941d7ee24b68f1064ca49a2fc6b3febe4a847eeaa1346401dacff91a1a3966"
+   },
+   {
+    "path": "data/derived/phenology/PCL0220.nc",
+    "bytes": 331232,
+    "sha256": "486f7d6bdd6dfc81ec982f99d9ccba03612f24f3ab4ed503229adae1e7bf1bdb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0221.nc",
+    "bytes": 335728,
+    "sha256": "07bc29f4c0bc55323d7471d2300f1cded1470936373c7430b81b6998917048f9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0222.nc",
+    "bytes": 335728,
+    "sha256": "c61ccc2de266e3159aa164742b93d45afb9ae94b601b412bb39cefc11fe71391"
+   },
+   {
+    "path": "data/derived/phenology/PCL0223.nc",
+    "bytes": 335728,
+    "sha256": "b951fb5bf7e9554ab0fadcede08b58272f6f59ce35ef834170b1e42c9ff83ae8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0224.nc",
+    "bytes": 335728,
+    "sha256": "702dbb3ce3fad31ef11cafac80efda2678133bda6bc00b5cd808c2c38fbf3be6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0225.nc",
+    "bytes": 328984,
+    "sha256": "c9181bee750f1759e116e1ce1e15814c1c7857be266b34170ba317e5ced960bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0226.nc",
+    "bytes": 328984,
+    "sha256": "d2666f867f8758819e62993eb9d00997f7187f72fb1c7659fda9bc039e211072"
+   },
+   {
+    "path": "data/derived/phenology/PCL0227.nc",
+    "bytes": 329676,
+    "sha256": "7684781440b91351fb5759f7386bd56606ba7722e0bf042fcc869444778ced3c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0228.nc",
+    "bytes": 335728,
+    "sha256": "9774afa27f59fd4b85e4a4a721c677bcfe1daa7c7fc51090e5fae96a77eedc65"
+   },
+   {
+    "path": "data/derived/phenology/PCL0229.nc",
+    "bytes": 328984,
+    "sha256": "bde46c856c119ea8ea4be3ebdbdcf1a458c8bf2f3f2b1009f53b1ea2c03e1a52"
+   },
+   {
+    "path": "data/derived/phenology/PCL0230.nc",
+    "bytes": 252192,
+    "sha256": "c44b60c66e298fc20696b2f77c8cfb78689744fec0181c3bf6f73a88a4970453"
+   },
+   {
+    "path": "data/derived/phenology/PCL0231.nc",
+    "bytes": 252884,
+    "sha256": "abf3c5fd290f45fd5d099eb197badbf8660b7b6c8c290fcd79c1e9b066fd9e34"
+   },
+   {
+    "path": "data/derived/phenology/PCL0232.nc",
+    "bytes": 252192,
+    "sha256": "7c5935fd76a3e1092c9f0556dbba2f83a2da3fc5e5a8310494aecdace33d38ca"
+   },
+   {
+    "path": "data/derived/phenology/PCL0233.nc",
+    "bytes": 252192,
+    "sha256": "5e4b92cb7a9594249bc47154eacb426a9b6907aadfacf5392179a8a7943195b6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0234.nc",
+    "bytes": 252192,
+    "sha256": "6fcc8198d227310edfc2daf958964a4a2fd5dc905e7a544db01756f736b217ef"
+   },
+   {
+    "path": "data/derived/phenology/PCL0235.nc",
+    "bytes": 252192,
+    "sha256": "98c16654649449b9a3715f74426de91ebfaf5bad0a77caf6d1ac1fe31a552365"
+   },
+   {
+    "path": "data/derived/phenology/PCL0236.nc",
+    "bytes": 252192,
+    "sha256": "4d92602618d4476332bcfe58c9b3b0600343621b1c53366fc202e9430285a9d9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0237.nc",
+    "bytes": 252192,
+    "sha256": "e2645ff9a5830e778d78b65b112faac0905b1b9c78494bbe8dbfd09649ef91ea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0238.nc",
+    "bytes": 252192,
+    "sha256": "19b5f7ff6bcecd861441a006f4b9fb4bf7322b8031c2c651446e5b8839ced1b7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0239.nc",
+    "bytes": 253015,
+    "sha256": "2dec386c52ea24edc13068faa430433a4f8830e78d6146f209bf5fc41e047d57"
+   },
+   {
+    "path": "data/derived/phenology/PCL0240.nc",
+    "bytes": 252192,
+    "sha256": "fedb6d7678e6914c0b5b6853f4f23d1130f0942d1729faa5dc353f0ddcec9719"
+   },
+   {
+    "path": "data/derived/phenology/PCL0241.nc",
+    "bytes": 252192,
+    "sha256": "ce5ad5aa65ceb278e2421668f980f02d05a60e4a3ad417fb7d795e2ea7437a61"
+   },
+   {
+    "path": "data/derived/phenology/PCL0242.nc",
+    "bytes": 253015,
+    "sha256": "b17187886fc72aed78dd5bcfd202f2c48ee546323e0485720dc2abee0bc9a98c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0243.nc",
+    "bytes": 252192,
+    "sha256": "44131d9ded41f22d3b896fa2b96c992b485daa3f673334e2baf044e051441de2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0244.nc",
+    "bytes": 252192,
+    "sha256": "de9e1ef9874498bd4b4098436062cb90f68599f99b6e9316eb437df512ebcfc6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0245.nc",
+    "bytes": 252192,
+    "sha256": "07639facd3d5f86e6ebe3540bd26996b6fa87214123d50cc5ea5999f70cdce47"
+   },
+   {
+    "path": "data/derived/phenology/PCL0246.nc",
+    "bytes": 252884,
+    "sha256": "6fd9035b549b74f21c12d58a642ea380c6f4f819a6a26d2511ec960d0f8be18a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0247.nc",
+    "bytes": 252192,
+    "sha256": "48404551211c5ce2043cfe0002d7ee159b8e8e73aaca6594423fc5a8016f81be"
+   },
+   {
+    "path": "data/derived/phenology/PCL0248.nc",
+    "bytes": 252884,
+    "sha256": "d688cd22e797a84ffa339ea48c17f54591b930885f4b2bb467eb015d11928b86"
+   },
+   {
+    "path": "data/derived/phenology/PCL0249.nc",
+    "bytes": 252192,
+    "sha256": "53b84b8dc7c1558260c718df351c34e35ca31819b9faa8f7a6630b2f67cdc489"
+   },
+   {
+    "path": "data/derived/phenology/PCL0250.nc",
+    "bytes": 252884,
+    "sha256": "feacf04e6bd2d3c69498d34920eda9dbdb1f806c6fa2816a39784793b8d68c7c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0251.nc",
+    "bytes": 252884,
+    "sha256": "8454c96d6d0d12b485378aa11f931c29c7c3f94bb94e4269b3ad301973cc4a43"
+   },
+   {
+    "path": "data/derived/phenology/PCL0252.nc",
+    "bytes": 252884,
+    "sha256": "888050ebb745fda053cd93eb24f6b27415e85871569537c074e2e98ebfc687be"
+   },
+   {
+    "path": "data/derived/phenology/PCL0253.nc",
+    "bytes": 252192,
+    "sha256": "f030cd198517a998a7dbd7df92f54d44d1234bebd9ce2f9a877b1af64f7950f9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0254.nc",
+    "bytes": 252884,
+    "sha256": "192a5844889b3b92f38b971695517a96041d68435a92fa7485c8d88b7b2cf084"
+   },
+   {
+    "path": "data/derived/phenology/PCL0256.nc",
+    "bytes": 252884,
+    "sha256": "81bfd83996c5352043da5fdfe1a3a23b57409b2d282822f7fa1d523f096051b9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0257.nc",
+    "bytes": 252969,
+    "sha256": "98908f5412afc72db34468550f5a72bcd8a564e29f40fe848b95fa45a45f802a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0258.nc",
+    "bytes": 252969,
+    "sha256": "ddc1e1b4e62b38b775dc4ddc0aa7f449a94453419356935108e74ad0839874ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0259.nc",
+    "bytes": 252884,
+    "sha256": "0b4ce98a3f80fc246222e1d4112331f1d1a6b84a2be8a9b4f04c4e756f6a713b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0260.nc",
+    "bytes": 252884,
+    "sha256": "37b7ed2c2b6f35edfda32538e59fc2453f4cfb5a8eb5430d131a34d3af496d6e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0261.nc",
+    "bytes": 252884,
+    "sha256": "8aa3f1f468538b26af9207a34b2de345066eea3a822c079c3f57351921dd03d4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0262.nc",
+    "bytes": 252192,
+    "sha256": "e39a5b36008714957156dd5d793483c7928c779e58d7cb118d0f7e71058b6e86"
+   },
+   {
+    "path": "data/derived/phenology/PCL0263.nc",
+    "bytes": 252192,
+    "sha256": "0671334413e36cddcf8bee017ccbba00a66ad1ceedb0c5331c8bdca1597b0237"
+   },
+   {
+    "path": "data/derived/phenology/PCL0264.nc",
+    "bytes": 252884,
+    "sha256": "66bba280fd178dccd7df504e302dc18cd621632056cf4d0e5536110e879f46aa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0265.nc",
+    "bytes": 252884,
+    "sha256": "49e9f662af1d793c36cb85a591b28572a90560a557b21ffa9ddd0237fe668152"
+   },
+   {
+    "path": "data/derived/phenology/PCL0266.nc",
+    "bytes": 252884,
+    "sha256": "113990e98914373cb05f303bd981d1cc8e6442d8179c4908461a999d05b26ff1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0267.nc",
+    "bytes": 252192,
+    "sha256": "bd45a34166033bc54ce8d8a02e8811ddaa25961baa130891c628debd786bf92b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0269.nc",
+    "bytes": 252884,
+    "sha256": "c1c718c9c080f9d79f7be10c9c5d74c760c53db8898c1571b8bc2c18f06663d2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0270.nc",
+    "bytes": 252192,
+    "sha256": "9edcb611ca240d4864e7d22a1df8aaaace697fba346f49ebec4fc7631b8dfa85"
+   },
+   {
+    "path": "data/derived/phenology/PCL0271.nc",
+    "bytes": 252192,
+    "sha256": "d0cc0604e200e74a24a20f4e19850d16ecfbc5bb2447c69a8fbfb921d811148f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0272.nc",
+    "bytes": 252884,
+    "sha256": "39aeed85e1c8b93479138d6d90deda94c6cd1f5b123d0eb126f3e943cd6b187a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0273.nc",
+    "bytes": 252192,
+    "sha256": "88d0e16df82c325971f2b701dc1661944e048d44d954b5a46b2dd0d35589560f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0274.nc",
+    "bytes": 252192,
+    "sha256": "94ff6b4ad8927ab3989c34656049baba3e27d6358d22f26915dc7c49a019d2e9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0275.nc",
+    "bytes": 252884,
+    "sha256": "4dab3050362f22f300d2971e03569668f9feef9d6226d3049fd7193c0a4910b3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0276.nc",
+    "bytes": 252192,
+    "sha256": "7ef7b4c5134be4572cfa954cd83c99dd9c5c400bef1cd0e57d42cb96f27ba63f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0277.nc",
+    "bytes": 252192,
+    "sha256": "9626927ebff6a7780ed3d195c0369993a9a3dd455d6611a01caa36b3effec23e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0278.nc",
+    "bytes": 252192,
+    "sha256": "57ac6dd3e24649f4e97bb70cc54760ef648d6482384c407e26144f275e292144"
+   },
+   {
+    "path": "data/derived/phenology/PCL0279.nc",
+    "bytes": 252192,
+    "sha256": "fc087c7b795c77b283e5536fce289147a90ee84581405a8db49f77cfbde6ecd4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0280.nc",
+    "bytes": 253015,
+    "sha256": "07f36a26738f19e6049d9d3f43044fe622b65c7c8498866cf9b1871f6113ce4a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0281.nc",
+    "bytes": 253015,
+    "sha256": "c73f3d3b8cecfa420dda8a9f08aa7f74093d3bca85ed36b761302f8774cc6cb2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0282.nc",
+    "bytes": 252884,
+    "sha256": "0b94b746d9a942660c58ecfb48a58cb28d595e636aaddbbff2b31bce32117830"
+   },
+   {
+    "path": "data/derived/phenology/PCL0284.nc",
+    "bytes": 252192,
+    "sha256": "ed4d50f7beaf752cc4ba0e545158896b0b1a23cccded6fe6eca9765557780b97"
+   },
+   {
+    "path": "data/derived/phenology/PCL0285.nc",
+    "bytes": 252192,
+    "sha256": "5f119dd656b3d3d513d55309fea6891084f9280d55ee877e2175f73dc9c47837"
+   },
+   {
+    "path": "data/derived/phenology/PCL0286.nc",
+    "bytes": 252884,
+    "sha256": "79d0c6909c2b493f422864484ed617ff61926e9816ad21b0750a89d97c391f3a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0287.nc",
+    "bytes": 252884,
+    "sha256": "13c254a72ac83b29256b0f78f837baac7b83c2d8fd13af510b2a82bdaa877b5f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0288.nc",
+    "bytes": 252192,
+    "sha256": "e11c31d2af6c82128d931514df6eeca406e15ddca0c480cf47fc5d82f46124a2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0290.nc",
+    "bytes": 360456,
+    "sha256": "aaafc783d94e4f982ab30aa58695947a3d0b6a39d73d7aba6261b5d1e4f17789"
+   },
+   {
+    "path": "data/derived/phenology/PCL0291.nc",
+    "bytes": 360456,
+    "sha256": "a5c455f816c68229ecd2e455ae16dbae9b26c28944667a43d244b6505affbd2c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0292.nc",
+    "bytes": 360456,
+    "sha256": "c71ded0af63c5651b540519efaab4f67d9e3fa430ba48c7f9711ea86ad1b7254"
+   },
+   {
+    "path": "data/derived/phenology/PCL0293.nc",
+    "bytes": 360456,
+    "sha256": "e1d2e8136aec487f807c825e2f09a134890609c1648e24b53e24cef736dee005"
+   },
+   {
+    "path": "data/derived/phenology/PCL0294.nc",
+    "bytes": 360456,
+    "sha256": "75e5a0d3675cb6fea8f3465b402d38c88744da65164db58db5494f26db1517af"
+   },
+   {
+    "path": "data/derived/phenology/PCL0295.nc",
+    "bytes": 361279,
+    "sha256": "2d51d2ee723cf3f7ec1ab2825c97e30966f6ddfc8945712381244ea2fa093953"
+   },
+   {
+    "path": "data/derived/phenology/PCL0296.nc",
+    "bytes": 360456,
+    "sha256": "f3216453184f5f0dbbeeeb0ea152508d3e09a49b9051d8fc8ea35517d6264e33"
+   },
+   {
+    "path": "data/derived/phenology/PCL0297.nc",
+    "bytes": 360456,
+    "sha256": "c9485d744d228b72d26284af2c9770854121ec526b90ee78983c55146cdb3e44"
+   },
+   {
+    "path": "data/derived/phenology/PCL0298.nc",
+    "bytes": 360456,
+    "sha256": "f4865fb9463fdb3e96d8062925d0cad62ef451f715a5806f22f9c2e2ccdd9952"
+   },
+   {
+    "path": "data/derived/phenology/PCL0299.nc",
+    "bytes": 360456,
+    "sha256": "0f5c6289eaca2eefb0dcdd4de6cea2ffd205af5257402bd1faa3b581867c2369"
+   },
+   {
+    "path": "data/derived/phenology/PCL0300.nc",
+    "bytes": 360456,
+    "sha256": "f11d97b7dd21687e835337a7e2fee1f33ee5eac66b3504a2beac3651e4192483"
+   },
+   {
+    "path": "data/derived/phenology/PCL0301.nc",
+    "bytes": 360456,
+    "sha256": "147fa14a434579685d5cba7076714babe0f63fb667d30d1e80495d85558d1718"
+   },
+   {
+    "path": "data/derived/phenology/PCL0302.nc",
+    "bytes": 360456,
+    "sha256": "53f66c60c8d720dc0f7dd40c5565201e73eae0cd2188100d396a2ec05c64b057"
+   },
+   {
+    "path": "data/derived/phenology/PCL0303.nc",
+    "bytes": 360456,
+    "sha256": "8d6fdf98ad47dc0106589d88bea21b5d16367318022b52c0422bc0f68a0d98ac"
+   },
+   {
+    "path": "data/derived/phenology/PCL0304.nc",
+    "bytes": 360456,
+    "sha256": "e70bac7ffe473dda69376b9bd65d78b78d97d18f156a77ef1729468f1b9eb0cc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0305.nc",
+    "bytes": 360456,
+    "sha256": "9427d1738926ec9b8f397d2f812d4312cf08942106eb8f38cddaed8523d13a0f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0306.nc",
+    "bytes": 360456,
+    "sha256": "5133561baaf65f339fdc468442f18552b03570d733ae3d99aa6c7de5edd95df6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0307.nc",
+    "bytes": 361279,
+    "sha256": "3a204475e60ef4e428ea7bd065208e71e78a1495fb6017648ac2370315076b2f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0308.nc",
+    "bytes": 360456,
+    "sha256": "08b5471499a88726b63823e4dd23cf2d55f027355e7e1840a3b319126835313d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0309.nc",
+    "bytes": 363527,
+    "sha256": "c67bd12d17f23eb205d6c0ee6b6ec06b3164ebdd26ae54c6d45e35a29183c2ba"
+   },
+   {
+    "path": "data/derived/phenology/PCL0310.nc",
+    "bytes": 362704,
+    "sha256": "f30d7da9dc9edd894a221a8b1b28e7893db54e48d79554ca1a8c7b24c4aec60d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0311.nc",
+    "bytes": 363527,
+    "sha256": "88f174574d11d108104b1ee4f88bccaa2daafb66c195fb967159b3982d62378d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0312.nc",
+    "bytes": 362704,
+    "sha256": "86631d2e7c2e04e5972c78c1897f90c6f7fd8254da9a4a84742e7a05e6284e1f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0313.nc",
+    "bytes": 362704,
+    "sha256": "b7ccc55b6893674dd0b2fe62ead08e0b5999101c06654d871ad63e5f1d1cc525"
+   },
+   {
+    "path": "data/derived/phenology/PCL0314.nc",
+    "bytes": 363527,
+    "sha256": "ca517ad8f6fac6c9c4f2bb09eb3ea003f8fd01e07c127e35f72498b6d2c64ee6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0315.nc",
+    "bytes": 363527,
+    "sha256": "8c0e5bc9dd651e1a2f73a162795732b1324b970b3f744d2d93a6fe5b88a2110e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0316.nc",
+    "bytes": 362704,
+    "sha256": "777f6cce78ea6ffe32d1c352be324bafff05caafdf7a7d1cdee8cab7086eb86f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0317.nc",
+    "bytes": 363527,
+    "sha256": "bb3f4b2d9b446c68d41f3a223a4f8ce3d7e68edaf46d0aa9c1423c9695a17137"
+   },
+   {
+    "path": "data/derived/phenology/PCL0318.nc",
+    "bytes": 363527,
+    "sha256": "45b00152ce1ca10d4f72110e219555fb8de0f293675934821d5a0ebfd3ccfd0d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0319.nc",
+    "bytes": 362704,
+    "sha256": "f7824c6771134d2aab899f4f6a7c12ba79c6fd771fe3837850007e4d3a39c04e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0320.nc",
+    "bytes": 362704,
+    "sha256": "03e94cc1267a5e3750aa1f1315fdc2857c2786b82877573c7fbaa765cc7ffcf0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0321.nc",
+    "bytes": 362704,
+    "sha256": "d1cc4be9e30e53f638259b6319c6e38b22f0a5517b9cdb15a8419f327b2e0e24"
+   },
+   {
+    "path": "data/derived/phenology/PCL0322.nc",
+    "bytes": 362704,
+    "sha256": "69e2a524a6ab0199a9f991c9aee596c1c7e19afc81cce8367470d11fb9c79762"
+   },
+   {
+    "path": "data/derived/phenology/PCL0323.nc",
+    "bytes": 362704,
+    "sha256": "9349760e90ff9c35d450ca7b4414e2971e48a0db0faa0607a77ac23dd9565292"
+   },
+   {
+    "path": "data/derived/phenology/PCL0324.nc",
+    "bytes": 362704,
+    "sha256": "0361f99af1914d6ea82558e17bf440f798ece655c214964f96648dbc3ea393d6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0325.nc",
+    "bytes": 362704,
+    "sha256": "27dc0d50c65b9590b767a1ffeb1f0022d21d6bf55ce243118295a015a6653f1f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0326.nc",
+    "bytes": 290768,
+    "sha256": "871a4d06e7972509431caf05973f567c551721c5b9d23f999ad2999a56e4cbad"
+   },
+   {
+    "path": "data/derived/phenology/PCL0327.nc",
+    "bytes": 290768,
+    "sha256": "4c39a9d19f1a7c90fe118174ea4fb78cd3920451ba67194d73f9d0bcfdb8bce7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0328.nc",
+    "bytes": 290768,
+    "sha256": "1835efe435d5bae2a57c22d3cf6900f07913a46827617c650ef04e587f61c1cf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0329.nc",
+    "bytes": 290768,
+    "sha256": "0ef8e4e4f4da6e599c5df25349ef845855203f1850bb3ade5208cd52b24405e1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0330.nc",
+    "bytes": 290768,
+    "sha256": "93b1aa77335bc5e1c0d1a412c336120ae72f0e911c9d33bc0db1cd577f1b035c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0331.nc",
+    "bytes": 290768,
+    "sha256": "d2cc74d8780e6ac74bae272d5f9fe044df7ccc07f19c7a334c7c53c94a1f1e62"
+   },
+   {
+    "path": "data/derived/phenology/PCL0332.nc",
+    "bytes": 290768,
+    "sha256": "88d1bc9a1a9fa39f04961e5912f340dc0d6bf9b8a50bf397f51d7ff60a72f493"
+   },
+   {
+    "path": "data/derived/phenology/PCL0333.nc",
+    "bytes": 295264,
+    "sha256": "c0ba33c5d1923d758122851c03b0466912f664b9c9f49fd5c8d494cef065ddd4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0334.nc",
+    "bytes": 295264,
+    "sha256": "aad2c4cfcf476bcecb11f5eab45a7129cc67025623d956190f5e498ca0cf0abb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0335.nc",
+    "bytes": 295264,
+    "sha256": "569b25af4248e20ee89e8a97526adcb049fbdb784816d06eeb2ec4bf4872544a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0336.nc",
+    "bytes": 290768,
+    "sha256": "f0d1ad7085779b3c741a266cb4b98b149f7c872aa094380010a1c14f17dfb0a9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0337.nc",
+    "bytes": 290768,
+    "sha256": "71bb928c596c4b688983635287e258da9a1039192c97ed4ec5e141887f3c7f88"
+   },
+   {
+    "path": "data/derived/phenology/PCL0338.nc",
+    "bytes": 290768,
+    "sha256": "fb80854337ebe5aae616884db4e7e82929d79eec7dab81af6ab11eb6c865b522"
+   },
+   {
+    "path": "data/derived/phenology/PCL0339.nc",
+    "bytes": 295264,
+    "sha256": "890caf6cd945a2a5d12049a5d2c79d8f80e29b3961c3271e0f3aedfe9d58a807"
+   },
+   {
+    "path": "data/derived/phenology/PCL0340.nc",
+    "bytes": 295264,
+    "sha256": "20faa37b9d026fd9b713fefb55b74e11515fcbe3788b56475752ce7a6fac2d56"
+   },
+   {
+    "path": "data/derived/phenology/PCL0341.nc",
+    "bytes": 291892,
+    "sha256": "7eac2f6da79c5731a81184cb36f8ef63e00513416ceee4506cbf3ab281fbebf9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0342.nc",
+    "bytes": 295264,
+    "sha256": "8ee0f9fcf87be861871b38ec4e4387c8e12da5cf5818acf229a24b7b5b9742f9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0343.nc",
+    "bytes": 296041,
+    "sha256": "69b8dd73331ede24a7fc9ac82d336a79fcdcac3d0c1c6e2791cc352da8fc6f7f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0344.nc",
+    "bytes": 295264,
+    "sha256": "228af4c56b4bb397c3253f97cd962581eb51e2976b10b57d7ea2e02010b59593"
+   },
+   {
+    "path": "data/derived/phenology/PCL0345.nc",
+    "bytes": 290768,
+    "sha256": "44761adfd277911d63b4f3e4fde55c45bacc4d9103c3563274c5b8834be9b74b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0346.nc",
+    "bytes": 295264,
+    "sha256": "12a3623b50673bcb580b51895c1aa57a573fe9963dc801c9a05540295250ff03"
+   },
+   {
+    "path": "data/derived/phenology/PCL0347.nc",
+    "bytes": 293839,
+    "sha256": "11e79d22d83c7707661f81ceb6a8a23dd318a3b6e648df0710410ab110dba072"
+   },
+   {
+    "path": "data/derived/phenology/PCL0348.nc",
+    "bytes": 293839,
+    "sha256": "ce3dec1195cc80d85d569dc27c1b247b33b6aebf1fdf57789dd3243959f0497d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0349.nc",
+    "bytes": 293839,
+    "sha256": "6be0bf01e4a47bd49387ae0e2e8bb71a638e41f92d220b7fb7acd655d6537b96"
+   },
+   {
+    "path": "data/derived/phenology/PCL0350.nc",
+    "bytes": 293016,
+    "sha256": "bde6e0449a87693ae9e1220f6697a406c7abb315da500f7d067b1e214ee5766e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0351.nc",
+    "bytes": 293016,
+    "sha256": "01bdad8d14a27da887727940d987708f82f44f102be03dfe4ff9cb73c1c1128f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0352.nc",
+    "bytes": 293839,
+    "sha256": "adce39f716d4cb7c2dd0974f691b69eefd712691ef446996d9d68aca22a139a2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0353.nc",
+    "bytes": 293016,
+    "sha256": "9eeadf0522c05d7482360ddb8dbf22e4a8538daf9acaa59a329c7db86a2b0b43"
+   },
+   {
+    "path": "data/derived/phenology/PCL0354.nc",
+    "bytes": 293839,
+    "sha256": "ef90c314214b31e7729d44ca6ca4d488f40e70b0620d371b5aa058c0648fd2c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0355.nc",
+    "bytes": 293708,
+    "sha256": "90dfe629fb0d3f012cc7b63b1cec89f837f32d99ee48aa33a4ad3f479b788399"
+   },
+   {
+    "path": "data/derived/phenology/PCL0356.nc",
+    "bytes": 293708,
+    "sha256": "7c69867e5aa9915ea6f391da4c6f514b9c68b8fb786c142631ba1fba2c5dc409"
+   },
+   {
+    "path": "data/derived/phenology/PCL0357.nc",
+    "bytes": 293016,
+    "sha256": "e58a222e4112d3b74aa3ab5ca8a687240be7485ef7eb83e94028fa2ef92e6f25"
+   },
+   {
+    "path": "data/derived/phenology/PCL0358.nc",
+    "bytes": 293708,
+    "sha256": "e49243b54553175e22136abff94085c47d4cce3f1de5bc5a335bdff2a72f5cba"
+   },
+   {
+    "path": "data/derived/phenology/PCL0359.nc",
+    "bytes": 293839,
+    "sha256": "70d5700b947a1b3ddd824969ca34dc69557cec5eb84976d0bd09ee3e34431646"
+   },
+   {
+    "path": "data/derived/phenology/PCL0360.nc",
+    "bytes": 293839,
+    "sha256": "f639a6c0fb8176794dd24e0756c21eac4fd0fc59821920b5bddfb51cb5101993"
+   },
+   {
+    "path": "data/derived/phenology/PCL0361.nc",
+    "bytes": 293708,
+    "sha256": "acf14b644d945648fe64cb392fac71fb632df9c97aa83223f24e8736672bd261"
+   },
+   {
+    "path": "data/derived/phenology/PCL0362.nc",
+    "bytes": 293839,
+    "sha256": "d9e713bba587ff35a68fe2bbe5c60085307632f13201b9c734eb1e27b3a5c77b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0363.nc",
+    "bytes": 293016,
+    "sha256": "9b8bd5b97d7f812f708daadf1104517ed557ad87fb1ecbc6351e3941bd7d4ef5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0364.nc",
+    "bytes": 293839,
+    "sha256": "af2185b139f14a4060d1393a6167dcdf1d0848d34a3446aee833428511e2f8b4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0365.nc",
+    "bytes": 293839,
+    "sha256": "2a399ce39821d141e63461d4b542d3af071d514de8c6f0b59d6a4208cdade9fe"
+   },
+   {
+    "path": "data/derived/phenology/PCL0366.nc",
+    "bytes": 293839,
+    "sha256": "9acaa438639021280a27613bb05cc313f13be44a99eefd1e8bb4a5e043093ea3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0367.nc",
+    "bytes": 293839,
+    "sha256": "4ab8ac9d36bbced14b8658832b3c89ddcbfd75ddec3b84f07d770750da2c627e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0368.nc",
+    "bytes": 293839,
+    "sha256": "b01bcb112700b67722415e1b94de030b792a2e5c875a0d551e1f4010b8e37ee1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0369.nc",
+    "bytes": 293839,
+    "sha256": "3c2fb820cfc2dc421c9e836e3b558b6508f82d08b90f2048a998e26c750bca7a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0370.nc",
+    "bytes": 293839,
+    "sha256": "d7e231e2bc50a31038a0d1e4994a234c8f3ee7a1a1b6ce226dce34dd8300e858"
+   },
+   {
+    "path": "data/derived/phenology/PCL0371.nc",
+    "bytes": 293839,
+    "sha256": "1e4567c092d61dc6c0051d536f5f7021ed4f7a2b6569fd188f3f5da2ff602ef0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0372.nc",
+    "bytes": 293708,
+    "sha256": "2e5cc6b039df27ec3d41cba482ebb48071209567246aea0b34a6b87349b6e5e7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0373.nc",
+    "bytes": 293839,
+    "sha256": "05f54bee3cdcf035bd6a73849e45f1d3661fc7ddb6fda30956e49f65a6546de7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0374.nc",
+    "bytes": 293793,
+    "sha256": "0c019afeaccd2e5b2814fe3902693b29275a61aa207c45251ff689d4908fc3a4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0375.nc",
+    "bytes": 293708,
+    "sha256": "5baa4a74209277c0c917b2a067a7e40cf5ad120bb6458f57fa6e7bd1ed794be3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0376.nc",
+    "bytes": 293708,
+    "sha256": "a0e848c2ae51714c554544bb2758d984e7f394cc74f3d553c8e0d9ef41ec97a4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0377.nc",
+    "bytes": 293793,
+    "sha256": "b7003e7c4f322b861152957f915fb142eaaf6c6e383ddc266a286064f9397595"
+   },
+   {
+    "path": "data/derived/phenology/PCL0378.nc",
+    "bytes": 293016,
+    "sha256": "98b6442d7d87bf9bf61115ffe0b1428f7c61b5212caabc8811cfc5d671b479bd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0379.nc",
+    "bytes": 293839,
+    "sha256": "072532e75ba9f9ea5887d3fdafa9772e476b08f686950f9947fce7d0630b6bb7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0380.nc",
+    "bytes": 293016,
+    "sha256": "65c0366638c9e25cc9f5d749d424645e486ca47db97ef4e64cb4dfae9a31e102"
+   },
+   {
+    "path": "data/derived/phenology/PCL0381.nc",
+    "bytes": 293839,
+    "sha256": "010ae096088292a0f014f1dc90416a68abdf740478d4966f06bd13694c3ee317"
+   },
+   {
+    "path": "data/derived/phenology/PCL0382.nc",
+    "bytes": 293839,
+    "sha256": "de00c51cf0646e7d4d73da1a23025b7ce811fb24541c17e9e4d909299e9a34f4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0383.nc",
+    "bytes": 293839,
+    "sha256": "b8b60861e0c0f58ab3e6fa961260d959de06fdce627eafa988c690b519113467"
+   },
+   {
+    "path": "data/derived/phenology/PCL0384.nc",
+    "bytes": 293839,
+    "sha256": "f2bfa508061f09f4ce1e756b7d55014d431d7fcdbab77f5a9ac827267f1ef4a4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0385.nc",
+    "bytes": 293016,
+    "sha256": "3588475fbae95142c6499b76105b5b4a9e328f7374b599c04ea30fa325965915"
+   },
+   {
+    "path": "data/derived/phenology/PCL0386.nc",
+    "bytes": 293839,
+    "sha256": "dc1555689d13e88128819033f1216641fb66b0655948cb788695b6672dd4b017"
+   },
+   {
+    "path": "data/derived/phenology/PCL0387.nc",
+    "bytes": 293839,
+    "sha256": "ae954295d4b3a2cb9fe39970611caa6db2e439edfd02c2d5f7df7058f3b75448"
+   },
+   {
+    "path": "data/derived/phenology/PCL0388.nc",
+    "bytes": 293016,
+    "sha256": "c5143ae63258a7d953ac69f4b1c902774a29aa8677de9dbe69ce5f2728185e6e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0389.nc",
+    "bytes": 293016,
+    "sha256": "c72ceb1ef0bc7db76f6522ed9f4ee9e622fe790e4dfe48326867c22890a4aa21"
+   },
+   {
+    "path": "data/derived/phenology/PCL0390.nc",
+    "bytes": 293016,
+    "sha256": "0617753da3a221c37997196c44d3d8ef6fd89ac57f15d88cea94d7c9f263c762"
+   },
+   {
+    "path": "data/derived/phenology/PCL0391.nc",
+    "bytes": 293839,
+    "sha256": "3e523c3d825b28e0072ef917cef6bc8d5cd2e159de89f2c0e310fa423157e971"
+   },
+   {
+    "path": "data/derived/phenology/PCL0392.nc",
+    "bytes": 293839,
+    "sha256": "d83cd7a9ff2de9477567f44f4df08dc58f37203221818d6f2bae881204d688e8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0393.nc",
+    "bytes": 293839,
+    "sha256": "6ba560cc8fc3d3a6af6f63286e6a05850199609bfbca02b81cae5a7f72fa73b2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0394.nc",
+    "bytes": 293839,
+    "sha256": "8d0abc867db29f4174accfca81035e144e60b99988644feb062e9c8e93a495c3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0395.nc",
+    "bytes": 293016,
+    "sha256": "7822e641399b4fac2fba3ef62082052a47d933b7e4215f05d46dea56bbb75849"
+   },
+   {
+    "path": "data/derived/phenology/PCL0396.nc",
+    "bytes": 293016,
+    "sha256": "40101ab88b8e941039189d01709d90eedb10b24886b284ddf86d9944b5af909f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0397.nc",
+    "bytes": 293016,
+    "sha256": "e0be6b7a7f89d242ffdaae2c3d27f7aa059ba58e29c73c528611f6bc4106f1f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0398.nc",
+    "bytes": 293839,
+    "sha256": "6e2f02af65a5132d7fbf4686af35a8f04d69c27df381e42366d34097983a9e80"
+   },
+   {
+    "path": "data/derived/phenology/PCL0399.nc",
+    "bytes": 293708,
+    "sha256": "ce1158b9a4237c5e27beda8859e031552da9b45462a793d1f90bf8bb742fb3d2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0400.nc",
+    "bytes": 293016,
+    "sha256": "a2ae58e366e6f904f1710f2b35c448e4275ecfded407e971cb293dc9b900d497"
+   },
+   {
+    "path": "data/derived/phenology/PCL0401.nc",
+    "bytes": 293016,
+    "sha256": "be4b1a8de1ff090ad87bb11abd20a11e803bacb4844d4f939fb7f48f7101662a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0402.nc",
+    "bytes": 293016,
+    "sha256": "30a40ae40a28a8c90e95f328aa8f7391c12cb35b9705b32ea454efd0875be25d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0403.nc",
+    "bytes": 293016,
+    "sha256": "edb0184238c27a6112c5d775157e72472757e166f64faee574bfceffc0155cbc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0404.nc",
+    "bytes": 293708,
+    "sha256": "9d9adf3de3537c80ee170ef070c335a947c8da672e71b401b5336c02c949745e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0405.nc",
+    "bytes": 293708,
+    "sha256": "4fd2141a8d5cbd19a6217db3fd006c6e14969e790fbb509208c8ba4267ac544a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0406.nc",
+    "bytes": 293708,
+    "sha256": "90cb093f41d3c7789b5b933bd635d8b2ad3e7b391699eefa6ce3307d49fab904"
+   },
+   {
+    "path": "data/derived/phenology/PCL0407.nc",
+    "bytes": 293708,
+    "sha256": "80f72ac76e8f86157de1dc5eb40ec853f0462c1a69b028a31f38eef9515a3513"
+   },
+   {
+    "path": "data/derived/phenology/PCL0408.nc",
+    "bytes": 293708,
+    "sha256": "73bf8f7884bf1b494ee4c1bc55ef2c402e58eaf9b16dab129c00fe4b85beedd6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0409.nc",
+    "bytes": 293016,
+    "sha256": "07cfafa125c2320476bae303ff62d3db863792e1e7b2876052101c659be2e78b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0410.nc",
+    "bytes": 293016,
+    "sha256": "3cf25c2e7f4ba1fa19c5c88dee7c093d10fb0b30247ce56258de2e15325119e2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0411.nc",
+    "bytes": 293708,
+    "sha256": "27d1e2db0c6904537b5f417e99de1eecb58ffa9378a19c18628c45a98c31ecc4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0412.nc",
+    "bytes": 293016,
+    "sha256": "af0c1d6b49a97943df0f09b6b7600575b1086fec36dcf02c81a499db083dea49"
+   },
+   {
+    "path": "data/derived/phenology/PCL0413.nc",
+    "bytes": 293708,
+    "sha256": "dfcfe9da4b0c2e780450742d50a6e198d49a3b342ae9f94fcb4f0cfe700d26f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0414.nc",
+    "bytes": 293708,
+    "sha256": "b6087fe5abb18b2b46490fa00745164984372d81669bb5bdf5726533b27b4a40"
+   },
+   {
+    "path": "data/derived/phenology/PCL0415.nc",
+    "bytes": 293016,
+    "sha256": "f2be84d4d666da92ca3e2409ae5c528e3e537fabaab8c40e29bd705b88d301a8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0416.nc",
+    "bytes": 293016,
+    "sha256": "b945849835bc9c45c19b1a3f16766d1c8ca30335f5b1aff79fdce88f09e9f109"
+   },
+   {
+    "path": "data/derived/phenology/PCL0417.nc",
+    "bytes": 295956,
+    "sha256": "090249b701afff540d698507d62009f88f3d415877ff8c1fc29a26d415d5b2ef"
+   },
+   {
+    "path": "data/derived/phenology/PCL0418.nc",
+    "bytes": 295956,
+    "sha256": "b0a1062c9777f43e80db99b51d5b56927b2ce97291647f0a2b05abeba2e2c2de"
+   },
+   {
+    "path": "data/derived/phenology/PCL0419.nc",
+    "bytes": 295956,
+    "sha256": "7f6c83a6899146cf7ea96eef5fb0b5c3dd8fa65c8580a2e9edc3f04e5c568e6e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0420.nc",
+    "bytes": 295956,
+    "sha256": "5dd72804c0b58aacf1b40819cdea8806b630ab8b7cf10c944df60f59ebc89769"
+   },
+   {
+    "path": "data/derived/phenology/PCL0421.nc",
+    "bytes": 295956,
+    "sha256": "092ed7d6047482cdf072f066e36e4fc94070d75007f38e81d2ed7bdaec876396"
+   },
+   {
+    "path": "data/derived/phenology/PCL0422.nc",
+    "bytes": 295956,
+    "sha256": "2678a523b230d4beb8053aedb3357048480631a013c70eec113386cdfa464cc3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0423.nc",
+    "bytes": 293723,
+    "sha256": "ed8736abff47781f743858fbb886bb5f85bedf27bd78bf98f16f45b1506e5878"
+   },
+   {
+    "path": "data/derived/phenology/PCL0424.nc",
+    "bytes": 293723,
+    "sha256": "76b475a343caeab6fe3f3ecc30a02b04a704d54fc9bcd42a600f70f40ee7bfac"
+   },
+   {
+    "path": "data/derived/phenology/PCL0425.nc",
+    "bytes": 293723,
+    "sha256": "b49422269f40bea934c6d27f2fe1964ffb21a4dcd1970f48cb05d44d1bdede85"
+   },
+   {
+    "path": "data/derived/phenology/PCL0426.nc",
+    "bytes": 293723,
+    "sha256": "dd476b57b84ed25e72e25f3ec0fb8f92b173fcf7a20444b94888b5dc7c509ea7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0427.nc",
+    "bytes": 293031,
+    "sha256": "4d2014bfeeabbea911f5d28643241e5daa25dc45a2ad241ac1dd7a26b9b4a2fe"
+   },
+   {
+    "path": "data/derived/phenology/PCL0428.nc",
+    "bytes": 293723,
+    "sha256": "d6068899d4ac8b7e33f1e88dcfeb8ec8261fac4f668630ff148279902c6ad5bd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0429.nc",
+    "bytes": 293723,
+    "sha256": "78e9f5426dd521ce46c24ba4eca5799af3679cd787d5872ea69a5aeb29bfaf54"
+   },
+   {
+    "path": "data/derived/phenology/PCL0430.nc",
+    "bytes": 293723,
+    "sha256": "b95248341b82fc6eb14603367a4343a9971ec4667a7abe9173d3d6b9def3babd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0431.nc",
+    "bytes": 293031,
+    "sha256": "0cca28c5e2d992f578c950f5077a8e10ed6328f7d9f208fd7d4e44697a56f800"
+   },
+   {
+    "path": "data/derived/phenology/PCL0432.nc",
+    "bytes": 293031,
+    "sha256": "3366da62cf0c734cb3d9afc65b8b4dff7d58bfd94ef8281e874c0f53a5fa54c3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0433.nc",
+    "bytes": 293031,
+    "sha256": "fa226965966da2ae346718334bb515d21ab3be88e0bda4003f1abe705e16c6cb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0434.nc",
+    "bytes": 293723,
+    "sha256": "2827c5738e8221c3a9040e586f4b108766901b6d05d6e269f950f0e765a02195"
+   },
+   {
+    "path": "data/derived/phenology/PCL0435.nc",
+    "bytes": 293854,
+    "sha256": "33f16f3a10cf16a9834524d344f13aa9ae0fc7f0c847f59bf2bf77d4657e776e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0436.nc",
+    "bytes": 299459,
+    "sha256": "c07a3d166b133d179580012a31426676ffa1730345e7adecf4379cb68bfe785a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0437.nc",
+    "bytes": 299459,
+    "sha256": "946b10e5729bcff4b2e50610bb4fb5a828e9ab134b0b109dfd6c0ec5b0658307"
+   },
+   {
+    "path": "data/derived/phenology/PCL0438.nc",
+    "bytes": 299459,
+    "sha256": "f12e8a4dc3df7fb8c3ca40cc6ade37b3aad8b64fefd6f6ff61793b5a09a3fbf3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0439.nc",
+    "bytes": 299328,
+    "sha256": "83e90fbee912c30923a6bf20bf48f9c2aa3b5a5c68ba918f803860cfe8d178bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0440.nc",
+    "bytes": 299459,
+    "sha256": "a286e84e08ed9da8e684b0959835685b814d63d2d095b034b8d2df0e97adf484"
+   },
+   {
+    "path": "data/derived/phenology/PCL0441.nc",
+    "bytes": 299459,
+    "sha256": "72e4f84d9831141c0d4da32673e28e049b74188c5af2d9fd23999a155b3743ea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0442.nc",
+    "bytes": 299459,
+    "sha256": "4a058a7abcd361e85904a50e8317451e1a18669f8a134998d541b94e5340da72"
+   },
+   {
+    "path": "data/derived/phenology/PCL0443.nc",
+    "bytes": 299459,
+    "sha256": "288f3abb0215dc2587c066f201802e6fdb4d1c9b7860e42bb7d4cc133703a570"
+   },
+   {
+    "path": "data/derived/phenology/PCL0444.nc",
+    "bytes": 299459,
+    "sha256": "fe6529102fc0ef1bd690b79b01bba409dc581f5247c4dbf507fe457c8872e916"
+   },
+   {
+    "path": "data/derived/phenology/PCL0445.nc",
+    "bytes": 299459,
+    "sha256": "87f3dcd4b891a5c95cde1eb9b2b3dce7ee2cd15d6dfb5463e739b17db61b08a5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0446.nc",
+    "bytes": 299459,
+    "sha256": "55e0c552b87a5bde1aca48d27ccbe930705aa6db82528d25b3ba2bcd37644c9b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0447.nc",
+    "bytes": 299459,
+    "sha256": "f000098ea86503f931157c54224983136d452346763ad25523752debb3064a44"
+   },
+   {
+    "path": "data/derived/phenology/PCL0448.nc",
+    "bytes": 299459,
+    "sha256": "c95c56c352dc232f34a3d0130f4fdb8cdd67d7b639925c9767a67e91cba71fc0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0449.nc",
+    "bytes": 299459,
+    "sha256": "2b5f07c767f72d7649e7bfdf0c29e7f29db3de9f42226d62154d5e79c8a9aacb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0450.nc",
+    "bytes": 298636,
+    "sha256": "dfdac74a5ea55c93bca8e312bcd7fee298886fe4107b161ba98ce16cfe4954e8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0451.nc",
+    "bytes": 299459,
+    "sha256": "598036922875d880c9fcf93ca328e515fdf6688676cd3306c9b86145f0728ec3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0452.nc",
+    "bytes": 299328,
+    "sha256": "1cbc03e7bb12d2bb4f2945fc9352e7b2249f6cc053ce72fc10fe9d8412b5fadb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0453.nc",
+    "bytes": 299459,
+    "sha256": "f7d5358617049cb3c383d8fe1e31aea65864351dfb507db6d42cb0cfd580f223"
+   },
+   {
+    "path": "data/derived/phenology/PCL0454.nc",
+    "bytes": 299459,
+    "sha256": "a95e0ddf977d77b35fd0cd0de34c1d62d702953884d65da17ce214532ab4cda3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0455.nc",
+    "bytes": 299459,
+    "sha256": "65689f03f1e4ca493bed8f858968e34594173208d2bbccd093bf1529043540b4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0456.nc",
+    "bytes": 299459,
+    "sha256": "c8f9e5db67ed5364c12d280327323a6ab86b6fdfb010d0e80a40f0e97bc8343f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0457.nc",
+    "bytes": 298636,
+    "sha256": "3efce7eeb5db38dff3c984418b5a26396bdd971e1800e6d953617f0f823e9e65"
+   },
+   {
+    "path": "data/derived/phenology/PCL0458.nc",
+    "bytes": 298636,
+    "sha256": "c7f99863994b5ae9d18a0dc57479eb41ec3df6d39b0c2190da44c1fb064938b8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0459.nc",
+    "bytes": 299328,
+    "sha256": "d10dff8a33175f3bf3a8434cbf0bb6e56a1392a69fe9185669491f19b280a7ac"
+   },
+   {
+    "path": "data/derived/phenology/PCL0460.nc",
+    "bytes": 299328,
+    "sha256": "96fd3dd9fdef2ba6e700b26e55198c76b5a5cbcae15fe304c9188332ce1070b1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0461.nc",
+    "bytes": 299328,
+    "sha256": "eb74da92d9159327fd4d6e7c745d580a3a079c9967226963f74f7f8075375641"
+   },
+   {
+    "path": "data/derived/phenology/PCL0462.nc",
+    "bytes": 298636,
+    "sha256": "00a7c93e53de73d3000333527ed8b1cacc9005188efa8bcdd87a4cd2f0192093"
+   },
+   {
+    "path": "data/derived/phenology/PCL0463.nc",
+    "bytes": 298636,
+    "sha256": "937601736314db34ab668351a3a31e993bc50b7bf9b9526065dbebe6c16a6300"
+   },
+   {
+    "path": "data/derived/phenology/PCL0464.nc",
+    "bytes": 298636,
+    "sha256": "56fe9d5d11cdca2a995936c1ac44edb7c7f955e125c8326ea637342a3d6e1a2e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0465.nc",
+    "bytes": 298636,
+    "sha256": "da1f8cd906fc81f114dd12e41c12c72d06096f7c7b7ee73fba352a139ed8f7aa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0466.nc",
+    "bytes": 299459,
+    "sha256": "f596b49d1bff18cde61d2dc95f19fb6dfe165afae390ae123e2183e51760e7e9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0467.nc",
+    "bytes": 298636,
+    "sha256": "634246b269e3e1a86606788138f07977c5cce6b00b1d62786b900f9c7592fade"
+   },
+   {
+    "path": "data/derived/phenology/PCL0468.nc",
+    "bytes": 298636,
+    "sha256": "9fb813582bae8aa6c6f10a6269f11a0bd92b8d8ccdbbc78557fe4c4df9654020"
+   },
+   {
+    "path": "data/derived/phenology/PCL0469.nc",
+    "bytes": 298636,
+    "sha256": "5cd333a7fa7bd514c78751f55648703fadf34d95ef19d50572961bf715851782"
+   },
+   {
+    "path": "data/derived/phenology/PCL0470.nc",
+    "bytes": 298636,
+    "sha256": "af5eff42dfb565d32278a1442e08bd9d5bbbcd65331d9c3cffe561cead1db343"
+   },
+   {
+    "path": "data/derived/phenology/PCL0471.nc",
+    "bytes": 298636,
+    "sha256": "4a9b67e4db3a05cb028c6fde5a2b7723e416d012ba932a878766b0ec97828b6b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0472.nc",
+    "bytes": 299459,
+    "sha256": "42ff5bdd302944131ebd28e027e73555acd151d53e00cfcc69e4b05e4172211e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0473.nc",
+    "bytes": 335728,
+    "sha256": "ba483d99a44dc32b2e3f82e8c8073109483ba6e46a1c13d5dd3eae9a82aa89fd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0474.nc",
+    "bytes": 335728,
+    "sha256": "5da9dd46ec2f973d247fb64983cbf4734afceb0326d911496bef1db09afec4ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0475.nc",
+    "bytes": 335728,
+    "sha256": "acbb109cd048d61cd2a7557f5c8243245266bd851fbd51745a2e48d2f3547b95"
+   },
+   {
+    "path": "data/derived/phenology/PCL0476.nc",
+    "bytes": 335728,
+    "sha256": "4a637e80f3d425c162249cebe977a9e7e2afe1b3b718ced8b674225d6d4ee881"
+   },
+   {
+    "path": "data/derived/phenology/PCL0477.nc",
+    "bytes": 335728,
+    "sha256": "6f7908130b86a161aea0731b775a86e41663439921e662a678e1002e178e2423"
+   },
+   {
+    "path": "data/derived/phenology/PCL0478.nc",
+    "bytes": 335728,
+    "sha256": "989f55e40812410daca3cddaebab912fe77b0d186fd79d0a685009a1541149ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0479.nc",
+    "bytes": 335728,
+    "sha256": "acdbd85d1dd0e7eb97010ceb7e834b07e18d72a2f0e57ab228701ac1b257ea7a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0480.nc",
+    "bytes": 336420,
+    "sha256": "526f818c0427940a8060b50f966359fd1aa5391e855c4f01aafeb56b6d4e3fa6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0481.nc",
+    "bytes": 336420,
+    "sha256": "c4d86f9303c2f48c322548452bcddf6ff377dc96560ae603a54dbb02d8b6a3fa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0482.nc",
+    "bytes": 335728,
+    "sha256": "450d65e828d223e1d979f2dffc8fab23f59bb26870aaef4edcf256f94cd191ee"
+   },
+   {
+    "path": "data/derived/phenology/PCL0483.nc",
+    "bytes": 336420,
+    "sha256": "31c45ae503e7529ccee512278478543026c165ea04f50715ec4f91af7e9b413d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0484.nc",
+    "bytes": 335728,
+    "sha256": "db7faeb3a0cc6164cc5d6084a2c0ecb45e6e66520fba8c141a422be9e5297e1b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0485.nc",
+    "bytes": 336420,
+    "sha256": "e41096ccf717c80775a470c383467730e897221e642efa7b33b3d117383fd77a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0486.nc",
+    "bytes": 335728,
+    "sha256": "5e0ae5b1c69bac2ac30941db3cdbcd36a60b8ada8ccb385e1cac772a0eab6d9f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0487.nc",
+    "bytes": 335728,
+    "sha256": "c31922b31b13bb5e6e0c709b642a4ecdd761f24aa1e1b26e50ed45b201530a85"
+   },
+   {
+    "path": "data/derived/phenology/PCL0488.nc",
+    "bytes": 335728,
+    "sha256": "64a10fbc8c4efed01bdc4159050370a3c3406af3cbb8919dc09258fe781b6b23"
+   },
+   {
+    "path": "data/derived/phenology/PCL0489.nc",
+    "bytes": 335728,
+    "sha256": "49acf8b644ac5c4e8030a44c735be4c00e70e3db0389bd88cbc745fc79936598"
+   },
+   {
+    "path": "data/derived/phenology/PCL0490.nc",
+    "bytes": 335728,
+    "sha256": "683b04e959a6e8cbf1aab12da15ba64fce6e837e78c5a38cbae89d4c62726983"
+   },
+   {
+    "path": "data/derived/phenology/PCL0491.nc",
+    "bytes": 335728,
+    "sha256": "e19d7306cfc8b7fbc2b1372376c8a4f8aec548db9698de150224f89ad9c817bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0492.nc",
+    "bytes": 335728,
+    "sha256": "64660e87ba497ad69ebeede94af8193336b4a3785a7f627773764360affad823"
+   },
+   {
+    "path": "data/derived/phenology/PCL0493.nc",
+    "bytes": 335728,
+    "sha256": "13cc7d92ec94c943f3db6a4f14d973d43a9e4ca3ed38f0f6cec70b74915d1a7d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0494.nc",
+    "bytes": 335728,
+    "sha256": "02e4523ebca10f40a0884bf66a9c975a3c9f4f85564df8977791aad7506fa903"
+   },
+   {
+    "path": "data/derived/phenology/PCL0495.nc",
+    "bytes": 335728,
+    "sha256": "8b0bdf47bac2c0b00ab5fd6df2e1a8f2fb3a500b84e1d72ba4a7c4ec36576646"
+   },
+   {
+    "path": "data/derived/phenology/PCL0496.nc",
+    "bytes": 335728,
+    "sha256": "e4aed9b96f0b2b7d02c9919e28c9a06e8cd0d3261faa1697773c5e896623420d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0497.nc",
+    "bytes": 336420,
+    "sha256": "25b8ecfef92a0ddb6ec13a60dc91daf3d0f10928e707074d91ad5ba24b8e60d5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0498.nc",
+    "bytes": 335728,
+    "sha256": "ce6516ea6228ccd16d695a4e36c36bc7e3af93593e49a334345a15dc2885d1e0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0499.nc",
+    "bytes": 336420,
+    "sha256": "cfc52540767b7a3af8b3c6cfdf9303aae34eb833da30ff4ed7b7893e90ddfe3e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0500.nc",
+    "bytes": 335728,
+    "sha256": "964f575b3e25a7db5f75241d3c92af95615014c7be43ee2df92a7ea753f68933"
+   },
+   {
+    "path": "data/derived/phenology/PCL0501.nc",
+    "bytes": 335728,
+    "sha256": "c406291c215d22387b2fed9b2a0046b859c41e0a52599e77a504056e9c428db2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0502.nc",
+    "bytes": 336420,
+    "sha256": "fb20ef9d7eba66322893d69aa8ee6346e3c789ade42b693004bab179001d8f01"
+   },
+   {
+    "path": "data/derived/phenology/PCL0503.nc",
+    "bytes": 335728,
+    "sha256": "39780c0f1ee0c4170cf9c674d25048e81709fae1502f5ff11df76dbae4aa3622"
+   },
+   {
+    "path": "data/derived/phenology/PCL0504.nc",
+    "bytes": 335728,
+    "sha256": "d8de3a4ad3d9b3d8a6b438e3f8cc3b68fb1eee81aff7058e2c29c9319e311292"
+   },
+   {
+    "path": "data/derived/phenology/PCL0505.nc",
+    "bytes": 336420,
+    "sha256": "ccdc65e6209401478ed2ddcdd1e9d99a8ce1058a2cc90c9662a460316bb99bf3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0506.nc",
+    "bytes": 336420,
+    "sha256": "93f896719547e31e25aa99b569a94881ffdd72ae811f47865c0828d05cf8cfad"
+   },
+   {
+    "path": "data/derived/phenology/PCL0507.nc",
+    "bytes": 335728,
+    "sha256": "da277ef1c5bf50592ecfa5ac96f4fc57d554b14016578cc6af21235d1398158e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0508.nc",
+    "bytes": 335728,
+    "sha256": "d048b10a80e01d4cf87939d65a380f0da0ece701ced45a93126dd497e4ca1ad1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0509.nc",
+    "bytes": 335728,
+    "sha256": "24f528590ebeb5906b74e9544beaa60c8d338113e5160faa6352a894b91e6887"
+   },
+   {
+    "path": "data/derived/phenology/PCL0510.nc",
+    "bytes": 335728,
+    "sha256": "e2db2fbf12166cd5565bff759168cec780f6f0a8c12f328bdb0650a79dc34686"
+   },
+   {
+    "path": "data/derived/phenology/PCL0511.nc",
+    "bytes": 335728,
+    "sha256": "fdbc1ab66d5615acbd41ba04144827f1d202f7e9f306728a7af759b7001ae327"
+   },
+   {
+    "path": "data/derived/phenology/PCL0512.nc",
+    "bytes": 335728,
+    "sha256": "8d76420b85012196e56ddc5da1d224dd0f0d50865e4e4c64273511ba5fad1992"
+   },
+   {
+    "path": "data/derived/phenology/PCL0513.nc",
+    "bytes": 335728,
+    "sha256": "a2eb8bec78c2df825f544765de10ccba327886be893dcb157a3b0807649dde56"
+   },
+   {
+    "path": "data/derived/phenology/PCL0514.nc",
+    "bytes": 335728,
+    "sha256": "fa7c078fbf681efa1bd1fdd99960f7a70af6d1bd3e3e6148538d638adadb9d65"
+   },
+   {
+    "path": "data/derived/phenology/PCL0515.nc",
+    "bytes": 335728,
+    "sha256": "bda57b7cb658cfaf76c7d396fbb11a17b7ec18f8512a49fee3372ed3a83f2d6a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0516.nc",
+    "bytes": 335728,
+    "sha256": "f9297ac0b7f3947f43faa35c5101b99e44ddd45952012b92bf0d3674d6562039"
+   },
+   {
+    "path": "data/derived/phenology/PCL0517.nc",
+    "bytes": 335728,
+    "sha256": "d5b68322a856a5e11b85f00bfa195efd8e3a1b67b0c50ab4deff5bc49d57501b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0518.nc",
+    "bytes": 335728,
+    "sha256": "76428155e222181837bc031c55d41a5ddf42117667b3aa43ce3c09375e1152f7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0519.nc",
+    "bytes": 335728,
+    "sha256": "8ad141fcd50e6ca5e695df6d3d7a1c1ad784f46226ef090ebca683d267bf85aa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0520.nc",
+    "bytes": 425016,
+    "sha256": "a6044384d58cab1b87f5856f31466d8f9edba29aac4f24af33f3a869e677f9f5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0521.nc",
+    "bytes": 422276,
+    "sha256": "583acc7dfdc313962d9d8c5cfa91e87f46e2b38e4ed98ab48df0e29c5c381f80"
+   },
+   {
+    "path": "data/derived/phenology/PCL0522.nc",
+    "bytes": 422276,
+    "sha256": "09287fe11e62363ea15765e71c651e0e1af029e606b476bf82a51786572a4952"
+   },
+   {
+    "path": "data/derived/phenology/PCL0523.nc",
+    "bytes": 422276,
+    "sha256": "8d2933c955eee9ea51151881f5f5940a6eaf9a388d29861334ec47a5a2ea67b1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0524.nc",
+    "bytes": 422276,
+    "sha256": "550b7736ceb6c6e53f54b70f51ba00f2d719bbf10b31fee1da4a4174355c23f3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0525.nc",
+    "bytes": 425016,
+    "sha256": "c6ff56e6bc120ec9061965fb1943a3c982e0194c84a15c79a3e0a08d6ace64da"
+   },
+   {
+    "path": "data/derived/phenology/PCL0526.nc",
+    "bytes": 425016,
+    "sha256": "d75234f74a833deff41800c127db0f0894f9bfb5e531ea28870f919362038f69"
+   },
+   {
+    "path": "data/derived/phenology/PCL0527.nc",
+    "bytes": 425016,
+    "sha256": "5a5bb269f571e691527e9aa4cdf49160bca366d84c8d564c15e73daa61e83191"
+   },
+   {
+    "path": "data/derived/phenology/PCL0528.nc",
+    "bytes": 436688,
+    "sha256": "8961113ddddb29e04d7a6c7fefb142a8efd76175eca4815fa3eeb2d5a48b2e38"
+   },
+   {
+    "path": "data/derived/phenology/PCL0529.nc",
+    "bytes": 436688,
+    "sha256": "35fdad3ffc93ef3002cde5cfdd5443781d05f77dd9467e7e9ffeae25c5542dad"
+   },
+   {
+    "path": "data/derived/phenology/PCL0530.nc",
+    "bytes": 436688,
+    "sha256": "776db2a9bbc28636d3f9c9fb13d234f42f75dcf7137d6a19e54a8defdf600d5b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0531.nc",
+    "bytes": 436688,
+    "sha256": "061034598f2df803f2e0b67e5c20295ef8cacc5e6ebdffb18c37dd4acb8dd173"
+   },
+   {
+    "path": "data/derived/phenology/PCL0532.nc",
+    "bytes": 436688,
+    "sha256": "42cf233d3dfb6a04189f163f2027168e76291f3903eedc3fed77635603e9ba83"
+   },
+   {
+    "path": "data/derived/phenology/PCL0533.nc",
+    "bytes": 436688,
+    "sha256": "8ad31675fbad191612b71736be6abb3f197baabec28113de3d2df62a7f2f2537"
+   },
+   {
+    "path": "data/derived/phenology/PCL0534.nc",
+    "bytes": 436688,
+    "sha256": "782abfc4b1f3659f0efb2dd3c4315a7413fb5e0d4e54683f05041edf3c8ea88c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0535.nc",
+    "bytes": 436688,
+    "sha256": "0d443a5d6acf5050fd816497c8e0d3f213fa77ecced6ddbcac7a9117cb7de636"
+   },
+   {
+    "path": "data/derived/phenology/PCL0536.nc",
+    "bytes": 436688,
+    "sha256": "709ce45c67aee3a46165ffb52a79b6eebed5e9ae64331bfaba0e32b0e6290e12"
+   },
+   {
+    "path": "data/derived/phenology/PCL0537.nc",
+    "bytes": 436688,
+    "sha256": "ae05bed7e3562f00c8a62d4526474b103bb331c77c5a2481920c2c9682741000"
+   },
+   {
+    "path": "data/derived/phenology/PCL0538.nc",
+    "bytes": 436688,
+    "sha256": "a7b8f1fb004dd490ac5ddeb5f5b64c0777576061df96c0f25a931ac6715917c1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0539.nc",
+    "bytes": 418904,
+    "sha256": "3dfe783402126e2f070aac3eff8a7f4960917710e25e5b0489ee8fe3df773f20"
+   },
+   {
+    "path": "data/derived/phenology/PCL0540.nc",
+    "bytes": 418904,
+    "sha256": "d0e9651df4ef4fef9b51862d792f85fc3505bca47481dda849b1aeeccab0fb52"
+   },
+   {
+    "path": "data/derived/phenology/PCL0541.nc",
+    "bytes": 418904,
+    "sha256": "6e48e9baeaf1c04480ed2ae4b5a35e54f7f3ca37fb87aa36357be0c30a9dbb6b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0542.nc",
+    "bytes": 418904,
+    "sha256": "26cf5c26605b3547f7ab9c17f328cce13f82943f53d44beb37140b3e853a252e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0543.nc",
+    "bytes": 418904,
+    "sha256": "61d68cef7672169311cfdfae458d018d3c51ceed492d73abb071266b9eccbe76"
+   },
+   {
+    "path": "data/derived/phenology/PCL0544.nc",
+    "bytes": 421644,
+    "sha256": "cda7fcd3934ce8654fa314c322be17d88df1f9f1f7a6ea3ef9ac91f0e416f302"
+   },
+   {
+    "path": "data/derived/phenology/PCL0545.nc",
+    "bytes": 421644,
+    "sha256": "06a33477f1fbee267e78218441961eb0817453b923c4b494dd662c0280da9ef5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0546.nc",
+    "bytes": 418904,
+    "sha256": "afceda6983db104df3e76c14d0f2986d5cf0ca08318edd0c644c4b139ea357be"
+   },
+   {
+    "path": "data/derived/phenology/PCL0547.nc",
+    "bytes": 419727,
+    "sha256": "e9ba8f5ad72866f98ab3b22340b51f3fd399e552032e081c0f7b21199d8bafd2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0548.nc",
+    "bytes": 418904,
+    "sha256": "fd2aa2c91ed781f0afbf07acca8468e8deae04691ce3a75fbc60c62034f30cb0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0549.nc",
+    "bytes": 418904,
+    "sha256": "7fb40c886340b608824ce5dca4b37d54b80db63ae904ef413df90a7da0a0b1ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0550.nc",
+    "bytes": 422768,
+    "sha256": "93f618f86470271d6c02c2639f2e70b91eeeeadf4f3ebe8e88da96eb94cfafbb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0551.nc",
+    "bytes": 422768,
+    "sha256": "3453feb1ee1bcf3571cdb49c468b03f2a82296041ce2ca555cd63b54e7cb5703"
+   },
+   {
+    "path": "data/derived/phenology/PCL0552.nc",
+    "bytes": 422768,
+    "sha256": "5814665801a1ce48312d9dfa0c9f4e0aa96310408696f1151e9987c08616c9f8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0553.nc",
+    "bytes": 451086,
+    "sha256": "0190e8d59c03e20946354b6624d99c4061270e5e578a295e681fad44e03c3964"
+   },
+   {
+    "path": "data/derived/phenology/PCL0554.nc",
+    "bytes": 451086,
+    "sha256": "3e15ca3122aaf0c9d6b56e26971dce6e03d7dc02f9bc57e4333e4c978501c9e7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0555.nc",
+    "bytes": 451086,
+    "sha256": "4674673494568085421f6c265b4fcf33dca2db1bb52d3c9b1aeebe1cfd5ddb49"
+   },
+   {
+    "path": "data/derived/phenology/PCL0556.nc",
+    "bytes": 451086,
+    "sha256": "15d55cad37b95c22a94dfa078487cb9de1123e49906c96623a44d1112b446a51"
+   },
+   {
+    "path": "data/derived/phenology/PCL0557.nc",
+    "bytes": 451086,
+    "sha256": "7fd0e4d0529c0f4f0a4c76f40b4b84e91aea3e562d7cce67fa38de7159f59715"
+   },
+   {
+    "path": "data/derived/phenology/PCL0558.nc",
+    "bytes": 451086,
+    "sha256": "b8733e28000592418b63f866a9777a1b40330e4c3418e9200459133ac759331a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0559.nc",
+    "bytes": 450263,
+    "sha256": "5ddf73b2880aaea25bfb32e11601844fbe7c89361e8f789a007cf33c4ef76b7f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0560.nc",
+    "bytes": 451086,
+    "sha256": "1145560caf29f8479a3bb8be0520f2bf74e6e04f6c33093a28a224f5cbe5d57e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0561.nc",
+    "bytes": 451086,
+    "sha256": "2b4232fbd6a88ee6bab8d0a077a67648e1fba6ed3f76b5213a7245d6137b767f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0562.nc",
+    "bytes": 451086,
+    "sha256": "d47468e94707d61834dafc846586ab81f3cc24e7edd135f119ac8ca5c90fe125"
+   },
+   {
+    "path": "data/derived/phenology/PCL0563.nc",
+    "bytes": 451086,
+    "sha256": "07fe56e407d6d12dd2683f2704f009feb18ef7e99868e278d59cebd11fd9c68d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0564.nc",
+    "bytes": 299459,
+    "sha256": "9170ca13d4658d47a9ca9383d303ba29dd4ceacc2b10262fa8e8e1b1c5adcbc2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0565.nc",
+    "bytes": 299328,
+    "sha256": "343b8a9f7ff1af8ca728e543def8333081d8db36de403cf81bfa821ed0d96d6a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0566.nc",
+    "bytes": 298636,
+    "sha256": "d65bd21c99360121114071b561622c84b77b38675998d83a46a15e7ef30a82cb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0567.nc",
+    "bytes": 298636,
+    "sha256": "55a46ce9820b5900c0dfe1036eda48e96eb67a6971e0f16dcd5fe6ac1ef4b1ad"
+   },
+   {
+    "path": "data/derived/phenology/PCL0568.nc",
+    "bytes": 299459,
+    "sha256": "87f000aa0a920fa403ce3af41ac43cd8801969255ff3d980a71686ec8f3a01c4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0569.nc",
+    "bytes": 430636,
+    "sha256": "5b0124ea98b722de6002cc3d7f1104424f984090fb9caed8c05c200d3792c7a5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0570.nc",
+    "bytes": 298636,
+    "sha256": "8830326f6cf8e44a03178e2940204861d0bbb583f12e2de9bed505c53e0b2135"
+   },
+   {
+    "path": "data/derived/phenology/PCL0571.nc",
+    "bytes": 298636,
+    "sha256": "7d8099245c6804538bf4a3bd62d2d02b92a2525a07cf7868d2869ba7180dbefc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0572.nc",
+    "bytes": 299459,
+    "sha256": "1c1206d49db634d9af5d4f9a13db52ff0fbd25e4811f77b2bfaea672350690a5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0573.nc",
+    "bytes": 354404,
+    "sha256": "1aab0e5d23392e8c9da15efcbfe6eba810afc3ff1e7c0b51b75144d03549ce86"
+   },
+   {
+    "path": "data/derived/phenology/PCL0574.nc",
+    "bytes": 299459,
+    "sha256": "ca4ea2f1f1a710fdc7bc76251d89d1999cd66501df78b946bfffe69b4c248ae3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0575.nc",
+    "bytes": 299459,
+    "sha256": "9b4b8bbb25e512db2c22f6d2003bd9a5bb64ebbb4d583c3ac91b75319264f582"
+   },
+   {
+    "path": "data/derived/phenology/PCL0576.nc",
+    "bytes": 298636,
+    "sha256": "ef6a21fbc34f45d988d492f5be0397d22b829a554a31dcedd89100051c7ee0cf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0577.nc",
+    "bytes": 298636,
+    "sha256": "48abe6fa57bc3b947301095431f6bed6a0e1d7d5de2f7b90d9b0197a1211292b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0578.nc",
+    "bytes": 454776,
+    "sha256": "9e560265746d4d62d9f9aa97e407c69b128357467226052b705ded06d21edf11"
+   },
+   {
+    "path": "data/derived/phenology/PCL0579.nc",
+    "bytes": 236093,
+    "sha256": "bf79fb22915267a0b5611ab0e637907a345ac751a3da79f37ac49d063e12afb8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0580.nc",
+    "bytes": 236093,
+    "sha256": "ced89c2e767500040edb27ad1b605fdc485e89cbe07a297fc68b1a13f2d3aa44"
+   },
+   {
+    "path": "data/derived/phenology/PCL0582.nc",
+    "bytes": 322240,
+    "sha256": "d9c3927df9dff95f9ff44744f686ac69e0d2e764caad317f5f74490b9646368a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0583.nc",
+    "bytes": 236093,
+    "sha256": "06464bdc23cbdcacbe27aee975cdbc4f7069a95a9f24336d9e6427015d4d6359"
+   },
+   {
+    "path": "data/derived/phenology/PCL0584.nc",
+    "bytes": 236093,
+    "sha256": "f33a836b4b4556eb2b1e28dea96fc3417333e64583bf02bc5207fd04bc034359"
+   },
+   {
+    "path": "data/derived/phenology/PCL0585.nc",
+    "bytes": 236093,
+    "sha256": "1105e3229377c9ee4235d73074916104ae6eb2ef5110a0dab3650e59e83f279b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0586.nc",
+    "bytes": 236093,
+    "sha256": "a2698f5ef20d206de61ea0a97d6c70ee528f1eadcc5fdd0ac344cd5ff86e1947"
+   },
+   {
+    "path": "data/derived/phenology/PCL0589.nc",
+    "bytes": 253015,
+    "sha256": "9a4d81811fd7382bbb8e064dbabae0a4fe473cec9a17c998b3520a2b24763b1f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0590.nc",
+    "bytes": 245496,
+    "sha256": "6c6dc4ec0ae1bbdf557c46ada0b8e7f86b434698cd73b8b6d31c598825f3b1c2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0592.nc",
+    "bytes": 346667,
+    "sha256": "5f0c038766069a475b5a00c6b18508cc49a4e7711823eb07d5ba8362a6fa70f2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0593.nc",
+    "bytes": 322240,
+    "sha256": "032e380723f17e5480ef32330a7e399c03b63a56161cb27b4d0a1608c80d434a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0594.nc",
+    "bytes": 245203,
+    "sha256": "ca831af989ab1bd5a198236a7adf2335d9fa5ca920ea7749e084258e8c6f38d1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0595.nc",
+    "bytes": 243264,
+    "sha256": "1ee0f2de5d977c0b9b2d4ac0442e45f3025a31e95cef49955784a9b4b04250b5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0596.nc",
+    "bytes": 317744,
+    "sha256": "6e51e8d86cc49ccefe7c4049f3bf4a775e64845cfaafc39d823f587d23122d03"
+   },
+   {
+    "path": "data/derived/phenology/PCL0602.nc",
+    "bytes": 244380,
+    "sha256": "41ccea0b291f0696f43646cdde60d3e23c7dea6136eb429b2c72712c3ea85ac4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0603.nc",
+    "bytes": 236931,
+    "sha256": "6b67c3a9659b90d56f567cb8a11f50d803dc9f4a9807aa75546078b29e53a72f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0604.nc",
+    "bytes": 236093,
+    "sha256": "541d53840b61c1b208741dc168cb0fba42e317e8dee71e79650f8ee469204a23"
+   },
+   {
+    "path": "data/derived/phenology/PCL0605.nc",
+    "bytes": 241032,
+    "sha256": "7cdf3fd05ba4d67b2a7fac2c71d7711d110fffd671f94d325a52d02a10f4d90e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0606.nc",
+    "bytes": 318868,
+    "sha256": "280e1afca2ea591d387be74d4ee20310c8f70a5de82a0c8eeba47f1613cc7a9f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0607.nc",
+    "bytes": 327860,
+    "sha256": "8735fe947d33de0dcaab2cbd3fd1c3c2723d8c21ab399347998b38ad3dc03c97"
+   },
+   {
+    "path": "data/derived/phenology/PCL0608.nc",
+    "bytes": 328984,
+    "sha256": "81c4d50ad586ebe74181faa549ac6efb7facaf4a11a5465d2243dce5fa97f148"
+   },
+   {
+    "path": "data/derived/phenology/PCL0609.nc",
+    "bytes": 328984,
+    "sha256": "1fd39b63070129f2981a34b643fbfc72930bf57406d094365712f54356ac7b95"
+   },
+   {
+    "path": "data/derived/phenology/PCL0610.nc",
+    "bytes": 317744,
+    "sha256": "a62fa39f439ab5bd0d4935420d18fa629f1f6631fd0d084649f5039ccdfc397c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0611.nc",
+    "bytes": 236093,
+    "sha256": "59357ccbc569817e8a2d33a932602961de8753671b316bccf8e8a492be09a39b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0613.nc",
+    "bytes": 235808,
+    "sha256": "8d7588fc0daae86efa289181aaf76ce49722eb4750612f4918f7ce72b66654b8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0616.nc",
+    "bytes": 311000,
+    "sha256": "db451e6b516ad6d09849581c34f32dcd54fda765ea6543aa43639dc7bd73ad08"
+   },
+   {
+    "path": "data/derived/phenology/PCL0617.nc",
+    "bytes": 236093,
+    "sha256": "63c20bc0abd555e06e20fd74c38cb1346205d6853ca31d97e6138c646ac1a175"
+   },
+   {
+    "path": "data/derived/phenology/PCL0618.nc",
+    "bytes": 249960,
+    "sha256": "cedef0cf15254469c42f081b0f25dbb4a1dd9541eae947d05926e2f819e834d6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0619.nc",
+    "bytes": 318883,
+    "sha256": "441d3531b708a171f1d04d78f7a93fd3226320fd0e6cf42b8153413ef6fba082"
+   },
+   {
+    "path": "data/derived/phenology/PCL0623.nc",
+    "bytes": 239916,
+    "sha256": "e506cbf719fb47d85f42f2b6f5cc02ca1d0962f402ddcfbdea3840f64a658f4f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0624.nc",
+    "bytes": 236093,
+    "sha256": "cdf9c0464df1c15ae4d0b3614828f40eae277ce80d91a07491d5e5ad20be214d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0625.nc",
+    "bytes": 236093,
+    "sha256": "9a25df230cae963e022958fd09c5c0064a5db6178daa9fccdd944f6bdf21713e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0626.nc",
+    "bytes": 246627,
+    "sha256": "0828590743cdaec1dd5582668649b3b219b55465783d789b09160cf7d50ffce6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0627.nc",
+    "bytes": 233877,
+    "sha256": "99bf674e27ec167b027a819e2cfde3d65b2bc556610940662246f0583ec2ee54"
+   },
+   {
+    "path": "data/derived/phenology/PCL0628.nc",
+    "bytes": 233877,
+    "sha256": "4bd43798543d75f57cd86b1a8458046ac7afd76c54264f67dbe8cb1194870b77"
+   },
+   {
+    "path": "data/derived/phenology/PCL0629.nc",
+    "bytes": 330108,
+    "sha256": "76eca4999242fa578783860d7be1a1ffe18f2bd9715d853643f684ba85a86626"
+   },
+   {
+    "path": "data/derived/phenology/PCL0630.nc",
+    "bytes": 231661,
+    "sha256": "9fd2200b51003ceccee37c4dcdc3ce70f3e67a8d180ace6bd8b6c983a8a7ee96"
+   },
+   {
+    "path": "data/derived/phenology/PCL0632.nc",
+    "bytes": 238800,
+    "sha256": "db14da052222abc2983b72422649d8d90dd2edb0839e915cd1dc62b4161d2333"
+   },
+   {
+    "path": "data/derived/phenology/PCL0633.nc",
+    "bytes": 236093,
+    "sha256": "d85670af4332318cb872f34f660c8bf99f1ffa22e01918d67a6f29764156c0cb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0634.nc",
+    "bytes": 232784,
+    "sha256": "a30dc0cb7361b5d15463ad7f6eb0043c6c62a5d73b2b2d0cde5897550bdea1b2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0637.nc",
+    "bytes": 252192,
+    "sha256": "68765997c01420974d2d3053b29a321854266d8103a3dfcc15eb576d72828208"
+   },
+   {
+    "path": "data/derived/phenology/PCL0639.nc",
+    "bytes": 236093,
+    "sha256": "4215d1d653ff67eecd4234c8ea6127c844426847fd26ce6c835e2f106232f45d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0640.nc",
+    "bytes": 234985,
+    "sha256": "c8714bbef46d4baf8ea07e23e7dda7422cbd646c4df363a677f47942f0668b1f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0641.nc",
+    "bytes": 318883,
+    "sha256": "2a30456e5b3635d3b7dadaf74e7b9fd9a78173b624827c2822657fcfed589728"
+   },
+   {
+    "path": "data/derived/phenology/PCL0642.nc",
+    "bytes": 236093,
+    "sha256": "a83f9e1600cdfab93548bc170181f816489da32e65e49cc05057881714ed79b8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0643.nc",
+    "bytes": 317744,
+    "sha256": "f61caa5de237dbfc27a33dc10b7d82be274eb6ee9955e708cf235354b90cdada"
+   },
+   {
+    "path": "data/derived/phenology/PCL0647.nc",
+    "bytes": 233877,
+    "sha256": "d8ea8541528801ec4f7180b21cb7ba6d63c9df31453de907ca4c86f32b81dc18"
+   },
+   {
+    "path": "data/derived/phenology/PCL0649.nc",
+    "bytes": 236093,
+    "sha256": "0bd0668a728e8cee85db07cb7b87505e30845fb11e156d283822f2800cb2ed9a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0651.nc",
+    "bytes": 244395,
+    "sha256": "965add9cc1e1f2a15152d2e770f5f4a3c7f5f375608cc7a10a4a5208611ed06d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0652.nc",
+    "bytes": 245087,
+    "sha256": "a00e84c9285ac366e7387cf65b016f4269290400801f38bebc8d4e1d21417cc1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0654.nc",
+    "bytes": 322255,
+    "sha256": "addfa2433edeb9465373c58f2e216c09c2fed3dc8574d0a99bf07aa1844287b3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0655.nc",
+    "bytes": 322255,
+    "sha256": "792c99b4128bb4244411c6eca91117e89b096d6760b8554c6d507e6159a46085"
+   },
+   {
+    "path": "data/derived/phenology/PCL0656.nc",
+    "bytes": 322255,
+    "sha256": "a02ff8e7198374822109383ac5501959fc2182ab3dcdb30e0c25c13a908467da"
+   },
+   {
+    "path": "data/derived/phenology/PCL0657.nc",
+    "bytes": 327875,
+    "sha256": "ce243bc2611a442c8b51a1c1fb24a74e7a344422b6999802fcd91d01fede39c4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0658.nc",
+    "bytes": 244380,
+    "sha256": "ef8ec2f20c66ed1310ac7527b1c2f513e4d8b4c8275380f9df937e5a3ab18df7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0661.nc",
+    "bytes": 236093,
+    "sha256": "a8bdc2cc23d0261ebf82b2c1ac2f5b047d0d6e94bb440db25db1b18fdfea4aef"
+   },
+   {
+    "path": "data/derived/phenology/PCL0662.nc",
+    "bytes": 233892,
+    "sha256": "9075d37252b9338bd99de2965fef4d072888616b3db05bbc5a5875eba95910dc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0663.nc",
+    "bytes": 337976,
+    "sha256": "134734762139a310cc5334e57df65c620fcf2fc65a5fed6dc5b6c8430c71b84f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0664.nc",
+    "bytes": 292669,
+    "sha256": "9081e303629b4923207f7648ba6cc04bdb25c15ebeb93d4dd49feccc23859dbf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0675.nc",
+    "bytes": 291892,
+    "sha256": "5f2fbed61bbbe7fbb4a8d9454c7ab1fbf6dadaa34cd9089dbb2230e78f9ad479"
+   },
+   {
+    "path": "data/derived/phenology/PCL0676.nc",
+    "bytes": 292715,
+    "sha256": "47d92c734701083d8407466cb56c988ccb8d7b64a9097442c976f28dd2fa3828"
+   },
+   {
+    "path": "data/derived/phenology/PCL0677.nc",
+    "bytes": 447675,
+    "sha256": "7b465c2a04b0eaab460127946b03514c4cc676dcc13c729746548bc36373e8ee"
+   },
+   {
+    "path": "data/derived/phenology/PCL0678.nc",
+    "bytes": 416309,
+    "sha256": "94c66943839167204ead8e544ff492d515d5e6b82e8a34d2605015f238ff364a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0679.nc",
+    "bytes": 362403,
+    "sha256": "23d306d863c815fe5f301dbaed33477f76e99b2f570406b3126c7420f3ccf393"
+   },
+   {
+    "path": "data/derived/phenology/PCL0680.nc",
+    "bytes": 289644,
+    "sha256": "bc8b2a70424dda649bc3e7a34803f14575be0d1dcaf4d98df5a74effaf5f4c89"
+   },
+   {
+    "path": "data/derived/phenology/PCL0681.nc",
+    "bytes": 422768,
+    "sha256": "cf1755fc0d65dbc02e5a2c7e5deb35fdbe3acf38d918383b790e8c57526c46dd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0682.nc",
+    "bytes": 334604,
+    "sha256": "1fec22f2b27df36e5457dca99b854301f61c772c3dc55bd1d5cb9b845e9f8ab3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0683.nc",
+    "bytes": 260696,
+    "sha256": "6c5e4e6cd7ffd647d753e6fb6d6528e77662c1d8cdacb700707aa350aef2cb06"
+   },
+   {
+    "path": "data/derived/phenology/PCL0684.nc",
+    "bytes": 351464,
+    "sha256": "cab2d900862480e645f6335d355525e8b5b5a8672c0923ac064a48fe8805f4f8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0685.nc",
+    "bytes": 354836,
+    "sha256": "f7f4a23e7710db8a1ab70616c1575e75654e822406a6170c5e6466e4ae89e2e1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0686.nc",
+    "bytes": 271987,
+    "sha256": "25531f19f210bd609f753e4399bf651b14d29e5c2d8d9799bd19ed6ac4a50997"
+   },
+   {
+    "path": "data/derived/phenology/PCL0687.nc",
+    "bytes": 310699,
+    "sha256": "25eed52a63c75f605b1e9ee862e9fd5c7c73ffaa182d7d89d2d60522f6fb068c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0688.nc",
+    "bytes": 352287,
+    "sha256": "b6140556de5418ea2c442bcfb681b40c98c4a8a3cc321a6c99e581ec1340f449"
+   },
+   {
+    "path": "data/derived/phenology/PCL0689.nc",
+    "bytes": 259711,
+    "sha256": "2581087cdfa90189eb70b068891d1ea103b1b158d4251f4af3758908a66a138a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0690.nc",
+    "bytes": 259711,
+    "sha256": "db21106cad22b1d87f095351a86c66111bef3d9b4a02e39c2dd24d3b3d95a368"
+   },
+   {
+    "path": "data/derived/phenology/PCL0691.nc",
+    "bytes": 339923,
+    "sha256": "49235f8b4c3f4ecc201a1579140a18148a3c8af706cc9a03e9542c54f2cdddc1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0692.nc",
+    "bytes": 353411,
+    "sha256": "ac10ff4e12b3e62108b5e27884650b47d9c7ba6a9842866e212db16c42e042ca"
+   },
+   {
+    "path": "data/derived/phenology/PCL0693.nc",
+    "bytes": 352588,
+    "sha256": "950e2157012c05da31f41b5c72f5b69e0572ac4094e0cf41623cb1525751d64d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0694.nc",
+    "bytes": 354836,
+    "sha256": "f09fe4fc34c8775f5a3745c653b84de76feed026233eb2eccf78a626fa04878e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0695.nc",
+    "bytes": 354836,
+    "sha256": "ed110ed95c4fcbf9638bfa6e8667a17d06a35e32a2705f9895bb5c72c0bd02f2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0696.nc",
+    "bytes": 355659,
+    "sha256": "7223c2c2929376257daf107e87608a7dc881b4e5d997b861b4d8c1f21ea4f0c7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0697.nc",
+    "bytes": 345543,
+    "sha256": "f8efda07f3773d70bc00234491126cc7688ca0c40e91cb83f27656dafb2c29ea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0698.nc",
+    "bytes": 258888,
+    "sha256": "ae788df83525131456bbe94b77b56615baab85c053203367afed1447aced60de"
+   },
+   {
+    "path": "data/derived/phenology/PCL0699.nc",
+    "bytes": 260004,
+    "sha256": "d4e4874a2dee05e232a26d3c57a9f1d9decb2599406f7819b15a95bee2bcd106"
+   },
+   {
+    "path": "data/derived/phenology/PCL0700.nc",
+    "bytes": 260827,
+    "sha256": "93fc8459662706f18c60b9290c8a4c96ffce06d49c84a12fd5d8b870eb1cd4fb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0701.nc",
+    "bytes": 260004,
+    "sha256": "aec7e294cac2f6aae99f1684ecafe5b0de21984a59c1a2680634cf2fffdee498"
+   },
+   {
+    "path": "data/derived/phenology/PCL0702.nc",
+    "bytes": 260004,
+    "sha256": "93f1da320d6d9f4814914d082be91a3abfa4d1272182be97a6efdeae1a72486a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0703.nc",
+    "bytes": 260004,
+    "sha256": "6fb2627e21e12a4047f0135aa99b156cff4f04d83c09df590f5820e173bd99c0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0704.nc",
+    "bytes": 260696,
+    "sha256": "9d9dbefc8ec0783ea26f093dbd2597ac7ca6ddc0f9600e404aa6b2eee569d43f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0705.nc",
+    "bytes": 260004,
+    "sha256": "11d25c9f085e72f2ec399790cc4ce86c992812e3a5840de35d2b2252f4fd3981"
+   },
+   {
+    "path": "data/derived/phenology/PCL0706.nc",
+    "bytes": 260004,
+    "sha256": "a2034277ce295fb9779d11bf2db493bd4e8e964874123809b233eb5ee124551e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0707.nc",
+    "bytes": 352588,
+    "sha256": "b251afb736bfcfc55c730c81d7bdceda6ba8bfa29daa278392358408fabefb9e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0708.nc",
+    "bytes": 353411,
+    "sha256": "04108bce952fb5c363d29586a314093e66bb45923ebfc452906edb11cc39013a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0709.nc",
+    "bytes": 352588,
+    "sha256": "7c4401800fd0799a55ece1c5528cf1b6614db64da714cf49c68179e34d7ac10e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0710.nc",
+    "bytes": 350340,
+    "sha256": "5e52f8fd06cfdfd2aa76458dd0e4100f5ecbc55e7b7b1cc305fa745d85e98a01"
+   },
+   {
+    "path": "data/derived/phenology/PCL0711.nc",
+    "bytes": 352588,
+    "sha256": "27881569d3e69151e5980a1555721562743d4d94372bb61d83818456b52622b9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0712.nc",
+    "bytes": 352588,
+    "sha256": "8839783cf062cb0cf83a178419cf4937108b5574d2fcf4c0489bbebe45e629db"
+   },
+   {
+    "path": "data/derived/phenology/PCL0713.nc",
+    "bytes": 353365,
+    "sha256": "00901eb5a9ac5165f4acdd2bfdd435795acf4f143707bb4178a5df60b5f281b2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0714.nc",
+    "bytes": 372820,
+    "sha256": "a10d9a917cf3b20909db8917b052a7c60356b7a315da445c94995080e0c6bb23"
+   },
+   {
+    "path": "data/derived/phenology/PCL0715.nc",
+    "bytes": 372820,
+    "sha256": "9492aaa17b399affa0fc5e9e6837f79c775fbd66829f797a2a7adf80e803eff7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0716.nc",
+    "bytes": 373512,
+    "sha256": "ab0315d50894818f7d80d161eea85b34bd7999c2ba87fe6cb17934a664f23004"
+   },
+   {
+    "path": "data/derived/phenology/PCL0717.nc",
+    "bytes": 321116,
+    "sha256": "8ed29fe57efa03996f9177b43e7b2624e6cee7187538a7178b838a76988888c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0718.nc",
+    "bytes": 321116,
+    "sha256": "bb92244e582f8c816a444518cde5046b5e7938938dd8f2fca9dc846d793cb1d5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0719.nc",
+    "bytes": 321116,
+    "sha256": "d946d845bcaba154cfc31e1b7de922b8e14c8182ac0b92573777c534d74de91f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0720.nc",
+    "bytes": 373643,
+    "sha256": "1fe4cf1d10d733164ecf34636c4ab330615eb01e066dec591610c7c7e16d0e75"
+   },
+   {
+    "path": "data/derived/phenology/PCL0721.nc",
+    "bytes": 372820,
+    "sha256": "2996de5797135dd867bec401b19606593135ff6fc69357df59ba1c3d7537e61d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0722.nc",
+    "bytes": 372820,
+    "sha256": "0fcc655a1af28865431f88fcfaa3953a875edc9fa62d1b7e7825a12c99a17f63"
+   },
+   {
+    "path": "data/derived/phenology/PCL0723.nc",
+    "bytes": 372820,
+    "sha256": "90bb3975a9c102d1673756b8ca617ff780403d90dce596e41ab3735bf423f0dd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0724.nc",
+    "bytes": 373512,
+    "sha256": "f63b4ade2a065b2a92e0b3c85a17e56e907da598f1334e1e0cce39bb2bd05436"
+   },
+   {
+    "path": "data/derived/phenology/PCL0725.nc",
+    "bytes": 353280,
+    "sha256": "c47c88c13f8760c72d1a74f2ff8d1eaae406c2c33096dc9547dc703cf7c54403"
+   },
+   {
+    "path": "data/derived/phenology/PCL0726.nc",
+    "bytes": 352588,
+    "sha256": "0b02315c0dd8d0fdb3b6aa37b11cad15cbc7270db970307a02f48b4533fab183"
+   },
+   {
+    "path": "data/derived/phenology/PCL0727.nc",
+    "bytes": 258888,
+    "sha256": "36016d7c3d809c073ef575dd952f80b9d843861fa7fb43807031a2fd5e061b3d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0728.nc",
+    "bytes": 258888,
+    "sha256": "a307387e8903b067845009db7c521268411f5d54206896010072e0fd0bc3f849"
+   },
+   {
+    "path": "data/derived/phenology/PCL0729.nc",
+    "bytes": 359031,
+    "sha256": "4f8d6dec22877b4b532c5f42f91cb27654d4d69a66e814e2c5ced7be74225223"
+   },
+   {
+    "path": "data/derived/phenology/PCL0730.nc",
+    "bytes": 358208,
+    "sha256": "197dc346babd58760211058dcb431b11e601829958848099e32ba3a552804827"
+   },
+   {
+    "path": "data/derived/phenology/PCL0731.nc",
+    "bytes": 359031,
+    "sha256": "76d416e38de028e3c761f0aa48df35bbd25dfe7b33f420e7111a1849f6d3d3cf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0732.nc",
+    "bytes": 359031,
+    "sha256": "7ddb451735636ff29e61c8e770bdb4ed6e340ebd242e0f9c2655ae07514ff804"
+   },
+   {
+    "path": "data/derived/phenology/PCL0733.nc",
+    "bytes": 359031,
+    "sha256": "89de531e3bfaf4ed2f251905a6432c6e8175d67963758d8a478aa0b2003964de"
+   },
+   {
+    "path": "data/derived/phenology/PCL0734.nc",
+    "bytes": 358208,
+    "sha256": "ea540d5fd60c080a1a46aacb3a92a8a6cbc9a4dff001b6d96fbdb087d740cbfd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0735.nc",
+    "bytes": 373643,
+    "sha256": "85f8ee291bb06655fe319e7e4e3428c47e7b774def566b41aec4c90f2d1fd739"
+   },
+   {
+    "path": "data/derived/phenology/PCL0736.nc",
+    "bytes": 373643,
+    "sha256": "5b8b49c55569a572379f1295b20fdc02d16d81aad3f2dfbe6666278f96d90765"
+   },
+   {
+    "path": "data/derived/phenology/PCL0737.nc",
+    "bytes": 353411,
+    "sha256": "2ebe808d77126f326fd4e9a7e10bee56b0eb223a43c9a5d38b0cb546c0cc7bb5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0738.nc",
+    "bytes": 353411,
+    "sha256": "439b63664303321da7f2d99f18e5ff5d0723579961795ecafc6c69958629e133"
+   },
+   {
+    "path": "data/derived/phenology/PCL0739.nc",
+    "bytes": 353411,
+    "sha256": "3af4b4388701e42c73bf5996811ae327f041f86d55f865334f5ee90d41921c93"
+   },
+   {
+    "path": "data/derived/phenology/PCL0740.nc",
+    "bytes": 352588,
+    "sha256": "31d0044cd6646f573652b6bd1dedd40a095c58742031c1fc76377d6a32d2233b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0741.nc",
+    "bytes": 352588,
+    "sha256": "f8d32497ce5460356ee9e4c6db499348e0d7da0aa72126ae7a89f7af7f3ff469"
+   },
+   {
+    "path": "data/derived/phenology/PCL0742.nc",
+    "bytes": 352588,
+    "sha256": "ccbe8c1bdad5f769c6c9f7171f6a44bc62ba78b278036d64855ddd6b0786138c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0743.nc",
+    "bytes": 352588,
+    "sha256": "5951f9e18b283558df75ab7c89274b3a1e64a0552b1a62979505b90eb68105a9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0744.nc",
+    "bytes": 352588,
+    "sha256": "0df8f6b773a6e3f0ca40b4a94c87fccdec719245033fbb816a1ccc894ab2fe2e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0745.nc",
+    "bytes": 352588,
+    "sha256": "a6212746242f037d7007bf6e975a90ac033987b67d3670efd4d338a1d04d9d49"
+   },
+   {
+    "path": "data/derived/phenology/PCL0746.nc",
+    "bytes": 352588,
+    "sha256": "40765c7b52aa71989a2640ebcf1deecfda31bc9bd7bdd2cb470c54b59ecd4c5e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0747.nc",
+    "bytes": 359031,
+    "sha256": "1f7988b48e50a1f6188b447afcdd2fbc51a634c4eb27fb7a948e33abeb4230a7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0748.nc",
+    "bytes": 352588,
+    "sha256": "77b2520acaaca7d84fd084084f092190765aa861eaa6568670c8b6b95ab1c77d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0749.nc",
+    "bytes": 352588,
+    "sha256": "be99490c233cd78bae281754d57a3ffba5769eb803acb84756c5d43e7f821732"
+   },
+   {
+    "path": "data/derived/phenology/PCL0750.nc",
+    "bytes": 372820,
+    "sha256": "479d330b3ec7fd847bce27511ae49cc0d07bea56ea36e26b0e659334e0a98447"
+   },
+   {
+    "path": "data/derived/phenology/PCL0751.nc",
+    "bytes": 359031,
+    "sha256": "a42f183982b456228e622f7e59cf7f7a3cdf73a61ca9c37274277b1eb0a323d2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0752.nc",
+    "bytes": 359031,
+    "sha256": "dfa79f478dcdd9cba50db8a119048028c9009348dc5e812134548a7de5af411b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0753.nc",
+    "bytes": 358208,
+    "sha256": "5eb20acae8f081ac1a4fd5b5bb66d0651131f27df7dc5a6c1803a32e2ee4b888"
+   },
+   {
+    "path": "data/derived/phenology/PCL0754.nc",
+    "bytes": 372820,
+    "sha256": "9ad3d4f51f84000876809cbe73be8b4b56ff9c61e44d63cf22e72ec8e14eec8d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0755.nc",
+    "bytes": 259711,
+    "sha256": "e8b4c91abdc5896f53f19691f0f661c44066f867b81c838927e3b0471af57010"
+   },
+   {
+    "path": "data/derived/phenology/PCL0756.nc",
+    "bytes": 259711,
+    "sha256": "3f1272dcb3751fb74f39037501fcdcae81930861dd9373f08456c0046bd7653a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0757.nc",
+    "bytes": 259711,
+    "sha256": "d4436157a40a46da9a927df55e9c5060a614b49216f1037c7c024f59b002a921"
+   },
+   {
+    "path": "data/derived/phenology/PCL0758.nc",
+    "bytes": 346968,
+    "sha256": "e4107a3f4f6ace9941b67115156150d6d7b1e86e277e246601b9ac8e4197807e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0759.nc",
+    "bytes": 346968,
+    "sha256": "ed101b4094597915222531037221ba0a91034d5a80da8b0535f9c4f25c3efb79"
+   },
+   {
+    "path": "data/derived/phenology/PCL0760.nc",
+    "bytes": 351464,
+    "sha256": "9d6297db128e1e05fb03d885d305a1cf03511a09f005072c834c5d3caf431f44"
+   },
+   {
+    "path": "data/derived/phenology/PCL0761.nc",
+    "bytes": 351464,
+    "sha256": "4d6b9fe90e01373e1073310241ae8fb78c03f0b1bbb3e42f9a99d611dbaf3889"
+   },
+   {
+    "path": "data/derived/phenology/PCL0762.nc",
+    "bytes": 351464,
+    "sha256": "6598754ea24405e5688d84909a1e8b8b8735068152298bfdd10d592e5316a422"
+   },
+   {
+    "path": "data/derived/phenology/PCL0763.nc",
+    "bytes": 351464,
+    "sha256": "80ffba7739397dd63d93fa3f6b05a10958892454110eeac98988d838d3581089"
+   },
+   {
+    "path": "data/derived/phenology/PCL0764.nc",
+    "bytes": 351464,
+    "sha256": "2bc44bafee064ad8d07174f0a4a67110694ed04f5a6a3c1b0ed0338bf051c44e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0765.nc",
+    "bytes": 350039,
+    "sha256": "2c93921c7e13868325a0262f3f872bff0f528c541b14bd71bebadef5a5525f23"
+   },
+   {
+    "path": "data/derived/phenology/PCL0766.nc",
+    "bytes": 350039,
+    "sha256": "faaa08717f4b82c0746f8cb8a86b35b0e7ec8bdb54a43f5081712fc6fe45688a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0767.nc",
+    "bytes": 350039,
+    "sha256": "e61085d49387180bfe9229e06e29f9963a28a01df82aec04b91f2b24ddc5e763"
+   },
+   {
+    "path": "data/derived/phenology/PCL0768.nc",
+    "bytes": 353411,
+    "sha256": "01c11692451604bb247f1f3d1569d90ef07236327e35baff84487fe42f23358d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0769.nc",
+    "bytes": 352588,
+    "sha256": "c7a056a6152c7e28c16efff797fd9f8366e7979d54f4ca3fa6ae3b70ae6db05e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0770.nc",
+    "bytes": 352588,
+    "sha256": "f24fbb3514c64f5e14ee201d81e1fbe5bf94d42783fbf3400da9bdecad72f421"
+   },
+   {
+    "path": "data/derived/phenology/PCL0771.nc",
+    "bytes": 352588,
+    "sha256": "517eb708f9f7a1c049d7947b8149ebe99579d89c613a58d3f98e10590738307a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0772.nc",
+    "bytes": 257772,
+    "sha256": "a390d4b769ceeecd373d4f6030d4a1949edc49da81bcba5bf6b2fb217da14bfe"
+   },
+   {
+    "path": "data/derived/phenology/PCL0773.nc",
+    "bytes": 257772,
+    "sha256": "8d7fac5d5ea214851f348265c549e7404306b5a7549cb613a5c82d7c0f72d13b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0774.nc",
+    "bytes": 353712,
+    "sha256": "c59272a5b04763363d15324a2b5a19caba0278740dbd92f25575a446735f00aa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0775.nc",
+    "bytes": 354535,
+    "sha256": "b04b041b9ddbc6e8d9d6b122e626fa57834ca2d5b43b58bf6bb05323fa26c1d4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0776.nc",
+    "bytes": 354535,
+    "sha256": "1f4bb21c8977a20f97639592250153af1fb5130ba87bfccb1a458271cd3466cb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0777.nc",
+    "bytes": 353712,
+    "sha256": "4a5e2d3da6129b24e22223a3043b963c3d68714fdeece1cfd1ae6a8f1527674b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0778.nc",
+    "bytes": 351163,
+    "sha256": "c1869e45704eb1195ea64b5d16890138df8f66c0d571052438258ed87d3baa4d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0779.nc",
+    "bytes": 352287,
+    "sha256": "dbeaccd28c2627eea273b8e6e40cc5ebd590b1bff89009d9f6e6cef92ed10c3f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0780.nc",
+    "bytes": 352287,
+    "sha256": "3114c4ed2aeed940b5b78a0ce2519a4f651161b4c56c20777d1c86e569801374"
+   },
+   {
+    "path": "data/derived/phenology/PCL0781.nc",
+    "bytes": 258595,
+    "sha256": "db97b3a5b5c700346afc5bdf126ffc2195b76e4322e95cc2fa7b70cb7eb3ed87"
+   },
+   {
+    "path": "data/derived/phenology/PCL0782.nc",
+    "bytes": 352287,
+    "sha256": "5aad9c18dba5af285caae0001ed3f4554d928b45f05e94051a3334972e3dcc4c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0783.nc",
+    "bytes": 352287,
+    "sha256": "7e9120af963a7c7149f02004b6ab3eefb82f74278c22e0303471aa14510e9a10"
+   },
+   {
+    "path": "data/derived/phenology/PCL0784.nc",
+    "bytes": 413284,
+    "sha256": "730b65616167ea100984f023d5d98f91676ba6cb001e3e4f93002d63273d828f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0785.nc",
+    "bytes": 413284,
+    "sha256": "f89480f5597af8d6b70b8d02286ab8dd9d56f2edbb4c7816e3a5d26847eb72dc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0786.nc",
+    "bytes": 413284,
+    "sha256": "0ac1b9621de78a4d6aae96f50ebf6d162d31556c628b437526086c84db01e2e8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0787.nc",
+    "bytes": 413284,
+    "sha256": "240a65fcb5777741a4ae8a877efaa6ba7a06616b47b3b5235a2b834eea97bde4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0788.nc",
+    "bytes": 413284,
+    "sha256": "fd77b464fecb7556a7ff817744455349504cf48be3ad831761458bd7e2070650"
+   },
+   {
+    "path": "data/derived/phenology/PCL0789.nc",
+    "bytes": 413284,
+    "sha256": "4affebb0a6b1bb4e8ac1efb5e82caa68ef553b810beea5d6ee4a157722be920d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0790.nc",
+    "bytes": 413284,
+    "sha256": "77247a6addcfa100d3af273d5e914100ccc69848e78de675c351bce9dc024665"
+   },
+   {
+    "path": "data/derived/phenology/PCL0791.nc",
+    "bytes": 413284,
+    "sha256": "d2d45c8d5e3a9541e20d0147bcc73b5f957ab493f520e8b860be7d104c8198c2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0792.nc",
+    "bytes": 413284,
+    "sha256": "be6e8c5474da7c0e5c7941e44f83e893f80ae538422bf98496faa0dfcb000ff9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0793.nc",
+    "bytes": 413284,
+    "sha256": "65ffdfa92e3d0c6b69ae01744c3c4d0776a5dd4fc14721887ce8f4f523dec574"
+   },
+   {
+    "path": "data/derived/phenology/PCL0794.nc",
+    "bytes": 413284,
+    "sha256": "f386e3a5d8fc8b10dc15b97fe53a6c51a193d469bb5bcef6768a954530133c6f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0795.nc",
+    "bytes": 413284,
+    "sha256": "2d09059ecc261ade7885076552c819769154a797e95bb782fa16c36feb9a44fb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0796.nc",
+    "bytes": 413284,
+    "sha256": "b8b692b543a8462b9f56f235a28ba84a02fef780a6a6f0e0fefd4fb147d62271"
+   },
+   {
+    "path": "data/derived/phenology/PCL0797.nc",
+    "bytes": 413284,
+    "sha256": "63e3b2804265d52a8a1f4f60809c94d209c309b027aac74e27aae188e8d82873"
+   },
+   {
+    "path": "data/derived/phenology/PCL0798.nc",
+    "bytes": 413284,
+    "sha256": "80cc661baa613290c282cc1cf892a64c10cc6d5da44e171d4e583ddcc067decd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0799.nc",
+    "bytes": 413284,
+    "sha256": "e7ee4682744eaec973af6bdf9d37008d934556f28522ae1f364bac5c310922c9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0800.nc",
+    "bytes": 413284,
+    "sha256": "bd118f6ca136ca2875dab97da961723fb9d3b1654032bca7b5d0c309a002cb84"
+   },
+   {
+    "path": "data/derived/phenology/PCL0801.nc",
+    "bytes": 413284,
+    "sha256": "10acd187f985c8d94fe1c77ca17abeb9c3e45576c28c53020411616f6480f2b6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0802.nc",
+    "bytes": 413284,
+    "sha256": "8e9d00bbbcfcd08c266706078a039a251a72e80368e0ead3b81f13ef7878daff"
+   },
+   {
+    "path": "data/derived/phenology/PCL0803.nc",
+    "bytes": 413284,
+    "sha256": "96bbb4df187e981401a978c016f630d6dd8793b6af23f7fbc63605c4bfe3a7a3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0804.nc",
+    "bytes": 413284,
+    "sha256": "e859777a86c3624061b0929cc0ba0f8b3390117d3a3ff1cafbd1453be7ceafdd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0805.nc",
+    "bytes": 413284,
+    "sha256": "845db9efff3ae39af9fa9adebc41fb01a171b926d90afb2f7e57756264e7e515"
+   },
+   {
+    "path": "data/derived/phenology/PCL0806.nc",
+    "bytes": 404292,
+    "sha256": "6a773dae1f6645f872e8b11c3782e2e9c2ceee62f168348b1c7a8916ca0335ae"
+   },
+   {
+    "path": "data/derived/phenology/PCL0807.nc",
+    "bytes": 404292,
+    "sha256": "0ae0789f0cc88a68f9a19a11d202aff7c545594bb3a51e44679c70fe86b8b76d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0808.nc",
+    "bytes": 404292,
+    "sha256": "395a73249a98ce1051773b7c0260dd8445e5fb5fe57dcc69a6e4abc3cd6d6879"
+   },
+   {
+    "path": "data/derived/phenology/PCL0809.nc",
+    "bytes": 404292,
+    "sha256": "d04218b37876a4491d0bc5bc92133b74a00386b9a4014b41719e468d23b4a8b0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0810.nc",
+    "bytes": 413284,
+    "sha256": "c84ed6c0952a4a3e432dae8f320125e2f3453f73555451a47b404a1f3857d802"
+   },
+   {
+    "path": "data/derived/phenology/PCL0811.nc",
+    "bytes": 413284,
+    "sha256": "4dfcacaa2156b726fba9ab38d0a2fd298ca9b59e94c8d4b554223c431eff0057"
+   },
+   {
+    "path": "data/derived/phenology/PCL0812.nc",
+    "bytes": 413284,
+    "sha256": "fed6937feeb60923731dd3e83c43ce200a3643540d01c63163974862c77bd727"
+   },
+   {
+    "path": "data/derived/phenology/PCL0813.nc",
+    "bytes": 413284,
+    "sha256": "9b0a976f0078ce8df02bf5a523f172cfd195181ee54d95b91a6418704b5a1276"
+   },
+   {
+    "path": "data/derived/phenology/PCL0814.nc",
+    "bytes": 413284,
+    "sha256": "b2d00a26fac118d8e593d95d1d2affe7d6098d00abb348d03f58ee5e5a64ef8d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0815.nc",
+    "bytes": 413284,
+    "sha256": "db2b909675b4247f7c2d009b57db4a1684f78f12f1ebaf0edcbf2d2afbe9f8bd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0816.nc",
+    "bytes": 413284,
+    "sha256": "8ee09399db54a20d251e1c390fe598a24e4d3f6352f9a9a67ad4e54092d667e6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0817.nc",
+    "bytes": 413284,
+    "sha256": "ef51ea2aa2a09b8341d412c860cecff1aea2aa2a15e6f965f2ab9e617dec619c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0818.nc",
+    "bytes": 404292,
+    "sha256": "c91ef82064aaaadbc1cc8824447a04c923d599b4083df1653b60a530b87d3434"
+   },
+   {
+    "path": "data/derived/phenology/PCL0819.nc",
+    "bytes": 404292,
+    "sha256": "4692c44fb5e79ea29dbd70f98ff57136cc106b1b991f431496cf6e0b4fdf45d7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0820.nc",
+    "bytes": 404292,
+    "sha256": "118a5b2d352991c7d492454f1b87d494fb4bf530e6f3e0be53c7ddf752ac43bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0821.nc",
+    "bytes": 404292,
+    "sha256": "7091e428885b80474f6cb63f43511b88c73a16173157b00179a012c174b7287c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0822.nc",
+    "bytes": 413284,
+    "sha256": "fee889d63b5b91b019d335aa2ca47cd0904ed1f452fcd3d682881b52e0b50057"
+   },
+   {
+    "path": "data/derived/phenology/PCL0823.nc",
+    "bytes": 414107,
+    "sha256": "5d484058fcf7be3c409646407418a47b7794d95878717746567f67a859267e4b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0824.nc",
+    "bytes": 414107,
+    "sha256": "706af46f9bc6a790976d2a0afad3b23cdf672d0952184abb51ffc20cde50e2f8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0825.nc",
+    "bytes": 404292,
+    "sha256": "938467d50cad9ffb325fd5e2f9c7bc0f380180bebbd3c69feef75fe6b9838823"
+   },
+   {
+    "path": "data/derived/phenology/PCL0826.nc",
+    "bytes": 404292,
+    "sha256": "e6f34e328d321ed6ec25d89b507a92f1e2844ba07f1e74f54ce0bf37c719f119"
+   },
+   {
+    "path": "data/derived/phenology/PCL0827.nc",
+    "bytes": 413284,
+    "sha256": "a69fa33a496f6c6273b7612760782a0141f348999ef7a3afacde1919d007a659"
+   },
+   {
+    "path": "data/derived/phenology/PCL0828.nc",
+    "bytes": 413284,
+    "sha256": "35836408c1ba5afe22d94626f10316678c4b6f735038156c07e2ec55dca8890a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0829.nc",
+    "bytes": 413284,
+    "sha256": "3c1dc18c785e2654d9b97ca2084297bd3fd7b5115b63391400cba4834072b8ac"
+   },
+   {
+    "path": "data/derived/phenology/PCL0830.nc",
+    "bytes": 413284,
+    "sha256": "63d080897d0a6a9e1c6f85407eb756ac631c79925fe332bbc7bb464adfa25f89"
+   },
+   {
+    "path": "data/derived/phenology/PCL0831.nc",
+    "bytes": 413284,
+    "sha256": "5f76a59fa0e5f26482852442bc52a583bd7df89af82c1f96e2078af940323aa7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0832.nc",
+    "bytes": 413284,
+    "sha256": "371de6b486dd8d02e3d0a0d47595f98667741e02a676cda60c7cdec82cf6df44"
+   },
+   {
+    "path": "data/derived/phenology/PCL0833.nc",
+    "bytes": 413284,
+    "sha256": "ef30f6b03023a26718c0a10635bbc078d172b9e6f1b21e3b883b3410640414f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0834.nc",
+    "bytes": 413284,
+    "sha256": "74735679d048fb35e62f1d8acde015aee186fa55b01e65baa0e0be63945f6d53"
+   },
+   {
+    "path": "data/derived/phenology/PCL0835.nc",
+    "bytes": 413284,
+    "sha256": "9e1a870639d64162ff93bd5dc4042ca30952a40842fa3b00fe33070185b4fdf9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0836.nc",
+    "bytes": 413284,
+    "sha256": "aa49fcae64c711e65755824d8269258632dc40b2f87f5f12c8131736a08d3515"
+   },
+   {
+    "path": "data/derived/phenology/PCL0837.nc",
+    "bytes": 413284,
+    "sha256": "f422f35583ef64da5be6ecfaaa975d6f76f316be1d32657a641c5cded4b2d89d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0838.nc",
+    "bytes": 413284,
+    "sha256": "5252dfcb96f9e26fabb46faeca2e6639c375196d805f16088b6b24a629483c30"
+   },
+   {
+    "path": "data/derived/phenology/PCL0839.nc",
+    "bytes": 413284,
+    "sha256": "e85eab6ee9149087be54d2418d1fd1f181efce84672901e255be64ea09eea904"
+   },
+   {
+    "path": "data/derived/phenology/PCL0840.nc",
+    "bytes": 413284,
+    "sha256": "5e7bd2ba682a4876f1eafbd5de31388a21363ef6003f64882d16b3cbdfe80a4c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0841.nc",
+    "bytes": 413284,
+    "sha256": "8dac28e9c6db54e1e59ef5010fffcf26406b1dc6f144aeefe51f9127f7caf2c4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0842.nc",
+    "bytes": 379564,
+    "sha256": "5bda5340bf83dbeddda9d0613c2fcf03a168f7282a7b5870ee8e2509a8df1ae4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0843.nc",
+    "bytes": 379564,
+    "sha256": "da7eb3b38e4b7df4d76ff787db2713ccee92319e45bc1156e86ad886c333074b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0844.nc",
+    "bytes": 379564,
+    "sha256": "ced074e2c265d4513bf80ca09fd1b0e583f33e2a8cc6915e3a1f5101635f9bf5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0845.nc",
+    "bytes": 379564,
+    "sha256": "ccf1c7d0542953eb1a8d0684ea2e0c93fa2a97519e844468624b0e8603fbe1c6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0846.nc",
+    "bytes": 417780,
+    "sha256": "a001f0f89782cb02f99abfdee90193a5bbce180ac0bebc866365b67b36f392f5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0847.nc",
+    "bytes": 417780,
+    "sha256": "d1f65f5a18386d31ed0abfa61e398b8b34dd0fb0c9f766625800e288717fc6ff"
+   },
+   {
+    "path": "data/derived/phenology/PCL0848.nc",
+    "bytes": 370572,
+    "sha256": "80beaa9c7f26c2ef4e03fee71fd5768ec91044dd2ab9cb2f3e8af501c4d4f2ba"
+   },
+   {
+    "path": "data/derived/phenology/PCL0849.nc",
+    "bytes": 370572,
+    "sha256": "f71a35ebe0516037f566ea8833be26c85d20979418d60fb1574cbd7b0da03a68"
+   },
+   {
+    "path": "data/derived/phenology/PCL0850.nc",
+    "bytes": 423400,
+    "sha256": "9b14b2eed2976d90b4c5c95d1d3be86821f8e503f79462686bbfe63b8ee2f0ee"
+   },
+   {
+    "path": "data/derived/phenology/PCL0851.nc",
+    "bytes": 424223,
+    "sha256": "f0313fc4876598af0b8d64fba2ae73cd3c751aa37247a6df37bf624e88d14b29"
+   },
+   {
+    "path": "data/derived/phenology/PCL0852.nc",
+    "bytes": 423400,
+    "sha256": "800a06851ffc0c7c0bc55e47d09b0d5a0746b0975c0fdd3c4add7bfbbe5ba56c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0853.nc",
+    "bytes": 423400,
+    "sha256": "5748b5954dd89a3d1e89cc6b141652864f5a8105f8c6cbb82259edf63e214443"
+   },
+   {
+    "path": "data/derived/phenology/PCL0854.nc",
+    "bytes": 424223,
+    "sha256": "1404394711529f2aa9423162e28daefb8f14efc144c422eb24cdbfd4a0a06eb7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0855.nc",
+    "bytes": 423400,
+    "sha256": "fc35f83026bbe847bf9ccd70d42931463d1a91811bcde8bd1f55fe739f1d45ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL0856.nc",
+    "bytes": 424223,
+    "sha256": "7b7977cf5f32531d4002e0f47ab974c95df84e6e575592542429560c2edae6ee"
+   },
+   {
+    "path": "data/derived/phenology/PCL0857.nc",
+    "bytes": 423400,
+    "sha256": "ff33446f5f9bcb90f52a0853c5e89eba06988d98e1ffcf3b86f7b65b474826be"
+   },
+   {
+    "path": "data/derived/phenology/PCL0858.nc",
+    "bytes": 423400,
+    "sha256": "7689672675065239ea9837dc50ff49d2d86f13440707b4cc429061705ed8987b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0859.nc",
+    "bytes": 370572,
+    "sha256": "0db363d55b31087ec520f9f39b2288b095cd87d1e39d6ae1a59e8310073e0770"
+   },
+   {
+    "path": "data/derived/phenology/PCL0860.nc",
+    "bytes": 370572,
+    "sha256": "5c2b3fb43666396a29cbfe61b5fee3e3bd4c1c8446b612f5101fd35d8430f5c1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0861.nc",
+    "bytes": 423400,
+    "sha256": "a532b3105fadf239f992f0aaf24339165e3acb8b636f4f3574d612215973c295"
+   },
+   {
+    "path": "data/derived/phenology/PCL0862.nc",
+    "bytes": 423400,
+    "sha256": "6a312ef3e5705fbac47958cf724a448389b96b4321b42cb78164f492d995e219"
+   },
+   {
+    "path": "data/derived/phenology/PCL0863.nc",
+    "bytes": 423400,
+    "sha256": "3539a72668c877e8f7ff7308d4c650ced646546b2d9b9c0063033c134683a836"
+   },
+   {
+    "path": "data/derived/phenology/PCL0864.nc",
+    "bytes": 423400,
+    "sha256": "b25b582380c9882718d815cd358a165c82c46ba171de551f2e10d4a0ea53f4a1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0865.nc",
+    "bytes": 423400,
+    "sha256": "138488da279a0a71e3451f790e3b1128e7a9f2fe53acdbafb4afa583571f581b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0866.nc",
+    "bytes": 423400,
+    "sha256": "6135231db32ff8c1818f747561782fc2577f41e309fb404e4e61eab13447e6d2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0867.nc",
+    "bytes": 413284,
+    "sha256": "513ecf74fd7559067ee36917f65de75acf3be9f7413ba4878978b44bc9c75e5d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0868.nc",
+    "bytes": 413284,
+    "sha256": "d910e396c77331aa62784d1f63b6677f3c092ffa5242a6355d85fed9aef8ba7a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0869.nc",
+    "bytes": 438635,
+    "sha256": "1af456d5a8884aa58d7aa1cf57718182b5cdb0ef3623cc5b9f9328e5e815ec9e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0870.nc",
+    "bytes": 438635,
+    "sha256": "38e654b9c805d9fb9066b77cb7647ba519d951bf7212816b0e2d675b26164fa1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0871.nc",
+    "bytes": 437812,
+    "sha256": "7397918b38d0b7cabe114ecad8517391150d6c060b76cea9402ac1479d4d0f03"
+   },
+   {
+    "path": "data/derived/phenology/PCL0872.nc",
+    "bytes": 413284,
+    "sha256": "273b9194edf6d5b0f7709d8848b9c7d80ff23200b20fd0f6ae45ccba87c971e6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0873.nc",
+    "bytes": 406540,
+    "sha256": "8f3989bdcb166f181915df422272871c9048d349fa710e3f01c72588da12aa13"
+   },
+   {
+    "path": "data/derived/phenology/PCL0874.nc",
+    "bytes": 406540,
+    "sha256": "04f7b9fe84446f32c44c3a49d1716c947f3619d5cceb1fdd5f0b71a688ac39f2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0875.nc",
+    "bytes": 436688,
+    "sha256": "46cf3b6928b94565aa576bd46074b00a043a50e692d3da0eacf6ce9d07332c3c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0876.nc",
+    "bytes": 436688,
+    "sha256": "dda7424e554ab27c872adac7ac72ffa9da7cd6a27a84e82d49a103deda7114a2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0877.nc",
+    "bytes": 436688,
+    "sha256": "716ae717590cf6a2556ca43d0df4841b649e50356daecd315d5bc96f2ef87889"
+   },
+   {
+    "path": "data/derived/phenology/PCL0878.nc",
+    "bytes": 436688,
+    "sha256": "e2968ec2bb98e6893112e0e243f55309c5e537484029d1e0b8672df112eb7562"
+   },
+   {
+    "path": "data/derived/phenology/PCL0879.nc",
+    "bytes": 436688,
+    "sha256": "88da461a9a480b5100319504155f036f59fcaf526afdd0da5130d9da6a4e40a7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0880.nc",
+    "bytes": 431068,
+    "sha256": "a80f2a7a7da14d15bcb1a6ddbd56a33cd71e7874c126f8c747664d934889a308"
+   },
+   {
+    "path": "data/derived/phenology/PCL0881.nc",
+    "bytes": 431068,
+    "sha256": "09845372e5f38c43d8f1b4f6fc1534abf2c88c67ec0695f4ad37bc4a9111645a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0882.nc",
+    "bytes": 431068,
+    "sha256": "803e2dd50c2e0c0ceb552b94779630167b05ef4edc1a26fcd411a00418d5dec7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0883.nc",
+    "bytes": 431068,
+    "sha256": "c539ca6cb9206d49c6bfab6ad9e05071077b47cd186b2b776392feba79e9c525"
+   },
+   {
+    "path": "data/derived/phenology/PCL0884.nc",
+    "bytes": 413284,
+    "sha256": "b00d9bdf38da0b3c38621aa2778be3d4651c6883b479b90eee9dd6703eec138c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0885.nc",
+    "bytes": 413284,
+    "sha256": "7700cab21189520a8c3da625b2b8870a98213cd0434d0e5ecec5e80fa5015293"
+   },
+   {
+    "path": "data/derived/phenology/PCL0886.nc",
+    "bytes": 403168,
+    "sha256": "eee83f7c8df1d98e8ecd529c78f2185ac5368d95783eb200132560ff6e3f6b0f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0889.nc",
+    "bytes": 285840,
+    "sha256": "97b344e9bca87456be468484aade2ae3f78e5463ca8a07766acc5ecd33056030"
+   },
+   {
+    "path": "data/derived/phenology/PCL0890.nc",
+    "bytes": 284188,
+    "sha256": "7f65d94341127f016640cd7f45afa0b3a8a5912669bbce2e837b53d1291dc80e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0891.nc",
+    "bytes": 285840,
+    "sha256": "68d897cd1cb95458d15aae988140ee0b97baa068a7cf861cc5eed7e6356f1d32"
+   },
+   {
+    "path": "data/derived/phenology/PCL0892.nc",
+    "bytes": 284188,
+    "sha256": "32373617c2ddac41bb208555f12628a94a5ba01655046c5941582553c4d6c55e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0893.nc",
+    "bytes": 402044,
+    "sha256": "833ff30128eee50701bb0cd613fd634eabc3801902340e8fb27ca58847adb95b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0894.nc",
+    "bytes": 402044,
+    "sha256": "3bc827de235119413e7ca83b6d77d9751b9225d31408a2acfc882c5c275af118"
+   },
+   {
+    "path": "data/derived/phenology/PCL0895.nc",
+    "bytes": 402044,
+    "sha256": "bf3afae00c7d9a9d2f76ad990dc0aecf52ce6f040f6a2ce3cc89b0c6bca35fe5"
+   },
+   {
+    "path": "data/derived/phenology/PCL0896.nc",
+    "bytes": 412160,
+    "sha256": "509e97d4feb281727e4e944b2bf3bb944ca92ab27e249b794e986c3673648397"
+   },
+   {
+    "path": "data/derived/phenology/PCL0897.nc",
+    "bytes": 403168,
+    "sha256": "6279bd68fb80a3ce2e2b24fddd1c5d8d376bac9829abffe837341a11c5a93c19"
+   },
+   {
+    "path": "data/derived/phenology/PCL0898.nc",
+    "bytes": 403168,
+    "sha256": "59dfb1713942ad26619f012e08c6518fce17477b63048f2a1949521ee4f07cbe"
+   },
+   {
+    "path": "data/derived/phenology/PCL0899.nc",
+    "bytes": 403168,
+    "sha256": "0a7bf397447a3d5f1a60024d3d3dec406def51f84fbe16d0be01d4f6854819fc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0900.nc",
+    "bytes": 284188,
+    "sha256": "5214f060b383c2bae0ecea760a5357b14bd4a61ff2da06f5874e2d2c2fb0a1ea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0901.nc",
+    "bytes": 284188,
+    "sha256": "1527c984e19bb1ac6fb3fb7e2ed72b478de66c81bcc20370735fadbd11909832"
+   },
+   {
+    "path": "data/derived/phenology/PCL0902.nc",
+    "bytes": 402044,
+    "sha256": "d76d215f5f43ea093496c28a134de497fc67e69e8d627271099fca2bc24fad7f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0903.nc",
+    "bytes": 403168,
+    "sha256": "9fc3557362f35f8ba5c360ee2a1f88e155222a484044c9061fb0f3262461056a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0904.nc",
+    "bytes": 403168,
+    "sha256": "dc4b2410d620029da9c494f84dae24656209686587eb7e6f464249f542eafeb1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0905.nc",
+    "bytes": 420028,
+    "sha256": "89ac221f0e86ca68337d7549ca805f907cafc4940219b05bfe6db5b6eafdfded"
+   },
+   {
+    "path": "data/derived/phenology/PCL0906.nc",
+    "bytes": 420028,
+    "sha256": "aae9ac3eca55785a382c4a9d9fe5125017ce7f21f44492be8626b31163beedc1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0907.nc",
+    "bytes": 420028,
+    "sha256": "3504ac28677f8e3d69d08fe4a3e23437ece92ec777b64b2043ae7a1c64617176"
+   },
+   {
+    "path": "data/derived/phenology/PCL0908.nc",
+    "bytes": 280840,
+    "sha256": "11ad818e6826caf72fb800f55da988e8194ba658d23d1f293d12d48ee0ae753b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0909.nc",
+    "bytes": 420028,
+    "sha256": "fbc3dc2030046a24fc6a7c7c2a8c746a70529344a8350411ba1644414058f7d2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0910.nc",
+    "bytes": 420028,
+    "sha256": "601bfa2a41bc184281f8bc0f44382c709cf5a9c1d42c3c16c0240ef1d3a2fd75"
+   },
+   {
+    "path": "data/derived/phenology/PCL0911.nc",
+    "bytes": 420805,
+    "sha256": "b463a44d2d329fa49dcbe6eed1ce03b7cb50bf1494b354d165483f9f39a183b0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0912.nc",
+    "bytes": 420028,
+    "sha256": "1799367fcdb3821da96e668c3da56e577d7d309da2d34405cfa7e52c21345ef4"
+   },
+   {
+    "path": "data/derived/phenology/PCL0913.nc",
+    "bytes": 308451,
+    "sha256": "4fc8993aa6fd1b67c4ef3f11c09e458a27b3e05adfdb6f59ec1811a9f741252d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0914.nc",
+    "bytes": 308451,
+    "sha256": "90ff9815a52e0dcceca56b9ad28fd19a68cd5327f3f4d1fc20b6125eeb41e88a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0915.nc",
+    "bytes": 308451,
+    "sha256": "bff29f7deff30f87a004bd7ac1430fd6ff5c1739386febf7a99916e04b23a14e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0916.nc",
+    "bytes": 308451,
+    "sha256": "4b6810a2d727637432d85b1e3a283587b805bac12f71c0f25902eb290c6ffde6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0917.nc",
+    "bytes": 308451,
+    "sha256": "03b1392ba95272d6c221450f829f28c7904fbc69e460f8d2932c7d6ccab3adfa"
+   },
+   {
+    "path": "data/derived/phenology/PCL0918.nc",
+    "bytes": 308451,
+    "sha256": "49f0f319daa42c71e6e39876c32cf7c95091e9b5460f23ab78fe2d572618deab"
+   },
+   {
+    "path": "data/derived/phenology/PCL0919.nc",
+    "bytes": 308451,
+    "sha256": "ec0c414050bd33d07f17a6231d5cabebb55893dc6cfb57de09dd22235a1e8bc0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0920.nc",
+    "bytes": 308451,
+    "sha256": "53ddbad51a2bc4ca4b9e9c24076514869377034f134aca8a3bba1fcd0f4e22bf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0921.nc",
+    "bytes": 357907,
+    "sha256": "f156ce428e90307458c1106558c604f638c29adcacb95dfea929fb99f031aba3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0922.nc",
+    "bytes": 357907,
+    "sha256": "28b1d0e21510bf3cbd5c4490799115faefe4ca5f6cb2c11d1b7e3d47cfd9c5ea"
+   },
+   {
+    "path": "data/derived/phenology/PCL0923.nc",
+    "bytes": 357907,
+    "sha256": "b6b93f852573fcf28316464b6009a87fdea61c996c25f5e3511d5dbd13cbe7b2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0924.nc",
+    "bytes": 357907,
+    "sha256": "db5a1e05ee0fc0a4724319974a802b09b6866e33e46f7942633320b860174234"
+   },
+   {
+    "path": "data/derived/phenology/PCL0925.nc",
+    "bytes": 353712,
+    "sha256": "a358c8fcfc4705ac2d023fa5e500cd68fb529c053d164059cf3c756dced86be1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0926.nc",
+    "bytes": 353712,
+    "sha256": "606d3b39a755e7c67456570d4722cfc95a4aae2adedceaabc57f698f19c99f9e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0927.nc",
+    "bytes": 353712,
+    "sha256": "334d9209a663cc57ffd41367376088e90286fa1bbf48ceab333c40c2ea24153f"
+   },
+   {
+    "path": "data/derived/phenology/PCL0928.nc",
+    "bytes": 353712,
+    "sha256": "d1f8f627ba4e1f2c53184af7eecec5aec3704f5bd52761288b241fb0d4a1539c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0929.nc",
+    "bytes": 353712,
+    "sha256": "1b5c6bb7ed756e9d486e8822060a25c53bf53289f0cff66234abab9240cf9bdc"
+   },
+   {
+    "path": "data/derived/phenology/PCL0930.nc",
+    "bytes": 353712,
+    "sha256": "a5fe74228f6105a867fce6e9f1b20f44fd42aff4daaca21f6ef18cef6a6eedb3"
+   },
+   {
+    "path": "data/derived/phenology/PCL0931.nc",
+    "bytes": 353712,
+    "sha256": "955c15b0beb8f4796a74543fe67ef0d58198d75c0399498cd81c2fc7a13fcfdb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0932.nc",
+    "bytes": 353712,
+    "sha256": "96ffa45dd81a8c3863514b53d8861d4edc6e04011273e241cf4d4c493a00c29b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0933.nc",
+    "bytes": 450248,
+    "sha256": "5994d240b2f28aa772f04b03cfca66fa4bf7c5183d7c7130806dd85be98e102c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0934.nc",
+    "bytes": 450248,
+    "sha256": "da20da7e244c6140b324cdb045adf916c8b9d557c9eff01e458befa4aa9f7c27"
+   },
+   {
+    "path": "data/derived/phenology/PCL0935.nc",
+    "bytes": 450248,
+    "sha256": "6c13944fc129e4299cff56ada1767b65ec65bae83f3ddccc8b238ed1be9b113e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0936.nc",
+    "bytes": 450248,
+    "sha256": "1c15ec6b918abdd088905b26c2cdc365dc5fc5c916fbe6cfa2987b8f584ef994"
+   },
+   {
+    "path": "data/derived/phenology/PCL0937.nc",
+    "bytes": 420028,
+    "sha256": "7ca8cf0e6cdee59dcb177e2289c3bb64c20fa64037a3362c9b953cfc2a5c5304"
+   },
+   {
+    "path": "data/derived/phenology/PCL0938.nc",
+    "bytes": 422768,
+    "sha256": "4d18f1b2ca3ab446efc618f8b083bfbab8ca4ea56cbc4dc6d97a097fe3dfc5fd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0939.nc",
+    "bytes": 420028,
+    "sha256": "5dfc7d3596cc55a64cda4f8e9df5adfc8c3d1c8ef4543f7f7c5b5a7a8622e48e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0940.nc",
+    "bytes": 420028,
+    "sha256": "813a6d64cacad4a2503913e7bbbf6bb15d618073e6b3ad769160434a4aff7c7c"
+   },
+   {
+    "path": "data/derived/phenology/PCL0941.nc",
+    "bytes": 307628,
+    "sha256": "67beb6c0d34bac126255ee794f4792276fdea7098ab849e8d8153a846c6c3a70"
+   },
+   {
+    "path": "data/derived/phenology/PCL0942.nc",
+    "bytes": 307628,
+    "sha256": "1773341a7dc68da7962ba4a97051b83c9cc5829d942d9683073263749c9a4f16"
+   },
+   {
+    "path": "data/derived/phenology/PCL0943.nc",
+    "bytes": 308320,
+    "sha256": "9d20709698a3ba28f8a4435216c17f4a8541fcfb9fa3a9a90ccf1630eb853312"
+   },
+   {
+    "path": "data/derived/phenology/PCL0944.nc",
+    "bytes": 307628,
+    "sha256": "b0022ae6871ea467ab4b8c330bc3357e41de548236dbd945184dad6be974dd68"
+   },
+   {
+    "path": "data/derived/phenology/PCL0945.nc",
+    "bytes": 308451,
+    "sha256": "0974331439b45dc77022b4c5975cfda8e97293d572de1230100772fea95ee452"
+   },
+   {
+    "path": "data/derived/phenology/PCL0946.nc",
+    "bytes": 308451,
+    "sha256": "424d877c309aa009418f0d6e8cdd64ff38f6ad131fd1e8446bdb0d9f4540cb00"
+   },
+   {
+    "path": "data/derived/phenology/PCL0947.nc",
+    "bytes": 308451,
+    "sha256": "3590448f397461930897148b65289496b269be0b8288155338334265e8afedf7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0948.nc",
+    "bytes": 308451,
+    "sha256": "91195b977ff26c382a4724e059f4c3fda495155b3583e88ce32b1291bb6c229d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0949.nc",
+    "bytes": 450248,
+    "sha256": "13919d6269fe80d7cd1004bb9bb90fd8935ca84d19cda1fba3181c16d3a64c00"
+   },
+   {
+    "path": "data/derived/phenology/PCL0950.nc",
+    "bytes": 450248,
+    "sha256": "016ca916994ae386c77f307d4381b263e6700aceb68ad4202ddaa04bb765398d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0951.nc",
+    "bytes": 451071,
+    "sha256": "a6873a5604ccd76575c8e7afc3fc099639da0e5b6d3251fa0170301adfc8e235"
+   },
+   {
+    "path": "data/derived/phenology/PCL0952.nc",
+    "bytes": 451071,
+    "sha256": "5ecae6389b7ef430931670ea1c474edee7368137aa120eaec106d891bbfd17c0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0953.nc",
+    "bytes": 451071,
+    "sha256": "f627b9eb488281fb00da37dcaae91be7bd877d3260f037703ac8b53ebd3e2212"
+   },
+   {
+    "path": "data/derived/phenology/PCL0954.nc",
+    "bytes": 451071,
+    "sha256": "82acd5fa071d7bfe03f400e8e04e41f73c3aa29f3fc217b4b8862dee606d5a3b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0955.nc",
+    "bytes": 451071,
+    "sha256": "6f5fbf372a00836d129cd04a4a9b78024e9443efe0b2f86cef326ad1cf44f2b6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0956.nc",
+    "bytes": 451071,
+    "sha256": "aee80ffa0d1b409ef4bcfd3c86e61e5dc809fac3af12456488251f89c064ea88"
+   },
+   {
+    "path": "data/derived/phenology/PCL0957.nc",
+    "bytes": 413284,
+    "sha256": "14d5a742556483f35b7585a92ca2839ca682776eae96d34e509e806d70d5f288"
+   },
+   {
+    "path": "data/derived/phenology/PCL0958.nc",
+    "bytes": 413284,
+    "sha256": "14acbf19395fccdf867bf15d06ceb78f738e8f032a0137705bbaf32ab770046b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0959.nc",
+    "bytes": 413284,
+    "sha256": "4b06c59f59535d3f9757b091b02fce029d8e44576648eca99e70a0bdae1eb4bb"
+   },
+   {
+    "path": "data/derived/phenology/PCL0960.nc",
+    "bytes": 413284,
+    "sha256": "c33e6a1c62aff51466c6b6a29a12c3d4b7d2f4420a410cdf5b3eb9d0ef162ef1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0961.nc",
+    "bytes": 468375,
+    "sha256": "917e628752bbb0a80452ec6d6cc0780a52e8a98139ffd20b217a39a5df878a5b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0962.nc",
+    "bytes": 468375,
+    "sha256": "b5adf08d5ad9758485a03205665fed875f92b6118afa2fb0431c775d711ff513"
+   },
+   {
+    "path": "data/derived/phenology/PCL0963.nc",
+    "bytes": 468375,
+    "sha256": "6d5a13605e8c396d20185430f2d8e9a97810b551cb0d73b5e926439f0fa5b8c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0964.nc",
+    "bytes": 469067,
+    "sha256": "cce3960fb217ce8d79ce4a3586db02317064274ebda504adfc683daf693e01dd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0965.nc",
+    "bytes": 451071,
+    "sha256": "a53f03834baf926787fb89063a6ca00f3b0c8521ac4b3462446671543126c874"
+   },
+   {
+    "path": "data/derived/phenology/PCL0966.nc",
+    "bytes": 451071,
+    "sha256": "13805a22c5cefac4fc41eb9cfcf6f07961c961d6fe5824240cd95a846fcb119e"
+   },
+   {
+    "path": "data/derived/phenology/PCL0967.nc",
+    "bytes": 451071,
+    "sha256": "36f6f400f4dc77a2d903883c7e9132bafe85c2a415ed7fed0d07713bcb82c0b8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0968.nc",
+    "bytes": 451071,
+    "sha256": "3e58a53160fe0f6f30066cb11a67f8c1a4f42ab64c5d72b88e089fe98089cbb0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0969.nc",
+    "bytes": 451071,
+    "sha256": "df31e62e26bb98f3491f608d8f6b10b73841b3a459e9c854a1e3aeed4ac364ae"
+   },
+   {
+    "path": "data/derived/phenology/PCL0970.nc",
+    "bytes": 451071,
+    "sha256": "ab5d08796447cc95bcfda46e9b34b3dd3d9bc56da43744a2c088b45775e5f516"
+   },
+   {
+    "path": "data/derived/phenology/PCL0971.nc",
+    "bytes": 307628,
+    "sha256": "3d6a070bd50c53e7a6503eea5e3c796e37e164927fbbc49bd8ef34e48084c5b7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0972.nc",
+    "bytes": 307628,
+    "sha256": "d9d98cd622cafff0d5718f2c3374307386a8c4352bc9a0fdbd7b3aa5f5ca44a9"
+   },
+   {
+    "path": "data/derived/phenology/PCL0973.nc",
+    "bytes": 307628,
+    "sha256": "83ffe1019a0442ba6527dc5c180169c1f78f98a92abe45c9b5b93ecaf7119b6b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0974.nc",
+    "bytes": 307628,
+    "sha256": "67ed4df58416bf518cc3f161e115eda26e1da91fb83c19d652cde7d3477b003d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0975.nc",
+    "bytes": 308320,
+    "sha256": "6472a46fde731bab2105077385903c3acdf5f600f6a9f9f0e12c56cd6eff6cd2"
+   },
+   {
+    "path": "data/derived/phenology/PCL0976.nc",
+    "bytes": 308405,
+    "sha256": "20d74a0df0c814c7a4cad66ffc3b8e4b5cb62db5e518c69f616b01531dbd9a10"
+   },
+   {
+    "path": "data/derived/phenology/PCL0977.nc",
+    "bytes": 308320,
+    "sha256": "f286bcf79223596b807b8bdc813edf90856bdac21f6cf6bb3de7684369a306e7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0978.nc",
+    "bytes": 307628,
+    "sha256": "2d2bb7bbea648c712fe7d6d06fb10569dca7e0d44e4a6207e062960e6a5b2f0b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0979.nc",
+    "bytes": 307628,
+    "sha256": "57518a0ae0c451d4900991f3ee1650a9b0ecf037711cd3851e67168fc62076b7"
+   },
+   {
+    "path": "data/derived/phenology/PCL0980.nc",
+    "bytes": 308320,
+    "sha256": "2caa7c88f82d35e825dc4e5c4cdbebfefb3e1601734215e56e286e9d6b0296fd"
+   },
+   {
+    "path": "data/derived/phenology/PCL0981.nc",
+    "bytes": 308320,
+    "sha256": "2d7e58b6a99d2c1b802179360e74c35aa2ed5ec9bcd057c51767cf1750552c01"
+   },
+   {
+    "path": "data/derived/phenology/PCL0982.nc",
+    "bytes": 307628,
+    "sha256": "05e2d0dc181152f66e601b2684d810f77c573e8de27a35eb5afdb7b5e86f2bf6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0983.nc",
+    "bytes": 308320,
+    "sha256": "50200541932b5c92d9b3c8e01b57a27786198e90d780d81989d013292d845e88"
+   },
+   {
+    "path": "data/derived/phenology/PCL0984.nc",
+    "bytes": 307628,
+    "sha256": "63f8226555f78e0fc4d7b0269923d73c3fcf6916ce4229d894e1c0407f5cb391"
+   },
+   {
+    "path": "data/derived/phenology/PCL0985.nc",
+    "bytes": 308320,
+    "sha256": "f5105b0662b42b0840fe617fd9708fa9341b4015b64264ee518e294f5b1e819b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0986.nc",
+    "bytes": 308320,
+    "sha256": "bb8dd5c3ec5eca620450eb2e3e18d335a8307482e76242b0bf8c69fa1c245fa0"
+   },
+   {
+    "path": "data/derived/phenology/PCL0987.nc",
+    "bytes": 308320,
+    "sha256": "9ed684de70b5903505e3016f2821fe3a260e7bc18c9a4007adabac4c6fa2a920"
+   },
+   {
+    "path": "data/derived/phenology/PCL0988.nc",
+    "bytes": 308320,
+    "sha256": "687f0c72f7b361d1a23697614b640dea349b2bdf9b9f0a6ae3e1333880c3d5e1"
+   },
+   {
+    "path": "data/derived/phenology/PCL0989.nc",
+    "bytes": 308320,
+    "sha256": "f2424c08d0af5af4d2854187f9074a147f6fe13470a5abcce6edad0bbe87313d"
+   },
+   {
+    "path": "data/derived/phenology/PCL0990.nc",
+    "bytes": 308320,
+    "sha256": "9c4da5a8be6aca226b66e225f05b91e50441b84caf4a8464ef2429147afe9b2a"
+   },
+   {
+    "path": "data/derived/phenology/PCL0991.nc",
+    "bytes": 308320,
+    "sha256": "24697a78cc9f46af43dabbb65cd1f8df3d8cd0ca410b93f87217a9b4a5e4bb47"
+   },
+   {
+    "path": "data/derived/phenology/PCL0992.nc",
+    "bytes": 308320,
+    "sha256": "1665edd877666dbc752e86ff374542238f2b02ca1dc99aa9d15317c4e62d92d8"
+   },
+   {
+    "path": "data/derived/phenology/PCL0993.nc",
+    "bytes": 308320,
+    "sha256": "b91700244b61d8ced452135a608fc4771c0ec9f8b29aaec2daebfa699ed08cdf"
+   },
+   {
+    "path": "data/derived/phenology/PCL0994.nc",
+    "bytes": 308320,
+    "sha256": "b6db8d6066d7b905783b648a576314b135baee177fb8c48a7b1d056cccde73c6"
+   },
+   {
+    "path": "data/derived/phenology/PCL0995.nc",
+    "bytes": 308320,
+    "sha256": "61b03f92173cc41dfc687d7129af1e9e35cdda89cdf306b05daf0add16f49309"
+   },
+   {
+    "path": "data/derived/phenology/PCL0996.nc",
+    "bytes": 308320,
+    "sha256": "1d64380e913052272815eb977813dca3135f76c3fa9439f695af00e03cc3413b"
+   },
+   {
+    "path": "data/derived/phenology/PCL0997.nc",
+    "bytes": 308320,
+    "sha256": "8bf4d1bc2fc49d265bcc54bb506fe2fcbc387cffe68915037a5ab6cfe70c06df"
+   },
+   {
+    "path": "data/derived/phenology/PCL0998.nc",
+    "bytes": 308320,
+    "sha256": "5d6fcf5e11409a479aad0249824c1fb5e9f8e7063661d68778cce23411e34804"
+   },
+   {
+    "path": "data/derived/phenology/PCL0999.nc",
+    "bytes": 308320,
+    "sha256": "1d7db2e436959648662ed6eeeeb2ecfe3fcc4164ed08b6ddf44abc3de212fe18"
+   },
+   {
+    "path": "data/derived/phenology/PCL1000.nc",
+    "bytes": 308320,
+    "sha256": "9a3852bf70265ff065708232eca715073dff031bfc2cea46cb44f1d60c8739f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1001.nc",
+    "bytes": 308320,
+    "sha256": "ffe78ccccc317c22f76b9dba3263c20c1c3efff92d159d0ce00736d0ef58f2f4"
+   },
+   {
+    "path": "data/derived/phenology/PCL1002.nc",
+    "bytes": 308320,
+    "sha256": "765d46976297e886eea3d84a58ba3515034ad69da1332df7e75e8e32e5ea1cf3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1003.nc",
+    "bytes": 308320,
+    "sha256": "93ced5e94b8db7ff3dcfed90d6250eb24b7c1693dcdf6e845c63095e8be48d0b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1004.nc",
+    "bytes": 308320,
+    "sha256": "023880e4d5921300b0683765c46dd1d54f2a328535e5daa843991573e120d43f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1005.nc",
+    "bytes": 308320,
+    "sha256": "6aa6cc6161c9d63b82ebe50c08df75943ed8be115341119e6cb0a667c4539e06"
+   },
+   {
+    "path": "data/derived/phenology/PCL1006.nc",
+    "bytes": 308320,
+    "sha256": "1c3452e5b36789c6b139019f6ecf7e0a8df08688e44a0b10e9977bb67433011b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1007.nc",
+    "bytes": 307628,
+    "sha256": "6c0c05e46050caf7b10d7a54a60ebce884d56c3c15158192bea7c9a84358ad1b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1008.nc",
+    "bytes": 307628,
+    "sha256": "368983e623aefd1b37fbaad79d180a47f80a00dda8735f8e6d0b03aa147cc28b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1009.nc",
+    "bytes": 308320,
+    "sha256": "7fc62249eab448f5770fa40d242c379a568f03d642d88c583fc85e150fe29bd8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1010.nc",
+    "bytes": 308320,
+    "sha256": "296cc40b96ccfaf514123cd3f7f3b234eb10555f96d5c8f91981d43c82916ac8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1011.nc",
+    "bytes": 308405,
+    "sha256": "68f516faa4c1834d3597ad6f8c99c7b6517e91bb2ba0422d563d36a346fe6a2d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1012.nc",
+    "bytes": 308320,
+    "sha256": "57d230065003a14f2689c3c4dbbe10d93ae5b3411f65838ca77f840a6665b298"
+   },
+   {
+    "path": "data/derived/phenology/PCL1013.nc",
+    "bytes": 308320,
+    "sha256": "e0e55fe7249f47aa6345a6d86f65b7572277aeb291375815e50e48217d970b0d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1014.nc",
+    "bytes": 308320,
+    "sha256": "8b8aa1b1ee9ed03ad35352110a52c6cb728d4025951b589792c43b3876984b6c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1015.nc",
+    "bytes": 308320,
+    "sha256": "3c68f1c0b79bf627a2637d43c9cf907aee831951656df31dbd695fa239422dbf"
+   },
+   {
+    "path": "data/derived/phenology/PCL1016.nc",
+    "bytes": 308320,
+    "sha256": "4521d79b7f482a2f8d8979f83a988c04050be53fb53737683dc15163fe7ee854"
+   },
+   {
+    "path": "data/derived/phenology/PCL1017.nc",
+    "bytes": 308320,
+    "sha256": "dcda14e0a408c6614b0fd45d3048f04f34f9c772669bc50cf2ba4f0a19b90e04"
+   },
+   {
+    "path": "data/derived/phenology/PCL1018.nc",
+    "bytes": 308320,
+    "sha256": "27c1d692cecec9115eb7f95ba98ddf9b919b2171587a8a53b3dce1381aa6b147"
+   },
+   {
+    "path": "data/derived/phenology/PCL1019.nc",
+    "bytes": 308320,
+    "sha256": "e3f284fe3b5e7ff63f54176f078c38ab24fed80d2fa262d0361baff2c810ab1f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1020.nc",
+    "bytes": 307628,
+    "sha256": "62b0fd7f2919fc0de3cc03a4350f522e504c3e2f475401915cf7696ad362f0f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1021.nc",
+    "bytes": 308320,
+    "sha256": "c0aa3f21da207a8cfbc62cb062d080e8efcedb8823d32351464b4b68466c30f5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1022.nc",
+    "bytes": 308320,
+    "sha256": "a60748e08eeca38d754789358ff130deeae78c3802835cd330af9ce0794381c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1023.nc",
+    "bytes": 308320,
+    "sha256": "036005f5fefedb3f60410bb4c40ecbcc1cf271de19041455e0836b3917754d89"
+   },
+   {
+    "path": "data/derived/phenology/PCL1024.nc",
+    "bytes": 308320,
+    "sha256": "6b248fd560a01ecf1db36651171c5a289b61de928401cda71ffac0d979f25f42"
+   },
+   {
+    "path": "data/derived/phenology/PCL1025.nc",
+    "bytes": 308320,
+    "sha256": "f965f1cda2bd7ede7b185b2cefe14181df4d987aebbc3364abf11df722d10b84"
+   },
+   {
+    "path": "data/derived/phenology/PCL1026.nc",
+    "bytes": 308320,
+    "sha256": "070c60c419cf52b71af8cb28989ab1bd794df765e4b0c6ccab88f498cbfc59af"
+   },
+   {
+    "path": "data/derived/phenology/PCL1027.nc",
+    "bytes": 308320,
+    "sha256": "19af18b3acc90d2d9a6e4ef23312cb78ed57eae11a986b79b8c5c53048f52678"
+   },
+   {
+    "path": "data/derived/phenology/PCL1028.nc",
+    "bytes": 308320,
+    "sha256": "93794c00f244e3e0dc29fb0dd537ab57dd19957dd3576672c94de160158a2403"
+   },
+   {
+    "path": "data/derived/phenology/PCL1029.nc",
+    "bytes": 308320,
+    "sha256": "a8c107570ee14ca9e0211d3ade94e09289389cbf74f54a58757bf2decd59231a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1030.nc",
+    "bytes": 307628,
+    "sha256": "104923162d78387df04c08c49694bfbe50d226e00ca171f0782fbe40c99cc6df"
+   },
+   {
+    "path": "data/derived/phenology/PCL1031.nc",
+    "bytes": 308320,
+    "sha256": "1e3ac3e31aa651bafa11049822f511769d28f116c15f2e7d4ca57fe6bbb454bd"
+   },
+   {
+    "path": "data/derived/phenology/PCL1032.nc",
+    "bytes": 308320,
+    "sha256": "bf354984abe1a7f5fc58db3b833857bb1ced24728a55409daa64b17d04c19aa4"
+   },
+   {
+    "path": "data/derived/phenology/PCL1033.nc",
+    "bytes": 308320,
+    "sha256": "9b38db2a8e09e39c6a9cdd9b34ca6610e6f5106a348b06d57083d92481c7c00a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1034.nc",
+    "bytes": 308320,
+    "sha256": "dd1621c373c97cef4984466d5554dfa0ef0ebd9350ae834b6a1a6ee280c6a8c0"
+   },
+   {
+    "path": "data/derived/phenology/PCL1035.nc",
+    "bytes": 308320,
+    "sha256": "c0199c9c6d7f9d09c3e722a72b3cb825ad4240712a641108b3d204ec63d9e376"
+   },
+   {
+    "path": "data/derived/phenology/PCL1036.nc",
+    "bytes": 307628,
+    "sha256": "6097193629066a27464e2bdd79b3a19b9777c5a27b79dcd2b010ab8e23344ad5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1037.nc",
+    "bytes": 307628,
+    "sha256": "251f659bee664df62f1e6431f1956f51882fe6247e75ce288b1cc4af421bb04a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1038.nc",
+    "bytes": 308320,
+    "sha256": "480c5423b35bd0155f02bc3395c8218cfdee5929a67b4f747bf8018806d0e144"
+   },
+   {
+    "path": "data/derived/phenology/PCL1039.nc",
+    "bytes": 308320,
+    "sha256": "913d81f0cc5aec0d699743c77faf3f43df30e2f0f2d429d9f4f9db3597977008"
+   },
+   {
+    "path": "data/derived/phenology/PCL1040.nc",
+    "bytes": 308320,
+    "sha256": "b5162dbf69e1c211afe080e6f8f5fd2cf8cb50bbb9931929d5e8010ebfcf40eb"
+   },
+   {
+    "path": "data/derived/phenology/PCL1041.nc",
+    "bytes": 308320,
+    "sha256": "e8b26869654e229df2811fe48f434695756a087df6dab19e778cf14a579ec330"
+   },
+   {
+    "path": "data/derived/phenology/PCL1042.nc",
+    "bytes": 308320,
+    "sha256": "6dc2e0924862aaea51bdefb0dd45aa22ae8cb5097f95ddf8a0a5803069e0ef6f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1043.nc",
+    "bytes": 308320,
+    "sha256": "12c74c0f99b9f0f7c5a87741f3603a70b886d90706eed285c9fb0f14b31eafd3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1044.nc",
+    "bytes": 308320,
+    "sha256": "c52cef445110e3f27a53c8092a2bcf46412f1b2cb76af78d2b6da86a70f0a008"
+   },
+   {
+    "path": "data/derived/phenology/PCL1045.nc",
+    "bytes": 308320,
+    "sha256": "406241f8ce4000009bbfff77cebe1d380d266604c37d24d07526c2e3974a7101"
+   },
+   {
+    "path": "data/derived/phenology/PCL1046.nc",
+    "bytes": 308320,
+    "sha256": "0d3ebdc0f105f8027fe0f5c677170a41b2ad75f7ddb9125ee46fb4b74d37aacc"
+   },
+   {
+    "path": "data/derived/phenology/PCL1047.nc",
+    "bytes": 308320,
+    "sha256": "8f7c2383bdf766ce316e8a5c1fe949720a9a3f850526df68b084e75fbef09ba3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1048.nc",
+    "bytes": 308320,
+    "sha256": "94dd1909c59254b183fb8cd25904cda74d8f1a92b1240e71ec5995b85d08d440"
+   },
+   {
+    "path": "data/derived/phenology/PCL1049.nc",
+    "bytes": 308320,
+    "sha256": "578ca002863270d1fbcf228bbba200d9942aecd55feeca03825b3485192baebe"
+   },
+   {
+    "path": "data/derived/phenology/PCL1050.nc",
+    "bytes": 308320,
+    "sha256": "5e5179b52480eb5915756e64053da1673ceb1351b7fc5e869638a9d8155bf3a2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1051.nc",
+    "bytes": 307628,
+    "sha256": "5e148f1afaa835f674ce9e09f66f9a8cea6c4c43671ddd4c44b994795dcd64ed"
+   },
+   {
+    "path": "data/derived/phenology/PCL1052.nc",
+    "bytes": 307628,
+    "sha256": "aa89d5c1f66843efe36cda2862eb18f189a9468eca01219d62131dc04163aba0"
+   },
+   {
+    "path": "data/derived/phenology/PCL1053.nc",
+    "bytes": 307628,
+    "sha256": "7186c4fc653cca44be268ce9d3c0aaaa7df90064d9f658466a816e88961956c1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1054.nc",
+    "bytes": 307628,
+    "sha256": "5e78ea64718f0b5dfe2db9fd05e23c674b0448756a6ecac9f8d0a807efb76ccc"
+   },
+   {
+    "path": "data/derived/phenology/PCL1055.nc",
+    "bytes": 307628,
+    "sha256": "16d402d777e8eede624522ae6e968223efa0609226ea419425ad20e184eb672f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1056.nc",
+    "bytes": 307628,
+    "sha256": "4221ca4fce53f64abad320ffcecf22777328183086e174c83dc23f78913158d0"
+   },
+   {
+    "path": "data/derived/phenology/PCL1057.nc",
+    "bytes": 308320,
+    "sha256": "effe07f599650be6cefe04d64d045246ad58485f393d6a6ee51619574ca0ab1b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1058.nc",
+    "bytes": 307628,
+    "sha256": "691dd0214474c3019fcff0544a145d96873169273de7aae79e8f067a3ec3b054"
+   },
+   {
+    "path": "data/derived/phenology/PCL1059.nc",
+    "bytes": 307628,
+    "sha256": "4dac7c632a757941f5d728110867f0cb1da39511d97649ca5d00f70b3d783ed8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1060.nc",
+    "bytes": 307628,
+    "sha256": "114023ab961e276193a1cf811dadcfb721dca81c75f91131a97e2da8b616f025"
+   },
+   {
+    "path": "data/derived/phenology/PCL1061.nc",
+    "bytes": 307628,
+    "sha256": "b11555c4be3a171f32a3d375391111807ccad3d8bd3a33f93970bbf2bb56abfb"
+   },
+   {
+    "path": "data/derived/phenology/PCL1062.nc",
+    "bytes": 307628,
+    "sha256": "5147354394e43897d3d12c1cbd3d543508ee769caf60076a82639fd88fdf2b7f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1063.nc",
+    "bytes": 307628,
+    "sha256": "c3cb8dc90b3901728f22e4b4ed27d973740ad41e3b10c12105180671c7eb4604"
+   },
+   {
+    "path": "data/derived/phenology/PCL1064.nc",
+    "bytes": 307628,
+    "sha256": "3fcc9fe5a52dd09bb90e76b586b127c588c708d85fab33c5e58d023f3793a9b2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1065.nc",
+    "bytes": 307628,
+    "sha256": "aca5c71cf771f66d65f6b2073ce16a8cb707535fac0c048b40eee59b76b09727"
+   },
+   {
+    "path": "data/derived/phenology/PCL1066.nc",
+    "bytes": 307628,
+    "sha256": "9959536ca06708c17018345d0650f1b8a866fa6f76b1e5a67860d17ee51a3c15"
+   },
+   {
+    "path": "data/derived/phenology/PCL1067.nc",
+    "bytes": 307628,
+    "sha256": "5b65b42e8027eea768fb9ad6a0d8bf408b66439dc94da02c5336f7414f0e5f79"
+   },
+   {
+    "path": "data/derived/phenology/PCL1068.nc",
+    "bytes": 307628,
+    "sha256": "8466b1ee95311189dc192614e686c49a29de78f44a82ae81ef33707ecf89eebd"
+   },
+   {
+    "path": "data/derived/phenology/PCL1069.nc",
+    "bytes": 307628,
+    "sha256": "6fc345d168d2314e23642b9c0ebed78eaef3765bd232f78c5d9675ac855749d1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1070.nc",
+    "bytes": 307628,
+    "sha256": "1fe7f1ca71093ca6ab50287c6b41da9068b61f622246c0f5b600a098887a22b8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1071.nc",
+    "bytes": 307628,
+    "sha256": "45d0b5f6beb90a0e1b484b4bc1f3d86bd4f9bb7597be6199ba130bd711a2344a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1072.nc",
+    "bytes": 308320,
+    "sha256": "bffe95f988392db2aebb073e41a92ac6afb5514be9ce7a923887aa9592be4f49"
+   },
+   {
+    "path": "data/derived/phenology/PCL1073.nc",
+    "bytes": 307628,
+    "sha256": "b42534b5557de484b02da2a346567230fce1df399595a2d80a3b12b78e689813"
+   },
+   {
+    "path": "data/derived/phenology/PCL1074.nc",
+    "bytes": 307628,
+    "sha256": "143913dc4b743c5deeaa0f3ac62c87d6c1751870c80e3a6e73311e80df6d1cbc"
+   },
+   {
+    "path": "data/derived/phenology/PCL1075.nc",
+    "bytes": 307628,
+    "sha256": "d4dab3ed136c56fb5411666e51e3e13fb9d27a379e16a647ee08cc11215db4af"
+   },
+   {
+    "path": "data/derived/phenology/PCL1076.nc",
+    "bytes": 307628,
+    "sha256": "fd61167b7ea08658e66e28e79297cbeb2cc16637af11096c13ce5eeda8aca7ba"
+   },
+   {
+    "path": "data/derived/phenology/PCL1077.nc",
+    "bytes": 298636,
+    "sha256": "19af81c4e7b688f6a6ea0c226aa43d86f321738a4b99c4b860d00ab3a8135618"
+   },
+   {
+    "path": "data/derived/phenology/PCL1078.nc",
+    "bytes": 298636,
+    "sha256": "a3d0e9b3dc57504a901c20fe96732c518f2237047b7c88ee735b9e5485927d2f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1079.nc",
+    "bytes": 298636,
+    "sha256": "8865251071b19a5bb2fc1517b5f4f7d24b35fc19ca0568346d97edaf1d42e60e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1080.nc",
+    "bytes": 298636,
+    "sha256": "832808799e7ad8a10cf2b7413a98af65a3f4c99c36924a17c8d437aceaaba86e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1081.nc",
+    "bytes": 298636,
+    "sha256": "37cb0251da630b03acb761e055a94d64b7ab5239b008897144728e336d31b7fa"
+   },
+   {
+    "path": "data/derived/phenology/PCL1082.nc",
+    "bytes": 298636,
+    "sha256": "366bb475617c68836b045484163907ee2a0320b08d30d775c5e682a135b447a9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1083.nc",
+    "bytes": 298636,
+    "sha256": "eb9dd4f6a75ccaa88a0853aede6bc61598b996353524608c0f738e6cba328b70"
+   },
+   {
+    "path": "data/derived/phenology/PCL1084.nc",
+    "bytes": 298636,
+    "sha256": "0d0efc6a9c7d437b2a7fa672fae63cfe6d5f257d919dfb351145db1ef9164e24"
+   },
+   {
+    "path": "data/derived/phenology/PCL1085.nc",
+    "bytes": 298636,
+    "sha256": "49429026e1ca19dfecfe6f27b63eb2dc5381d3732ef1e0c4b1ffe2bf23a0434f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1086.nc",
+    "bytes": 298636,
+    "sha256": "0c1fe11b775ec7f7966a38b6d1a3b0f4d4015266a551636f5fbfc7bfddeed591"
+   },
+   {
+    "path": "data/derived/phenology/PCL1087.nc",
+    "bytes": 298636,
+    "sha256": "e066220c6d731826e12d3498bdf08a3088af9a08dcc6b185fbf2d500ed1101d0"
+   },
+   {
+    "path": "data/derived/phenology/PCL1088.nc",
+    "bytes": 299459,
+    "sha256": "8c08b4b42bbcfb55a584eeb1cd5eae6ba6e7ef14082d93d9a04bf2e92a8d1d4d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1089.nc",
+    "bytes": 298636,
+    "sha256": "9b98260bcf47c3c5e1563e205a180e6bbfa7cc0c53b18d5e25671ad6dc6738c9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1090.nc",
+    "bytes": 298636,
+    "sha256": "ec28a5aca3a8da3ef93e57d6305c2425b2a6d9f8ffa0a7cf6e410b5371209785"
+   },
+   {
+    "path": "data/derived/phenology/PCL1091.nc",
+    "bytes": 298636,
+    "sha256": "b4430258dbe9c11bf88c994ada865209a96a10f78cacd81f06b09882a0854e2f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1092.nc",
+    "bytes": 299328,
+    "sha256": "4cc702cee9f3cb31fffebfc85c96c0fcc128f1c1a028b9ac5e43ca1d8046bdde"
+   },
+   {
+    "path": "data/derived/phenology/PCL1093.nc",
+    "bytes": 298636,
+    "sha256": "0b7c77d7d0466d424082e31ef0c32d4d36d5310e4da049221bc77d418675641d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1094.nc",
+    "bytes": 298636,
+    "sha256": "6c3477789c2784aa12eb2a240b9b7bf38ce51c353415e3c47bc3f2a7c4ce8126"
+   },
+   {
+    "path": "data/derived/phenology/PCL1095.nc",
+    "bytes": 298636,
+    "sha256": "c1b6a137bd6f34110ecfb7223f64027135dddd3ea334c900d1b28135bfec6925"
+   },
+   {
+    "path": "data/derived/phenology/PCL1096.nc",
+    "bytes": 299328,
+    "sha256": "2c73d8fddd5655c5fe605edf9f47bb623db1c054674dd342e8c96e3a40156e63"
+   },
+   {
+    "path": "data/derived/phenology/PCL1097.nc",
+    "bytes": 299328,
+    "sha256": "3d70778283209d68eebb00b1a27ac4530fe30ad0198d8ce2704661570d105b7b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1098.nc",
+    "bytes": 298636,
+    "sha256": "ce49220758b181bf5f6eb81563f88d752439df13acf6fa9f55e7a22f8c6cd5f7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1099.nc",
+    "bytes": 298636,
+    "sha256": "3093d8fa5066df7f2c79ec853a253355cdcc65de11a68269a95d60873c7372a5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1100.nc",
+    "bytes": 298636,
+    "sha256": "9a2267f52ed907f5a4a013170994d2663803f8a07b1ac0f2d8cb3ecd234aa0e6"
+   },
+   {
+    "path": "data/derived/phenology/PCL1101.nc",
+    "bytes": 298636,
+    "sha256": "0bbfbcf1b3e394edf82232b637698a503f6ea409106497e5f02c26ffe60d525b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1102.nc",
+    "bytes": 298636,
+    "sha256": "0c6404eba18810be5f23bfe966313c173cef23ce767d1cab19ad9a816617f65e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1103.nc",
+    "bytes": 298636,
+    "sha256": "a024043e52469502486a3bed34fd3c69511d405ca93144357638ee27da1838ff"
+   },
+   {
+    "path": "data/derived/phenology/PCL1104.nc",
+    "bytes": 302831,
+    "sha256": "5a8a2c141f9c40f13068cc9d29a9bb86fbaf40a128dec3c1aecdc7188ccb79c2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1105.nc",
+    "bytes": 302008,
+    "sha256": "579d9508f909e5f27f85c4efb538c07d2224aa42677e00f940450e8b22f41293"
+   },
+   {
+    "path": "data/derived/phenology/PCL1106.nc",
+    "bytes": 302008,
+    "sha256": "8a2de16a24bd602e045cff8932191b0ec6d64b68a8686a0dd9bafe06efc65036"
+   },
+   {
+    "path": "data/derived/phenology/PCL1107.nc",
+    "bytes": 302008,
+    "sha256": "a8159c62e8a5ed20280a32612b6e60dce1addebd6031b64a62c5973b2fe6477c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1108.nc",
+    "bytes": 302008,
+    "sha256": "b1aacd3aa07346426a0eb966c10e70b134d3a087a2c61bc7a95b4c0e5fcda031"
+   },
+   {
+    "path": "data/derived/phenology/PCL1109.nc",
+    "bytes": 302008,
+    "sha256": "31f740a737f4fc64988d19c9cda7ff4f803fa5cc1b03fe8dbffcbcbdb2ab3871"
+   },
+   {
+    "path": "data/derived/phenology/PCL1110.nc",
+    "bytes": 302008,
+    "sha256": "659b1fb8e8fc1b45ce848791e7d1459829d57e4b009eba599a0addbfb2925b6f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1111.nc",
+    "bytes": 302008,
+    "sha256": "806bf0dcec71ea365aaa7688959305e45f4e161b064998fce6b8f8c09149dfcf"
+   },
+   {
+    "path": "data/derived/phenology/PCL1112.nc",
+    "bytes": 302008,
+    "sha256": "8f1d3e7686b27269529e2f47041e2ee29e93b917a4ff7889cd6ee39c40d77eb9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1113.nc",
+    "bytes": 302008,
+    "sha256": "e841f91926b63da7a455219b9bb0d316859c04b662e6f946017390c38a437f5f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1114.nc",
+    "bytes": 302008,
+    "sha256": "28e8308a36702527789b37f69c3d7be963c5293b511d1f829d5ba20d4c47f878"
+   },
+   {
+    "path": "data/derived/phenology/PCL1115.nc",
+    "bytes": 302831,
+    "sha256": "8c34deb0fe0ce47c9fa3a41e87e98941f31d7227ee78d7b9e9e82230bd89ef8a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1116.nc",
+    "bytes": 302831,
+    "sha256": "99c84a18355eb89fbd8fb0177e8009dc87b470b1f3efca2f515e32c342676bd7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1117.nc",
+    "bytes": 302008,
+    "sha256": "851adeb5df6fb3a5aa566884b2bbb75998963c5e50c350c0d0f75b78adc4f13b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1118.nc",
+    "bytes": 302831,
+    "sha256": "1c47f84f375b95b71135f484c0e8139d6327070bbb23873195f90ce8b674414f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1119.nc",
+    "bytes": 302008,
+    "sha256": "c44ae1e05423a3699307bf4def5530e49754393b7c7ab951e57c0856b9d2bd2b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1120.nc",
+    "bytes": 302008,
+    "sha256": "dfa2b1142868b993564cde8685c8c7510e8f29c4a7a3b5cfefd54d48bf43483a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1121.nc",
+    "bytes": 302008,
+    "sha256": "e2d9b97f9cf5bb0fe99c72d19c0ea10b45f60c9555f30d50ae2d623e2fa31860"
+   },
+   {
+    "path": "data/derived/phenology/PCL1122.nc",
+    "bytes": 302831,
+    "sha256": "2948881c09def9f93b8c079809423cb3d4634df87ff7cb581a4435b9ed8ea953"
+   },
+   {
+    "path": "data/derived/phenology/PCL1123.nc",
+    "bytes": 302008,
+    "sha256": "e9a301478b10e170600f5e4871ce8c78a62cb87932d0bd2b0a1f8aee22d1006c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1124.nc",
+    "bytes": 302008,
+    "sha256": "cda620d85b41806439047a5ebb5d54670496b06a2f4cfef9b7a1bc97398b4e16"
+   },
+   {
+    "path": "data/derived/phenology/PCL1125.nc",
+    "bytes": 302008,
+    "sha256": "3fd0e5949f87f91e841c59354be15987908c674fd9a75d2afbe35a919e1c968d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1126.nc",
+    "bytes": 302008,
+    "sha256": "45a15af7eeca3fe8d6d1c02c1280419f356e83bdf3416f43c6ff74ef57cf1145"
+   },
+   {
+    "path": "data/derived/phenology/PCL1127.nc",
+    "bytes": 302008,
+    "sha256": "94a2ab7daa0e668cad06d070602252baf4eba9f235665c3736e42dc1794e2844"
+   },
+   {
+    "path": "data/derived/phenology/PCL1128.nc",
+    "bytes": 302831,
+    "sha256": "39d97245cc30d628a10a9658ee898903977ad5dfad981fbd1fed5a5a34ae5fca"
+   },
+   {
+    "path": "data/derived/phenology/PCL1129.nc",
+    "bytes": 302008,
+    "sha256": "10774e0072ac4e1b50868e5e9aa1b22e425d9c4c70e31a6e280b74e405c0d048"
+   },
+   {
+    "path": "data/derived/phenology/PCL1130.nc",
+    "bytes": 302008,
+    "sha256": "8a40eabd450810601323c2c52084062fc276bda52c9bb007001f2b2a0f133ed3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1131.nc",
+    "bytes": 302008,
+    "sha256": "81a3408c21ac33ab2327531202596fbd17a141eb58f088e1d036e12c1603e69a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1132.nc",
+    "bytes": 302008,
+    "sha256": "991a7f273108761d20f0eefe9b0eb3ec53b2108806ca05be64aecec1275ca134"
+   },
+   {
+    "path": "data/derived/phenology/PCL1133.nc",
+    "bytes": 302008,
+    "sha256": "a3754dfdceb0a22670c48468754d60dbbbb5d7137388f46ea0d719b241813a41"
+   },
+   {
+    "path": "data/derived/phenology/PCL1134.nc",
+    "bytes": 302008,
+    "sha256": "e324e5cad643a8b85574874264baf2cb815821961778f30ca828c5e919b2c07e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1135.nc",
+    "bytes": 302008,
+    "sha256": "b43487a5a9e855c183b809adcdfa9f9dd0668e694aa80b736e5b5bbfa116bf41"
+   },
+   {
+    "path": "data/derived/phenology/PCL1136.nc",
+    "bytes": 302831,
+    "sha256": "3186b7141b179f4807128595d2ba593afeeac08ab053b7dc66c36b2aba9892ac"
+   },
+   {
+    "path": "data/derived/phenology/PCL1137.nc",
+    "bytes": 302008,
+    "sha256": "4e2dabc2040cfa1532cf0205b1f19f3cf4088ef07e0c3273983996752c7079e1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1138.nc",
+    "bytes": 302008,
+    "sha256": "2202d9bda6faffe7ff0a7f799ef83810c3e9031ea55b34159242a9eb752efbc4"
+   },
+   {
+    "path": "data/derived/phenology/PCL1139.nc",
+    "bytes": 302008,
+    "sha256": "140c88aa03c0659642f552caea4956f9e267b0ccb2480faeb203bb6b838a1c9c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1140.nc",
+    "bytes": 302008,
+    "sha256": "c2914cd323771328460577b7d2d7cc8d4ad532d035a2bfc5017839c8a023cf78"
+   },
+   {
+    "path": "data/derived/phenology/PCL1141.nc",
+    "bytes": 302008,
+    "sha256": "ae006de4205ab9de097a2b105abde4946f67d7e2a8938ace0ad97458dd97c1ce"
+   },
+   {
+    "path": "data/derived/phenology/PCL1142.nc",
+    "bytes": 302008,
+    "sha256": "5c2b98ecca5d32030371e53317f2c8f4e8f8e546da6176b5a5efe6afb44efbad"
+   },
+   {
+    "path": "data/derived/phenology/PCL1143.nc",
+    "bytes": 302008,
+    "sha256": "d85ef246d485b2e159c4e01303d5cbe43d055e7c926514c638043e661fd65f16"
+   },
+   {
+    "path": "data/derived/phenology/PCL1144.nc",
+    "bytes": 302008,
+    "sha256": "e1acea6053812daedc14d07335c83a08bb230731fb14c903d4864cd188af3d2e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1145.nc",
+    "bytes": 302008,
+    "sha256": "1593ee2ea40fe955f059f1f38a9ee90f51ada8d908042fc1d846dfae8f12fa41"
+   },
+   {
+    "path": "data/derived/phenology/PCL1146.nc",
+    "bytes": 302008,
+    "sha256": "131076ff857cd3fdab94d5deea9669b5b681931e3a33b6b4195889131d4c2975"
+   },
+   {
+    "path": "data/derived/phenology/PCL1147.nc",
+    "bytes": 302008,
+    "sha256": "f53072a226a37be774eeddff2dd4b923c8f7dcacd4975c7c5a7776cf03ea0aa2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1148.nc",
+    "bytes": 302008,
+    "sha256": "41e2d2af848e854401857d8297a116de8d7c1d6209b44e8a79098f12c2704453"
+   },
+   {
+    "path": "data/derived/phenology/PCL1149.nc",
+    "bytes": 302008,
+    "sha256": "e31c56032d99f7fcbda63446d26a5d86f372e5ca2ff85463475cc22914e3cada"
+   },
+   {
+    "path": "data/derived/phenology/PCL1150.nc",
+    "bytes": 302008,
+    "sha256": "b5e8ebfc39850541e4e851782b3910dd28754199d4cc361f1dd628b4ba7e6d7e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1151.nc",
+    "bytes": 302008,
+    "sha256": "a305bb054ca3e53067877381a89a59cdede7b426eb3bfb1b5c68ef0609019981"
+   },
+   {
+    "path": "data/derived/phenology/PCL1152.nc",
+    "bytes": 302008,
+    "sha256": "1a882fff32e0893dc28cdaa550593b65f00f11b3a446e75ba5f600a9ce178894"
+   },
+   {
+    "path": "data/derived/phenology/PCL1153.nc",
+    "bytes": 302008,
+    "sha256": "0dcb7accd70ae9f6b6c0b3716a74ba7c8b32a0c96df7ea0dea968fa9aa6e4a8e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1154.nc",
+    "bytes": 302008,
+    "sha256": "a0aa014435e37d4b59b75ab1ae4cdeff41f0276bac4634c85014e8860306c4de"
+   },
+   {
+    "path": "data/derived/phenology/PCL1155.nc",
+    "bytes": 302008,
+    "sha256": "4e818f589fa94cc6674ca7ce055b377aa87464f51b5c7b1837608fd555707ff4"
+   },
+   {
+    "path": "data/derived/phenology/PCL1156.nc",
+    "bytes": 429944,
+    "sha256": "61c5c1525a79341d271754900194854c04e7963ea25823c2f1207c138d658318"
+   },
+   {
+    "path": "data/derived/phenology/PCL1157.nc",
+    "bytes": 430636,
+    "sha256": "9e0e8d2745fb1b2672b4bc82518232b486cf5f6419113353eb519bc2ab5dea11"
+   },
+   {
+    "path": "data/derived/phenology/PCL1158.nc",
+    "bytes": 430636,
+    "sha256": "e866d4741a57e548c1a681f21c4b3d95884b5f8abe8af08c8c1de663f655385f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1159.nc",
+    "bytes": 470184,
+    "sha256": "30752d9ab97cbee5fb5b4cd477b6bbf2f919c340c25663c065268ef6dda80fc8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1160.nc",
+    "bytes": 470269,
+    "sha256": "dd286ff617136b3f452f26c1a7d25b0a8147d3047a74575e2d3398eecbe26f65"
+   },
+   {
+    "path": "data/derived/phenology/PCL1161.nc",
+    "bytes": 470624,
+    "sha256": "ec8acf6d0234f6147ad4348a70c828cf2681ffe8cab34991e2c19dfcb20c0e97"
+   },
+   {
+    "path": "data/derived/phenology/PCL1162.nc",
+    "bytes": 429944,
+    "sha256": "0e0c9f38b2db9c905befaa7e0c6fd956de1551d76eaf9f2930e57fd94df11674"
+   },
+   {
+    "path": "data/derived/phenology/PCL1163.nc",
+    "bytes": 429944,
+    "sha256": "6ad8f24efec0d7df33bb5d5718bcf9276bb30fd757b8eeea01cc9c4c3f5b5a31"
+   },
+   {
+    "path": "data/derived/phenology/PCL1164.nc",
+    "bytes": 430636,
+    "sha256": "eda8ef6a19dfc7bb88d2f2cae83964d8a3fb33f537c4f7048872f77384311600"
+   },
+   {
+    "path": "data/derived/phenology/PCL1165.nc",
+    "bytes": 430636,
+    "sha256": "765cf4eaacb434293a93692fb6dde6bb796dbc0eb31bd173aecc0ee2ed645545"
+   },
+   {
+    "path": "data/derived/phenology/PCL1166.nc",
+    "bytes": 470184,
+    "sha256": "45ccd4ae70e9177e361ebd7eee6b907c4981ccd8b83670d1115c0d8f9890948e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1167.nc",
+    "bytes": 470184,
+    "sha256": "4fd02cea28947d7f27b3501b5f7cdc1fb79c81fe35dec5e69b267b88f21ad1d6"
+   },
+   {
+    "path": "data/derived/phenology/PCL1168.nc",
+    "bytes": 470315,
+    "sha256": "6de062c6e4561771be09b7da697599b0850192ca2bdc8064c2ebde13dbf9393f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1169.nc",
+    "bytes": 430767,
+    "sha256": "f5604e4a90a138138c821ade39359e1dd01274b7b55ec66807e5596e41303cbc"
+   },
+   {
+    "path": "data/derived/phenology/PCL1170.nc",
+    "bytes": 430636,
+    "sha256": "35291b34f50708384bdfef328c0d145247dbe4719afbeee264e3d59be49ca3db"
+   },
+   {
+    "path": "data/derived/phenology/PCL1171.nc",
+    "bytes": 430767,
+    "sha256": "a47a0a9b8bf469f2b35cb2619306dc53526c4908c10d92fcc2a4542925439ddc"
+   },
+   {
+    "path": "data/derived/phenology/PCL1172.nc",
+    "bytes": 385876,
+    "sha256": "7317a5e82365a1cd9c826afb4d69b343b5c87f79783f86bbd1134892cccf80b6"
+   },
+   {
+    "path": "data/derived/phenology/PCL1173.nc",
+    "bytes": 385961,
+    "sha256": "d35175ac8e5784db3cf591e7cfedec1d907f36a69dd3397c3bbd6aa6c72f52b9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1174.nc",
+    "bytes": 386007,
+    "sha256": "db9b3e3ac3028021000ac694173398a641d9629392f619df2142723b14b45034"
+   },
+   {
+    "path": "data/derived/phenology/PCL1175.nc",
+    "bytes": 385961,
+    "sha256": "16b90e4fcb67738f209a57947e4507e3857f88c6ff7b11c43fd7d3e6630e0300"
+   },
+   {
+    "path": "data/derived/phenology/PCL1176.nc",
+    "bytes": 430767,
+    "sha256": "334a93d8256a1264896ac6627a3639398e7645c8ab5c57b7916e5eaa962fba5a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1177.nc",
+    "bytes": 429944,
+    "sha256": "7a2da65170ce1b4532b848290046afebff653ef42abad2b7601672315812bf25"
+   },
+   {
+    "path": "data/derived/phenology/PCL1178.nc",
+    "bytes": 469492,
+    "sha256": "d50a44a09524ad4b4b1b425d2728fca334eb465376dd51b10ce6fa2ce06ed4ad"
+   },
+   {
+    "path": "data/derived/phenology/PCL1179.nc",
+    "bytes": 470315,
+    "sha256": "6ceff00e22598bad32043ff88a787f3afdbf0a752e420d1ecf66e704e5764bab"
+   },
+   {
+    "path": "data/derived/phenology/PCL1180.nc",
+    "bytes": 470184,
+    "sha256": "1376ee4a2c20bd6ca03f3f2e4474d8bfd4009818bd7d7689a4de8e8d83f4c534"
+   },
+   {
+    "path": "data/derived/phenology/PCL1181.nc",
+    "bytes": 470269,
+    "sha256": "9d4e778fc6db016cd92dfc834aa076d85860832d7d956a1034fcdd34b0ee5690"
+   },
+   {
+    "path": "data/derived/phenology/PCL1182.nc",
+    "bytes": 470315,
+    "sha256": "44fd4d1b1386e5b7dec5dda4e0f49257ed3038df4c922b9096eb88051e8e07dd"
+   },
+   {
+    "path": "data/derived/phenology/PCL1183.nc",
+    "bytes": 430721,
+    "sha256": "9f8c2d0797e8e6df1e3fc1fa493fd044301046252b1116289dbec3dd8a7a03ef"
+   },
+   {
+    "path": "data/derived/phenology/PCL1184.nc",
+    "bytes": 470315,
+    "sha256": "27366df8c1beb6ca49d9bbeae552420d0672e845119546b767c5806c5182dd89"
+   },
+   {
+    "path": "data/derived/phenology/PCL1185.nc",
+    "bytes": 470269,
+    "sha256": "b7d53bce5fac44dbbeca0deecd602749e98a1e3fb9475094b67204ff29675147"
+   },
+   {
+    "path": "data/derived/phenology/PCL1186.nc",
+    "bytes": 470315,
+    "sha256": "af859a532b8177aa24b26176325a9621e97d697553836ecf62ef69572f840fb0"
+   },
+   {
+    "path": "data/derived/phenology/PCL1187.nc",
+    "bytes": 469492,
+    "sha256": "92f02dcad9b9a81c9a442016750d0ae5b4e8d174193d99452758a242748b6a01"
+   },
+   {
+    "path": "data/derived/phenology/PCL1188.nc",
+    "bytes": 470184,
+    "sha256": "dbd0438812ed832dbf60e7e28de0a00cb115e72021c0e0004387c54694d2545a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1189.nc",
+    "bytes": 469492,
+    "sha256": "f55669370cd2f4a3359347c725dd6fb8dc2f8b27f7ab7a762d628da1d42f3044"
+   },
+   {
+    "path": "data/derived/phenology/PCL1190.nc",
+    "bytes": 470315,
+    "sha256": "a36d74f168385dc6e7641c5920a95c93366d1273801532a776bb7ae80a2d2a9a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1191.nc",
+    "bytes": 429944,
+    "sha256": "bb970fdcb9b805f5d01ad7c106889e0d2ec45eb265f6bd9d4a4fe1f0ce9d86d9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1192.nc",
+    "bytes": 430636,
+    "sha256": "7605b11b2904e2f3962da561faa4c5d1423616f8063d17e942fb93ee51945b06"
+   },
+   {
+    "path": "data/derived/phenology/PCL1193.nc",
+    "bytes": 429944,
+    "sha256": "b65380a131dd41c86ec886a4aacfe5f57dd4b0ef09c2bff4afb2cce74f158983"
+   },
+   {
+    "path": "data/derived/phenology/PCL1194.nc",
+    "bytes": 430636,
+    "sha256": "3e48356e8f157b4dc7cdd7aa17e87a0fa97c5b7428a3f535ae54c71c33092cf8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1195.nc",
+    "bytes": 430636,
+    "sha256": "23a8635f6193f00409d8625267387b09731274ef352605eeb91f5ff6c896e03b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1196.nc",
+    "bytes": 470184,
+    "sha256": "2e206b0f20754546665eb201b07ecba22b5616f3ddb46d2862141eb1b5f8336a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1197.nc",
+    "bytes": 469492,
+    "sha256": "83eeb14af0a04d08d8baa14d11e3a28aab744b6a7075436fb14e5f014e9f42e7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1198.nc",
+    "bytes": 430721,
+    "sha256": "8084256eaf0ac6861646b5e48442c9ce2190e708ecb3b021425e87332e39f214"
+   },
+   {
+    "path": "data/derived/phenology/PCL1199.nc",
+    "bytes": 430636,
+    "sha256": "859d8bc86a52304dc66ea2323b7a4f78e87a3855e963e4c882985a916daefd29"
+   },
+   {
+    "path": "data/derived/phenology/PCL1200.nc",
+    "bytes": 417780,
+    "sha256": "dbf700c11882e0f442bd3459bf050f1d22e6ed8ad263071d287dd0888e46445d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1201.nc",
+    "bytes": 430636,
+    "sha256": "74d9cbfb5c95815f372404caa85af4fe4ecdba6f6c892e19c92a640824ee5689"
+   },
+   {
+    "path": "data/derived/phenology/PCL1202.nc",
+    "bytes": 417780,
+    "sha256": "811735362a03f5d772ea11bee0cd63d67942b77db48b0d109d0ccba4e0683f30"
+   },
+   {
+    "path": "data/derived/phenology/PCL1203.nc",
+    "bytes": 469492,
+    "sha256": "e44cd3757216d5d58c5d55b4e97974008108b0352b45c042a19dc1028c37a40e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1204.nc",
+    "bytes": 469492,
+    "sha256": "66fb4072cf6a424f806f0ffcd567158edb179a7682ff9d6fee4ec5d1a277a3e5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1205.nc",
+    "bytes": 469492,
+    "sha256": "7379e897486f96623d53a6fef6601e0583c6542ca25b9f7f58ba54faa640bde8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1206.nc",
+    "bytes": 470315,
+    "sha256": "e1e597465d9a31d17e27dd8d1c92463482bf61285999cde866cf84bd40c8a961"
+   },
+   {
+    "path": "data/derived/phenology/PCL1207.nc",
+    "bytes": 470269,
+    "sha256": "e9a0fc1434611adcd3afb9c07d56ebffe6dcc75b9d21ab40d87964f48af49b45"
+   },
+   {
+    "path": "data/derived/phenology/PCL1208.nc",
+    "bytes": 430636,
+    "sha256": "2c1780075c312518b1ab60445c83df130f18c40cd54373ad761cd4ec4703af19"
+   },
+   {
+    "path": "data/derived/phenology/PCL1209.nc",
+    "bytes": 429944,
+    "sha256": "4e8d725dcf9a5c37a84cec5c7fcdee5f0b39f8ba9ca5a42dc64407b3f82a2dd7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1210.nc",
+    "bytes": 470269,
+    "sha256": "0a4e021902d3d34f23c446884e7b4cab79cdb65ac5fca45fe0726d50fe39cd45"
+   },
+   {
+    "path": "data/derived/phenology/PCL1211.nc",
+    "bytes": 470315,
+    "sha256": "c2061710105071b6aa075e9c34fa1acc63d9932efdb6b5359b31ea189c6de5d5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1212.nc",
+    "bytes": 470269,
+    "sha256": "6fd3f71d0ea12b8a6dc8c55224b13be99276e4ef4d197c7df089454290f7d116"
+   },
+   {
+    "path": "data/derived/phenology/PCL1213.nc",
+    "bytes": 470315,
+    "sha256": "e7155939b08fed27e7aacbbcca7dc8ed099293936ef2be3716134229db36725e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1214.nc",
+    "bytes": 420520,
+    "sha256": "9477a932caf7df364a40778a12c7d835f0fb3cedb713a08e682683eaac2f7578"
+   },
+   {
+    "path": "data/derived/phenology/PCL1215.nc",
+    "bytes": 430636,
+    "sha256": "574ceec13daa8b82122ceb95a33c7154e0ca9def76cdcfb972b443229ad12ebf"
+   },
+   {
+    "path": "data/derived/phenology/PCL1216.nc",
+    "bytes": 264468,
+    "sha256": "5defadb71eeb9c3e05c97fb896aa11b7e35817847ab0d2f67600a0320d0d91e2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1217.nc",
+    "bytes": 264468,
+    "sha256": "156e1ff2b6633d7f174f3a959136ed50ba7efc1577f77c5f240b245a1f5bb95c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1218.nc",
+    "bytes": 264468,
+    "sha256": "c187a44eee6499bababaffb5500aabb666e08fe459c188c390b445864b7be5f7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1219.nc",
+    "bytes": 264468,
+    "sha256": "88488cee9cd63c12c7ef2ec62a87bb27dba1f6068f3d9b32e208ad7b8df8bbe7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1220.nc",
+    "bytes": 268932,
+    "sha256": "2f63dd5f235dc06aaeed5a5e6d1762449b2d75f9a9c0d7d6c888c95027aab5b3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1221.nc",
+    "bytes": 268932,
+    "sha256": "2903b124a178b227bbac0fa0e1ad73828356af3e82661227ace6c8f7c410f374"
+   },
+   {
+    "path": "data/derived/phenology/PCL1222.nc",
+    "bytes": 268932,
+    "sha256": "d9c2f434fa299a660764b99f8f3a61d7ebd1198212f7a0c3f5eb09ef3682fea7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1223.nc",
+    "bytes": 268932,
+    "sha256": "0a0931ca09f01e53113ac545ccb3af5f8dc3fc28249916004d5128a3d24b43aa"
+   },
+   {
+    "path": "data/derived/phenology/PCL1224.nc",
+    "bytes": 268932,
+    "sha256": "7e54357e0e4abc36c1c0bf908b34a6fd118f53e974daf2ac17f5d959ce1d95fe"
+   },
+   {
+    "path": "data/derived/phenology/PCL1225.nc",
+    "bytes": 264468,
+    "sha256": "0628b677372548ffd4ff7e25550967134bee02e1de99eb0f6274b44421a572db"
+   },
+   {
+    "path": "data/derived/phenology/PCL1226.nc",
+    "bytes": 264468,
+    "sha256": "353be5e9b53620b08a30e9fe76beab269fc36491e1b10f697dc0a09a07cb1c0d"
+   },
+   {
+    "path": "data/derived/phenology/PCL1227.nc",
+    "bytes": 268932,
+    "sha256": "c13ee2537f366bce5935eb9af4340f2522946f24a1ab222d9f9914752306c7e5"
+   },
+   {
+    "path": "data/derived/phenology/PCL1228.nc",
+    "bytes": 268932,
+    "sha256": "1067412da93ee8921aba883e9f2db264c484bacdaa5fe64dd695a287131420d9"
+   },
+   {
+    "path": "data/derived/phenology/PCL1229.nc",
+    "bytes": 268932,
+    "sha256": "22657b0575e294d6f85c8cbdb691a86c897d5303c3f953a5d43b2301bdd44350"
+   },
+   {
+    "path": "data/derived/phenology/PCL1230.nc",
+    "bytes": 268932,
+    "sha256": "911b74b23ad86ee94a6b1d596ae0dc8f4bd22bb7e61cfce1497de6fd38f401ac"
+   },
+   {
+    "path": "data/derived/phenology/PCL1231.nc",
+    "bytes": 268932,
+    "sha256": "d5a3e70a1cb71d8cae269988698c2c01935a683920c7d3de155481828c80c798"
+   },
+   {
+    "path": "data/derived/phenology/PCL1232.nc",
+    "bytes": 268932,
+    "sha256": "1dd7fee1081c0ef00a52690b6d73f9e7d9bc463b833f2f9631859c25d1814688"
+   },
+   {
+    "path": "data/derived/phenology/PCL1233.nc",
+    "bytes": 264468,
+    "sha256": "8393e4c4b4b67ac5dac9e351c1b5663eadf174016b9eacf4f194573a4775e6c8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1234.nc",
+    "bytes": 264468,
+    "sha256": "02b48e39a0949de4684216dce53b2726aecd0b6fe4e6761d669127a87d6dc126"
+   },
+   {
+    "path": "data/derived/phenology/PCL1235.nc",
+    "bytes": 264468,
+    "sha256": "09cc88189cddb7af7187cf7c0aac3ac2bad4bfede41ec0e7c7a0b4e80092c4cf"
+   },
+   {
+    "path": "data/derived/phenology/PCL1236.nc",
+    "bytes": 264468,
+    "sha256": "bd7f89f08a2795b7cd66c5314ea27c61f2c51540997bd9c0b9c3a1bbc4b3549e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1237.nc",
+    "bytes": 264468,
+    "sha256": "1fcdaff974786888200c6d39049d4d48e7c0ad8f4560a2f455d9f3678d7e6eb3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1238.nc",
+    "bytes": 264468,
+    "sha256": "d912bf8b9b7d877cda67784a63a39a5cf45aadca2620ecb0ba39cf1711234b39"
+   },
+   {
+    "path": "data/derived/phenology/PCL1239.nc",
+    "bytes": 264468,
+    "sha256": "c57f44a788eb598ae1f252084bca7aff3ea1ccd10417ce80c4bd2397ff5f6935"
+   },
+   {
+    "path": "data/derived/phenology/PCL1240.nc",
+    "bytes": 264468,
+    "sha256": "be89783f36319d94f050b8369e4b291dfc0825d88e134751dadfbd078e9ef0b3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1241.nc",
+    "bytes": 264468,
+    "sha256": "18363edb297a816ef58d6b6ec11ed9f51a793c2a5337eb5d6a5b2ee27ba0b278"
+   },
+   {
+    "path": "data/derived/phenology/PCL1242.nc",
+    "bytes": 264468,
+    "sha256": "bfdeb1d0babb84df3ac2dd6bf41f2e6ebe5e9710bab56f08697b7b21781c296b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1243.nc",
+    "bytes": 265160,
+    "sha256": "1b4b1fcb5c33ea0edc13291dfd10a76b3ee777793e56ad1b0a2d64d89a1cf3be"
+   },
+   {
+    "path": "data/derived/phenology/PCL1244.nc",
+    "bytes": 264468,
+    "sha256": "60aefa691cc189087c1452f1ae2d73280ab163271419c07d124d4dba0970398f"
+   },
+   {
+    "path": "data/derived/phenology/PCL1245.nc",
+    "bytes": 264468,
+    "sha256": "382bbbb57371bd0ef6a6bae5215626bbffb9a7b3f871dc2149b2014f564ae445"
+   },
+   {
+    "path": "data/derived/phenology/PCL1246.nc",
+    "bytes": 264468,
+    "sha256": "a418b56a3dd9c014468c664adfce0cbd3e0db1acf9afa0e80e1fceaf5341c4d8"
+   },
+   {
+    "path": "data/derived/phenology/PCL1247.nc",
+    "bytes": 264468,
+    "sha256": "076947f4ebf3a1dd1e11c2f3e79dae3dfb2805f6ce04dc7cd580b36d9938c69e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1248.nc",
+    "bytes": 264468,
+    "sha256": "95756b808eb53415e0add8d69fe82a1ee66f15bca3b1e8faa6021db30e9f36d7"
+   },
+   {
+    "path": "data/derived/phenology/PCL1249.nc",
+    "bytes": 264468,
+    "sha256": "92929902b346092c8d62a7fad21dce827132099babdc86a189d5866887331f9e"
+   },
+   {
+    "path": "data/derived/phenology/PCL1250.nc",
+    "bytes": 264468,
+    "sha256": "4c96e7aa4f3ef36be0c822d834b28549d4df6ac6c81a8aa83b6dc959076d8b75"
+   },
+   {
+    "path": "data/derived/phenology/PCL1251.nc",
+    "bytes": 264468,
+    "sha256": "6eac0afaf1033459462d42a59b8b88b6624d526922d70ff696fbdeffbfc1a2bd"
+   },
+   {
+    "path": "data/derived/phenology/PCL1252.nc",
+    "bytes": 264468,
+    "sha256": "4c53255e2cbfb9d9386adc472303805ab4e9544ca5e808717541282b43e2d32b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1253.nc",
+    "bytes": 264468,
+    "sha256": "78450fe1fde62d4282e5e530d8571071b64dfa957c1069b81b3dac41ce359328"
+   },
+   {
+    "path": "data/derived/phenology/PCL1254.nc",
+    "bytes": 264468,
+    "sha256": "2248ea3379371803d006daf360a083235c4e9a8837ee6b1b1584b85f9e49344b"
+   },
+   {
+    "path": "data/derived/phenology/PCL1255.nc",
+    "bytes": 264468,
+    "sha256": "e4d8f6e86f787ca9775353d77e24097ea041830ac2147f405e0b95f74c7c8cb2"
+   },
+   {
+    "path": "data/derived/phenology/PCL1256.nc",
+    "bytes": 264468,
+    "sha256": "bcbd882c2b849a6f9ed3f119ae0a8825fbb0dff4f536fd3c70e262931c60e87a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1257.nc",
+    "bytes": 264468,
+    "sha256": "a6e9da1bfe257d0d08d5442231f5049f34cfe8b430a24c852dee55ca7b24c429"
+   },
+   {
+    "path": "data/derived/phenology/PCL1258.nc",
+    "bytes": 264468,
+    "sha256": "199de90c6a96a67c8233a3f965cd0243916001204b800f3108c530a0eaec8f88"
+   },
+   {
+    "path": "data/derived/phenology/PCL1259.nc",
+    "bytes": 264468,
+    "sha256": "4beeb845fbd8e73ac6e2ea063a83739417dd8b4884414b930ae940ca25b81bb3"
+   },
+   {
+    "path": "data/derived/phenology/PCL1260.nc",
+    "bytes": 264468,
+    "sha256": "fcf1446be48aa707a6ef8d443bc80caebf35a952ad1686e7f74b8b32311d79f1"
+   },
+   {
+    "path": "data/derived/phenology/PCL1261.nc",
+    "bytes": 264468,
+    "sha256": "12bbf65f2771112eb22307ce18ade75d65a240aacad6f5ca099fac7fdfae195c"
+   },
+   {
+    "path": "data/derived/phenology/PCL1262.nc",
+    "bytes": 268932,
+    "sha256": "ec82059ea13494d113a2ab45c345f16cfd7d51dbaaab00e5ca70363b1a5e827a"
+   },
+   {
+    "path": "data/derived/phenology/PCL1263.nc",
+    "bytes": 268932,
+    "sha256": "0fc1d63b510c0dafb51d0e4abd28f3378196f1e5fa4e39d57443464a92afe0cd"
+   },
+   {
+    "path": "data/derived/phenology/PCL1264.nc",
+    "bytes": 268932,
+    "sha256": "43722b7604028ec47559a97e6049ea03326471c275956239bd05586b0a342f2a"
+   }
+  ]
+ },
+ "cube_schema": {
+  "example": "32477.nc",
+  "dims": {
+   "index": 5,
+   "doy": 52,
+   "y": 5,
+   "x": 5,
+   "time": 96
+  },
+  "data_vars": [
+   "phenoshape",
+   "lsp_sos",
+   "lsp_pos",
+   "lsp_eos",
+   "lsp_vsos",
+   "lsp_vpos",
+   "lsp_veos",
+   "lsp_los",
+   "lsp_msp",
+   "lsp_mau",
+   "lsp_vmsp",
+   "lsp_vmau",
+   "lsp_ampl",
+   "lsp_ios",
+   "lsp_rog",
+   "lsp_ros",
+   "lsp_sw",
+   "lsp_trough",
+   "lsp_mos",
+   "obs_ndvi",
+   "obs_evi",
+   "obs_kndvi",
+   "obs_nbr",
+   "obs_savi",
+   "obs_band_blue",
+   "obs_band_green",
+   "obs_band_red",
+   "obs_band_nir",
+   "obs_band_swir1",
+   "obs_band_swir2"
+  ],
+  "coords": [
+   "y",
+   "x",
+   "spatial_ref",
+   "doy",
+   "index",
+   "time",
+   "sensor",
+   "year"
+  ],
+  "attrs_keys": [
+   "plot_id",
+   "census_year",
+   "win_start",
+   "win_end",
+   "n_obs",
+   "max_doy_gap",
+   "mean_doy_gap",
+   "frac_valid_px",
+   "n_obs_per_year",
+   "n_years_with_obs",
+   "patch_y",
+   "patch_x",
+   "sensors",
+   "indices_ok",
+   "plot_size_m2",
+   "n_landsat_px_covered",
+   "metadata_id",
+   "Location",
+   "lat",
+   "lon",
+   "phase_anchoring",
+   "doy_order",
+   "doy_anchor"
+  ]
+ },
+ "table_schemas": {
+  "data/derived/plots_subset.parquet": {
+   "rows": 1082,
+   "cols": 19,
+   "columns": [
+    "PlotObservationID",
+    "Owner",
+    "metadata_id",
+    "Location",
+    "Year",
+    "PlotSize_m2",
+    "X",
+    "Y",
+    "lon",
+    "lat",
+    "richness",
+    "n_records",
+    "stratum",
+    "Abundance_parameter",
+    "pixel_id",
+    "cell",
+    "win_start",
+    "win_end",
+    "win_years"
+   ]
+  },
+  "data/derived/lsp_all_auto.parquet": {
+   "rows": 5410,
+   "cols": 50,
+   "columns": [
+    "plot_id",
+    "index",
+    "sos",
+    "sos_mean5x5",
+    "pos",
+    "pos_mean5x5",
+    "eos",
+    "eos_mean5x5",
+    "vsos",
+    "vsos_mean5x5",
+    "vpos",
+    "vpos_mean5x5",
+    "veos",
+    "veos_mean5x5",
+    "los",
+    "los_mean5x5",
+    "msp",
+    "msp_mean5x5",
+    "mau",
+    "mau_mean5x5",
+    "vmsp",
+    "vmsp_mean5x5",
+    "vmau",
+    "vmau_mean5x5",
+    "ampl",
+    "ampl_mean5x5",
+    "ios",
+    "ios_mean5x5",
+    "rog",
+    "rog_mean5x5",
+    "ros",
+    "ros_mean5x5",
+    "sw",
+    "sw_mean5x5",
+    "trough",
+    "trough_mean5x5",
+    "mos",
+    "mos_mean5x5",
+    "degenerate_px_frac",
+    "peak_doy_observed",
+    "peak_doy_ref",
+    "phase_group",
+    "order_coherent",
+    "anchoring_used",
+    "ref_index",
+    "anchor_circ_sd",
+    "anchor_median",
+    "aseasonal_frac",
+    "strength_median",
+    "phase_error"
+   ]
+  },
+  "data/derived/lsp_all_by_phase.parquet": {
+   "rows": 4145,
+   "cols": 45,
+   "columns": [
+    "plot_id",
+    "index",
+    "sos",
+    "sos_mean5x5",
+    "pos",
+    "pos_mean5x5",
+    "eos",
+    "eos_mean5x5",
+    "vsos",
+    "vsos_mean5x5",
+    "vpos",
+    "vpos_mean5x5",
+    "veos",
+    "veos_mean5x5",
+    "los",
+    "los_mean5x5",
+    "msp",
+    "msp_mean5x5",
+    "mau",
+    "mau_mean5x5",
+    "vmsp",
+    "vmsp_mean5x5",
+    "vmau",
+    "vmau_mean5x5",
+    "ampl",
+    "ampl_mean5x5",
+    "ios",
+    "ios_mean5x5",
+    "rog",
+    "rog_mean5x5",
+    "ros",
+    "ros_mean5x5",
+    "sw",
+    "sw_mean5x5",
+    "trough",
+    "trough_mean5x5",
+    "mos",
+    "mos_mean5x5",
+    "degenerate_px_frac",
+    "peak_doy_observed",
+    "peak_doy_ref",
+    "phase_group",
+    "order_coherent",
+    "anchoring_used",
+    "ref_index"
+   ]
+  },
+  "data/derived/cv_folds.parquet": {
+   "rows": 27050,
+   "cols": 5,
+   "columns": [
+    "fold",
+    "held_out",
+    "PlotObservationID",
+    "split",
+    "scheme"
+   ]
+  },
+  "data/derived/topography/topography.parquet": {
+   "rows": 1082,
+   "cols": 28,
+   "columns": [
+    "plot_id",
+    "elevation",
+    "elevation_mean",
+    "elevation_std",
+    "slope",
+    "slope_mean",
+    "slope_std",
+    "aspect",
+    "aspect_mean",
+    "aspect_std",
+    "northness",
+    "northness_mean",
+    "northness_std",
+    "eastness",
+    "eastness_mean",
+    "eastness_std",
+    "heat_load",
+    "heat_load_mean",
+    "heat_load_std",
+    "tpi",
+    "tpi_mean",
+    "tpi_std",
+    "tri",
+    "tri_mean",
+    "tri_std",
+    "curvature",
+    "curvature_mean",
+    "curvature_std"
+   ]
+  }
+ }
+}

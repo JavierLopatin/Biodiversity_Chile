@@ -8,7 +8,30 @@ Se predicen simultáneamente diversidad alfa taxonómica, contribución local a 
 usando la curva fenológica reconstruida desde series temporales Landsat y Sentinel-2 más variables
 topográficas derivadas de un DEM.
 
-**Estado:** fase de diseño. Solo documentación; sin pipeline todavía.
+**Estado:** predictores extraídos. El pipeline de adquisición está completo para 1.082
+parcelas de Chile central (curvas fenológicas, 18 métricas LSP y 8 variables topográficas).
+Falta el modelado. Ver [`docs/07_run_record.md`](docs/07_run_record.md) para el registro
+reproducible del run.
+
+---
+
+## Pipeline
+
+```bash
+python scripts/01_build_subset.py --zip data/20602096.zip --out-dir data/derived
+python scripts/03_extract_topography.py
+python scripts/02_extract_phenology.py --hemisphere auto --resume
+python scripts/04_recompute_lsp.py --hemisphere auto --write-back
+python scripts/06_paper_figures.py --out-dir results/figures
+```
+
+| Script | Rol |
+|---|---|
+| `01_build_subset.py` | Subset espacio-temporal de Parcelas-CL y folds de CV agrupados |
+| `02_extract_phenology.py` | Cubo 5×5 px por parcela desde el datacube; `PhenoShape` + LSP |
+| `03_extract_topography.py` | DEM y derivadas topográficas sobre el mismo parche |
+| `04_recompute_lsp.py` | Re-ancla las LSP sobre las curvas ya guardadas, sin volver al cubo |
+| `06_paper_figures.py` | Figuras del manuscrito |
 
 ---
 
@@ -19,6 +42,9 @@ topográficas derivadas de un DEM.
 | [`docs/01_state_of_the_art.md`](docs/01_state_of_the_art.md) | Revisión crítica en 7 ejes: Spectral Variation Hypothesis, fenología como predictor de biodiversidad, diversidad funcional y filogenética desde teledetección, regresión sobre ejes de ordenación, deep learning multi-tarea, dark diversity, contexto chileno. Cierra con tabla de 5 gaps. |
 | [`docs/02_innovation_and_impact.md`](docs/02_innovation_and_impact.md) | Evaluación graduada de innovación, tabla de 9 riesgos cuantificados, impacto esperado, y sección explícita de lo que el proyecto **no** va a demostrar. |
 | [`docs/03_cnn_architecture.md`](docs/03_cnn_architecture.md) | Diseño de `PhenoNet-S`, CNN de ~15 k parámetros para n ≈ 1.000 parcelas. Sustrato *phenocube* (año × DOY), catálogo de transformaciones señal→imagen, régimen de entrenamiento y matriz experimental. |
+| [`docs/05_data_acquisition.md`](docs/05_data_acquisition.md) | Estrategia de adquisición satelital: ventana temporal, pooling y no estacionariedad, geometría de extracción, plan de ejecución. |
+| [`docs/06_phase_and_2d_transform.md`](docs/06_phase_and_2d_transform.md) | Anclaje de fase de las LSP (`hemisphere="auto"`) y la rotación global para la transformación 2D. |
+| [`docs/07_run_record.md`](docs/07_run_record.md) | **Registro del run final:** comandos, parámetros, versiones, salidas, diagnósticos y advertencias. Con [`docs/run_manifest.json`](docs/run_manifest.json) (inventario con `sha256`). |
 | [`docs/refs.bib`](docs/refs.bib) | 42 referencias; todos los DOI resueltos contra la API de Crossref. |
 
 ---

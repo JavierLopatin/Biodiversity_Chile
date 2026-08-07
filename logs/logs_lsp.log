@@ -1,0 +1,40 @@
+# logs_lsp.log -> 04_recompute_lsp.py --write-back
+#
+# Log condensado para versionarlo. Original: 78627 lineas, 13.2 MB.
+# Solo se colapsaron los bloques de advertencia (linea de Warning + su eco de codigo),
+# contabilizados al final. Ninguna linea de salida del script fue eliminada.
+
+plots on disk: 1082  |  index: all
+
+write-back under 'auto': 1082 files updated, 0 failed
+
+written: data/derived/lsp_all_auto.parquet  (5410 rows, 1082 plots, degenerate pixels 0.2%)
+
+season order coherence (SOS -> POS -> EOS, one wrap allowed):
+  evi    coherent in  90.6% of plots
+  kndvi  coherent in  88.8% of plots
+  nbr    coherent in  90.4% of plots
+  ndvi   coherent in  90.5% of plots
+  savi   coherent in  91.4% of plots
+
+=== within-plot anchoring coherence (the risk of per-pixel anchoring) ===
+circular sd of the anchor across the 25 pixels, in days:
+  median=14  q75=27  q90=43
+  plots with circ sd >  15 d: 2634 (49%)
+  plots with circ sd >  30 d: 1130 (21%)
+  plots with circ sd >  60 d:  207 (4%)
+  median aseasonal pixel fraction: 0.08
+  median seasonality strength:     0.258
+
+Plots with a large circular sd have pixels anchored to different
+phenological years; their 5x5 window is not internally comparable and
+should be flagged before being used for augmentation.
+
+==============================================================
+ADVERTENCIAS COLAPSADAS (clase @ origen: conteo)
+==============================================================
+  19476  FutureWarning @ 04_recompute_lsp.py: In a future version of xarray the default value for coords will change from coords='differ
+   7160  RuntimeWarning @ fromnumeric.py: Mean of empty slice.
+   7160  RuntimeWarning @ _methods.py: invalid value encountered in scalar divide
+   5122  RuntimeWarning @ utils.py: invalid value encountered in divide
+    383  RuntimeWarning @ 04_recompute_lsp.py: Mean of empty slice

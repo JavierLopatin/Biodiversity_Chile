@@ -1,0 +1,193 @@
+"""Cross-validation schemes that hold out whole units (dataset or site).
+
+Never random CV: Parcelas-CL is strongly clustered by project and locality, so a random
+fold places plots from the same site on both sides of the split and inflates R². The
+partition unit here is always a complete group.
+
+Two grouping axes, with different meanings:
+
+- ``metadata_id`` (project/dataset): deliberately confounds sampling protocol, site and
+  year. It is the strictest transferability test and answers "does the model work on data
+  we did not collect ourselves?". In this dataset most projects are single-year, so
+  leave-one-dataset-out is simultaneously leave-one-year-out.
+- ``Location`` (site): splits by place while leaving protocols mixed. Finer-grained
+  (169 levels) and measures spatial generalisation within known protocols.
+"""
+
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+
+
+def leave_one_group_out(df: pd.DataFrame, group_col: str, min_size: int = 20) -> pd.DataFrame:
+    """One row per (fold, plot). Every group with >= min_size plots becomes a test fold.
+
+    Groups smaller than ``min_size`` are never used as test —a test metric over 3 plots is
+    not interpretable— but they still contribute to training.
+    """
+    sizes = df[group_col].value_counts()
+    testable = sizes[sizes >= min_size].index.tolist()
+    rows = []
+    for fold, g in enumerate(sorted(testable)):
+        is_test = df[group_col] == g
+        rows.append(
+            pd.DataFrame(
+                {
+                    "fold": fold,
+                    "held_out": str(g),
+                    "PlotObservationID": df["PlotObservationID"],
+                    "split": np.where(is_test, "test", "train"),
+                }
+            )
+        )
+    out = pd.concat(rows, ignore_index=True)
+    out.attrs["scheme"] = f"leave-one-{group_col}-out"
+    out.attrs["n_folds"] = len(testable)
+    out.attrs["excluded_from_test"] = sorted(set(sizes.index) - set(testable))
+    return out
+
+
+def grouped_kfold(df: pd.DataFrame, group_col: str, k: int = 5, seed: int = 42,
+                  stratify_on: str | None = None,
+                  balance_weight: float = 1.0) -> pd.DataFrame:
+    """K folds assigning **whole groups** to a fold, balanced by size and (optionally) by a
+    response variable.
+
+    Greedy packing: groups are sorted largest-first and each goes to the fold that minimises
+    the resulting imbalance. With very unequal groups (md022 has 181 plots while others have
+    11) this balances considerably better than a random assignment.
+
+    ``stratify_on`` (e.g. ``"richness"``) additionally balances the *distribution* of that
+    variable across folds. This is not cosmetic. R-squared is a variance-normalised metric,
+    so a test fold whose response has almost no variance returns R-squared near zero however
+    good the model is, and a fold concentrating the high-richness plots returns a high value
+    almost for free. Measured on this dataset, the per-dataset groups span median richness
+    from 1 (md006) to 27 (md023), so unbalanced folds make per-fold scores incomparable.
+
+    Balancing the split on the response is not leakage: no information crosses from test to
+    train within a fold, group integrity is preserved, and the only effect is that folds
+    become comparable to each other. What it *does* hide is genuine distribution shift, so
+    the unstratified leave-one-group-out scheme should be reported alongside it — there the
+    shift is the quantity of interest, not a nuisance.
+
+    **Know the limit before relying on this.** Measured on this dataset, richness variance
+    decomposes as 80% *between* metadata_id groups and 20% within (82/18 for Location).
+    Richness is largely a property OF the group — md023 holds 6% of plots but 22% of all
+    species occurrences, at mean richness 28 against a dataset median of 5 — and groups are
+    atomic, so stratification can only rebalance the within-group fifth. Expect it to reduce
+    fold-to-fold imbalance modestly, not to remove it.
+
+    The imbalance that survives is best handled at the metric, not the split:
+
+    - Score pooled out-of-fold predictions rather than averaging per-fold R-squared. One
+      score over all plots uses the full response variance and sidesteps comparability
+      entirely; keep per-fold values as diagnostics.
+    - Report RMSE/MAE, which are in response units, next to any R-squared.
+    - Always publish ``fold_report`` beside the scores.
+    """
+    sizes = df[group_col].value_counts().sort_values(ascending=False)
+    load = np.zeros(k, dtype=int)
+    assignment: dict[str, int] = {}
+
+    if stratify_on is None:
+        for g, n in sizes.items():
+            f = int(np.argmin(load))
+            assignment[g] = f
+            load[f] += n
+    else:
+        # Size balance is a hard constraint, response balance a soft one. Optimising both
+        # in a single weighted sum lets the response term win whenever groups are small and
+        # numerous (169 Locations, median a handful of plots each), which produced folds of
+        # 96 vs 370 plots. Instead: restrict candidates to the folds that are still near the
+        # minimum load, then among those pick the one that best balances the response.
+        gsum = df.groupby(group_col)[stratify_on].sum()
+        gsum2 = df.groupby(group_col)[stratify_on].apply(lambda s: float((s**2).sum()))
+        scale = float(df[stratify_on].std()) or 1.0
+        total = float(len(df))
+        tol = max(1.0, 0.10 * total / k)   # allowed slack over the least-loaded fold
+        acc = np.zeros(k)    # sum of the response per fold
+        acc2 = np.zeros(k)   # sum of squares, so variance can be balanced too
+
+        def spread(loads, s1, s2):
+            """Spread of per-fold means and sds, in units of the overall sd."""
+            with np.errstate(invalid="ignore", divide="ignore"):
+                nz = np.maximum(loads, 1)
+                means = s1 / nz
+                var = np.maximum(s2 / nz - means**2, 0.0)
+            return means.std() / scale + np.sqrt(var).std() / scale
+
+        for g, n in sizes.items():
+            candidates = [f for f in range(k) if load[f] <= load.min() + tol] or [int(np.argmin(load))]
+            best, best_cost = candidates[0], np.inf
+            for f in candidates:
+                tl, t1, t2 = load.copy(), acc.copy(), acc2.copy()
+                tl[f] += n; t1[f] += gsum[g]; t2[f] += gsum2[g]
+                cost = balance_weight * spread(tl, t1, t2)
+                if cost < best_cost:
+                    best, best_cost = f, cost
+            assignment[g] = best
+            load[best] += n
+            acc[best] += gsum[g]
+            acc2[best] += gsum2[g]
+
+    fold_of_plot = df[group_col].map(assignment)
+    rows = []
+    for fold in range(k):
+        rows.append(
+            pd.DataFrame(
+                {
+                    "fold": fold,
+                    "held_out": f"fold{fold}",
+                    "PlotObservationID": df["PlotObservationID"],
+                    "split": np.where(fold_of_plot == fold, "test", "train"),
+                }
+            )
+        )
+    out = pd.concat(rows, ignore_index=True)
+    suffix = f"-stratified-on-{stratify_on}" if stratify_on else ""
+    out.attrs["scheme"] = f"grouped-{k}fold-by-{group_col}{suffix}"
+    out.attrs["n_folds"] = k
+    out.attrs["fold_sizes"] = load.tolist()
+    if stratify_on:
+        fold_mean = df.groupby(fold_of_plot)[stratify_on].mean()
+        out.attrs["fold_response_means"] = [round(float(v), 2) for v in fold_mean]
+    return out
+
+
+def fold_report(df: pd.DataFrame, cv: pd.DataFrame, response: str = "richness") -> pd.DataFrame:
+    """Per-fold composition of the response — always report this next to any score.
+
+    ``pct_out_of_range`` counts test plots whose response falls outside the training range.
+    It is usually near zero here because the pooled training set spans the full range; the
+    quantity that actually breaks comparability is the difference in *variance* between
+    test folds, which is why sd is reported.
+    """
+    m = df.set_index("PlotObservationID")[response]
+    rows = []
+    for (scheme, fold), g in cv.groupby(["scheme", "fold"]):
+        te = m[g.loc[g["split"] == "test", "PlotObservationID"]]
+        tr = m[g.loc[g["split"] == "train", "PlotObservationID"]]
+        rows.append(dict(
+            scheme=scheme, fold=fold, held_out=g["held_out"].iloc[0], n_test=len(te),
+            test_median=te.median(), test_mean=round(te.mean(), 2), test_sd=round(te.std(), 2),
+            train_mean=round(tr.mean(), 2), train_sd=round(tr.std(), 2),
+            pct_out_of_range=round(float(((te < tr.min()) | (te > tr.max())).mean() * 100), 1),
+        ))
+    return pd.DataFrame(rows)
+
+
+def summarise(df: pd.DataFrame, group_col: str) -> pd.DataFrame:
+    """Size and composition of each group, so the scheme is chosen with the data in view."""
+    g = df.groupby(group_col)
+    out = pd.DataFrame(
+        {
+            "n_plots": g.size(),
+            "n_locations": g["Location"].nunique(),
+            "years": g["Year"].apply(lambda s: f"{int(s.min())}-{int(s.max())}"),
+            "richness_median": g["richness"].median(),
+            "strata": g["stratum"].apply(lambda s: ",".join(sorted(s.unique()))),
+            "owner": g["Owner"].first(),
+        }
+    ).sort_values("n_plots", ascending=False)
+    return out.reset_index()

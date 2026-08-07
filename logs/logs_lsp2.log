@@ -1,0 +1,37 @@
+# logs_lsp2.log -> 04_recompute_lsp.py --compare
+#
+# Log condensado para versionarlo. Original: 9583 lineas, 0.7 MB.
+# Solo se colapsaron los bloques de advertencia (linea de Warning + su eco de codigo),
+# contabilizados al final. Ninguna linea de salida del script fue eliminada.
+
+plots on disk: 1082  |  index: all
+
+written: data/derived/lsp_all_auto.parquet  (5410 rows, 1082 plots, degenerate pixels 1.3%)
+
+season order coherence (SOS -> POS -> EOS, one wrap allowed):
+  evi    coherent in  96.9% of plots
+  kndvi  coherent in  98.2% of plots
+  nbr    coherent in  98.8% of plots
+  ndvi   coherent in  96.6% of plots
+  savi   coherent in  96.6% of plots
+
+=== within-plot anchoring coherence (the risk of per-pixel anchoring) ===
+circular sd of the anchor across the 25 pixels, in days:
+  median=14  q75=27  q90=43
+  plots with circ sd >  15 d: 2634 (49%)
+  plots with circ sd >  30 d: 1130 (21%)
+  plots with circ sd >  60 d:  207 (4%)
+  median aseasonal pixel fraction: 0.08
+  median seasonality strength:     0.258
+
+Plots with a large circular sd have pixels anchored to different
+phenological years; their 5x5 window is not internally comparable and
+should be flagged before being used for augmentation.
+
+==============================================================
+ADVERTENCIAS COLAPSADAS (clase @ origen: conteo)
+==============================================================
+   1771  RuntimeWarning @ fromnumeric.py: Mean of empty slice.
+   1771  RuntimeWarning @ _methods.py: invalid value encountered in scalar divide
+   1236  RuntimeWarning @ utils.py: invalid value encountered in divide
+      2  RuntimeWarning @ 04_recompute_lsp.py: Mean of empty slice
