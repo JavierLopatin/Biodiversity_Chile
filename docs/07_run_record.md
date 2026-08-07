@@ -138,6 +138,35 @@ de él, y por eso `04_recompute_lsp.py` puede re-anclarlas sin volver al datacub
 | `phase_audit_full.csv` | — | auditoría de anclaje por parcela |
 | `phenology/manifest.csv` | 1082 filas | una fila por cubo, con sus atributos |
 
+### Tablas de modelado (predictores)
+
+Producidas por `scripts/05_flatten_phenoshape.py`. Todas se unen entre sí por
+**`(plot_id, index)`**, y contra `plots_subset.parquet` / `cv_folds.parquet` por
+`plot_id` = `PlotObservationID`.
+
+| Archivo | Forma | Contenido |
+|---|---|---|
+| `lsp_all_auto.parquet` / `.csv` | 5410 × 50 | **LSP × índice.** 18 métricas × (píxel central, `_mean5x5`) + diagnósticos de anclaje |
+| `phenoshape_by_index.parquet` / `.csv` | 10820 × 55 | **Curva × índice.** `px ∈ {center, mean5x5}`, pasos `s00…s51` |
+| `phenoshape_pixels.parquet` | 135250 × 56 | Los 25 píxeles por parcela, para aumentación |
+| `phenoshape_doy_grid.parquet` / `.csv` | 1082 × 53 | DOY real de cada uno de los 52 pasos, por parcela |
+
+**Los pasos `s00…s51` son posicionales, no un calendario compartido.** Cada parcela tiene
+su propia grilla de 52 pasos sobre su ventana de observación, todas rotadas al mismo ancla
+global (DOY 108). Medido entre parcelas, las grillas difieren **≤ 2 días** en cualquier
+paso, así que tratar el paso `i` como comparable entre parcelas es defendible — pero es un
+hecho empírico de este run, no una garantía, y por eso el DOY real va en
+`phenoshape_doy_grid`.
+
+**`phenoshape_pixels` no son observaciones independientes:** las 25 filas de una parcela
+comparten footprint y no deben separarse entre folds de CV. Además, las parcelas con
+`anchor_circ_sd` alta (§5) tienen píxeles anclados a años fenológicos distintos y su
+ventana 5×5 no es internamente comparable.
+
+Verificado contra los cubos: los valores aplanados coinciden con `phenoshape` a precisión
+float32 (dif. máx. 2·10⁻⁸), la media de los 25 píxeles reproduce `mean5x5`, el join con
+`lsp_all_auto` cubre 5410/5410 filas y no hay `NaN` en las curvas.
+
 ### Figuras — `results/figures/` (11 archivos)
 
 `fig01_study_area`, `fig02_sampling`, `fig03_predictor_quality`, `fig04_curves_by_index`,

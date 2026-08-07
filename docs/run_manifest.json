@@ -2,7 +2,7 @@
  "schema": "biodiversity-chile/run-manifest/1",
  "code": {
   "Biodiversity_Chile": {
-   "commit": "5f248b33150d878f9b6c1122f15b74753a276834",
+   "commit": "8161223fda9c7b586ade5d39b41a6af5fec92a8a",
    "clean": false
   },
   "PhenoSensing_vendored": {
@@ -52,6 +52,11 @@
    "path": "scripts/04_recompute_lsp.py",
    "bytes": 21770,
    "sha256": "3e75d3e308d7d638e2648e3c6bcbb266a9e412abe2777f0d3c2bfe40fd0c3976"
+  },
+  {
+   "path": "scripts/05_flatten_phenoshape.py",
+   "bytes": 5634,
+   "sha256": "dab61177ecd8aa04ee0dcda60ccae5e98d6311058c736d56c5bfc1d8bc856600"
   },
   {
    "path": "scripts/06_paper_figures.py",
@@ -113,6 +118,11 @@
    "sha256": "6c6b9dc9af4d204290a9b8d0da570b231779092465474a7f877fff5f14e1fb7b"
   },
   {
+   "path": "data/derived/lsp_all_auto.csv",
+   "bytes": 3509957,
+   "sha256": "5ae3a3f917a7f14bc730caff4dcdfffae5badeaeda929a4d604816b3ac2fdb56"
+  },
+  {
    "path": "data/derived/lsp_all_auto.parquet",
    "bytes": 1511521,
    "sha256": "14b7e0fb7fff56c9c8ef44d50253f58f2352e14f8fd4aabc6fc105f8d4f63bd7"
@@ -126,6 +136,31 @@
    "path": "data/derived/phase_audit_full.csv",
    "bytes": 138156,
    "sha256": "208157771e56b7931f6611233ae9de354bd57c9f69781b5b0ac7d9d064385c9b"
+  },
+  {
+   "path": "data/derived/phenoshape_by_index.csv",
+   "bytes": 6313791,
+   "sha256": "51f7f2e23425fc422848c805e1e28b0f288fdab3d5fb1255baefe681f16e0646"
+  },
+  {
+   "path": "data/derived/phenoshape_by_index.parquet",
+   "bytes": 3256404,
+   "sha256": "8d43684bf703420d9cb0bbd3aea56c1288c5d3952b6c6d09b059a553e0fe1b53"
+  },
+  {
+   "path": "data/derived/phenoshape_doy_grid.csv",
+   "bytes": 216558,
+   "sha256": "786157be994b5ce6a601cb6996fee0fb289c0f61d0ba45041430b4a89bfc7070"
+  },
+  {
+   "path": "data/derived/phenoshape_doy_grid.parquet",
+   "bytes": 40877,
+   "sha256": "15794b07181f8fa00700b33ddffe95925eaec1ee4f10248b17af2440a0d7758c"
+  },
+  {
+   "path": "data/derived/phenoshape_pixels.parquet",
+   "bytes": 38355769,
+   "sha256": "481b3775dff3bba6f10312f126deccd646add3ed4e5e433c0c443bbef4df684c"
   },
   {
    "path": "data/derived/plots_subset.parquet",

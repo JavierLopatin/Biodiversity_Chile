@@ -22,6 +22,7 @@ python scripts/01_build_subset.py --zip data/20602096.zip --out-dir data/derived
 python scripts/03_extract_topography.py
 python scripts/02_extract_phenology.py --hemisphere auto --resume
 python scripts/04_recompute_lsp.py --hemisphere auto --write-back
+python scripts/05_flatten_phenoshape.py --csv
 python scripts/06_paper_figures.py --out-dir results/figures
 ```
 
@@ -31,6 +32,7 @@ python scripts/06_paper_figures.py --out-dir results/figures
 | `02_extract_phenology.py` | Cubo 5×5 px por parcela desde el datacube; `PhenoShape` + LSP |
 | `03_extract_topography.py` | DEM y derivadas topográficas sobre el mismo parche |
 | `04_recompute_lsp.py` | Re-ancla las LSP sobre las curvas ya guardadas, sin volver al cubo |
+| `05_flatten_phenoshape.py` | Aplana las curvas de los cubos a tablas de modelado |
 | `06_paper_figures.py` | Figuras del manuscrito |
 
 ---
