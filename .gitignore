@@ -19,6 +19,11 @@ paper_examples/
 *.pdf
 !docs/**/*.pdf
 
+# --- Manuscritos de terceros ---
+# Parcelas-CL se referencia por DOI en el README (fuente canonica); no se
+# redistribuye el manuscrito desde aqui.
+/Cerda-Paredes*.md
+
 # --- Repos propios clonados dentro del arbol de trabajo ---
 # Tienen su propio remote y su propia historia; se referencian por commit en
 # docs/run_manifest.json, no se anidan aqui.
