@@ -45,8 +45,22 @@ logs/px_lsp_only.log
 gmail_mcp.log
 
 # --- Salidas de modelos ---
+# Se versionan los RESULTADOS (tablas de sintesis, figuras, atribuciones) y no los
+# ARTEFACTOS por corrida (predicciones OOF, checkpoints, historiales, summary.csv):
+# ~390 MB contra ~2 MB, y los artefactos se regeneran con scripts/14_run_matrix.py.
+# (las negaciones de directorio no bastan: los patrones globales *.csv y *.pdf de mas
+# arriba siguen alcanzando a los archivos, asi que hay que negarlos explicitamente)
+results/*
+!results/tables/
+!results/tables/**
+!results/interpretation/
+!results/interpretation/**
+!results/figures/
+!results/figures/**
+# results/models/ queda fuera entero: son artefactos por corrida (predicciones OOF,
+# checkpoints, historiales), ~390 MB, y se regeneran con scripts/14_run_matrix.py.
+
 cache/
-results/
 checkpoints/
 runs/
 lightning_logs/
