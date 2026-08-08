@@ -62,6 +62,11 @@
    "path": "scripts/06_paper_figures.py",
    "bytes": 20163,
    "sha256": "9fd2eacda21e8689122202c53e371180d3f7ecf9b413bb78b5df67f4f2bf645f"
+  },
+  {
+   "path": "scripts/07_compute_taxonomic_beta_responses.R",
+   "bytes": 8975,
+   "sha256": "7aa8085df604b16d8c8a1ab7dfb460d20824f9b5280b062b548bee455d64832e"
   }
  ],
  "src": [
@@ -176,6 +181,11 @@
    "path": "data/derived/topography/topography_patches.nc",
    "bytes": 1037876,
    "sha256": "4b29a908d0664a4a3c070c4ca961fb47971d3a41262d90922f6b18b064ce8489"
+  },
+  {
+   "path": "data/derived/biodiversity_responses.parquet",
+   "bytes": 74391,
+   "sha256": "01654910b4463e45f8f27e124546eb60ea8262a750432c4eb8d67a70d7edecb2"
   }
  ],
  "figures": [
@@ -5911,6 +5921,33 @@
     "curvature_mean",
     "curvature_std"
    ]
+  },
+  "data/derived/biodiversity_responses.parquet": {
+   "rows": 1082,
+   "cols": 12,
+   "columns": [
+    "PlotObservationID",
+    "hill_q0",
+    "hill_q1",
+    "hill_q2",
+    "lcbd_pa",
+    "p_lcbd_pa",
+    "pcoa1_pa",
+    "pcoa2_pa",
+    "lcbd_cover",
+    "p_lcbd_cover",
+    "pcoa1_cover",
+    "pcoa2_cover"
+   ]
   }
+ },
+ "environment_r": {
+  "R": "4.6.1",
+  "optparse": "1.8.2",
+  "arrow": "25.0.0",
+  "vegan": "2.7-5",
+  "adespatial": "0.3-29",
+  "hillR": "0.5.2",
+  "ape": "5.8.1"
  }
 }

@@ -34,6 +34,15 @@ paper_examples/
 # Los logs al nivel raiz son 99% advertencias repetidas de numpy (logs_lsp.log: 13 MB
 # -> 25 lineas de senal). La version condensada y versionada esta en logs/.
 /logs_*.log
+# Un log por trabajo de la matriz de modelamiento (~90 archivos). El registro
+# condensado y versionado esta en docs/08_modelling_progress.md.
+logs/modelling/
+logs/modelling_run1/
+logs/px_ablation/
+logs/px_lsp_only.log
+
+# --- Ruido de herramientas externas ---
+gmail_mcp.log
 
 # --- Salidas de modelos ---
 cache/
@@ -62,6 +71,11 @@ env/
 .Rhistory
 .RData
 .Rproj.user/
+# renv: se versiona el lockfile y el activador, nunca la biblioteca instalada.
+renv/library/
+renv/local/
+renv/staging/
+renv/sandbox/
 
 # --- Sistema / editores ---
 .DS_Store
