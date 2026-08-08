@@ -8,7 +8,7 @@ Se predicen simultáneamente diversidad alfa taxonómica, contribución local a 
 usando la curva fenológica reconstruida desde series temporales Landsat y Sentinel-2 más variables
 topográficas derivadas de un DEM.
 
-**Estado:** modelamiento completo. El pipeline de adquisición está completo para 1.082
+**Estado:** modelamiento completo; siguiente fase en diseño. El pipeline de adquisición está completo para 1.082
 parcelas de Chile central (curvas fenológicas de 52 pasos semanales, 18 métricas LSP y 9
 variables topográficas, todo × 5 índices de vegetación) y las variables respuesta de fase 1
 (diversidad taxonómica, LCBD, PCoA) están calculadas. La etapa de modelamiento —Random
@@ -121,6 +121,7 @@ Parcelas-CL no satura (ver `docs/01_state_of_the_art.md` gap G5 y
 | [`docs/05_data_acquisition.md`](docs/05_data_acquisition.md) | Estrategia de adquisición satelital: ventana temporal, pooling y no estacionariedad, geometría de extracción, plan de ejecución. |
 | [`docs/06_phase_and_2d_transform.md`](docs/06_phase_and_2d_transform.md) | Anclaje de fase de las LSP (`hemisphere="auto"`) y la rotación global para la transformación 2D. |
 | [`docs/08_modelling.md`](docs/08_modelling.md) | **Modelamiento:** las tres preguntas del benchmark, las decisiones no obvias (sesgo de retransformación, DOY circular por eje, alfa contra beta, píxel central contra 5×5), arquitecturas con conteos medidos, fusión topográfica, la matriz de ~170 corridas y los resultados con tests pareados. |
+| [`docs/09_predictors.md`](docs/09_predictors.md) | **Siguiente fase:** eliminar los NaN de LSP (99,2 % vienen de un `return None` cuando la curva no se rota), agregación explícita por píxel, CV por componente de ventana solapada, y el cribado con Random Forest de alternativas no fenológicas — composites anuales, geomedianas y heterogeneidad espectral. |
 | [`docs/07_run_record.md`](docs/07_run_record.md) | **Registro del run final:** comandos, parámetros, versiones, salidas, diagnósticos y advertencias. Con [`docs/run_manifest.json`](docs/run_manifest.json) (inventario con `sha256`). |
 | [`docs/refs.bib`](docs/refs.bib) | 42 referencias; todos los DOI resueltos contra la API de Crossref. |
 
