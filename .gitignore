@@ -1,7 +1,19 @@
 # --- Datos ---
-# Las bases de datos son públicas y se recuperan por DOI (ver README).
-# No se versionan aquí para mantener el repo liviano y con una sola fuente de verdad.
-data/
+# Las bases de datos FUENTE son públicas y se recuperan por DOI (ver README).
+# No se versionan aquí, para mantener una sola fuente de verdad.
+#
+# Las tablas DERIVADAS de data/derived/ sí se versionan, y la distinción importa: son la
+# salida de los scripts 01-05, que necesitan el datacube del Data Observatory. No se
+# recuperan por DOI ni se regeneran en una máquina cualquiera, así que sin ellas el repo
+# no se puede trabajar. Son ~44 MB e inmutables: salida de un run cerrado
+# (docs/07_run_record.md).
+#
+# Dos detalles de gitignore que hacen falta aquí:
+#   - `data/` no puede ser un patrón de directorio: git no desciende en un directorio
+#     excluido, así que ninguna negación de adentro tendría efecto. Por eso `data/*`.
+#   - Las negaciones tienen que ir DESPUÉS de los patrones globales `*.csv`/`*.parquet`,
+#     porque para una ruta gana el último patrón que coincide.
+data/*
 *.zip
 *.csv
 *.parquet
@@ -14,6 +26,17 @@ data/
 *.shx
 *.prj
 
+!data/derived/
+!data/derived/*.parquet
+!data/derived/*.csv
+!data/derived/topography/
+!data/derived/topography/topography.parquet
+!data/derived/topography/topography_patches.nc
+!data/derived/phenology/
+!data/derived/phenology/manifest.csv
+
+# Los cubos .nc por parcela (~360 MB) siguen fuera — ver docs/09_predictors.md §1.
+data/derived/phenology/*.nc
 # --- PDFs de referencia ---
 paper_examples/
 *.pdf
