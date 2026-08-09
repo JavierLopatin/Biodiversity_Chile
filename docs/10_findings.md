@@ -104,6 +104,54 @@ Las dos cosas son fugas distintas y ningún esquema único cierra ambas salvo
 
 ---
 
+## 1b. El esquema queda fijado: `kfold5_owner`
+
+El proyecto usa un solo esquema primario y no se cambia entre tablas. La decisión es
+`kfold5_owner`, y la medición que la cierra es cuánta fuga de ventana queda realmente viva
+en cada partición realizada, no cuántos componentes existen:
+
+| esquema | componentes partidos (de 135) | parcelas con píxeles a ambos lados |
+|---|---|---|
+| `kfold5_random` | 126 | 557 (51,5 %) |
+| `kfold5_owner` | **7** | **47 (4,3 %)** |
+| `kfold5_block20` | 0 | 0 |
+| `kfold5_window` | 0 | 0 |
+
+**`kfold5_owner` ya cierra 128 de los 135 componentes, y lo hace incidentalmente:** los
+contribuyentes están agrupados espacialmente, así que agrupar por persona agrupa por terreno
+casi gratis. Los 7 que sobreviven son terreno compartido bajo dos etiquetas de dueño; cinco
+son el mismo par Altamirano/Miranda. Eso deja a `kfold5_window` sin el argumento que lo
+justificaba: no compra la fuga que decía comprar, y a cambio abre la de contribuyente.
+
+Las tres razones, en orden de peso:
+
+1. **Es el único que bloquea la memorización de nivel.** Bajo `kfold5_window`, el clima solo
+   —18 columnas que son en la práctica una coordenada, 253 celdas de 0,05° para 1.082
+   parcelas— alcanza R²_beta = +0,516 y casi iguala a la curva de 52 pasos (+0,507). Esa es
+   la misma firma por la que `B03_coords` es el mejor de los 79 modelos bajo `kfold5_random`.
+   Un esquema que premia eso no puede ser el que decide qué bloque de predictores gana.
+2. **La elección cambia las conclusiones, no solo el nivel.** La concordancia de ranking entre
+   los dos esquemas sobre las 19 filas del cribado es ρ = +0,53: coinciden en el ganador (X17)
+   pero `clima+topo` es 3.º bajo `window` y 14.º bajo `owner`. Justamente por eso hay que
+   fijar uno antes de leer la tabla.
+3. **Es el primario de los 79 modelos ya corridos.** Cambiar ahora rompe la comparabilidad con
+   toda la etapa de modelamiento sin comprar nada.
+
+**Los otros dos se reportan como diagnóstico, nunca se optimiza contra ellos:**
+`kfold5_random` mide la brecha de optimismo (0,64 en R²_main contra `owner`) y `kfold5_window`
+acota cuánto del R² era pseudorreplicación de ventana.
+
+**Limitación que se declara, no se esconde:** quedan 47 parcelas (4,3 %) con píxeles a ambos
+lados de un fold. Cerrarlo cuesta soltar la minoría de cada uno de los 7 componentes, 12
+parcelas (1,1 %), pero eso redefine los folds e invalida el cribado y los 79 modelos, por un
+sesgo que está por debajo del ruido entre semillas (0,016–0,024). El parche queda descrito
+aquí por si un revisor lo pide.
+
+Para alfa ningún esquema de este conjunto de datos produce un número interpretable, así que
+esta elección no es un costo suyo: es una propiedad del dataset.
+
+---
+
 ## 2. Los dos ejes PCoA son el cuello de botella del target
 
 Tras la corrección de Cailliez, dos ejes llevan el **12,5 %** de la masa de autovalores

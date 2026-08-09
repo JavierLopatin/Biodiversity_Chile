@@ -146,10 +146,29 @@ def window_components(plots: pd.DataFrame, half_m: float = 150.0) -> pd.Series:
     17 plots (a recensus laid over a grid). Splitting those across a fold boundary is
     pseudoreplication — the model is scored on pixels it was trained on.
 
-    ``kfold5_owner`` catches only 7 of those components; ``kfold5_random`` leaves 97% of
-    them split; the geometric block schemes catch none, because a 20 km grid line does not
-    care where a 150 m window falls. Grouping by component is the only scheme here with
-    **zero window leakage by construction**.
+    Measured on the realised partitions (test side, ``cv_folds_modelling.parquet``), the
+    leak is much smaller than the component count suggests, and grouping by component is
+    not the only way to close it:
+
+    ============================  ==================  ===================
+    scheme                        components split    plots on both sides
+    ============================  ==================  ===================
+    ``kfold5_random``             126 of 135          557 (51.5%)
+    ``kfold5_owner``              7 of 135            47 (4.3%)
+    ``kfold5_block20``            0                   0
+    ``kfold5_window``             0                   0
+    ``kfold5_owner_window``       0                   0
+    ============================  ==================  ===================
+
+    ``kfold5_owner`` closes 128 of the 135 components *incidentally*, because contributors
+    are spatially clustered — grouping by person groups by ground almost for free. The 7
+    that survive are shared ground under two owner labels; five of them are the same
+    Altamirano/Miranda recensus pair. Dropping the minority side of each closes the leak
+    at a cost of 12 plots (1.1%).
+
+    ``kfold5_block20`` also reaches zero, but incidentally rather than by construction: a
+    20 km grid line does not care where a 150 m window falls, and a different grid offset
+    could cut one. Only grouping by component is zero **by construction**.
 
     The windows are axis-aligned squares of side ``2 * half_m`` in UTM, so overlap is the
     Chebyshev condition ``|dX| < 2*half_m and |dY| < 2*half_m``... except that the window is
