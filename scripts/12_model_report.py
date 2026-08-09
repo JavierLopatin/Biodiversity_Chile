@@ -22,7 +22,7 @@ driver produced a run.
 
 Usage:
     python scripts/12_model_report.py
-    python scripts/12_model_report.py --scheme kfold5_owner --family C2D
+    python scripts/12_model_report.py --scheme kfold5_window --family C2D
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from biodiv import metrics as mx                # noqa: E402
 from biodiv import targets as tg                # noqa: E402
 
-PRIMARY = "kfold5_owner"
+PRIMARY = "kfold5_window"
 SPATIAL = "kfold5_block20"
 OPTIMISTIC = "kfold5_random"
 
@@ -229,7 +229,7 @@ def plot_gap(gap: pd.DataFrame, out: Path) -> None:
         ax.scatter(g[PRIMARY], g[OPTIMISTIC], s=14, label=t, alpha=0.75)
     lo = float(np.nanmin([d[PRIMARY].min(), d[OPTIMISTIC].min(), -0.5]))
     ax.plot([lo, 1], [lo, 1], "k--", lw=0.8)
-    ax.set_xlabel("$R^2$ — grouped CV by contributor (kfold5_owner)")
+    ax.set_xlabel("$R^2$ — grouped CV by window component (kfold5_window)")
     ax.set_ylabel("$R^2$ — random CV (optimistic)")
     ax.set_title("How much of the score is spatial and protocol autocorrelation", fontsize=9)
     ax.legend(fontsize=6, ncol=2, frameon=False)

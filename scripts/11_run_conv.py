@@ -22,7 +22,7 @@ The last two are the substrates whose second axis is not manufactured, which is 
 `docs/03_cnn_architecture.md` wanted the (unavailable) year x DOY phenocube to support.
 
 Usage:
-    python scripts/11_run_conv.py --substrate reshape --index ndvi --scheme kfold5_owner
+    python scripts/11_run_conv.py --substrate reshape --index ndvi --scheme kfold5_window
     python scripts/11_run_conv.py --stage 4a --index nbr --seeds 5
     python scripts/11_run_conv.py --count-params
 """
@@ -90,6 +90,7 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
     run_dl(family=fam, run_id=ident, scheme=args.scheme, substrate=substrate, index=index,
            px=args.px,
            width=width, fusion=fusion, rotation=rotation, normalize=normalize,
+           ctx_spec=args.context,
            seeds=tuple(range(args.seeds)), derived=args.derived, out_root=Path(args.out),
            train_cfg=cfg, force=args.force, save_state=True,
            notes=f"{fam} on {substrate}")
@@ -129,7 +130,7 @@ def main() -> None:
     p.add_argument("--index", default=None)
     p.add_argument("--indices", nargs="+", default=None, help="stage 4b: indices to expand over")
     p.add_argument("--top", nargs="+", default=None, help="stage 4b: substrates to expand")
-    p.add_argument("--scheme", default="kfold5_owner")
+    p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=5)
     p.add_argument("--width", default="B", choices=["A", "B", "C", "X"])
     p.add_argument("--fusion", default="late", choices=["none", "late", "film", "patch"])
@@ -146,6 +147,9 @@ def main() -> None:
     p.add_argument("--out", default="results/models")
     p.add_argument("--px", default="mean5x5", choices=["mean5x5", "center"],
                    help="pixel level of the curve and of the topographic context")
+    p.add_argument("--context", default=feat.CONTEXT_SPEC,
+                   help="feature spec for the context vector fused into the head; "
+                        "'clim+topo+area' reproduces the winning screening block X17")
     p.add_argument("--force", action="store_true")
     p.add_argument("--count-params", action="store_true")
     p.add_argument("--shapes", action="store_true")

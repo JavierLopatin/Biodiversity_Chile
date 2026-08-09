@@ -10,8 +10,8 @@ the 52 steps only through its weights, not through convolution. That makes it th
 midpoint between the forest and the 1-D CNN.
 
 Usage:
-    python scripts/10_run_tabular_dl.py --model MLP01 --index ndvi --scheme kfold5_owner
-    python scripts/10_run_tabular_dl.py --all --scheme kfold5_owner --seeds 5
+    python scripts/10_run_tabular_dl.py --model MLP01 --index ndvi --scheme kfold5_window
+    python scripts/10_run_tabular_dl.py --all --scheme kfold5_window --seeds 5
 """
 
 from __future__ import annotations
@@ -39,6 +39,13 @@ MODELS = {
     "MLP05a": dict(spec="curve", width="A", per_index=True, note="width ablation A"),
     "MLP05c": dict(spec="curve", width="C", per_index=True,
                    note="width ablation C — over the 50k budget, an over-fitting control"),
+    # X17, el bloque ganador del cribado (docs/10_findings.md 4c): la curva mas clima. El
+    # clima entra por el vector de contexto, no por el bloque de features, porque es lo que
+    # deja la comparacion contra MLP02 en un solo factor.
+    "MLP06": dict(spec="curve", width="B", per_index=True, ctx="clim+topo+area",
+                  note="X17: curve + climate context — the winning screening block"),
+    "MLP07": dict(spec="curve_all", width="A", per_index=False, ctx="clim+topo+area",
+                  note="X18: all five curves + climate context"),
 }
 
 
@@ -48,7 +55,7 @@ def main() -> None:
     p.add_argument("--model", choices=sorted(MODELS), default=None)
     p.add_argument("--all", action="store_true")
     p.add_argument("--index", default=None)
-    p.add_argument("--scheme", default="kfold5_owner")
+    p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=5)
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--out", default="results/models")
@@ -56,6 +63,9 @@ def main() -> None:
     p.add_argument("--patience", type=int, default=25)
     p.add_argument("--no-augment", action="store_true",
                    help="curve augmentation is meaningless for the LSP block; auto-disabled there")
+    p.add_argument("--context", default=None,
+                   help="feature spec for the context vector; overrides the model default "
+                        "(default topo+area, see biodiv.features.CONTEXT_SPEC)")
     p.add_argument("--force", action="store_true")
     args = p.parse_args()
 
@@ -74,6 +84,7 @@ def main() -> None:
                 run_id=runlog.make_run_id(name, spec.replace("+", "-"), ix or ""),
                 scheme=args.scheme, substrate="tabular", index=ix, features_spec=spec,
                 width=meta["width"], fusion="late", target_set="all", seeds=seeds,
+                ctx_spec=args.context or meta.get("ctx", feat.CONTEXT_SPEC),
                 derived=args.derived, out_root=Path(args.out),
                 train_cfg=TrainCfg(max_epochs=args.max_epochs, patience=args.patience,
                                    augment=False),      # tabular rows are not curves

@@ -130,7 +130,7 @@ def all_pairs(idx: np.ndarray, rng: np.random.Generator | None = None,
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--scheme", default="kfold5_owner")
+    p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--spec", default="gm+obscomp_all+seas_all+contrast+topo")
     p.add_argument("--index", default=None)
     p.add_argument("--derived", default="data/derived")

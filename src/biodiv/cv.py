@@ -71,6 +71,35 @@ def iter_folds(cv: pd.DataFrame, scheme: str) -> Iterator[tuple[int, str, pd.Ind
         yield int(fold), str(g["held_out"].iloc[0]), tr, te
 
 
+def ensure_group_col(plots: pd.DataFrame, group_col: str) -> pd.DataFrame:
+    """Materialise a grouping column that is derived rather than stored.
+
+    `block20`, `window_component` and `owner_window` are computed from coordinates, not
+    read from the plots table, and `scripts/08_build_modelling_folds.py` only keeps them
+    long enough to write the fold assignments. Any consumer that needs the *same* grouping
+    for its inner split has to recompute it, and doing that in one place is the difference
+    between a nested split that respects the outer grouping and one that silently does not.
+
+    Returns ``plots`` unchanged if the column is already there, a copy with the column
+    added otherwise.
+    """
+    if group_col in plots.columns:
+        return plots
+    out = plots.copy()
+    if group_col.startswith("block"):
+        out[group_col] = add_block_key(out, float(group_col.replace("block", "")))
+    elif group_col == "window_component":
+        out[group_col] = window_components(out).to_numpy()
+    elif group_col == "owner_window":
+        w = window_components(out).to_numpy()
+        out[group_col] = [f"{o}|{x}" for o, x in zip(out["Owner"], w)]
+    else:
+        raise KeyError(
+            f"{group_col!r} is neither a column of the plots table nor a derived grouping "
+            "this function knows how to build")
+    return out
+
+
 def inner_split(train_ids: pd.Index, plots: pd.DataFrame, group_col: str,
                 seed: int, val_frac: float = 0.2) -> tuple[pd.Index, pd.Index]:
     """Carve a grouped validation set out of the training fold, for early stopping.

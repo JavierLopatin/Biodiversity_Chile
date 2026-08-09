@@ -86,11 +86,15 @@ def test_partitioning_schemes_cover_every_plot_once(cv, ids):
 def test_inner_split_is_grouped_not_random(cv, ids):
     """The stopping epoch must not be chosen against a same-group plot."""
     plots = feat.load_tables(DERIVED).plots
-    for scheme in ("kfold5_owner", "kfold5_dataset"):
+    # kfold5_window is the primary scheme and its grouping column is *derived*, not stored:
+    # if `ensure_group_col` stops materialising it the inner split silently falls back to a
+    # KeyError at best and an ungrouped split at worst.
+    for scheme in ("kfold5_window", "kfold5_owner", "kfold5_dataset"):
         group_col = cvmod.SCHEME_GROUP[scheme]
-        gmap = plots.set_index("PlotObservationID")[group_col]
+        plots_s = cvmod.ensure_group_col(plots, group_col)
+        gmap = plots_s.set_index("PlotObservationID")[group_col]
         for fold, _, tr, te in cvmod.iter_folds(cv, scheme):
-            fit, val = cvmod.inner_split(tr, plots, group_col, seed=0)
+            fit, val = cvmod.inner_split(tr, plots_s, group_col, seed=0)
             assert len(fit.intersection(val)) == 0
             assert set(gmap[fit]).isdisjoint(set(gmap[val])), (
                 f"{scheme} fold {fold}: inner split shares a {group_col} group")
@@ -235,3 +239,70 @@ def test_fractional_roll_is_circular_and_sub_step():
     half = frac_roll(x, 0.5)
     assert not np.allclose(half, x)
     assert np.abs(half - x).max() < np.abs(np.roll(x, 1) - x).max()
+
+
+# --------------------------------------------------------------------------------------
+# kfold5_window — the primary scheme
+# --------------------------------------------------------------------------------------
+
+def test_window_scheme_never_splits_a_shared_extraction_window(cv, ids):
+    """The reason this scheme exists.
+
+    53% of plots share their 150 m extraction window with another plot: 575 plots in 135
+    connected components, the largest with 17. `kfold5_owner` splits 7 of those components
+    across folds (47 plots, recensuses 2-20 m apart filed under different contributors) and
+    `kfold5_random` splits 97%. Here it must be exactly zero, by construction.
+    """
+    plots = feat.load_tables(DERIVED).plots
+    comp = cvmod.ensure_group_col(plots, "window_component")
+    gmap = comp.set_index("PlotObservationID")["window_component"]
+    for fold, _, tr, te in cvmod.iter_folds(cv, "kfold5_window"):
+        shared = set(gmap[tr]).intersection(set(gmap[te]))
+        assert not shared, f"fold {fold} splits window components {sorted(shared)[:5]}"
+
+
+def test_window_components_are_symmetric_and_transitive(ids):
+    """A component is a connected component: if A overlaps B and B overlaps C, all three
+    share a label even when A and C do not overlap each other."""
+    plots = feat.load_tables(DERIVED).plots
+    comp = cvmod.ensure_group_col(plots, "window_component")
+    xy = comp[["X", "Y"]].to_numpy()
+    lab = comp["window_component"].to_numpy()
+    dx = np.abs(xy[:, 0][:, None] - xy[:, 0][None, :])
+    dy = np.abs(xy[:, 1][:, None] - xy[:, 1][None, :])
+    overlap = (dx < 150) & (dy < 150)
+    same = lab[:, None] == lab[None, :]
+    assert not (overlap & ~same).any(), "two overlapping plots landed in different components"
+
+
+# --------------------------------------------------------------------------------------
+# the five facets
+# --------------------------------------------------------------------------------------
+
+def test_every_target_has_a_facet_and_every_facet_a_source(ids):
+    assert set(tg.FACET_OF) == set(tg.TARGETS_ALL)
+    assert set(tg.TARGET_SOURCE) == set(tg.TARGETS_ALL)
+    assert sum(len(v) for v in tg.FACETS.values()) == len(tg.TARGETS_ALL)
+
+
+def test_the_three_parquets_join_without_losing_a_plot(ids):
+    """load_targets concatenates three files written by three scripts; a mismatched index
+    would silently produce NaN columns rather than an error."""
+    yids, Y, names = tg.load_targets(DERIVED, "all", plot_ids=ids)
+    assert list(yids) == list(ids)
+    assert Y.shape == (len(ids), 15)
+    n_nan = dict(zip(names, np.isnan(Y).sum(axis=0)))
+    # the two by-design gaps, and nothing else
+    assert all(n_nan[t] == 0 for t in tg.TARGETS_MAIN + tg.TARGETS_DARK)
+    assert all(n_nan[t] == 536 for t in tg.TARGETS_COVER)      # the cover tier
+    assert all(n_nan[t] == 113 for t in tg.TARGETS_PHYLO)      # no species in the tree
+
+
+@pytest.mark.parametrize("bad", ["pd_faith", "completeness", "dark_pd", "dark_mpd"])
+def test_the_redundant_facets_can_never_become_targets(bad):
+    """Each of these was measured and rejected: pd_faith +0.948 with richness, completeness
+    +0.988, dark_pd +0.96 with dark_n, dark_mpd +0.504 with plot area. See
+    docs/12_phylo_and_rarefaction.md."""
+    assert bad in tg.DROPPED
+    with pytest.raises(ValueError):
+        tg.resolve_targets([bad])

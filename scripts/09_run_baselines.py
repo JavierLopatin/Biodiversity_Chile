@@ -20,8 +20,8 @@ Nothing in the deep-learning tiers is interpretable without these. In order of i
        is gap G1 of docs/01_state_of_the_art.md, answered before any neural network exists.
 
 Usage:
-    python scripts/09_run_baselines.py --model RF01 --index ndvi --scheme kfold5_owner
-    python scripts/09_run_baselines.py --all --scheme kfold5_owner --seeds 3
+    python scripts/09_run_baselines.py --model RF01 --index ndvi --scheme kfold5_window
+    python scripts/09_run_baselines.py --all --scheme kfold5_window --seeds 3
 """
 
 from __future__ import annotations
@@ -205,7 +205,7 @@ def main() -> None:
     p.add_argument("--model", choices=sorted(MODELS) + ["RF07"], default=None)
     p.add_argument("--all", action="store_true", help="run every Tier 0 and Tier 1 model")
     p.add_argument("--index", default=None, help="vegetation index; omit to sweep all five")
-    p.add_argument("--scheme", default="kfold5_owner")
+    p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=3)
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--target-set", default="all")

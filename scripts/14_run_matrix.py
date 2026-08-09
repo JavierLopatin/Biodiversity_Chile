@@ -49,10 +49,16 @@ PY = sys.executable
 LOGDIR = ROOT / "logs" / "modelling"
 PROGRESS = ROOT / "docs" / "08_modelling_progress.md"
 
-PRIMARY = "kfold5_owner"
-SPATIAL = "kfold5_block20"
-OPTIMISTIC = "kfold5_random"
-OTHER_SCHEMES = ["kfold5_dataset", "kfold5_location", "lodo_owner"]
+# Un solo esquema, por decision de proyecto (docs/10_findings.md 1b, docs/11_next_steps.md).
+# `kfold5_window` agrupa por componente conexo de solapamiento de la ventana de 150 m, que es
+# la unica particion con fuga cero por construccion: `kfold5_owner` filtra 7 componentes / 47
+# parcelas (recensos con dueno distinto a 2-20 m) y `kfold5_random` el 97%.
+#
+# Los esquemas de diagnostico ya NO se corren. Las filas de `kfold5_owner`, `kfold5_random` y
+# `kfold5_block20` que hay en summary.csv vienen de la tanda anterior y se conservan para
+# poder seguir citando la brecha de optimismo; no se amplian, y nada se optimiza contra ellas.
+PRIMARY = "kfold5_window"
+DIAGNOSTIC_SCHEMES: list[str] = []
 
 SCREEN_SEEDS = 3     # screening tiers: enough to see through seed noise, cheap
 FINAL_SEEDS = 5      # finalists: the number reported in the paper
@@ -82,16 +88,6 @@ def stage_rf(args) -> list[Job]:
                  "--seeds", str(SCREEN_SEEDS)], gpu=False)
             for m in ("B00", "B01", "B02", "B03", "RF01", "RF02", "RF03", "RF04",
                       "RF05", "RF06", "RF08")]
-    # the optimism gap needs the same models under the two contrasting schemes
-    for scheme in (SPATIAL, OPTIMISTIC):
-        for model in ("B00", "B01", "B02", "B03"):
-            jobs.append(Job(f"rf/{model}@{scheme}",
-                            [PY, "scripts/09_run_baselines.py", "--model", model,
-                             "--scheme", scheme, "--seeds", str(SCREEN_SEEDS)], gpu=False))
-        for model in ("RF01", "RF03"):
-            jobs.append(Job(f"rf/{model}@{scheme}",
-                            [PY, "scripts/09_run_baselines.py", "--model", model,
-                             "--scheme", scheme, "--seeds", str(SCREEN_SEEDS)], gpu=False))
     return jobs
 
 
@@ -191,7 +187,7 @@ def stage_final(args) -> list[Job]:
     fin = finalists(args)
     jobs = []
     for run in fin:
-        for scheme in [SPATIAL, OPTIMISTIC] + OTHER_SCHEMES:
+        for scheme in DIAGNOSTIC_SCHEMES:
             cmd = _rebuild_cmd(run, scheme, FINAL_SEEDS, args)
             if cmd:
                 jobs.append(Job(f"final/{run['run_id']}@{scheme}", cmd,
@@ -355,8 +351,40 @@ def write_progress(stage: str, results: list[dict]) -> None:
         fh.write("\n".join(lines) + "\n")
 
 
+def stage_clim(args) -> list[Job]:
+    """Los modelos profundos sobre el bloque ganador del cribado (docs/11_next_steps.md 3).
+
+    X17 = `curve + clim + topo` con kNDVI es el mejor bloque del cribado RF (+0,562 R2_beta
+    bajo `kfold5_window`), y supera al mejor modelo publicado del proyecto con un tercio de
+    las columnas. La pregunta que falta es si una arquitectura profunda saca algo mas de el.
+
+    El clima entra por el vector de CONTEXTO, no por el bloque de features: asi la
+    comparacion contra el mismo modelo sin clima es de un solo factor, y la CNN sigue viendo
+    la curva como senal en vez de aplanarla contra 18 columnas de normales climaticas.
+
+    Expectativa honesta, del resultado 4 del cribado: empate con el Random Forest. Con 1.082
+    parcelas mas columnas es peor, y eso no lo arregla la arquitectura. Se corre porque es la
+    comparacion que el paper necesita, no porque se espere que gane.
+    """
+    bi = best_index(args)
+    jobs = [Job(f"clim/{m}",
+                [PY, "scripts/10_run_tabular_dl.py", "--model", m, "--scheme", PRIMARY,
+                 "--seeds", str(FINAL_SEEDS)]
+                + (["--index", bi] if m == "MLP06" else [])
+                + _dl_common(args))
+            for m in ("MLP06", "MLP07")]
+    for sub in (best_substrates(args, k=2) + ["curve1d"]):
+        cmd = [PY, "scripts/11_run_conv.py", "--substrate", sub, "--scheme", PRIMARY,
+               "--context", "clim+topo+area", "--seeds", str(FINAL_SEEDS)] + _dl_common(args)
+        if sub not in ("stack5", "curve5"):
+            cmd += ["--index", bi]
+        jobs.append(Job(f"clim/{sub}", cmd))
+    return jobs
+
+
 STAGES = {
     "rf": stage_rf,
+    "clim": stage_clim,
     "c1d": stage_c1d,
     "mlp": stage_mlp,
     "4a": stage_4a,
@@ -375,7 +403,7 @@ def stage_rf_c1d(args) -> list[Job]:
 
 STAGES["rf+c1d"] = stage_rf_c1d
 
-ORDER = ["rf+c1d", "4a", "mlp", "4b", "4c", "final"]
+ORDER = ["rf+c1d", "4a", "mlp", "4b", "4c", "clim", "final"]
 
 
 def main() -> None:

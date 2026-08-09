@@ -122,9 +122,7 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
     cv = cvmod.load_schemes(Path(derived) / "cv_folds_modelling.parquet")
     plots = feat.load_tables(derived).plots
     group_col = cvmod.SCHEME_GROUP[scheme]
-    if group_col.startswith("block"):
-        plots = plots.copy()
-        plots[group_col] = cvmod.add_block_key(plots, float(group_col.replace("block", "")))
+    plots = cvmod.ensure_group_col(plots, group_col)
     pos = pd.Series(np.arange(len(ids)), index=ids)
 
     per_fold, n_params, hist_rows = [], None, []

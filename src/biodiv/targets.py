@@ -35,10 +35,54 @@ TARGETS_MAIN = ["hill_q0", "hill_q1", "hill_q2", "lcbd_pa", "pcoa1_pa", "pcoa2_p
 #: Available only for the 546 plots of the ``cover`` stratum; NaN elsewhere, by design.
 TARGETS_COVER = ["lcbd_cover", "pcoa1_cover", "pcoa2_cover"]
 
-TARGETS_ALL = TARGETS_MAIN + TARGETS_COVER
+#: Phylogenetic facet, from ``phylo_responses.parquet`` (script 25). 113 plots have no
+#: species in the tree and stay NaN -- same masking contract as the cover tier.
+#: `pd_faith` is deliberately absent: r = +0.948 with richness, so it is `hill_q0`
+#: relabelled. See docs/12_phylo_and_rarefaction.md section 4.
+TARGETS_PHYLO = ["mpd", "mntd", "ses_pd", "ses_mpd", "ses_mntd"]
 
-#: Never fit, never score. Spearman == -1.00 with the matching lcbd_* column.
-DROPPED = ["p_lcbd_pa", "p_lcbd_cover"]
+#: Dark diversity, from ``dark_diversity.parquet`` (script 27). Complete for all plots.
+#: Only the thresholded count survives the selection criterion: `completeness` is +0.988
+#: with richness, `dark_pd` is +0.96 with `dark_n`, and `dark_mpd` is +0.50 with plot area.
+#: See docs/12_phylo_and_rarefaction.md section 8.
+TARGETS_DARK = ["dark_n"]
+
+TARGETS_ALL = TARGETS_MAIN + TARGETS_COVER + TARGETS_PHYLO + TARGETS_DARK
+
+#: Which parquet each target lives in. `load_targets` joins them on PlotObservationID.
+TARGET_SOURCE = (
+    {t: "biodiversity_responses.parquet" for t in TARGETS_MAIN + TARGETS_COVER}
+    | {t: "phylo_responses.parquet" for t in TARGETS_PHYLO}
+    | {t: "dark_diversity.parquet" for t in TARGETS_DARK}
+)
+
+#: Reporting groups. Averaging R2 across facets that behave differently hides both: alpha
+#: is not predictable across contributors while composition is, so one grand mean reports
+#: neither. Every results table is broken down by these.
+FACETS = {
+    "alpha":      ["hill_q0", "hill_q1", "hill_q2"],
+    "beta_pa":    ["lcbd_pa", "pcoa1_pa", "pcoa2_pa"],
+    "beta_cover": ["lcbd_cover", "pcoa1_cover", "pcoa2_cover"],
+    "phylo":      TARGETS_PHYLO,
+    "dark":       TARGETS_DARK,
+}
+
+#: target -> facet
+FACET_OF = {t: f for f, ts in FACETS.items() for t in ts}
+
+#: Never fit, never score.
+#:
+#: `p_lcbd_*`  -- Spearman == -1.00 with the matching lcbd_* column: the permutation
+#:               p-value is a rank transform of LCBD itself within each tier.
+#: `pd_faith`  -- +0.948 with richness (docs/12 section 4). Kept as a descriptor.
+#: `completeness` -- +0.988 with richness. The measure was *proposed* as independent of
+#:               pool size; on these data it is not (docs/12 section 8).
+#: `dark_pd`   -- +0.96 with `dark_n`: the Faith trap again, one level up.
+#: `dark_mpd`  -- +0.504 with log plot area. Measures protocol, not ecology.
+#: `n_sp_tree`, `n_obs` -- richness by another name.
+DROPPED = ["p_lcbd_pa", "p_lcbd_cover", "p_ses_pd", "p_ses_mpd", "p_ses_mntd",
+           "pd_faith", "completeness", "dark_pd", "dark_lin", "dark_mpd",
+           "dark_prob", "pool_n", "n_sp_tree", "n_obs", "near_frac", "jaccard_fav"]
 
 #: Reported but not treated as an independent result: r(hill_q1, hill_q2) = 0.95. Kept in
 #: the multi-output head as a cheap multi-task regulariser.
@@ -48,6 +92,10 @@ TARGET_SETS = {
     "all": TARGETS_ALL,
     "main": TARGETS_MAIN,
     "cover": TARGETS_COVER,
+    "phylo": TARGETS_PHYLO,
+    "dark": TARGETS_DARK,
+    #: the 9 taxonomic targets, i.e. what the 79 runs of docs/08_modelling.md scored
+    "taxonomic": TARGETS_MAIN + TARGETS_COVER,
 }
 
 
@@ -74,7 +122,21 @@ def load_targets(derived: Path | str = "data/derived",
     plausible-looking but meaningless R-squared.
     """
     names = resolve_targets(target_set)
-    df = pd.read_parquet(Path(derived) / "biodiversity_responses.parquet").set_index(ID_COL)
+    derived = Path(derived)
+
+    # The facets live in three parquets written by three different scripts (07, 25, 27).
+    # They are joined here rather than merged on disk so that each script stays the single
+    # owner of its own output and a rerun of one never has to touch the others.
+    frames = []
+    for src in dict.fromkeys(TARGET_SOURCE[t] for t in names):
+        cols = [t for t in names if TARGET_SOURCE[t] == src]
+        f = derived / src
+        if not f.exists():
+            raise FileNotFoundError(
+                f"{f} is missing but {cols} were requested. Run the script that writes it: "
+                f"07 for biodiversity_responses, 25 for phylo_responses, 27 for dark_diversity.")
+        frames.append(pd.read_parquet(f).set_index(ID_COL)[cols])
+    df = pd.concat(frames, axis=1)
     if plot_ids is not None:
         missing = pd.Index(plot_ids).difference(df.index)
         if len(missing):

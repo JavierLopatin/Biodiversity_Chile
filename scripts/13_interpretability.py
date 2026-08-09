@@ -191,7 +191,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--root", default="results/models")
-    p.add_argument("--scheme", default="kfold5_owner")
+    p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--cnn", default=None)
     p.add_argument("--rf", default=None)
     p.add_argument("--auto", action="store_true", help="pick the best run of each family")
