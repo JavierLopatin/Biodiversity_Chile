@@ -1,0 +1,108 @@
+=== arranca GDM 2026-08-09 00:53:08
+
+############ fenologia: la curva de 52 pasos   spec=curve+topo index=kndvi   00:53:08
+esquema=kfold5_owner  spec=curve+topo  p=69  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 211 pares= 22155 [ 0.6m]  gdm=+0.741 +geo=+0.778 sgdm=+0.754 geo=+0.698 rf=+0.750 oracle=+0.650
+  fold 1 (fold1                 ) n= 241 pares= 28920 [ 0.5m]  gdm=+0.415 +geo=+0.429 sgdm=+0.336 geo=+0.372 rf=+0.283 oracle=+0.470
+  fold 2 (fold2                 ) n= 187 pares= 17391 [ 0.6m]  gdm=+0.556 +geo=+0.564 sgdm=+0.508 geo=+0.440 rf=+0.434 oracle=+0.444
+  fold 3 (fold3                 ) n= 232 pares= 26796 [ 0.7m]  gdm=+0.375 +geo=+0.449 sgdm=+0.332 geo=+0.361 rf=+0.361 oracle=+0.418
+  fold 4 (fold4                 ) n= 211 pares= 22155 [ 0.6m]  gdm=+0.323 +geo=+0.389 sgdm=+0.241 geo=+0.302 rf=+0.254 oracle=+0.667
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.435 (sd 0.155)   dev_expl=+0.141
+  GDM con los predictores                    rho = +0.482 (sd 0.169)   dev_expl=+0.195
+  GDM con predictores + geografia            rho = +0.522 (sd 0.157)   dev_expl=+0.267
+  SGDM (sCCA fold-local + GDM)               rho = +0.434 (sd 0.203)   dev_expl=+0.140
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.417 (sd 0.199)
+  TECHO: los 2 ejes verdaderos               rho = +0.465 (sd 0.158)
+  TECHO: los 8 ejes verdaderos               rho = +0.530 (sd 0.119)
+
+############ compuesto anual (sin forma)   spec=composite_all+topo index=   00:56:20
+esquema=kfold5_owner  spec=composite_all+topo  p=77  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 211 pares= 22155 [ 0.6m]  gdm=+0.701 +geo=+0.762 sgdm=+0.688 geo=+0.698 rf=+0.706 oracle=+0.650
+  fold 1 (fold1                 ) n= 241 pares= 28920 [ 0.6m]  gdm=+0.418 +geo=+0.428 sgdm=+0.315 geo=+0.372 rf=+0.240 oracle=+0.470
+  fold 2 (fold2                 ) n= 187 pares= 17391 [ 0.8m]  gdm=+0.532 +geo=+0.554 sgdm=+0.495 geo=+0.440 rf=+0.421 oracle=+0.444
+  fold 3 (fold3                 ) n= 232 pares= 26796 [ 0.7m]  gdm=+0.380 +geo=+0.467 sgdm=+0.341 geo=+0.361 rf=+0.359 oracle=+0.418
+  fold 4 (fold4                 ) n= 211 pares= 22155 [ 0.6m]  gdm=+0.316 +geo=+0.383 sgdm=+0.259 geo=+0.302 rf=+0.304 oracle=+0.667
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.435 (sd 0.155)   dev_expl=+0.141
+  GDM con los predictores                    rho = +0.469 (sd 0.151)   dev_expl=+0.161
+  GDM con predictores + geografia            rho = +0.519 (sd 0.150)   dev_expl=+0.267
+  SGDM (sCCA fold-local + GDM)               rho = +0.419 (sd 0.174)   dev_expl=+0.112
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.406 (sd 0.181)
+  TECHO: los 2 ejes verdaderos               rho = +0.465 (sd 0.158)
+  TECHO: los 8 ejes verdaderos               rho = +0.530 (sd 0.119)
+
+############ geomediana + MADs   spec=gm+topo index=   00:59:53
+esquema=kfold5_owner  spec=gm+topo  p=32  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 211 pares= 22155 [ 0.4m]  gdm=+0.755 +geo=+0.784 sgdm=+0.734 geo=+0.698 rf=+0.673 oracle=+0.650
+  fold 1 (fold1                 ) n= 241 pares= 28920 [ 0.3m]  gdm=+0.406 +geo=+0.395 sgdm=+0.352 geo=+0.372 rf=+0.275 oracle=+0.470
+  fold 2 (fold2                 ) n= 187 pares= 17391 [ 0.4m]  gdm=+0.572 +geo=+0.575 sgdm=+0.533 geo=+0.440 rf=+0.408 oracle=+0.444
+  fold 3 (fold3                 ) n= 232 pares= 26796 [ 0.4m]  gdm=+0.389 +geo=+0.463 sgdm=+0.316 geo=+0.361 rf=+0.389 oracle=+0.418
+  fold 4 (fold4                 ) n= 211 pares= 22155 [ 0.3m]  gdm=+0.323 +geo=+0.381 sgdm=+0.243 geo=+0.302 rf=+0.290 oracle=+0.667
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.435 (sd 0.155)   dev_expl=+0.141
+  GDM con los predictores                    rho = +0.489 (sd 0.175)   dev_expl=+0.196
+  GDM con predictores + geografia            rho = +0.520 (sd 0.167)   dev_expl=+0.264
+  SGDM (sCCA fold-local + GDM)               rho = +0.435 (sd 0.198)   dev_expl=+0.144
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.407 (sd 0.160)
+  TECHO: los 2 ejes verdaderos               rho = +0.465 (sd 0.158)
+  TECHO: los 8 ejes verdaderos               rho = +0.530 (sd 0.119)
+
+############ todo lo sin forma   spec=gm+obscomp_all+seas_all+contrast+topo index=   01:01:50
+esquema=kfold5_owner  spec=gm+obscomp_all+seas_all+contrast+topo  p=157  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 211 pares= 22155 [ 1.3m]  gdm=+0.720 +geo=+0.763 sgdm=+0.702 geo=+0.698 rf=+0.704 oracle=+0.650
+  fold 1 (fold1                 ) n= 241 pares= 28920 [ 1.2m]  gdm=+0.387 +geo=+0.403 sgdm=+0.317 geo=+0.372 rf=+0.252 oracle=+0.470
+  fold 2 (fold2                 ) n= 187 pares= 17391 [ 1.4m]  gdm=+0.574 +geo=+0.579 sgdm=+0.514 geo=+0.440 rf=+0.416 oracle=+0.444
+  fold 3 (fold3                 ) n= 232 pares= 26796 [ 1.4m]  gdm=+0.392 +geo=+0.455 sgdm=+0.372 geo=+0.361 rf=+0.398 oracle=+0.418
+  fold 4 (fold4                 ) n= 211 pares= 22155 [ 1.2m]  gdm=+0.381 +geo=+0.432 sgdm=+0.249 geo=+0.302 rf=+0.313 oracle=+0.667
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.435 (sd 0.155)   dev_expl=+0.141
+  GDM con los predictores                    rho = +0.491 (sd 0.152)   dev_expl=+0.182
+  GDM con predictores + geografia            rho = +0.527 (sd 0.148)   dev_expl=+0.257
+  SGDM (sCCA fold-local + GDM)               rho = +0.431 (sd 0.180)   dev_expl=+0.145
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.417 (sd 0.174)
+  TECHO: los 2 ejes verdaderos               rho = +0.465 (sd 0.158)
+  TECHO: los 8 ejes verdaderos               rho = +0.530 (sd 0.119)
+
+############ todo junto   spec=curve+gm+obscomp_all+seas_all+contrast+topo index=kndvi   01:08:33
+esquema=kfold5_owner  spec=curve+gm+obscomp_all+seas_all+contrast+topo  p=209  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 211 pares= 22155 [ 1.6m]  gdm=+0.727 +geo=+0.767 sgdm=+0.728 geo=+0.698 rf=+0.709 oracle=+0.650
+  fold 1 (fold1                 ) n= 241 pares= 28920 [ 1.7m]  gdm=+0.384 +geo=+0.405 sgdm=+0.369 geo=+0.372 rf=+0.262 oracle=+0.470
+  fold 2 (fold2                 ) n= 187 pares= 17391 [ 1.7m]  gdm=+0.583 +geo=+0.583 sgdm=+0.525 geo=+0.440 rf=+0.420 oracle=+0.444
+  fold 3 (fold3                 ) n= 232 pares= 26796 [ 1.9m]  gdm=+0.382 +geo=+0.444 sgdm=+0.384 geo=+0.361 rf=+0.393 oracle=+0.418
+  fold 4 (fold4                 ) n= 211 pares= 22155 [ 1.9m]  gdm=+0.388 +geo=+0.433 sgdm=+0.217 geo=+0.302 rf=+0.308 oracle=+0.667
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.435 (sd 0.155)   dev_expl=+0.141
+  GDM con los predictores                    rho = +0.493 (sd 0.157)   dev_expl=+0.191
+  GDM con predictores + geografia            rho = +0.526 (sd 0.151)   dev_expl=+0.266
+  SGDM (sCCA fold-local + GDM)               rho = +0.444 (sd 0.192)   dev_expl=+0.156
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.418 (sd 0.174)
+  TECHO: los 2 ejes verdaderos               rho = +0.465 (sd 0.158)
+  TECHO: los 8 ejes verdaderos               rho = +0.530 (sd 0.119)
+
+=== GDM terminado 2026-08-09 01:17:26

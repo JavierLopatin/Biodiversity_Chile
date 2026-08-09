@@ -27,7 +27,12 @@ done
 # only when the file is absent — two appends racing on an empty file would emit it twice. The
 # screening above almost certainly outlasts the other queue, but "almost certainly" is not a
 # guarantee worth taking on a table this expensive to rebuild.
-while pgrep -f run_gdm_queue >/dev/null; do sleep 60; done
+# The pattern is anchored to the actual command line. An unanchored `pgrep -f run_gdm_queue`
+# also matches any *other* process that merely mentions the name — a `tail`, a watcher, an
+# editor — and then this loop never exits. That is not hypothetical: it blocked this queue
+# for 40 minutes after the GDM runs had already finished, because a monitoring shell was
+# waiting on the same string.
+while pgrep -f '^bash scripts/run_gdm_queue\.sh' >/dev/null; do sleep 60; done
 
 # BLAS gets its threads back: the sCCA grid search is dense linear algebra, not forests.
 export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4

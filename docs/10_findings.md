@@ -104,11 +104,58 @@ Las dos cosas son fugas distintas y ningún esquema único cierra ambas salvo
 
 ---
 
-## 1b. El esquema queda fijado: `kfold5_owner`
+## 1b. El esquema queda fijado: `kfold5_window`
 
-El proyecto usa un solo esquema primario y no se cambia entre tablas. La decisión es
-`kfold5_owner`, y la medición que la cierra es cuánta fuga de ventana queda realmente viva
-en cada partición realizada, no cuántos componentes existen:
+**Decisión de proyecto (J. Lopatin): `kfold5_window` es el esquema primario único de aquí en
+adelante, y alfa se reporta sola, sin descomposición adjunta.** Esta sección deja registrada
+la evidencia que respalda esa elección y la que la limita, porque un revisor va a pedir las
+dos.
+
+### Lo que la respalda
+
+Bajo `kfold5_window` la validación cruzada es independiente en el sentido que importa para el
+uso previsto: cada parcela se puntúa desde un modelo que nunca vio ni esa parcela ni ninguno
+de los píxeles de su ventana de extracción. Es el único esquema del proyecto con **cero fuga
+de ventana por construcción**, y el escenario que reproduce —predecir en una parcela nueva
+dentro de un territorio ya muestreado— es exactamente el de un mapa.
+
+La prueba decisiva se corrió dentro del propio esquema, sin comparar contra ningún otro
+(`scripts/24_alpha_decomposition.py`). Descompone las mismas predicciones OOF que producen el
+número titular en dos partes: acertar el nivel medio de cada contribuyente, y ordenar las
+parcelas *dentro* de un contribuyente, que es la parte que solo puede venir del ambiente.
+
+| bajo `kfold5_window` | R²_total | within-owner | between-owner |
+|---|---|---|---|
+| **beta**, 87 predictores | +0,562 | **+0,380** | +0,765 |
+| alfa, 87 predictores | +0,569 | +0,063 | +0,751 |
+| beta, solo lon/lat/elev (3 col) | +0,508 | +0,305 | +0,735 |
+| alfa, solo lon/lat/elev (3 col) | +0,490 | −0,126 | +0,704 |
+
+**Beta se sostiene sin reservas.** Con el nivel del contribuyente removido, el modelo todavía
+explica +0,380 de la composición, sobre el 66–71 % de varianza que es intra-contribuyente. Eso
+es señal ambiental real, medida en el esquema que se está usando para reportar.
+
+### Lo que hay que declarar igual
+
+- **Alfa es casi toda nivel de contribuyente.** Su R² intra-contribuyente es +0,063, y
+  `hill_q2` queda en −0,095. El 88 % del +0,569 es acertar quién censó, lo que era esperable
+  con η² = 0,72 (§1). Se reporta el número sin descomposición, por decisión de proyecto; el
+  η² y esta tabla quedan aquí para quien pregunte.
+- **Tres columnas de posición hacen casi todo el trabajo.** `lon/lat/elev` alcanzan el 90 % del
+  beta y el 86 % del alfa que alcanzan los 87 predictores de fenología y clima. El aporte
+  propio de la teledetección bajo este esquema es +0,054 en beta y +0,079 en alfa. Es el
+  número que un revisor va a buscar, y conviene que esté escrito antes de que lo pida.
+- **Pérdida de comparabilidad hacia atrás.** Los 79 modelos de `08_modelling.md` se corrieron
+  con `kfold5_owner` como primario y no tienen `kfold5_window`. Para que las tablas hablen del
+  mismo número hay que re-correr esa matriz bajo el esquema nuevo (ver
+  [`11_next_steps.md`](11_next_steps.md), experimento 1).
+- **`kfold5_owner` pasa a diagnóstico**, junto con `kfold5_random`: el primero acota cuánto del
+  R² depende de la identidad del contribuyente, el segundo la brecha de optimismo.
+
+### La medición que ordena los esquemas
+
+Cuánta fuga de ventana queda realmente viva en cada partición realizada, que no es lo mismo
+que cuántos componentes existen:
 
 | esquema | componentes partidos (de 135) | parcelas con píxeles a ambos lados |
 |---|---|---|
@@ -117,38 +164,23 @@ en cada partición realizada, no cuántos componentes existen:
 | `kfold5_block20` | 0 | 0 |
 | `kfold5_window` | 0 | 0 |
 
-**`kfold5_owner` ya cierra 128 de los 135 componentes, y lo hace incidentalmente:** los
-contribuyentes están agrupados espacialmente, así que agrupar por persona agrupa por terreno
-casi gratis. Los 7 que sobreviven son terreno compartido bajo dos etiquetas de dueño; cinco
-son el mismo par Altamirano/Miranda. Eso deja a `kfold5_window` sin el argumento que lo
-justificaba: no compra la fuga que decía comprar, y a cambio abre la de contribuyente.
+`kfold5_window` y `kfold5_block20` llegan a cero, pero por razones distintas y solo el primero
+lo hace **por construcción**: una línea de grilla de 20 km no sabe dónde cae una ventana de
+150 m, y otro desplazamiento de grilla podría cortar un componente. `kfold5_owner` deja 7 de
+135 componentes partidos (47 parcelas) porque cierra los otros 128 de forma incidental —los
+contribuyentes están agrupados espacialmente—, y `kfold5_random` deja partido el 51,5 % de las
+parcelas, que es por qué su R² no es un resultado sino la medida de la brecha de optimismo.
 
-Las tres razones, en orden de peso:
+**Los dos esquemas no son comparables como "más o menos estricto": cierran fugas distintas.**
+`kfold5_window` cierra la de ventana y reparte a cada contribuyente entre folds;
+`kfold5_owner` hace lo inverso. Ninguno cierra ambas salvo `kfold5_owner_window`, que deja 9
+grupos y es demasiado grueso para 5 folds. La consecuencia práctica de elegir `window` está en
+la tabla de arriba: alfa deja de ser interpretable como señal ambiental, y por eso el proyecto
+la reporta como descriptor y concentra el esfuerzo de predictores en beta.
 
-1. **Es el único que bloquea la memorización de nivel.** Bajo `kfold5_window`, el clima solo
-   —18 columnas que son en la práctica una coordenada, 253 celdas de 0,05° para 1.082
-   parcelas— alcanza R²_beta = +0,516 y casi iguala a la curva de 52 pasos (+0,507). Esa es
-   la misma firma por la que `B03_coords` es el mejor de los 79 modelos bajo `kfold5_random`.
-   Un esquema que premia eso no puede ser el que decide qué bloque de predictores gana.
-2. **La elección cambia las conclusiones, no solo el nivel.** La concordancia de ranking entre
-   los dos esquemas sobre las 19 filas del cribado es ρ = +0,53: coinciden en el ganador (X17)
-   pero `clima+topo` es 3.º bajo `window` y 14.º bajo `owner`. Justamente por eso hay que
-   fijar uno antes de leer la tabla.
-3. **Es el primario de los 79 modelos ya corridos.** Cambiar ahora rompe la comparabilidad con
-   toda la etapa de modelamiento sin comprar nada.
-
-**Los otros dos se reportan como diagnóstico, nunca se optimiza contra ellos:**
-`kfold5_random` mide la brecha de optimismo (0,64 en R²_main contra `owner`) y `kfold5_window`
-acota cuánto del R² era pseudorreplicación de ventana.
-
-**Limitación que se declara, no se esconde:** quedan 47 parcelas (4,3 %) con píxeles a ambos
-lados de un fold. Cerrarlo cuesta soltar la minoría de cada uno de los 7 componentes, 12
-parcelas (1,1 %), pero eso redefine los folds e invalida el cribado y los 79 modelos, por un
-sesgo que está por debajo del ruido entre semillas (0,016–0,024). El parche queda descrito
-aquí por si un revisor lo pide.
-
-Para alfa ningún esquema de este conjunto de datos produce un número interpretable, así que
-esta elección no es un costo suyo: es una propiedad del dataset.
+Que la elección importa se ve en que la concordancia de ranking entre los dos esquemas sobre
+las 19 filas del cribado es solo ρ = +0,53: coinciden en el ganador (X17) pero `clima+topo` es
+3.º bajo `window` y 14.º bajo `owner`. Fijar uno antes de leer la tabla no es formalismo.
 
 ---
 
@@ -370,6 +402,21 @@ columnas), el mejor modelo publicado del proyecto, y X18 muestra que apilar los 
 **4. Más columnas es peor.** X14 (511 columnas, todo) da +0,205 contra +0,309 de X17 (87). Con
 1.082 parcelas y 5 folds agrupados por contribuyente, el Random Forest se ahoga mucho antes de
 quedarse sin señal. Cualquier modelo profundo hereda ese límite, y no es de arquitectura.
+
+**5. La regla de agregación de los 25 píxeles no importa.** Fila X10 del doc 09, cribada sobre
+los dos bloques que sí están hechos de píxeles, bajo `kfold5_owner`:
+
+| | `median` | `mean` | `trimmed` | `center` | rango | ruido semillas |
+|---|---|---|---|---|---|---|
+| X07 `gm+MADs` | +0,222 | +0,228 | +0,221 | +0,234 | 0,013 | 0,013 |
+| X12 todo sin forma | +0,197 | +0,208 | +0,199 | +0,196 | 0,012 | 0,014 |
+
+El rango entre las cuatro reglas es exactamente el ruido entre semillas. Lo llamativo es
+`center`: **el píxel central solo iguala a cualquier promedio de los 25**, así que la ventana
+de 5×5 no está comprando señal, solo suavizando. Eso vuelve discutible el diseño de ventana
+—y hace que `kfold5_window`, que existe para proteger esa ventana, pague un costo por algo que
+aporta poco— pero también significa que la elección de `median` en todas las demás filas no
+sesga ninguna conclusión.
 
 ---
 
