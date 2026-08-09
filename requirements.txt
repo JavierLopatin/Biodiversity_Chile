@@ -1,0 +1,38 @@
+# Dependencias para correr el modelamiento en una maquina sin datacube.
+#
+# Este archivo describe la maquina de MODELAMIENTO (la que tiene GPU), no la de extraccion.
+# La distincion importa: `datacube`, `odc-*` y las credenciales de Data Cube Chile solo las
+# necesitan scripts/02_extract_phenology.py, 03_extract_topography.py y 22_extract_climate.py,
+# que ya corrieron y cuya salida esta versionada en data/derived/. Nada de lo que sigue —
+# cribado, GDM, MLP, CNN 1D, CNN 2D — vuelve a tocar el datacube.
+#
+# Versiones fijadas a las del entorno donde se produjeron los resultados de docs/10_findings.md,
+# porque "reproducible" con rangos abiertos no es una afirmacion comprobable.
+
+numpy==2.3.5
+pandas==3.0.3
+scipy==1.17.1
+scikit-learn==1.8.0
+pyarrow==23.0.1
+
+# Torch: esta linea instala la build de CPU. En la maquina con GPU hay que reemplazarla por la
+# build de CUDA correspondiente al driver, p.ej.
+#   pip install torch==2.12.0 --index-url https://download.pytorch.org/whl/cu124
+torch==2.12.0
+
+# Lectura de los parches topograficos 2D (topography_patches.nc) y de los cubos .nc si se
+# quisiera recalcular predictores desde las observaciones crudas.
+xarray==2026.4.0
+netCDF4==1.7.4
+
+# Transformada wavelet continua: es UNO de los sustratos de la CNN 1D
+# (biodiv.transforms1d.CWTTransform). Sin ella, tests/test_modelling.py falla en
+# test_every_substrate_runs_through_one_model y las corridas con substrate=cwt abortan; el
+# resto del pipeline corre igual.
+PyWavelets>=1.6
+
+# Figuras y geometria. No hacen falta para entrenar, si para scripts/12_model_report.py y
+# para las figuras de results/.
+matplotlib==3.10.9
+geopandas==1.1.3
+pyproj==3.7.2
