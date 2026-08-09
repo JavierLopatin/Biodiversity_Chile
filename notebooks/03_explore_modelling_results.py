@@ -341,3 +341,121 @@ if px_path.exists():
     plt.tight_layout(); plt.show()
 else:
     print("aún no existe pixel_ablation.csv — corre scripts/15_pixel_ablation.py --run")
+
+# %% [markdown]
+# ## 10. Diversidad filogenética y curvas de acumulación
+#
+# La faceta que `scripts/07_compute_taxonomic_beta_responses.R` dejó pendiente por no haber
+# "ninguna filogenia referenciada en este repo". `scripts/25_compute_phylo_responses.R` la
+# cierra con el megaárbol `GBOTB.extended.TPL` de V.PhyloMaker2 (74.529 tips, backbone GBOTB
+# de Smith & Brown 2018 extendido con Zanne et al. 2014).
+#
+# Las curvas replican la **Fig. 4b,c del paper de Parcelas-CL** y añaden la comparación que
+# ahí no existe: el subset de 1.082 parcelas de este proyecto contra las 1.485 del dataset
+# completo. La pregunta es si filtrar por Chile central, año ≥ 1999 y coordenada única costó
+# representatividad — y si la costó en la dimensión taxonómica, en la filogenética, o en las
+# dos.
+#
+# Nota sobre el paper: reporta diversidad filogenética en su Fig. 4c pero **no documenta el
+# árbol ni el método** — la sección de métodos no menciona filogenia, ni paquete, ni
+# referencia de backbone. Lo único que se infiere del pie de figura ("lineage diversity for
+# Hill number 0", con interpolación y rarefacción) es la familia de métodos. Por eso el árbol
+# de aquí es propio y queda documentado; si Cerda-Paredes comparte el suyo, es preferible.
+
+# %%
+CURVES = ROOT / "data" / "derived" / "rarefaction_curves.csv"
+PHYLO = ROOT / "data" / "derived" / "phylo_responses.parquet"
+
+if CURVES.exists():
+    cur = pd.read_csv(CURVES)
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
+    colors = {"Parcelas-CL completo": "#4c72b0", "subset del proyecto": "#c44e52"}
+    for ax, (val, lo, hi, lab) in zip(
+            axes,
+            [("sr_mean", "sr_lo", "sr_hi", "especies acumuladas"),
+             ("pd_mean", "pd_lo", "pd_hi", "PD de Faith acumulada (Ma)")]):
+        for d, g in cur.groupby("dataset"):
+            g = g.sort_values("m")
+            ax.plot(g["m"], g[val], lw=1.8, color=colors[d], label=d)
+            ax.fill_between(g["m"], g[lo], g[hi], alpha=0.18, color=colors[d], lw=0)
+        ax.set_xscale("log")
+        ax.set_xlabel("parcelas muestreadas")
+        ax.set_ylabel(lab)
+        ax.legend(fontsize=7, frameon=False, loc="lower right")
+    axes[0].set_title("Acumulación taxonómica", fontsize=9)
+    axes[1].set_title("Acumulación filogenética", fontsize=9)
+    fig.suptitle("Esfuerzo de muestreo: nuestro subset contra Parcelas-CL completo "
+                 "(banda = IC 95 % del remuestreo)", fontsize=10)
+    plt.tight_layout(); plt.show()
+
+    print("Estado al máximo esfuerzo, y pendiente final en escala log-log")
+    print("(pendiente 0 sería saturación completa; >0 significa que seguir muestreando "
+          "seguiría sumando):\n")
+    for d, g in cur.groupby("dataset"):
+        g = g.sort_values("m"); last = g.iloc[-1]; tail = g.tail(5)
+        sl_sr = np.polyfit(np.log(tail["m"]), np.log(tail["sr_mean"]), 1)[0]
+        sl_pd = np.polyfit(np.log(tail["m"]), np.log(tail["pd_mean"]), 1)[0]
+        print(f"  {d:24s} n={int(last['m']):4d}  especies={last['sr_mean']:5.0f}  "
+              f"PD={last['pd_mean']:7.0f}   pendiente SR={sl_sr:.3f}  PD={sl_pd:.3f}")
+
+    # Lo que decide si el filtrado costó representatividad: a igual número de parcelas,
+    # ¿las dos curvas coinciden? Si el subset queda por debajo, el filtro no fue neutral.
+    piv = cur.pivot_table(index="m", columns="dataset", values=["sr_mean", "pd_mean"])
+    common = piv.dropna()
+    if len(common):
+        r_sr = (common[("sr_mean", "subset del proyecto")]
+                / common[("sr_mean", "Parcelas-CL completo")])
+        r_pd = (common[("pd_mean", "subset del proyecto")]
+                / common[("pd_mean", "Parcelas-CL completo")])
+        print(f"\n  A igual esfuerzo, el subset retiene en promedio "
+              f"{100*r_sr.mean():.1f} % de las especies y {100*r_pd.mean():.1f} % de la PD "
+              f"del dataset completo.")
+else:
+    print("aún no existen las curvas — corre scripts/25_compute_phylo_responses.R")
+
+# %% [markdown]
+# ### 10.1 Qué facetas filogenéticas sirven como target
+#
+# `PD` de Faith correlaciona ~0,97 con la riqueza: es riqueza reetiquetada, y la riqueza es
+# justo lo que no se puede predecir bajo CV por contribuyente (§7.1 de `docs/08_modelling.md`).
+# Las que aportan información nueva son **MPD** (casi ortogonal a la riqueza) y **MNTD**, más
+# los **SES**, que son los que separan "hay muchas especies" de "hay muchos linajes distintos".
+
+# %%
+if PHYLO.exists():
+    ph = pd.read_parquet(PHYLO)
+    print(f"{len(ph)} parcelas, {ph.pd_faith.isna().sum()} sin cobertura filogenética\n")
+    metrics = ["pd_faith", "mpd", "mntd", "ses_pd", "ses_mpd", "ses_mntd"]
+    display(ph[metrics + ["n_sp_tree"]].describe().round(3))
+
+    # el criterio de seleccion de targets, en una tabla
+    rows = []
+    resp_tax = pd.read_parquet(ROOT / "data/derived/biodiversity_responses.parquet")
+    m = ph.merge(resp_tax, on="PlotObservationID", how="left")
+    from scipy import stats as st
+    for v in metrics:
+        ok = m[v].notna()
+        rows.append(dict(
+            metrica=v,
+            r_riqueza=st.spearmanr(m.loc[ok, v], m.loc[ok, "n_sp_tree"]).statistic,
+            r_hill_q0=st.spearmanr(m.loc[ok, v], m.loc[ok, "hill_q0"]).statistic,
+            r_pcoa1=st.spearmanr(m.loc[ok, v], m.loc[ok, "pcoa1_pa"]).statistic,
+            r_lcbd=st.spearmanr(m.loc[ok, v], m.loc[ok, "lcbd_pa"]).statistic))
+    tab = pd.DataFrame(rows).round(3)
+    print("Spearman contra riqueza y contra los targets taxonómicos ya existentes.")
+    print("Una métrica con |r| alto contra hill_q0 no aporta un target nuevo:\n")
+    display(tab)
+
+    fig, axes = plt.subplots(2, 3, figsize=(11, 6))
+    for ax, v in zip(axes.ravel(), metrics):
+        ax.scatter(m["n_sp_tree"], m[v], s=7, alpha=0.3, c="#4c72b0")
+        ok = m[v].notna() & m["n_sp_tree"].notna()
+        r = st.spearmanr(m.loc[ok, "n_sp_tree"], m.loc[ok, v]).statistic
+        ax.set_title(f"{v}   ρ={r:+.3f}", fontsize=9)
+        ax.set_xlabel("especies en el árbol", fontsize=7)
+        ax.tick_params(labelsize=6)
+    fig.suptitle("Cada métrica filogenética contra la riqueza — cuanto más plana, "
+                 "más información nueva aporta", fontsize=10)
+    plt.tight_layout(); plt.show()
+else:
+    print("aún no existen las respuestas — corre scripts/25_compute_phylo_responses.R")
