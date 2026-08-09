@@ -38,6 +38,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from . import composites
+
 ID_COL = "PlotObservationID"
 NGS = 52
 STEP_COLS = [f"s{i:02d}" for i in range(NGS)]
@@ -84,6 +86,7 @@ class Tables:
     topo: pd.DataFrame        # indexed by plot id
     doy_grid: pd.DataFrame    # indexed by plot id
     derived: Path
+    cube: pd.DataFrame | None  # geomedian / observation composites, indexed by plot id
 
 
 @lru_cache(maxsize=4)
@@ -109,8 +112,17 @@ def load_tables(derived: str = "data/derived") -> Tables:
         if len(missing):
             raise SystemExit(f"{name}: {len(missing)} plots absent, e.g. {list(missing[:5])}")
 
+    # Optional: only present once scripts/18 and 18b have run. Every block that needs it
+    # raises a pointed error rather than a KeyError, because "the cube predictors were never
+    # extracted" and "this column name is wrong" are different problems.
+    cube_path = d / "cube_predictors.parquet"
+    cube = None
+    if cube_path.exists():
+        cube = pd.read_parquet(cube_path)
+        cube = cube.set_index(ID_COL) if ID_COL in cube.columns else cube.set_index("plot_id")
+
     return Tables(plots=plots, lsp=lsp, curves=curves, pixels=d / "phenoshape_pixels.parquet",
-                  topo=topo, doy_grid=doy, derived=d)
+                  topo=topo, doy_grid=doy, derived=d, cube=cube)
 
 
 def plot_ids(derived: str = "data/derived") -> pd.Index:
@@ -198,16 +210,150 @@ def _block_year(t: Tables, ids: pd.Index) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------------------
+# blocks without phenological shape — the controls of docs/09_predictors.md
+# --------------------------------------------------------------------------------------
+#
+# Everything below describes the same 5x5 window, the same three-year causal window and the
+# same cloud mask as the curve. They differ from it in one respect only: none of them can
+# tell you *when* anything happened. That is what makes "does shape help?" answerable.
+
+#: How the 25 pixels are collapsed into one plot value. Screened as a factor (row X10 of
+#: docs/09_predictors.md) rather than assumed: `median` is robust to the single failing
+#: pixel that `np.nanmean` silently absorbs.
+DEFAULT_AGG = "median"
+
+
+def _cube(t: Tables) -> pd.DataFrame:
+    if t.cube is None:
+        raise SystemExit(
+            "data/derived/cube_predictors.parquet not found — run "
+            "`python scripts/18_geomedian_from_cubes.py` then "
+            "`python scripts/18b_aggregate_cube_predictors.py` first."
+        )
+    return t.cube
+
+
+def _cube_cols(t: Tables, ids: pd.Index, prefixes: tuple[str, ...], agg: str,
+               name: str) -> pd.DataFrame:
+    """Pull one aggregation level of a family of cube columns, in canonical plot order."""
+    cube = _cube(t)
+    suffix = f"_{agg}"
+    cols = [c for c in cube.columns
+            if c.endswith(suffix) and c[: -len(suffix)].startswith(prefixes)]
+    if not cols:
+        raise ValueError(f"no {name} columns for agg={agg!r}")
+    sub = cube.reindex(ids)[cols].copy()
+    sub.columns = [c[: -len(suffix)] for c in cols]
+    return sub
+
+
+def _block_composite(t: Tables, ids: pd.Index, index: str, px: str = "mean5x5"
+                     ) -> pd.DataFrame:
+    """Annual statistics of the 52-step curve: level and spread, no shape and no date."""
+    return composites.composite_block(t.curves, ids, index, STEP_COLS, px=px)
+
+
+def _block_contrast(t: Tables, ids: pd.Index, px: str = "mean5x5") -> pd.DataFrame:
+    """Differences and ratios between the annual levels of the five indices."""
+    return composites.contrast_block(t.curves, ids, INDICES, STEP_COLS, px=px)
+
+
+def _block_gm(t: Tables, ids: pd.Index, agg: str = DEFAULT_AGG) -> pd.DataFrame:
+    """Geomedian spectrum, its five derived indices, and the three MADs.
+
+    The MADs are the load-bearing part: within-window variability with the time axis
+    discarded. If the fitted curve cannot beat a geomedian plus its MADs, the gain the
+    project attributes to phenology was never about phenology.
+    """
+    return _cube_cols(t, ids, ("gm_",), agg, "geomedian").add_prefix("gmA_")
+
+
+def _block_obscomp(t: Tables, ids: pd.Index, index: str | None = None,
+                   agg: str = DEFAULT_AGG) -> pd.DataFrame:
+    """Composites over the *real observations* rather than over the interpolated curve.
+
+    Distinct from ``composite``: that one inherits the smoother's fingerprint (rollWindow=5
+    and the interpolation onto 52 steps), this one does not. Comparing the two isolates what
+    the smoothing did.
+    """
+    pref = ("obs_",) if index is None else (f"obs_{index}_",)
+    return _cube_cols(t, ids, pref, agg, "observation composite").add_prefix("oc_")
+
+
+def _block_seas(t: Tables, ids: pd.Index, index: str | None = None,
+                agg: str = DEFAULT_AGG) -> pd.DataFrame:
+    """Median per austral season plus the summer-minus-winter contrast.
+
+    Phenology reduced to four numbers. Between the annual composite (no time at all) and the
+    52-step curve (all of it), this is the intermediate rung: if it recovers most of the
+    curve's advantage, the useful part of the temporal signal is an amplitude, not a shape.
+    """
+    pref = ("seas_",) if index is None else (f"seas_{index}_",)
+    return _cube_cols(t, ids, pref, agg, "seasonal").add_prefix("sea_")
+
+
+def _block_clim(t: Tables, ids: pd.Index) -> pd.DataFrame:
+    """Bioclimatic normals, 1971-2000, from CR2MET (``scripts/22_extract_climate.py``).
+
+    The only block here that does not describe the 150 m window: CR2MET is a 0.05 degree
+    grid, so the 1,082 plots occupy 253 distinct cells and several plots share a value. That
+    is a real limitation of support and is stated rather than hidden — but it is the axis the
+    GDM comparison says is missing, since geographic distance alone already reaches Spearman
+    +0.435 against observed dissimilarity and everything else added +0.057 on top.
+
+    The normal ends in 2000, before the earliest census in 2003, so it is causal for every
+    plot in the subset.
+    """
+    path = t.derived / "climate.parquet"
+    if not path.exists():
+        raise SystemExit(
+            f"{path} not found — run `python scripts/22_extract_climate.py` first "
+            "(needs a Data Cube Chile connection)."
+        )
+    clim = pd.read_parquet(path).set_index(ID_COL)
+    return clim.reindex(ids)
+
+
+def _block_svh(t: Tables, ids: pd.Index) -> pd.DataFrame:
+    """Spectral variation between the 25 pixels — axis A of docs/01_state_of_the_art.md.
+
+    Two warnings are designed in rather than discovered afterwards. Dispersion is confounded
+    with level (measured r = 0.22-0.52 depending on index), so ``_cv`` is carried beside
+    ``_sd`` and any reported correlation must be the partial one controlling for the mean.
+    And the sign is expected to be *negative* for richness in ndvi/kndvi/nbr here, opposite
+    to the classical spectral-variation hypothesis; if it holds up it is a result, not a bug.
+    """
+    cube = _cube(t)
+    keep = [c for c in cube.columns
+            if (c.endswith("_sd") or c.endswith("_cv"))
+            and c.startswith(("gm_", "obs_", "seas_"))]
+    sub = cube.reindex(ids)[keep].copy()
+    return sub.add_prefix("svh_")
+
+
+# --------------------------------------------------------------------------------------
 # composition
 # --------------------------------------------------------------------------------------
 
 def build_design(spec: str, index: str | None = None, derived: str = "data/derived",
                  px: str = "mean5x5", circular_doy: bool = False,
-                 ids: pd.Index | None = None) -> tuple[pd.DataFrame, pd.Index]:
+                 ids: pd.Index | None = None,
+                 agg: str = DEFAULT_AGG) -> tuple[pd.DataFrame, pd.Index]:
     """Assemble a design matrix from ``+``-joined block names.
 
-    Blocks: ``lsp``, ``lsp_ctr``, ``curve``, ``qc``, ``topo``, ``area``, ``coords``, ``year``,
-    plus ``lsp_all`` / ``curve_all`` which stack all five vegetation indices side by side.
+    Phenology-bearing blocks: ``lsp``, ``lsp_ctr``, ``curve``, ``qc``, plus ``lsp_all`` /
+    ``curve_all`` which stack all five vegetation indices side by side.
+
+    Shape-free controls (docs/09_predictors.md): ``composite`` / ``composite_all``,
+    ``contrast``, ``gm``, ``obscomp`` / ``obscomp_all``, ``seas`` / ``seas_all``, ``svh``.
+
+    Environment: ``clim`` (CR2MET bioclimatic normals; coarser support than the rest).
+
+    Context: ``topo``, ``topo_ctr``, ``area``, ``coords``, ``year``.
+
+    ``agg`` chooses how the 25 pixels are collapsed for the cube-derived blocks — one of
+    ``median``, ``mean``, ``trimmed``, ``center``. It is a screened factor, not a default
+    nobody looked at.
 
     Returns the frame (rows in canonical plot order, NaN preserved) and the plot id index.
     Imputation and scaling happen later, per fold, in :class:`Preprocessor` — doing them here
@@ -215,7 +361,7 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
     """
     t = load_tables(derived)
     ids = pd.Index(t.plots[ID_COL]) if ids is None else pd.Index(ids)
-    needs_index = {"lsp", "lsp_ctr", "curve", "qc"}
+    needs_index = {"lsp", "lsp_ctr", "curve", "qc", "composite"}
     parts: list[pd.DataFrame] = []
 
     for name in spec.split("+"):
@@ -247,6 +393,27 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
         elif name == "curve_all":
             for ix in INDICES:
                 parts.append(_block_curve(t, ids, ix, px=px).add_prefix(f"{ix}_"))
+        elif name == "composite":
+            parts.append(_block_composite(t, ids, index, px=px))
+        elif name == "composite_all":
+            for ix in INDICES:
+                parts.append(_block_composite(t, ids, ix, px=px).add_prefix(f"{ix}_"))
+        elif name == "contrast":
+            parts.append(_block_contrast(t, ids, px=px))
+        elif name == "gm":
+            parts.append(_block_gm(t, ids, agg=agg))
+        elif name == "obscomp":
+            parts.append(_block_obscomp(t, ids, index=index, agg=agg))
+        elif name == "obscomp_all":
+            parts.append(_block_obscomp(t, ids, index=None, agg=agg))
+        elif name == "seas":
+            parts.append(_block_seas(t, ids, index=index, agg=agg))
+        elif name == "seas_all":
+            parts.append(_block_seas(t, ids, index=None, agg=agg))
+        elif name == "svh":
+            parts.append(_block_svh(t, ids))
+        elif name == "clim":
+            parts.append(_block_clim(t, ids))
         else:
             raise ValueError(f"unknown feature block {name!r}")
 

@@ -1,0 +1,118 @@
+{
+  "cascade": {
+    "0. Parcelas-CL, all plots": 1485,
+    "1. + year known": 1443,
+    "2. + latitude 30.0-38.0S": 1254,
+    "3. + year >= 1999": 1253,
+    "4. + unique coordinate": 1082,
+    "5. (flag) richness >= 2": 969
+  },
+  "n_subset": 1082,
+  "year_range": [
+    2003,
+    2026
+  ],
+  "window": "y-2..y (causal)",
+  "n_cells": 240,
+  "n_cell_year": 294,
+  "n_datasets": 23,
+  "n_locations": 163,
+  "strata": {
+    "cover": 546,
+    "counts": 479,
+    "presence": 54,
+    "basal": 3
+  },
+  "plots_per_year": {
+    "2003": 2,
+    "2006": 18,
+    "2010": 92,
+    "2012": 31,
+    "2013": 96,
+    "2014": 101,
+    "2017": 32,
+    "2018": 3,
+    "2019": 126,
+    "2020": 95,
+    "2021": 79,
+    "2022": 254,
+    "2023": 17,
+    "2024": 27,
+    "2025": 60,
+    "2026": 49
+  },
+  "richness": {
+    "median": 5.0,
+    "n_richness_1": 113,
+    "n_richness_ge2": 969
+  },
+  "plotsize_na": 0,
+  "cv": {
+    "lodo_dataset": {
+      "scheme": "leave-one-metadata_id-out",
+      "n_folds": 15,
+      "fold_sizes": null,
+      "excluded_from_test": [
+        "md007",
+        "md010",
+        "md011",
+        "md012",
+        "md013",
+        "md014",
+        "md016",
+        "md018"
+      ]
+    },
+    "kfold5_dataset": {
+      "scheme": "grouped-5fold-by-metadata_id-stratified-on-richness",
+      "n_folds": 5,
+      "fold_sizes": [
+        220,
+        204,
+        228,
+        204,
+        226
+      ],
+      "excluded_from_test": null
+    },
+    "kfold5_location": {
+      "scheme": "grouped-5fold-by-Location-stratified-on-richness",
+      "n_folds": 5,
+      "fold_sizes": [
+        221,
+        218,
+        222,
+        221,
+        200
+      ],
+      "excluded_from_test": null
+    }
+  },
+  "cv_fold_report": "data/derived/cv_fold_report.csv",
+  "reconcile_with_paper": {
+    "n_plots": 1485,
+    "n_plots_paper": 1485,
+    "richness_median": 5.0,
+    "richness_median_paper": 5.0,
+    "cover_plots": 625,
+    "cover_plots_paper": 625,
+    "counts_plots": 489,
+    "counts_plots_paper": 489,
+    "presence_absence_plots": 371,
+    "presence_absence_plots_paper": 371
+  },
+  "quality_flags": {
+    "plots_inconsistent_abundance_flag": 60,
+    "plots_inconsistent_abundance_parameter": 0,
+    "cover_max": 101.75,
+    "cover_over_100": 1,
+    "n_accepted_taxa": 675,
+    "taxa_by_rank": {
+      "family": 7,
+      "genus": 54,
+      "species": 597,
+      "subspecies": 6,
+      "variety": 11
+    }
+  }
+}
