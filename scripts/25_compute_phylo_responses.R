@@ -20,7 +20,7 @@
 # familias, y con mediana de 5 especies por parcela lo que domina es que linajes profundos
 # estan presentes, no donde cae exactamente cada especie dentro de su genero.
 #
-# El punto debil real son 33 generos ausentes por completo del megaarbol, en buena parte
+# El punto debil real son 27 generos ausentes de LOS TRES megaarboles, en buena parte
 # endemismos chilenos (Bridgesia, Lapageria, Retanilla, Trevoa, Llagunoa, Podanthus,
 # Laureliopsis, Archidasyphyllum): un arbol global armado desde GenBank esta mal muestreado
 # justo donde esta flora es mas distintiva. Parte se recupera mapeando sinonimos, porque
@@ -29,10 +29,11 @@
 # Jarava->Stipa). El script aplica ese mapeo y reporta lo que queda fuera.
 #
 # Que targets salen de aqui, y cual NO:
-#   PD de Faith  -- correlaciona 0,966 con la riqueza. Es riqueza reetiquetada, y la riqueza
-#                   es justo lo que no se puede predecir bajo CV por contribuyente
-#                   (docs/08_modelling.md seccion 7.1). Se calcula y se guarda, pero como
-#                   descriptor, no como target.
+#   PD de Faith  -- correlaciona 0,966 con la riqueza, asi que hereda entera su patologia:
+#                   bajo el esquema primario `kfold5_window` la alfa alcanza R2 = +0,569 pero
+#                   el 88% de eso es acertar el nivel del contribuyente, y solo +0,063 es
+#                   intra-contribuyente (docs/10_findings.md seccion 1b). Se calcula y se
+#                   guarda, pero como descriptor, no como target.
 #   MPD          -- correlaciona 0,076 con la riqueza. Casi ortogonal: informacion nueva.
 #   MNTD         -- correlaciona -0,465. Parcialmente independiente.
 #   SES de las tres -- lo que separa "hay muchas especies" de "hay muchos linajes distintos".
@@ -216,14 +217,24 @@ message(sprintf("  subset del proyecto:  %d parcelas x %d especies (de %d en plo
 
 message("\n== respuestas por parcela ==")
 cph <- cophenetic(tree)
-pdv <- picante::pd(comm_sub, tree, include.root = TRUE)
+
+# `include.root = FALSE` no es cosmetico. Con TRUE, picante::pd() llama a node.age() sobre el
+# subarbol podado a las especies de cada comunidad, y ese subarbol puede quedar sin raiz
+# aunque el arbol completo si la tenga -- basta una comunidad cuya poda deje la raiz con un
+# solo hijo. Con 199 aleatorizaciones eso ocurre casi seguro y aborta ses.pd(). Con FALSE se
+# suma solo el largo de rama que conecta a las especies presentes, sin el camino hasta la
+# raiz, que es ademas la definicion mas comun para comparar comunidades dentro de un arbol.
+# Observado y nulo usan el mismo criterio, que es lo que hace que el SES signifique algo.
+PD_ROOT <- FALSE
+pdv <- picante::pd(comm_sub, tree, include.root = PD_ROOT)
 
 # SES: "taxa.labels" baraja las etiquetas del arbol, que es el nulo que pregunta si los
 # linajes de la parcela estan mas o menos emparentados de lo esperado A IGUAL RIQUEZA.
 # Es justamente lo que descuenta la correlacion 0,97 entre PD y riqueza.
 set.seed(SEED)
 message(sprintf("  SES con %d aleatorizaciones (modelo nulo taxa.labels)...", N_RUNS))
-ses_pd   <- picante::ses.pd(comm_sub, tree, null.model = "taxa.labels", runs = N_RUNS)
+ses_pd   <- picante::ses.pd(comm_sub, tree, null.model = "taxa.labels", runs = N_RUNS,
+                            include.root = PD_ROOT)
 ses_mpd  <- picante::ses.mpd(comm_sub, cph, null.model = "taxa.labels", runs = N_RUNS)
 ses_mntd <- picante::ses.mntd(comm_sub, cph, null.model = "taxa.labels", runs = N_RUNS)
 
@@ -271,6 +282,8 @@ accum <- function(cm, tr, reps, label, seed = SEED) {
       idx <- sample.int(n, m)
       pool <- colnames(cm)[colSums(cm[idx, , drop = FALSE]) > 0]
       c(length(pool),
+        # mismo criterio de raiz que las respuestas por parcela: solo el largo de rama
+        # que conecta a las especies presentes
         if (length(pool) > 1) sum(keep.tip(tr, pool)$edge.length) else NA_real_)
     })
     data.frame(m = m,
