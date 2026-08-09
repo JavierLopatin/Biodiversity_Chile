@@ -1,0 +1,241 @@
+"dataset","metric","n","method","value","lo","hi"
+"Parcelas-CL completo","taxonomica",1,"Rarefaction",7.12457912457912,1,29.1
+"Parcelas-CL completo","taxonomica",79,"Rarefaction",207.233472002816,154.95,257.175
+"Parcelas-CL completo","taxonomica",157,"Rarefaction",287.635633290354,241.95,332.075
+"Parcelas-CL completo","taxonomica",235,"Rarefaction",340.44400348517,301.975,381.025
+"Parcelas-CL completo","taxonomica",313,"Rarefaction",379.78474240428,341,421
+"Parcelas-CL completo","taxonomica",391,"Rarefaction",411.042574651385,374,447.025
+"Parcelas-CL completo","taxonomica",469,"Rarefaction",436.924748191945,396.925,470.1
+"Parcelas-CL completo","taxonomica",547,"Rarefaction",458.97860241579,423.975,491
+"Parcelas-CL completo","taxonomica",625,"Rarefaction",478.164507027109,445,508
+"Parcelas-CL completo","taxonomica",703,"Rarefaction",495.116941447465,459.925,524
+"Parcelas-CL completo","taxonomica",782,"Rarefaction",510.460879170963,481,535.075
+"Parcelas-CL completo","taxonomica",860,"Rarefaction",524.129910167183,495.975,547.05
+"Parcelas-CL completo","taxonomica",938,"Rarefaction",536.567538456993,508.925,563.05
+"Parcelas-CL completo","taxonomica",1016,"Rarefaction",547.958229155071,519.975,569.025
+"Parcelas-CL completo","taxonomica",1094,"Rarefaction",558.448278877813,528,578
+"Parcelas-CL completo","taxonomica",1172,"Rarefaction",568.156252136683,543.975,584.05
+"Parcelas-CL completo","taxonomica",1250,"Rarefaction",577.180019381511,560.95,591
+"Parcelas-CL completo","taxonomica",1328,"Rarefaction",585.601645135737,569,596
+"Parcelas-CL completo","taxonomica",1406,"Rarefaction",593.490882473784,582,600
+"Parcelas-CL completo","taxonomica",1485,"Observed",601,601,601
+"Parcelas-CL completo","taxonomica",1486,"Extrapolation",601.092186970131,NA,NA
+"Parcelas-CL completo","taxonomica",1564,"Extrapolation",608.074591839553,NA,NA
+"Parcelas-CL completo","taxonomica",1642,"Extrapolation",614.661603110868,NA,NA
+"Parcelas-CL completo","taxonomica",1720,"Extrapolation",620.87561079158,NA,NA
+"Parcelas-CL completo","taxonomica",1798,"Extrapolation",626.737737007169,NA,NA
+"Parcelas-CL completo","taxonomica",1876,"Extrapolation",632.267907797616,NA,NA
+"Parcelas-CL completo","taxonomica",1954,"Extrapolation",637.484920848305,NA,NA
+"Parcelas-CL completo","taxonomica",2032,"Extrapolation",642.406509385513,NA,NA
+"Parcelas-CL completo","taxonomica",2110,"Extrapolation",647.049402453678,NA,NA
+"Parcelas-CL completo","taxonomica",2188,"Extrapolation",651.429381779347,NA,NA
+"Parcelas-CL completo","taxonomica",2267,"Extrapolation",655.612760943233,NA,NA
+"Parcelas-CL completo","taxonomica",2345,"Extrapolation",659.507821793335,NA,NA
+"Parcelas-CL completo","taxonomica",2423,"Extrapolation",663.182316498511,NA,NA
+"Parcelas-CL completo","taxonomica",2501,"Extrapolation",666.648735088097,NA,NA
+"Parcelas-CL completo","taxonomica",2579,"Extrapolation",669.918860316827,NA,NA
+"Parcelas-CL completo","taxonomica",2657,"Extrapolation",673.003807715765,NA,NA
+"Parcelas-CL completo","taxonomica",2735,"Extrapolation",675.914063375273,NA,NA
+"Parcelas-CL completo","taxonomica",2813,"Extrapolation",678.659519588439,NA,NA
+"Parcelas-CL completo","taxonomica",2891,"Extrapolation",681.24950847611,NA,NA
+"Parcelas-CL completo","taxonomica",2970,"Extrapolation",683.723242880262,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1,"Rarefaction",2.64377138051671,0.999999997373961,6.7679005927989
+"Parcelas-CL completo","filogenetica_meanPD",79,"Rarefaction",28.4456593833921,23.8476224530914,32.6112847505946
+"Parcelas-CL completo","filogenetica_meanPD",157,"Rarefaction",34.548554772517,30.8952980917986,38.1834980616107
+"Parcelas-CL completo","filogenetica_meanPD",235,"Rarefaction",38.0493442130955,34.8415707943893,40.7877336625948
+"Parcelas-CL completo","filogenetica_meanPD",313,"Rarefaction",40.4805016625466,37.1765454421242,43.287680679259
+"Parcelas-CL completo","filogenetica_meanPD",391,"Rarefaction",42.3380950861731,39.6537485597535,44.7316957742492
+"Parcelas-CL completo","filogenetica_meanPD",469,"Rarefaction",43.839636862502,41.1093949773712,46.1388388780411
+"Parcelas-CL completo","filogenetica_meanPD",547,"Rarefaction",45.0972776837891,43.029172347639,46.9892463958279
+"Parcelas-CL completo","filogenetica_meanPD",625,"Rarefaction",46.176163635561,44.0127670203497,48.2377999896214
+"Parcelas-CL completo","filogenetica_meanPD",703,"Rarefaction",47.1177855162911,44.8410723393029,48.8868937268042
+"Parcelas-CL completo","filogenetica_meanPD",782,"Rarefaction",47.9605334845138,46.1573987994057,49.8026721860648
+"Parcelas-CL completo","filogenetica_meanPD",860,"Rarefaction",48.7036328414528,46.752658485063,50.3483556691447
+"Parcelas-CL completo","filogenetica_meanPD",938,"Rarefaction",49.3736173432379,47.4235809614001,51.0046078001852
+"Parcelas-CL completo","filogenetica_meanPD",1016,"Rarefaction",49.9822823310216,48.2271323161791,51.1437986162547
+"Parcelas-CL completo","filogenetica_meanPD",1094,"Rarefaction",50.5390275779961,48.9103046872902,51.8179248507254
+"Parcelas-CL completo","filogenetica_meanPD",1172,"Rarefaction",51.0515222893436,49.6193663345526,52.0676896111777
+"Parcelas-CL completo","filogenetica_meanPD",1250,"Rarefaction",51.5261485809465,50.391027096956,52.3564500768684
+"Parcelas-CL completo","filogenetica_meanPD",1328,"Rarefaction",51.9683056182744,51.0298608788129,52.6092873864061
+"Parcelas-CL completo","filogenetica_meanPD",1406,"Rarefaction",52.3826244657318,51.5661076890774,52.7674853930636
+"Parcelas-CL completo","filogenetica_meanPD",1485,"Observed",52.7779924375653,52.7779924375653,52.7779924375653
+"Parcelas-CL completo","filogenetica_meanPD",1486,"Extrapolation",52.7828567126523,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1564,"Extrapolation",53.1522023897073,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1642,"Extrapolation",53.5023632828953,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1720,"Extrapolation",53.8343359002434,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1798,"Extrapolation",54.1490649885366,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1876,"Extrapolation",54.447446221932,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",1954,"Extrapolation",54.7303287509204,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2032,"Extrapolation",54.9985176188872,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2110,"Extrapolation",55.2527760531515,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2188,"Extrapolation",55.4938276370023,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2267,"Extrapolation",55.7252098293273,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2345,"Extrapolation",55.9417219628731,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2423,"Extrapolation",56.1469878879353,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2501,"Extrapolation",56.3415917620997,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2579,"Extrapolation",56.5260874002742,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2657,"Extrapolation",56.7009998507666,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2735,"Extrapolation",56.8668268894975,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2813,"Extrapolation",57.0240404365998,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2891,"Extrapolation",57.173087899436,NA,NA
+"Parcelas-CL completo","filogenetica_meanPD",2970,"Extrapolation",57.3161565661528,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1,"Rarefaction",1032.92819361592,390.702539,2644.23595225
+"Parcelas-CL completo","filogenetica_PD",79,"Rarefaction",11113.7913738057,9317.32666600387,12741.3117855685
+"Parcelas-CL completo","filogenetica_PD",157,"Rarefaction",13498.2081038498,12070.8714393262,14918.3896797492
+"Parcelas-CL completo","filogenetica_PD",235,"Rarefaction",14865.97543038,13612.6902078636,15935.8711438798
+"Parcelas-CL completo","filogenetica_PD",313,"Rarefaction",15815.8348210837,14524.9707336299,16912.6067932209
+"Parcelas-CL completo","filogenetica_PD",391,"Rarefaction",16541.6012900301,15492.8202838481,17476.7871586695
+"Parcelas-CL completo","filogenetica_PD",469,"Rarefaction",17128.257475997,16061.545036591,18026.561543501
+"Parcelas-CL completo","filogenetica_PD",547,"Rarefaction",17619.6209393142,16811.6069314391,18358.8179207575
+"Parcelas-CL completo","filogenetica_PD",625,"Rarefaction",18041.1444210699,17195.8998684232,18846.6309812112
+"Parcelas-CL completo","filogenetica_PD",703,"Rarefaction",18409.0384816152,17519.5208604553,19100.2335530435
+"Parcelas-CL completo","filogenetica_PD",782,"Rarefaction",18738.3022534016,18033.8129519209,19458.0305231777
+"Parcelas-CL completo","filogenetica_PD",860,"Rarefaction",19028.6330596493,18266.3824230823,19671.2304460673
+"Parcelas-CL completo","filogenetica_PD",938,"Rarefaction",19290.3977062748,18528.5135387477,19927.6298205623
+"Parcelas-CL completo","filogenetica_PD",1016,"Rarefaction",19528.2046630268,18842.4630941011,19982.0120259489
+"Parcelas-CL completo","filogenetica_PD",1094,"Rarefaction",19745.7264451672,19109.3802747699,20245.3948580548
+"Parcelas-CL completo","filogenetica_PD",1172,"Rarefaction",19945.9594306405,19386.4124613903,20342.9785843725
+"Parcelas-CL completo","filogenetica_PD",1250,"Rarefaction",20131.3971283329,19687.9022812997,20455.798031777
+"Parcelas-CL completo","filogenetica_PD",1328,"Rarefaction",20304.1490059072,19937.4962625256,20554.5822108267
+"Parcelas-CL completo","filogenetica_PD",1406,"Rarefaction",20466.0244319895,20147.0092533768,20616.3905738548
+"Parcelas-CL completo","filogenetica_PD",1485,"Observed",20620.4957028298,20620.4957028298,20620.4957028298
+"Parcelas-CL completo","filogenetica_PD",1486,"Extrapolation",20622.3961874616,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1564,"Extrapolation",20766.7004816347,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1642,"Extrapolation",20903.509232021,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1720,"Extrapolation",21033.211776838,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1798,"Extrapolation",21156.1772310542,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1876,"Extrapolation",21272.7555368379,NA,NA
+"Parcelas-CL completo","filogenetica_PD",1954,"Extrapolation",21383.2784594426,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2032,"Extrapolation",21488.0605313639,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2110,"Extrapolation",21587.399947454,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2188,"Extrapolation",21681.5794135418,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2267,"Extrapolation",21771.9810238,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2345,"Extrapolation",21856.5728643228,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2423,"Extrapolation",21936.7707826254,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2501,"Extrapolation",22012.8030105603,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2579,"Extrapolation",22084.8859250188,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2657,"Extrapolation",22153.2246637084,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2735,"Extrapolation",22218.0137089455,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2813,"Extrapolation",22279.4374411249,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2891,"Extrapolation",22337.6706634394,NA,NA
+"Parcelas-CL completo","filogenetica_PD",2970,"Extrapolation",22393.5679549238,NA,NA
+"subset del proyecto","taxonomica",1,"Rarefaction",6.99353049907579,1,28
+"subset del proyecto","taxonomica",57,"Rarefaction",154.547162347758,110.975,203.075
+"subset del proyecto","taxonomica",114,"Rarefaction",218.925474947825,170,274.05
+"subset del proyecto","taxonomica",171,"Rarefaction",262.794687092415,223.825,306.075
+"subset del proyecto","taxonomica",228,"Rarefaction",296.38839221945,254,337.05
+"subset del proyecto","taxonomica",285,"Rarefaction",323.666640226231,279.875,361.075
+"subset del proyecto","taxonomica",342,"Rarefaction",346.662947420965,303.975,389
+"subset del proyecto","taxonomica",399,"Rarefaction",366.568332070885,315.975,407.125
+"subset del proyecto","taxonomica",456,"Rarefaction",384.139415076092,343,424.025
+"subset del proyecto","taxonomica",513,"Rarefaction",399.885673286467,359,432
+"subset del proyecto","taxonomica",569,"Rarefaction",413.926426241416,376,448.05
+"subset del proyecto","taxonomica",626,"Rarefaction",427.021912182534,389.975,460.025
+"subset del proyecto","taxonomica",683,"Rarefaction",439.107316372381,405,465.075
+"subset del proyecto","taxonomica",740,"Rarefaction",450.33502762015,421.975,475.025
+"subset del proyecto","taxonomica",797,"Rarefaction",460.824768046909,431.95,483
+"subset del proyecto","taxonomica",854,"Rarefaction",470.672210139903,443.975,492
+"subset del proyecto","taxonomica",911,"Rarefaction",479.954934448859,454.95,495
+"subset del proyecto","taxonomica",968,"Rarefaction",488.736651753835,467.975,501
+"subset del proyecto","taxonomica",1025,"Rarefaction",497.070247438503,481,504
+"subset del proyecto","taxonomica",1082,"Observed",505,505,505
+"subset del proyecto","taxonomica",1083,"Extrapolation",505.135746758032,NA,NA
+"subset del proyecto","taxonomica",1139,"Extrapolation",512.56045320861,NA,NA
+"subset del proyecto","taxonomica",1196,"Extrapolation",519.771415021332,NA,NA
+"subset del proyecto","taxonomica",1253,"Extrapolation",526.649041114609,NA,NA
+"subset del proyecto","taxonomica",1310,"Extrapolation",533.208740348554,NA,NA
+"subset del proyecto","taxonomica",1367,"Extrapolation",539.465209289471,NA,NA
+"subset del proyecto","taxonomica",1424,"Extrapolation",545.432465136521,NA,NA
+"subset del proyecto","taxonomica",1481,"Extrapolation",551.123877126323,NA,NA
+"subset del proyecto","taxonomica",1538,"Extrapolation",556.552196485828,NA,NA
+"subset del proyecto","taxonomica",1595,"Extrapolation",561.729585000589,NA,NA
+"subset del proyecto","taxonomica",1651,"Extrapolation",566.583008483727,NA,NA
+"subset del proyecto","taxonomica",1708,"Extrapolation",571.296710181005,NA,NA
+"subset del proyecto","taxonomica",1765,"Extrapolation",575.792515127846,NA,NA
+"subset del proyecto","taxonomica",1822,"Extrapolation",580.080495873788,NA,NA
+"subset del proyecto","taxonomica",1879,"Extrapolation",584.170259352181,NA,NA
+"subset del proyecto","taxonomica",1936,"Extrapolation",588.070968403879,NA,NA
+"subset del proyecto","taxonomica",1993,"Extrapolation",591.791362305966,NA,NA
+"subset del proyecto","taxonomica",2050,"Extrapolation",595.339776351526,NA,NA
+"subset del proyecto","taxonomica",2107,"Extrapolation",598.724160524305,NA,NA
+"subset del proyecto","taxonomica",2164,"Extrapolation",601.952097310119,NA,NA
+"subset del proyecto","filogenetica_meanPD",1,"Rarefaction",2.56563948675064,0.999999997373961,6.49423518012253
+"subset del proyecto","filogenetica_meanPD",57,"Rarefaction",23.7713019121542,18.7605286770453,28.4588149958269
+"subset del proyecto","filogenetica_meanPD",114,"Rarefaction",29.3237129511297,24.989034056087,33.136233259765
+"subset del proyecto","filogenetica_meanPD",171,"Rarefaction",32.5105027884009,29.3651985867973,35.5610902759954
+"subset del proyecto","filogenetica_meanPD",228,"Rarefaction",34.7266327560433,31.4518839299563,37.3170445403256
+"subset del proyecto","filogenetica_meanPD",285,"Rarefaction",36.4265270579589,33.6258794867991,39.1942096595675
+"subset del proyecto","filogenetica_meanPD",342,"Rarefaction",37.81052037587,35.2940439473091,40.560803565391
+"subset del proyecto","filogenetica_meanPD",399,"Rarefaction",38.9815728222478,36.2354582703224,41.5780094595264
+"subset del proyecto","filogenetica_meanPD",456,"Rarefaction",39.9986459131826,37.3561322758933,42.2982482311011
+"subset del proyecto","filogenetica_meanPD",513,"Rarefaction",40.8985218951481,38.2376396013435,42.7682077673467
+"subset del proyecto","filogenetica_meanPD",569,"Rarefaction",41.6923005756398,39.6511899842409,43.5517879853881
+"subset del proyecto","filogenetica_meanPD",626,"Rarefaction",42.4254537216586,40.1609211020049,44.2685057472277
+"subset del proyecto","filogenetica_meanPD",683,"Rarefaction",43.0958823501468,40.8417091649291,44.6802351580205
+"subset del proyecto","filogenetica_meanPD",740,"Rarefaction",43.7133666599867,42.1137342648825,45.2661700953139
+"subset del proyecto","filogenetica_meanPD",797,"Rarefaction",44.2855712454965,42.7480021980684,45.5516265975401
+"subset del proyecto","filogenetica_meanPD",854,"Rarefaction",44.818634404332,43.051085774659,46.1157834006546
+"subset del proyecto","filogenetica_meanPD",911,"Rarefaction",45.3175540086912,43.8281638133679,46.2617415410834
+"subset del proyecto","filogenetica_meanPD",968,"Rarefaction",45.7864498605361,44.6005487557626,46.5517229907624
+"subset del proyecto","filogenetica_meanPD",1025,"Rarefaction",46.2287494509663,45.1753417877302,46.6382209167747
+"subset del proyecto","filogenetica_meanPD",1082,"Observed",46.6473254564451,46.6473254564451,46.6473254564451
+"subset del proyecto","filogenetica_meanPD",1083,"Extrapolation",46.6544722693171,NA,NA
+"subset del proyecto","filogenetica_meanPD",1139,"Extrapolation",47.0444190739173,NA,NA
+"subset del proyecto","filogenetica_meanPD",1196,"Extrapolation",47.4213028837939,NA,NA
+"subset del proyecto","filogenetica_meanPD",1253,"Extrapolation",47.7790054503859,NA,NA
+"subset del proyecto","filogenetica_meanPD",1310,"Extrapolation",48.1185029899284,NA,NA
+"subset del proyecto","filogenetica_meanPD",1367,"Extrapolation",48.4407220348001,NA,NA
+"subset del proyecto","filogenetica_meanPD",1424,"Extrapolation",48.746541962149,NA,NA
+"subset del proyecto","filogenetica_meanPD",1481,"Extrapolation",49.0367973938256,NA,NA
+"subset del proyecto","filogenetica_meanPD",1538,"Extrapolation",49.3122804741734,NA,NA
+"subset del proyecto","filogenetica_meanPD",1595,"Extrapolation",49.5737430318921,NA,NA
+"subset del proyecto","filogenetica_meanPD",1651,"Extrapolation",49.8176557968126,NA,NA
+"subset del proyecto","filogenetica_meanPD",1708,"Extrapolation",50.0533976237396,NA,NA
+"subset del proyecto","filogenetica_meanPD",1765,"Extrapolation",50.2771415319019,NA,NA
+"subset del proyecto","filogenetica_meanPD",1822,"Extrapolation",50.4894981471547,NA,NA
+"subset del proyecto","filogenetica_meanPD",1879,"Extrapolation",50.6910470179687,NA,NA
+"subset del proyecto","filogenetica_meanPD",1936,"Extrapolation",50.8823381970924,NA,NA
+"subset del proyecto","filogenetica_meanPD",1993,"Extrapolation",51.0638937427162,NA,NA
+"subset del proyecto","filogenetica_meanPD",2050,"Extrapolation",51.2362091432369,NA,NA
+"subset del proyecto","filogenetica_meanPD",2107,"Extrapolation",51.3997546695088,NA,NA
+"subset del proyecto","filogenetica_meanPD",2164,"Extrapolation",51.554976658273,NA,NA
+"subset del proyecto","filogenetica_PD",1,"Rarefaction",1002.40186426448,390.702539,2537.31418040008
+"subset del proyecto","filogenetica_PD",57,"Rarefaction",9287.50803680357,7329.7862063522,11118.9313049996
+"subset del proyecto","filogenetica_PD",114,"Rarefaction",11456.8491329997,9763.2790785094,12946.4105014842
+"subset del proyecto","filogenetica_PD",171,"Rarefaction",12701.9360169506,11473.0576762296,13893.8082969253
+"subset del proyecto","filogenetica_PD",228,"Rarefaction",13567.7836243362,12288.3309400369,14579.8640881686
+"subset del proyecto","filogenetica_PD",285,"Rarefaction",14231.9366458704,13137.7165261006,15313.2772683046
+"subset del proyecto","filogenetica_PD",342,"Rarefaction",14772.6663505572,13789.472618003,15847.2089784939
+"subset del proyecto","filogenetica_PD",399,"Rarefaction",15230.1995158607,14157.2855852211,16244.633905062
+"subset del proyecto","filogenetica_PD",456,"Rarefaction",15627.572555881,14595.1357657387,16526.0330225414
+"subset del proyecto","filogenetica_PD",513,"Rarefaction",15979.1563877433,14939.5429168437,16709.6474070621
+"subset del proyecto","filogenetica_PD",569,"Rarefaction",16289.2877344299,15491.8206418964,17015.7941885649
+"subset del proyecto","filogenetica_PD",626,"Rarefaction",16575.7325308075,15690.9738843371,17295.8176385975
+"subset del proyecto","filogenetica_PD",683,"Rarefaction",16837.670698864,15956.959509741,17456.6813651976
+"subset del proyecto","filogenetica_PD",740,"Rarefaction",17078.9233871447,16453.9429472696,17685.6076334881
+"subset del proyecto","filogenetica_PD",797,"Rarefaction",17302.4851721179,16701.7530398224,17797.1362139748
+"subset del proyecto","filogenetica_PD",854,"Rarefaction",17510.7543022692,16820.1685630365,18017.5537099246
+"subset del proyecto","filogenetica_PD",911,"Rarefaction",17705.6834589611,17123.7749265584,18074.5799261276
+"subset del proyecto","filogenetica_PD",968,"Rarefaction",17888.8822592845,17425.5476854299,18187.8764150776
+"subset del proyecto","filogenetica_PD",1025,"Rarefaction",18061.6898327181,17650.1207830089,18221.6713744776
+"subset del proyecto","filogenetica_PD",1082,"Observed",18225.2285412526,18225.2285412526,18225.2285412526
+"subset del proyecto","filogenetica_PD",1083,"Extrapolation",18228.0208191948,NA,NA
+"subset del proyecto","filogenetica_PD",1139,"Extrapolation",18380.3740262271,NA,NA
+"subset del proyecto","filogenetica_PD",1196,"Extrapolation",18527.6234880405,NA,NA
+"subset del proyecto","filogenetica_PD",1253,"Extrapolation",18667.3787893819,NA,NA
+"subset del proyecto","filogenetica_PD",1310,"Extrapolation",18800.0213404137,NA,NA
+"subset del proyecto","filogenetica_PD",1367,"Extrapolation",18925.9131396898,NA,NA
+"subset del proyecto","filogenetica_PD",1424,"Extrapolation",19045.3977620956,NA,NA
+"subset del proyecto","filogenetica_PD",1481,"Extrapolation",19158.801296508,NA,NA
+"subset del proyecto","filogenetica_PD",1538,"Extrapolation",19266.4332357341,NA,NA
+"subset del proyecto","filogenetica_PD",1595,"Extrapolation",19368.5873211565,NA,NA
+"subset del proyecto","filogenetica_PD",1651,"Extrapolation",19463.8846579557,NA,NA
+"subset del proyecto","filogenetica_PD",1708,"Extrapolation",19555.9895885264,NA,NA
+"subset del proyecto","filogenetica_PD",1765,"Extrapolation",19643.4069017608,NA,NA
+"subset del proyecto","filogenetica_PD",1822,"Extrapolation",19726.3751707314,NA,NA
+"subset del proyecto","filogenetica_PD",1879,"Extrapolation",19805.1208264978,NA,NA
+"subset del proyecto","filogenetica_PD",1936,"Extrapolation",19879.858776066,NA,NA
+"subset del proyecto","filogenetica_PD",1993,"Extrapolation",19950.792988897,NA,NA
+"subset del proyecto","filogenetica_PD",2050,"Extrapolation",20018.117053566,NA,NA
+"subset del proyecto","filogenetica_PD",2107,"Extrapolation",20082.0147060903,NA,NA
+"subset del proyecto","filogenetica_PD",2164,"Extrapolation",20142.6603313684,NA,NA

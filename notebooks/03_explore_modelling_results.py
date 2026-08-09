@@ -350,73 +350,99 @@ else:
 # cierra con el megaárbol `GBOTB.extended.TPL` de V.PhyloMaker2 (74.529 tips, backbone GBOTB
 # de Smith & Brown 2018 extendido con Zanne et al. 2014).
 #
-# Las curvas replican la **Fig. 4b,c del paper de Parcelas-CL** y añaden la comparación que
-# ahí no existe: el subset de 1.082 parcelas de este proyecto contra las 1.485 del dataset
-# completo. La pregunta es si filtrar por Chile central, año ≥ 1999 y coordenada única costó
-# representatividad — y si la costó en la dimensión taxonómica, en la filogenética, o en las
-# dos.
+# Las curvas replican la **Fig. 4b,c del paper de Parcelas-CL** con el método que esa figura
+# usa —rarefacción/extrapolación de iNEXT (Chao et al.)— y añaden la comparación que ahí no
+# existe: el subset de 1.082 parcelas de este proyecto contra las 1.485 del dataset completo.
+# La pregunta es si filtrar por Chile central, año ≥ 1999 y coordenada única costó
+# representatividad, y si la costó en la dimensión taxonómica, en la filogenética o en las dos.
 #
-# Nota sobre el paper: reporta diversidad filogenética en su Fig. 4c pero **no documenta el
-# árbol ni el método** — la sección de métodos no menciona filogenia, ni paquete, ni
-# referencia de backbone. Lo único que se infiere del pie de figura ("lineage diversity for
-# Hill number 0", con interpolación y rarefacción) es la familia de métodos. Por eso el árbol
+# **El n del paper.** Parcelas-CL declara 675 especies, pero eso cuenta 54 registros
+# determinados sólo a género y 7 sólo a familia. A rango de especie hay 597 taxones, y
+# colapsando subespecies y variedades al binomio quedan **601**, que es lo que un árbol puede
+# representar: darle un tip a un registro de género inventaría un linaje que nadie observó.
+#
+# **La escala del panel filogenético.** El eje del paper llega a ~60, no a las decenas de miles
+# de una PD sumada en millones de años: es `meanPD`, la PD dividida por la profundidad del
+# árbol (390,7 Ma aquí), que se lee como número efectivo de linajes.
+#
+# **La banda.** No es la de iNEXT. Es la dispersión al submuestrear parcelas sin reemplazo, que
+# está centrada en la curva por construcción, y cubre sólo el tramo interpolado. Los dos
+# alternativos fallan de forma medible y están documentados en `scripts/lib/pd_inext.R`. Para
+# el tramo extrapolado no hay análogo por submuestreo, así que va sin banda: su incertidumbre
+# vive justo en las especies que no se han visto.
+#
 # de aquí es propio y queda documentado; si Cerda-Paredes comparte el suyo, es preferible.
 
 # %%
-CURVES = ROOT / "data" / "derived" / "rarefaction_curves.csv"
+CURVES = ROOT / "data" / "derived" / "rarefaction_inext.csv"
+ASYMPT = ROOT / "data" / "derived" / "rarefaction_asymptote.csv"
 PHYLO = ROOT / "data" / "derived" / "phylo_responses.parquet"
 
 if CURVES.exists():
     cur = pd.read_csv(CURVES)
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
-    colors = {"Parcelas-CL completo": "#4c72b0", "subset del proyecto": "#c44e52"}
-    for ax, (val, lo, hi, lab) in zip(
-            axes,
-            [("sr_mean", "sr_lo", "sr_hi", "especies acumuladas"),
-             ("pd_mean", "pd_lo", "pd_hi", "PD de Faith acumulada (Ma)")]):
-        for d, g in cur.groupby("dataset"):
-            g = g.sort_values("m")
-            ax.plot(g["m"], g[val], lw=1.8, color=colors[d], label=d)
-            ax.fill_between(g["m"], g[lo], g[hi], alpha=0.18, color=colors[d], lw=0)
-        ax.set_xscale("log")
-        ax.set_xlabel("parcelas muestreadas")
-        ax.set_ylabel(lab)
-        ax.legend(fontsize=7, frameon=False, loc="lower right")
-    axes[0].set_title("Acumulación taxonómica", fontsize=9)
-    axes[1].set_title("Acumulación filogenética", fontsize=9)
-    fig.suptitle("Esfuerzo de muestreo: nuestro subset contra Parcelas-CL completo "
-                 "(banda = IC 95 % del remuestreo)", fontsize=10)
+    colors = {"Parcelas-CL completo": "#2f6f7f", "subset del proyecto": "#c1553b"}
+    panels = [("taxonomica", "Riqueza taxonómica"),
+              ("filogenetica_meanPD", "Riqueza filogenética (meanPD)")]
+
+    fig, axes = plt.subplots(2, 1, figsize=(6.5, 7.5), sharex=True)
+    for ax, (metric, ylab) in zip(axes, panels):
+        for d, g in cur[cur["metric"] == metric].groupby("dataset"):
+            g = g.sort_values("n")
+            obs = g[g["method"] == "Observed"]
+            interp = g[g["method"] != "Extrapolation"]
+            # el punto observado pertenece a los dos tramos, si no la línea se corta
+            extrap = pd.concat([obs, g[g["method"] == "Extrapolation"]])
+            ax.plot(interp["n"], interp["value"], lw=1.8, color=colors[d], label=d)
+            ax.plot(extrap["n"], extrap["value"], lw=1.8, ls="--", color=colors[d])
+            ax.plot(obs["n"], obs["value"], "o", ms=6, color=colors[d])
+            b = g[g["lo"].notna()]
+            ax.fill_between(b["n"], b["lo"], b["hi"], alpha=0.18, color=colors[d], lw=0)
+        ax.set_ylabel(ylab)
+        ax.set_ylim(bottom=0)
+    axes[0].legend(fontsize=8, frameon=False, loc="lower right")
+    axes[1].set_xlabel("Unidades de muestreo (parcelas)")
+    fig.suptitle("Rarefacción y extrapolación — réplica de la Fig. 4b,c de Parcelas-CL\n"
+                 "sólido = observado, punteado = extrapolado a 2n", fontsize=10)
     plt.tight_layout(); plt.show()
 
-    print("Estado al máximo esfuerzo, y pendiente final en escala log-log")
-    print("(pendiente 0 sería saturación completa; >0 significa que seguir muestreando "
-          "seguiría sumando):\n")
-    for d, g in cur.groupby("dataset"):
-        g = g.sort_values("m"); last = g.iloc[-1]; tail = g.tail(5)
-        sl_sr = np.polyfit(np.log(tail["m"]), np.log(tail["sr_mean"]), 1)[0]
-        sl_pd = np.polyfit(np.log(tail["m"]), np.log(tail["pd_mean"]), 1)[0]
-        print(f"  {d:24s} n={int(last['m']):4d}  especies={last['sr_mean']:5.0f}  "
-              f"PD={last['pd_mean']:7.0f}   pendiente SR={sl_sr:.3f}  PD={sl_pd:.3f}")
+    print("Cuánto queda por descubrir, según el propio muestreo:\n")
+    for metric, lab in panels:
+        for d, g in cur[cur["metric"] == metric].groupby("dataset"):
+            g = g.sort_values("n")
+            o = g[g["method"] == "Observed"].iloc[0]; e = g.iloc[-1]
+            print(f"  {lab:32s} {d:22s} n={o['n']:>4.0f}: {o['value']:8.1f}"
+                  f"  ->  2n={e['n']:>4.0f}: {e['value']:8.1f}  (+{100*(e['value']/o['value']-1):.1f} %)")
+
+    if ASYMPT.exists():
+        asy = pd.read_csv(ASYMPT)
+        print("\nAsíntota de riqueza taxonómica (Chao2) — el total que el muestreo implica:\n")
+        for _, a in asy.iterrows():
+            print(f"  {a['Assemblage']:22s} observado {a['TD_obs']:5.1f}  ->  "
+                  f"asíntota {a['TD_asy']:6.1f} ± {a['s.e.']:.1f}   "
+                  f"(sin ver el {100*(1-a['TD_obs']/a['TD_asy']):.0f} % de la flora)")
 
     # Lo que decide si el filtrado costó representatividad: a igual número de parcelas,
     # ¿las dos curvas coinciden? Si el subset queda por debajo, el filtro no fue neutral.
-    piv = cur.pivot_table(index="m", columns="dataset", values=["sr_mean", "pd_mean"])
-    common = piv.dropna()
-    if len(common):
-        r_sr = (common[("sr_mean", "subset del proyecto")]
-                / common[("sr_mean", "Parcelas-CL completo")])
-        r_pd = (common[("pd_mean", "subset del proyecto")]
-                / common[("pd_mean", "Parcelas-CL completo")])
-        print(f"\n  A igual esfuerzo, el subset retiene en promedio "
-              f"{100*r_sr.mean():.1f} % de las especies y {100*r_pd.mean():.1f} % de la PD "
-              f"del dataset completo.")
+    # Los dos conjuntos tienen rejillas de n distintas (cada uno se evalúa en sus propios
+    # nudos), así que cruzarlos por valor exacto no encuentra nada: hay que interpolar.
+    print("\nA igual esfuerzo (tramo interpolado, sobre rejilla común):\n")
+    for metric, lab in panels:
+        g = cur[(cur["metric"] == metric) & (cur["method"] != "Extrapolation")]
+        a = g[g["dataset"] == "Parcelas-CL completo"].sort_values("n")
+        b = g[g["dataset"] == "subset del proyecto"].sort_values("n")
+        grid = np.linspace(20, min(a["n"].max(), b["n"].max()), 200)
+        ratio = (np.interp(grid, b["n"], b["value"])
+                 / np.interp(grid, a["n"], a["value"]))
+        print(f"  {lab:32s} el subset retiene el {100*ratio.mean():.1f} % "
+              f"(de {100*ratio[0]:.1f} % con 20 parcelas a {100*ratio[-1]:.1f} % "
+              f"con {grid[-1]:.0f})")
 else:
-    print("aún no existen las curvas — corre scripts/25_compute_phylo_responses.R")
+    print("aún no existen las curvas — corre scripts/26_rarefaction_inext.R")
 
 # %% [markdown]
 # ### 10.1 Qué facetas filogenéticas sirven como target
 #
-# `PD` de Faith correlaciona ~0,97 con la riqueza: es riqueza reetiquetada, y la riqueza es
+# `PD` de Faith correlaciona +0,95 con la riqueza: es riqueza reetiquetada, y la riqueza es
 # justo lo que no se puede predecir bajo CV por contribuyente (§7.1 de `docs/08_modelling.md`).
 # Las que aportan información nueva son **MPD** (casi ortogonal a la riqueza) y **MNTD**, más
 # los **SES**, que son los que separan "hay muchas especies" de "hay muchos linajes distintos".
