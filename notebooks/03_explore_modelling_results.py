@@ -485,3 +485,77 @@ if PHYLO.exists():
     plt.tight_layout(); plt.show()
 else:
     print("aún no existen las respuestas — corre scripts/25_compute_phylo_responses.R")
+
+# %% [markdown]
+# ## 11. Dark diversity
+#
+# Las especies que **podrían** estar en una parcela y no están (Pärtel, Szava-Kovats & Zobel
+# 2011), estimadas por co-ocurrencia con `DarkDiv` (Carmona & Pärtel 2021), método
+# hipergeométrico. `scripts/27_compute_dark_diversity.R`.
+#
+# Tres decisiones que cambian el resultado y están medidas en `docs/12_phylo_and_rarefaction.md`:
+#
+# - **El pool se estima con las 1.485 parcelas**, no con las 1.082 del subset. Con el pool
+#   reducido la dependencia del área de parcela sube de ρ = +0,085 a **+0,315**.
+# - **Se cuenta con umbral (p > 0,9), no sumando probabilidades.** Sumarlas da 253 especies
+#   oscuras de mediana para parcelas con 5 observadas — es sumar 596 números pequeños, no un
+#   resultado ecológico.
+# - **La completitud `log(obs/oscuras)` no sirve como target**: ρ = +0,988 con la riqueza.
+#   Es riqueza reetiquetada, igual que la PD de Faith, y por la misma razón estructural.
+#
+# Lo que sale de aquí es **`dark_n`**, y es la faceta con menos confundido de contribuyente
+# de todo el proyecto: R² por `Owner` de 0,22, contra 0,70 de la log-riqueza. Eso importa
+# porque es justo el confundido que hunde la α bajo `kfold5_window`.
+
+# %%
+DARK = ROOT / "data" / "derived" / "dark_diversity.parquet"
+DARKSP = ROOT / "data" / "derived" / "dark_diversity_spatial.csv"
+
+if DARK.exists():
+    dk = pd.read_parquet(DARK)
+    tax = pd.read_parquet(ROOT / "data/derived/biodiversity_responses.parquet")
+    md = dk.merge(tax, on="PlotObservationID", how="left")
+    print(f"{len(dk)} parcelas, {dk.dark_n.isna().sum()} sin cobertura")
+    print(f"especies oscuras: mediana {dk.dark_n.median():.0f}, "
+          f"rango {dk.dark_n.min():.0f}-{dk.dark_n.max():.0f}   "
+          f"(observadas: mediana {dk.n_obs.median():.0f})\n")
+
+    from scipy import stats as st
+    rows = []
+    for v in ["dark_n", "pool_n", "dark_pd", "dark_mpd", "dark_prob", "completeness"]:
+        ok = md[v].notna()
+        rows.append(dict(
+            metrica=v,
+            r_riqueza=st.spearmanr(md.loc[ok, v], md.loc[ok, "n_obs"]).statistic,
+            r_hill_q0=st.spearmanr(md.loc[ok, v], md.loc[ok, "hill_q0"]).statistic,
+            r_pcoa1=st.spearmanr(md.loc[ok, v], md.loc[ok, "pcoa1_pa"]).statistic,
+            r_lcbd=st.spearmanr(md.loc[ok, v], md.loc[ok, "lcbd_pa"]).statistic))
+    print("Criterio de selección: |r| bajo contra la riqueza y contra los targets que ya "
+          "existen.\nUna métrica con r alto contra hill_q0 no aporta un target nuevo:\n")
+    display(pd.DataFrame(rows).round(3))
+
+    if DARKSP.exists():
+        sp = pd.read_csv(DARKSP)
+        print("\nValidación espacial — ¿el pool es local, o una lista nacional?")
+        print("El número absoluto no dice nada sin la línea base (una ausente cualquiera):\n")
+        for _, r in sp.iterrows():
+            print(f"  {r['km']:>3.0f} km: de las oscuras se ha visto cerca el "
+                  f"{100*r['oscuras']:4.1f} %, de una ausente cualquiera el "
+                  f"{100*r['base']:4.1f} %  ->  {r['razon']:.1f}×")
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 3.6))
+    for ax, (v, lab) in zip(axes, [
+            ("dark_n", "especies oscuras (p > 0,9)"),
+            ("completeness", "completitud  log(obs/oscuras)"),
+            ("near_frac", "fracción de oscuras vista a < 50 km")]):
+        ok = md[v].notna()
+        ax.scatter(md.loc[ok, "n_obs"], md.loc[ok, v], s=7, alpha=0.25, c="#2f6f7f")
+        r = st.spearmanr(md.loc[ok, "n_obs"], md.loc[ok, v]).statistic
+        ax.set_title(f"{lab}\nρ = {r:+.3f}", fontsize=9)
+        ax.set_xlabel("especies observadas", fontsize=8)
+        ax.tick_params(labelsize=7)
+    fig.suptitle("El panel del medio es el resultado negativo: la completitud es la riqueza "
+                 "otra vez", fontsize=10)
+    plt.tight_layout(); plt.show()
+else:
+    print("aún no existe — corre scripts/27_compute_dark_diversity.R")
