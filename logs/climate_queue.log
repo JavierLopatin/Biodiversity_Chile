@@ -1,0 +1,87 @@
+=== arranca cribado de clima 2026-08-09 00:53:08
+  X15 kfold5_owner         p=  18 [  2.4m]  R2_beta=+0.177 R2_alpha=-0.623
+  X15 kfold5_window        p=  18 [  2.4m]  R2_beta=+0.516 R2_alpha=+0.582
+  X16 kfold5_owner         p=  35 [  3.0m]  R2_beta=+0.202 R2_alpha=-0.564
+  X16 kfold5_window        p=  35 [  3.1m]  R2_beta=+0.542 R2_alpha=+0.581
+  X17 kfold5_owner         p=  87 [  4.8m]  R2_beta=+0.309 R2_alpha=-0.601
+  X17 kfold5_window        p=  87 [  5.0m]  R2_beta=+0.562 R2_alpha=+0.569
+  X18 kfold5_owner         p= 295 [  9.8m]  R2_beta=+0.309 R2_alpha=-0.657
+  X18 kfold5_window        p= 295 [  8.9m]  R2_beta=+0.552 R2_alpha=+0.557
+  X19 kfold5_owner         p= 180 [  5.9m]  R2_beta=+0.290 R2_alpha=-0.487
+  X19 kfold5_window        p= 180 [  5.9m]  R2_beta=+0.554 R2_alpha=+0.561
+
+-> results/tables/block_screen.csv
+
+===== kfold5_owner — ordenado por R2_beta  (X03, la referencia = +0.250)
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                      question
+X17          87   +0.309      +0.014    -0.601   +0.248    +0.358    +0.321             EL CONTRASTE: la fenologia aporta SOBRE el clima?
+X18         295   +0.309      +0.012    -0.657   +0.255    +0.385    +0.286                                          las 5 curvas + clima
+X19         180   +0.290      +0.014    -0.487   +0.228    +0.347    +0.294                                   el mejor candidato completo
+X13         281   +0.268      +0.016    -0.601   +0.203    +0.409    +0.193            las 5 curvas apiladas (= RF06, el mejor publicado)
+X08          88   +0.257      +0.014    -0.439   +0.180    +0.397    +0.192                                    fenologia sobre geomediana
+X03          73   +0.250      +0.016    -0.557   +0.170    +0.393    +0.189                  LA REFERENCIA: la curva de 52 pasos (= RF03)
+X04         133   +0.245      +0.018    -0.602   +0.154    +0.399    +0.183     EL CONTRASTE CENTRAL: la forma aporta SOBRE el compuesto?
+X02          39   +0.239      +0.018    -0.421   +0.148    +0.405    +0.164                  LSP actual, la linea base del campo (= RF01)
+X07          36   +0.222      +0.014    -0.428   +0.125    +0.375    +0.166       geomediana + las tres MAD: composite sin forma temporal
+X10          51   +0.219      +0.019    -0.690   +0.130    +0.370    +0.156  fenologia reducida a 4 numeros: mediana por estacion austral
+X11          51   +0.214      +0.021    -0.387   +0.149    +0.400    +0.093 contrastes entre indices (ndvi-savi mide exposicion de suelo)
+X09          86   +0.207      +0.013    -0.367   +0.060    +0.370    +0.190       composites sobre observaciones reales, sin el suavizado
+X14         511   +0.205      +0.018    -0.278   +0.121    +0.348    +0.146                                 todo junto: el techo empirico
+X01          81   +0.204      +0.016    -0.669   +0.065    +0.392    +0.157                             el control no fenologico completo
+X16          35   +0.202      +0.024    -0.564   +0.176    +0.204    +0.227                 clima + topografia, sin nada de teledeteccion
+X12         161   +0.197      +0.013    -0.370   +0.085    +0.352    +0.155                             todo lo que NO tiene forma, junto
+X15          18   +0.177      +0.025    -0.623   +0.167    +0.165    +0.200                  clima solo: normales bioclimaticas 1971-2000
+X06         301   +0.175      +0.021    -0.425   +0.032    +0.362    +0.133                      la heterogeneidad aporta sobre el nivel?
+X00          60   +0.157      +0.019    -0.662   +0.046    +0.287    +0.137    compuesto anual solo: cuanto da sin nada de forma ni fecha
+X05         241   +0.146      +0.018    -0.318   +0.114    +0.298    +0.025                  heterogeneidad espectral entre pixeles, sola
+
+===== kfold5_window — ordenado por R2_beta  (X03, la referencia = +0.507)
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                      question
+X17          87   +0.562      +0.003    +0.569   +0.544    +0.580    +0.561             EL CONTRASTE: la fenologia aporta SOBRE el clima?
+X19         180   +0.554      +0.005    +0.561   +0.547    +0.570    +0.545                                   el mejor candidato completo
+X18         295   +0.552      +0.004    +0.557   +0.535    +0.578    +0.543                                          las 5 curvas + clima
+X16          35   +0.542      +0.004    +0.581   +0.538    +0.558    +0.528                 clima + topografia, sin nada de teledeteccion
+X08          88   +0.526      +0.004    +0.518   +0.512    +0.567    +0.497                                    fenologia sobre geomediana
+X09          86   +0.524      +0.003    +0.520   +0.499    +0.566    +0.506       composites sobre observaciones reales, sin el suavizado
+X12         161   +0.521      +0.004    +0.515   +0.505    +0.559    +0.499                             todo lo que NO tiene forma, junto
+X07          36   +0.517      +0.004    +0.510   +0.492    +0.561    +0.499       geomediana + las tres MAD: composite sin forma temporal
+X15          18   +0.516      +0.002    +0.582   +0.525    +0.507    +0.515                  clima solo: normales bioclimaticas 1971-2000
+X13         281   +0.516      +0.004    +0.431   +0.494    +0.563    +0.491            las 5 curvas apiladas (= RF06, el mejor publicado)
+X14         511   +0.511      +0.005    +0.503   +0.493    +0.542    +0.498                                 todo junto: el techo empirico
+X02          39   +0.510      +0.004    +0.427   +0.480    +0.564    +0.486                  LSP actual, la linea base del campo (= RF01)
+X10          51   +0.507      +0.003    +0.409   +0.486    +0.561    +0.475  fenologia reducida a 4 numeros: mediana por estacion austral
+X03          73   +0.507      +0.004    +0.448   +0.487    +0.557    +0.476                  LA REFERENCIA: la curva de 52 pasos (= RF03)
+X04         133   +0.504      +0.003    +0.416   +0.482    +0.562    +0.469     EL CONTRASTE CENTRAL: la forma aporta SOBRE el compuesto?
+X11          51   +0.494      +0.004    +0.388   +0.460    +0.555    +0.467 contrastes entre indices (ndvi-savi mide exposicion de suelo)
+X01          81   +0.490      +0.004    +0.387   +0.455    +0.558    +0.457                             el control no fenologico completo
+X06         301   +0.483      +0.004    +0.384   +0.446    +0.550    +0.453                      la heterogeneidad aporta sobre el nivel?
+X05         241   +0.452      +0.005    +0.363   +0.429    +0.513    +0.413                  heterogeneidad espectral entre pixeles, sola
+X00          60   +0.405      +0.004    +0.229   +0.358    +0.480    +0.377    compuesto anual solo: cuanto da sin nada de forma ni fecha
+=== factor de agregacion 01:44:22
+  X07 kfold5_owner         p=  36 [  2.2m]  R2_beta=+0.228 R2_alpha=-0.412
+  X12 kfold5_owner         p= 161 [  5.6m]  R2_beta=+0.208 R2_alpha=-0.370
+
+-> results/tables/block_screen.csv
+
+===== kfold5_owner — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X07          36   +0.228      +0.012    -0.412   +0.136    +0.386    +0.160 geomediana + las tres MAD: composite sin forma temporal
+X12         161   +0.208      +0.014    -0.370   +0.104    +0.366    +0.154                       todo lo que NO tiene forma, junto
+  X07 kfold5_owner         p=  36 [  2.3m]  R2_beta=+0.221 R2_alpha=-0.405
+  X12 kfold5_owner         p= 161 [  5.5m]  R2_beta=+0.199 R2_alpha=-0.377
+
+-> results/tables/block_screen.csv
+
+===== kfold5_owner — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X07          36   +0.221      +0.011    -0.405   +0.121    +0.380    +0.163 geomediana + las tres MAD: composite sin forma temporal
+X12         161   +0.199      +0.013    -0.377   +0.086    +0.355    +0.155                       todo lo que NO tiene forma, junto
+  X07 kfold5_owner         p=  36 [  2.2m]  R2_beta=+0.234 R2_alpha=-0.308
+  X12 kfold5_owner         p= 161 [  5.6m]  R2_beta=+0.196 R2_alpha=-0.340
+
+-> results/tables/block_screen.csv
+
+===== kfold5_owner — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X07          36   +0.234      +0.016    -0.308   +0.157    +0.409    +0.137 geomediana + las tres MAD: composite sin forma temporal
+X12         161   +0.196      +0.017    -0.340   +0.072    +0.369    +0.148                       todo lo que NO tiene forma, junto

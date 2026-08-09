@@ -38,6 +38,8 @@ SCHEME_GROUP = {
     "kfold5_random": "block20",
     "lodo_owner": "Owner",
     "lodo_dataset": "metadata_id",
+    "kfold5_window": "window_component",
+    "kfold5_owner_window": "owner_window",
 }
 
 #: LODO schemes do not partition the plots — groups below the minimum size are never a test
@@ -133,6 +135,76 @@ def add_block_key(plots: pd.DataFrame, km: float) -> pd.Series:
     size = km * 1000.0
     return (np.floor(plots["X"] / size).astype(int).astype(str) + "_"
             + np.floor(plots["Y"] / size).astype(int).astype(str))
+
+
+def window_components(plots: pd.DataFrame, half_m: float = 150.0) -> pd.Series:
+    """Connected components of the "plots share an extraction window" graph.
+
+    Every predictor in this project is read from a 5x5 Landsat window centred on the plot,
+    so two plots whose windows overlap are described by *partly the same pixels*. Measured
+    on this subset: 767 overlapping pairs, 575 plots in 135 components, the largest holding
+    17 plots (a recensus laid over a grid). Splitting those across a fold boundary is
+    pseudoreplication — the model is scored on pixels it was trained on.
+
+    Measured on the realised partitions (test side, ``cv_folds_modelling.parquet``), the
+    leak is much smaller than the component count suggests, and grouping by component is
+    not the only way to close it:
+
+    ============================  ==================  ===================
+    scheme                        components split    plots on both sides
+    ============================  ==================  ===================
+    ``kfold5_random``             126 of 135          557 (51.5%)
+    ``kfold5_owner``              7 of 135            47 (4.3%)
+    ``kfold5_block20``            0                   0
+    ``kfold5_window``             0                   0
+    ``kfold5_owner_window``       0                   0
+    ============================  ==================  ===================
+
+    ``kfold5_owner`` closes 128 of the 135 components *incidentally*, because contributors
+    are spatially clustered — grouping by person groups by ground almost for free. The 7
+    that survive are shared ground under two owner labels; five of them are the same
+    Altamirano/Miranda recensus pair. Dropping the minority side of each closes the leak
+    at a cost of 12 plots (1.1%).
+
+    ``kfold5_block20`` also reaches zero, but incidentally rather than by construction: a
+    20 km grid line does not care where a 150 m window falls, and a different grid offset
+    could cut one. Only grouping by component is zero **by construction**.
+
+    The windows are axis-aligned squares of side ``2 * half_m`` in UTM, so overlap is the
+    Chebyshev condition ``|dX| < 2*half_m and |dY| < 2*half_m``... except that the window is
+    ``half_m`` on each side of the plot, which makes the overlap threshold ``half_m`` in each
+    axis. Union-find over the resulting edges, sorted-sweep on X so this stays O(n log n)
+    rather than O(n^2).
+    """
+    xs = plots["X"].to_numpy(float)
+    ys = plots["Y"].to_numpy(float)
+    n = len(plots)
+
+    parent = np.arange(n)
+
+    def find(a: int) -> int:
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+
+    def union(a: int, b: int) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[max(ra, rb)] = min(ra, rb)
+
+    order = np.argsort(xs, kind="stable")
+    for pi in range(n):
+        i = order[pi]
+        for pj in range(pi + 1, n):
+            j = order[pj]
+            if xs[j] - xs[i] >= half_m:
+                break
+            if abs(ys[j] - ys[i]) < half_m:
+                union(i, j)
+
+    roots = np.array([find(i) for i in range(n)])
+    return pd.Series([f"w{r}" for r in roots], index=plots.index, name="window_component")
 
 
 def random_kfold(plots: pd.DataFrame, k: int = 5, seed: int = 42) -> pd.DataFrame:

@@ -119,3 +119,12 @@ renv/sandbox/
 .vscode/
 .idea/
 *.swp
+
+# --- Intermedios reconstruibles de la fase de predictores ---
+# `cube_predictors_pixels.parquet` (19 MB) es la salida por pixel de scripts/18; la tabla
+# que consumen los modelos es su agregacion, `cube_predictors.parquet` (6,1 MB), que si se
+# versiona. `dissimilarity_pa.npy` (4,5 MB) es la matriz de Jaccard observada y la reconstruye
+# scripts/20 en segundos desde el zip publico. Ninguno de los dos necesita el datacube, que
+# es el criterio por el que las demas tablas derivadas si se versionan.
+data/derived/cube_predictors_pixels.parquet
+data/derived/dissimilarity_pa.npy
