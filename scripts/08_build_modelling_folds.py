@@ -36,6 +36,7 @@ import argparse
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -44,6 +45,31 @@ from biodiv import cv as cvmod          # noqa: E402
 from biodiv import cv_groups            # noqa: E402
 
 ID_COL = "PlotObservationID"
+
+
+def _union_groups(plots: pd.DataFrame, a: str, b: str) -> pd.Series:
+    """Merge two groupings: two plots share a group if they share *either* label.
+
+    Not the same as pasting the two labels together, which would make the grouping *finer*
+    rather than coarser and would let a shared window straddle a fold boundary whenever the
+    two plots have different owners — exactly the 47-plot case this is meant to close.
+    """
+    idx = {v: i for i, v in enumerate(pd.unique(plots[a]))}
+    off = len(idx)
+    idx.update({v: off + i for i, v in enumerate(pd.unique(plots[b]))})
+    parent = np.arange(len(idx))
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for va, vb in zip(plots[a], plots[b]):
+        ra, rb = find(idx[va]), find(idx[vb])
+        if ra != rb:
+            parent[max(ra, rb)] = min(ra, rb)
+    return pd.Series([f"u{find(idx[v])}" for v in plots[a]], index=plots.index)
 
 
 def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
@@ -67,6 +93,24 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
               f"median {int(plots[col].value_counts().median())}")
         add(cv_groups.grouped_kfold(plots, col, k=k, seed=seed, stratify_on="richness"),
             f"kfold5_{col}")
+
+    # Window components: the only scheme with zero shared-pixel leakage by construction.
+    # `kfold5_owner` filters 7 of the 135 components; the block schemes filter none.
+    plots["window_component"] = cvmod.window_components(plots).to_numpy()
+    n_comp = plots["window_component"].nunique()
+    largest = int(plots["window_component"].value_counts().iloc[0])
+    n_singleton = int((plots["window_component"].value_counts() == 1).sum())
+    print(f"  [window] {n_comp} componentes ({n_singleton} de una parcela), "
+          f"el mayor con {largest}")
+    add(cv_groups.grouped_kfold(plots, "window_component", k=k, seed=seed,
+                                stratify_on="richness"), "kfold5_window")
+
+    # The union of the two groupings: the strictest partition in the project. A fold
+    # boundary crosses neither a contributor nor a shared extraction window.
+    plots["owner_window"] = _union_groups(plots, "Owner", "window_component")
+    print(f"  [owner_window] {plots['owner_window'].nunique()} grupos")
+    add(cv_groups.grouped_kfold(plots, "owner_window", k=k, seed=seed,
+                                stratify_on="richness"), "kfold5_owner_window")
 
     add(cv_groups.leave_one_group_out(plots, "Owner", min_size=min_lodo), "lodo_owner")
     add(cvmod.random_kfold(plots, k=k, seed=seed), "kfold5_random")
