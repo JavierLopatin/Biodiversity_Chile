@@ -24,6 +24,7 @@ import json
 import platform
 import subprocess
 from dataclasses import asdict, dataclass, field
+import os
 from pathlib import Path
 
 import numpy as np
@@ -91,6 +92,13 @@ def make_run_id(family: str, tag: str, index: str = "", substrate: str = "",
         parts.append(substrate)
     if fusion and fusion != "late":
         parts.append(fusion)
+    # The curve version has to be part of the identity. Without it a run on the refitted
+    # curves lands in the same directory as the original, `already_done` reports it as
+    # finished and the job is skipped in silence -- the trap that made five jobs of the 4c
+    # and clim stages report `ok` in 0.0 minutes without computing anything.
+    sfx = os.environ.get("BIODIV_CURVES", "")
+    if sfx:
+        parts.append(sfx.lstrip("_"))
     return "_".join(p.replace("+", "-").replace("/", "-") for p in parts if p)
 
 

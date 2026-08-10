@@ -33,6 +33,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
+import os
 from pathlib import Path
 
 import numpy as np
@@ -89,18 +90,39 @@ class Tables:
     cube: pd.DataFrame | None  # geomedian / observation composites, indexed by plot id
 
 
-@lru_cache(maxsize=4)
+#: Suffix appended to the three phenoshape parquets, read from the environment.
+#:
+#: `scripts/29_refit_curves_from_cubes.py` writes `phenoshape_*_v2.parquet` rather than
+#: overwriting, so the corrected curves can be compared against the originals with one
+#: factor changing. Setting BIODIV_CURVES=_v2 points the whole pipeline at them without
+#: editing anything -- and, crucially, without a half-corrected state where some blocks read
+#: the new curves and others the old. `runlog.make_run_id` appends it to every run id so the
+#: two versions cannot land in the same results directory.
+CURVE_SUFFIX_ENV = "BIODIV_CURVES"
+
+
+def curve_suffix() -> str:
+    return os.environ.get(CURVE_SUFFIX_ENV, "")
+
+
 def load_tables(derived: str = "data/derived") -> Tables:
+    # the suffix is part of the cache key: without it, a process that switches curve version
+    # would keep serving the tables it loaded first
+    return _load_tables(derived, curve_suffix())
+
+
+@lru_cache(maxsize=4)
+def _load_tables(derived: str, sfx: str) -> Tables:
     d = Path(derived)
     plots = pd.read_parquet(d / "plots_subset.parquet")
     plots = plots.sort_values(ID_COL, kind="stable").reset_index(drop=True)
     plots["log10_area"] = np.log10(plots["PlotSize_m2"].astype(float))
 
     lsp = pd.read_parquet(d / "lsp_all_auto.parquet").set_index(["plot_id", "index"])
-    curves = pd.read_parquet(d / "phenoshape_by_index.parquet").set_index(
+    curves = pd.read_parquet(d / f"phenoshape_by_index{sfx}.parquet").set_index(
         ["plot_id", "index", "px"])
     topo = pd.read_parquet(d / "topography" / "topography.parquet").set_index("plot_id")
-    doy = pd.read_parquet(d / "phenoshape_doy_grid.parquet").set_index("plot_id")
+    doy = pd.read_parquet(d / f"phenoshape_doy_grid{sfx}.parquet").set_index("plot_id")
 
     ids = pd.Index(plots[ID_COL])
     for name, tbl in (("lsp", lsp), ("curves", curves)):
@@ -121,7 +143,8 @@ def load_tables(derived: str = "data/derived") -> Tables:
         cube = pd.read_parquet(cube_path)
         cube = cube.set_index(ID_COL) if ID_COL in cube.columns else cube.set_index("plot_id")
 
-    return Tables(plots=plots, lsp=lsp, curves=curves, pixels=d / "phenoshape_pixels.parquet",
+    return Tables(plots=plots, lsp=lsp, curves=curves,
+                  pixels=d / f"phenoshape_pixels{sfx}.parquet",
                   topo=topo, doy_grid=doy, derived=d, cube=cube)
 
 
