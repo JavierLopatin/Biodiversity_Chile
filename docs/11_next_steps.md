@@ -164,6 +164,13 @@ requiere volver a una máquina con credenciales.
 
 Ninguna bloquea lo de arriba; van anotadas para que no se descubran dos veces.
 
+- **La curva fenológica no cierra el año.** Escalón sistemático de ~4× el cambio semanal
+  típico entre DOY 364 y DOY 1, negativo en el 67–71 % de las parcelas. El defecto es de
+  `phenosensing`, no de este repo, y afecta a todo lo convolucional porque cinco sustratos
+  rellenan `circular`. Diagnóstico completo, mecanismo con `file:line` y las tres opciones de
+  arreglo en [`13_phenology_year_boundary.md`](13_phenology_year_boundary.md). **El arreglo
+  correcto exige los `.nc`**, así que entra en la lista de razones para traerlos.
+
 - **47 parcelas (4,3 %) con fuga de ventana bajo `kfold5_owner`.** No afecta a `kfold5_window`,
   que es cero por construcción. Solo importa si se vuelve a reportar algo bajo `owner`; el
   parche (soltar 12 parcelas) está descrito en `10_findings.md` §1b.

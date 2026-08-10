@@ -234,3 +234,173 @@ pcoa1_cover    49  86.0     0.025060
 pcoa2_cover     2 122.0     0.030726
    pcoa2_pa     2 122.0     0.028901
 ```
+
+
+## Etapa `rf+c1d` — 2026-08-09 12:09
+
+17/17 trabajos completados, 3.1 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `rf/RF04@kfold5_window` | ok | 31.7 |
+| `rf/RF03@kfold5_window` | ok | 31.3 |
+| `rf/RF02@kfold5_window` | ok | 29.6 |
+| `rf/RF01@kfold5_window` | ok | 27.9 |
+| `rf/RF08@kfold5_window` | ok | 23.6 |
+| `rf/RF06@kfold5_window` | ok | 9.0 |
+| `rf/RF05@kfold5_window` | ok | 6.4 |
+| `rf/B01@kfold5_window` | ok | 3.2 |
+| `rf/B03@kfold5_window` | ok | 3.1 |
+| `rf/B02@kfold5_window` | ok | 2.7 |
+| `c1d/evi` | ok | 2.6 |
+| `c1d/kndvi` | ok | 2.5 |
+| `c1d/ndvi` | ok | 2.5 |
+| `c1d/nbr` | ok | 2.4 |
+| `c1d/savi` | ok | 2.4 |
+| `c1d/curve5` | ok | 2.4 |
+| `rf/B00@kfold5_window` | ok | 0.1 |
+
+
+## Etapa `4a` — 2026-08-09 12:34
+
+11/11 trabajos completados, 0.8 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `4a/cwt` | ok | 13.5 |
+| `4a/mtf` | ok | 8.6 |
+| `4a/gaf` | ok | 6.0 |
+| `4a/pxcube` | ok | 3.8 |
+| `4a/spectrogram` | ok | 3.4 |
+| `4a/cos2d` | ok | 3.1 |
+| `4a/ndi` | ok | 2.5 |
+| `4a/stack5` | ok | 2.4 |
+| `4a/hilbert` | ok | 2.0 |
+| `4a/serpentine` | ok | 1.9 |
+| `4a/reshape` | ok | 1.8 |
+
+
+## Etapa `mlp` — 2026-08-09 12:37
+
+14/14 trabajos completados, 0.1 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `mlp/MLP04` | ok | 0.6 |
+| `mlp/MLP05a/kndvi` | ok | 0.5 |
+| `mlp/MLP02/evi` | ok | 0.5 |
+| `mlp/MLP05c/kndvi` | ok | 0.5 |
+| `mlp/MLP02/kndvi` | ok | 0.5 |
+| `mlp/MLP02/ndvi` | ok | 0.5 |
+| `mlp/MLP02/savi` | ok | 0.5 |
+| `mlp/MLP02/nbr` | ok | 0.5 |
+| `mlp/MLP01/evi` | ok | 0.5 |
+| `mlp/MLP01/nbr` | ok | 0.4 |
+| `mlp/MLP03/kndvi` | ok | 0.4 |
+| `mlp/MLP01/kndvi` | ok | 0.4 |
+| `mlp/MLP01/savi` | ok | 0.4 |
+| `mlp/MLP01/ndvi` | ok | 0.4 |
+
+
+## Etapa `4b` — 2026-08-09 12:48
+
+15/15 trabajos completados, 0.4 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `4b/hilbert/ndvi` | ok | 2.0 |
+| `4b/hilbert/evi` | ok | 1.9 |
+| `4b/hilbert/savi` | ok | 1.9 |
+| `4b/hilbert/nbr` | ok | 1.8 |
+| `4b/serpentine/savi` | ok | 1.8 |
+| `4b/reshape/nbr` | ok | 1.8 |
+| `4b/serpentine/ndvi` | ok | 1.7 |
+| `4b/reshape/ndvi` | ok | 1.7 |
+| `4b/serpentine/evi` | ok | 1.7 |
+| `4b/reshape/savi` | ok | 1.7 |
+| `4b/serpentine/nbr` | ok | 1.7 |
+| `4b/reshape/evi` | ok | 1.6 |
+| `4b/reshape/kndvi` | ok | 0.0 |
+| `4b/hilbert/kndvi` | ok | 0.0 |
+| `4b/serpentine/kndvi` | ok | 0.0 |
+
+
+## Etapa `4c` — 2026-08-09 12:56
+
+11/11 trabajos completados, 0.3 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `4c/width-A` | ok | 2.3 |
+| `4c/rotation-calendar` | ok | 2.2 |
+| `4c/normalize-perSample` | ok | 2.1 |
+| `4c/fusion-none` | ok | 2.1 |
+| `4c/fusion-patch` | ok | 1.7 |
+| `4c/width-X` | ok | 1.7 |
+| `4c/width-C` | ok | 1.5 |
+| `4c/fusion-film` | ok | 1.4 |
+| `4c/normalize-global` | ok | 0.6 |
+| `4c/mixup` | ok | 0.0 |
+| `4c/no-augment` | ok | 0.0 |
+
+
+## Etapa `clim` — 2026-08-09 12:57
+
+5/5 trabajos completados, 0.0 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `clim/MLP07` | ok | 1.0 |
+| `clim/MLP06` | ok | 0.8 |
+| `clim/curve1d` | ok | 0.0 |
+| `clim/serpentine` | ok | 0.0 |
+| `clim/reshape` | ok | 0.0 |
+
+
+## Etapa `final` — 2026-08-09 12:57
+
+0/0 trabajos completados, 0.0 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+
+
+## Etapa `clim` — 2026-08-09 20:58
+
+5/5 trabajos completados, 0.2 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `clim/reshape` | ok | 4.1 |
+| `clim/serpentine` | ok | 3.9 |
+| `clim/curve1d` | ok | 3.5 |
+| `clim/MLP06` | ok | 0.0 |
+| `clim/MLP07` | ok | 0.0 |
+
+
+## Etapa `4c` — 2026-08-09 21:02
+
+11/11 trabajos completados, 0.4 h de cómputo acumulado.
+
+
+| trabajo | estado | minutos |
+|---|---|---|
+| `4c/normalize-perSample` | ok | 3.1 |
+| `4c/rotation-calendar` | ok | 2.9 |
+| `4c/width-A` | ok | 2.5 |
+| `4c/mixup` | ok | 2.5 |
+| `4c/fusion-none` | ok | 2.5 |
+| `4c/fusion-patch` | ok | 2.0 |
+| `4c/fusion-film` | ok | 1.7 |
+| `4c/width-C` | ok | 1.7 |
+| `4c/width-X` | ok | 1.6 |
+| `4c/no-augment` | ok | 1.0 |
+| `4c/normalize-global` | ok | 0.7 |
