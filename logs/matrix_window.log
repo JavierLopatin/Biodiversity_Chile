@@ -1,0 +1,90 @@
+start 2026-08-09 11:24
+devices=['0', '1']  epochs<=200  patience=20
+
+[rf+c1d] 17 jobs
+  [  1/17] c1d/savi                               ok               2.4m  -> c1d_savi.log
+  [  2/17] c1d/nbr                                ok               2.4m  -> c1d_nbr.log
+  [  3/17] rf/B00@kfold5_window                   ok               0.1m  -> rf_B00@kfold5_window.log
+  [  4/17] c1d/ndvi                               ok               2.5m  -> c1d_ndvi.log
+  [  5/17] c1d/kndvi                              ok               2.5m  -> c1d_kndvi.log
+  [  6/17] c1d/evi                                ok               2.6m  -> c1d_evi.log
+  [  7/17] c1d/curve5                             ok               2.4m  -> c1d_curve5.log
+  [  8/17] rf/B02@kfold5_window                   ok               2.7m  -> rf_B02@kfold5_window.log
+  [  9/17] rf/B03@kfold5_window                   ok               3.1m  -> rf_B03@kfold5_window.log
+  [ 10/17] rf/B01@kfold5_window                   ok               3.2m  -> rf_B01@kfold5_window.log
+  [ 11/17] rf/RF05@kfold5_window                  ok               6.4m  -> rf_RF05@kfold5_window.log
+  [ 12/17] rf/RF06@kfold5_window                  ok               9.0m  -> rf_RF06@kfold5_window.log
+  [ 13/17] rf/RF01@kfold5_window                  ok              27.9m  -> rf_RF01@kfold5_window.log
+  [ 14/17] rf/RF02@kfold5_window                  ok              29.6m  -> rf_RF02@kfold5_window.log
+  [ 15/17] rf/RF03@kfold5_window                  ok              31.3m  -> rf_RF03@kfold5_window.log
+  [ 16/17] rf/RF04@kfold5_window                  ok              31.7m  -> rf_RF04@kfold5_window.log
+  [ 17/17] rf/RF08@kfold5_window                  ok              23.6m  -> rf_RF08@kfold5_window.log
+[4a] 11 jobs
+  [  1/11] 4a/reshape                             ok               1.8m  -> 4a_reshape.log
+  [  2/11] 4a/serpentine                          ok               1.9m  -> 4a_serpentine.log
+  [  3/11] 4a/gaf                                 ok               6.0m  -> 4a_gaf.log
+  [  4/11] 4a/ndi                                 ok               2.5m  -> 4a_ndi.log
+  [  5/11] 4a/mtf                                 ok               8.6m  -> 4a_mtf.log
+  [  6/11] 4a/hilbert                             ok               2.0m  -> 4a_hilbert.log
+  [  7/11] 4a/cos2d                               ok               3.1m  -> 4a_cos2d.log
+  [  8/11] 4a/spectrogram                         ok               3.4m  -> 4a_spectrogram.log
+  [  9/11] 4a/stack5                              ok               2.4m  -> 4a_stack5.log
+  [ 10/11] 4a/cwt                                 ok              13.5m  -> 4a_cwt.log
+  [ 11/11] 4a/pxcube                              ok               3.8m  -> 4a_pxcube.log
+[mlp] 14 jobs
+  [  1/14] mlp/MLP01/ndvi                         ok               0.4m  -> mlp_MLP01_ndvi.log
+  [  2/14] mlp/MLP01/evi                          ok               0.5m  -> mlp_MLP01_evi.log
+  [  3/14] mlp/MLP01/kndvi                        ok               0.4m  -> mlp_MLP01_kndvi.log
+  [  4/14] mlp/MLP01/nbr                          ok               0.4m  -> mlp_MLP01_nbr.log
+  [  5/14] mlp/MLP01/savi                         ok               0.4m  -> mlp_MLP01_savi.log
+  [  6/14] mlp/MLP02/ndvi                         ok               0.5m  -> mlp_MLP02_ndvi.log
+  [  7/14] mlp/MLP02/evi                          ok               0.5m  -> mlp_MLP02_evi.log
+  [  8/14] mlp/MLP02/kndvi                        ok               0.5m  -> mlp_MLP02_kndvi.log
+  [  9/14] mlp/MLP02/nbr                          ok               0.5m  -> mlp_MLP02_nbr.log
+  [ 10/14] mlp/MLP02/savi                         ok               0.5m  -> mlp_MLP02_savi.log
+  [ 11/14] mlp/MLP03/kndvi                        ok               0.4m  -> mlp_MLP03_kndvi.log
+  [ 12/14] mlp/MLP05a/kndvi                       ok               0.5m  -> mlp_MLP05a_kndvi.log
+  [ 13/14] mlp/MLP05c/kndvi                       ok               0.5m  -> mlp_MLP05c_kndvi.log
+  [ 14/14] mlp/MLP04                              ok               0.6m  -> mlp_MLP04.log
+[4b] 15 jobs
+  [  1/15] 4b/serpentine/evi                      ok               1.7m  -> 4b_serpentine_evi.log
+  [  2/15] 4b/serpentine/kndvi                    ok               0.0m  -> 4b_serpentine_kndvi.log
+  [  3/15] 4b/serpentine/ndvi                     ok               1.7m  -> 4b_serpentine_ndvi.log
+  [  4/15] 4b/serpentine/nbr                      ok               1.7m  -> 4b_serpentine_nbr.log
+  [  5/15] 4b/serpentine/savi                     ok               1.8m  -> 4b_serpentine_savi.log
+  [  6/15] 4b/hilbert/ndvi                        ok               2.0m  -> 4b_hilbert_ndvi.log
+  [  7/15] 4b/hilbert/kndvi                       ok               0.0m  -> 4b_hilbert_kndvi.log
+  [  8/15] 4b/hilbert/evi                         ok               1.9m  -> 4b_hilbert_evi.log
+  [  9/15] 4b/hilbert/nbr                         ok               1.8m  -> 4b_hilbert_nbr.log
+  [ 10/15] 4b/hilbert/savi                        ok               1.9m  -> 4b_hilbert_savi.log
+  [ 11/15] 4b/reshape/evi                         ok               1.6m  -> 4b_reshape_evi.log
+  [ 12/15] 4b/reshape/ndvi                        ok               1.7m  -> 4b_reshape_ndvi.log
+  [ 13/15] 4b/reshape/kndvi                       ok               0.0m  -> 4b_reshape_kndvi.log
+  [ 14/15] 4b/reshape/savi                        ok               1.7m  -> 4b_reshape_savi.log
+  [ 15/15] 4b/reshape/nbr                         ok               1.8m  -> 4b_reshape_nbr.log
+[4c] 11 jobs
+  [  1/11] 4c/normalize-global                    ok               0.6m  -> 4c_normalize-global.log
+  [  2/11] 4c/rotation-calendar                   ok               2.2m  -> 4c_rotation-calendar.log
+  [  3/11] 4c/normalize-perSample                 ok               2.1m  -> 4c_normalize-perSample.log
+  [  4/11] 4c/fusion-film                         ok               1.4m  -> 4c_fusion-film.log
+  [  5/11] 4c/fusion-none                         ok               2.1m  -> 4c_fusion-none.log
+  [  6/11] 4c/fusion-patch                        ok               1.7m  -> 4c_fusion-patch.log
+  [  7/11] 4c/width-A                             ok               2.3m  -> 4c_width-A.log
+  [  8/11] 4c/width-C                             ok               1.5m  -> 4c_width-C.log
+  [  9/11] 4c/mixup                               ok               0.0m  -> 4c_mixup.log
+  [ 10/11] 4c/no-augment                          ok               0.0m  -> 4c_no-augment.log
+  [ 11/11] 4c/width-X                             ok               1.7m  -> 4c_width-X.log
+[clim] 5 jobs
+  [  1/5] clim/MLP06                             ok               0.8m  -> clim_MLP06.log
+  [  2/5] clim/serpentine                        ok               0.0m  -> clim_serpentine.log
+  [  3/5] clim/reshape                           ok               0.0m  -> clim_reshape.log
+  [  4/5] clim/curve1d                           ok               0.0m  -> clim_curve1d.log
+  [  5/5] clim/MLP07                             ok               1.0m  -> clim_MLP07.log
+[final] 0 jobs
+
+[report]
+  scripts/12_model_report.py               -> /mnt/rapidita_4T/GitHub/Biodiversity_Chile/logs/modelling/12_model_report.log
+  scripts/13_interpretability.py --auto    -> /mnt/rapidita_4T/GitHub/Biodiversity_Chile/logs/modelling/13_interpretability.log
+
+done 2026-08-09 12:57
+progress log: /mnt/rapidita_4T/GitHub/Biodiversity_Chile/docs/08_modelling_progress.md

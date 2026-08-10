@@ -42,8 +42,29 @@ import pandas as pd
 from . import composites
 
 ID_COL = "PlotObservationID"
+
+#: Default step count -- what `scripts/05_flatten_phenoshape.py` writes for the composite
+#: year. It is a **default, not a fact about the data**: `BIODIV_CURVES` can point the
+#: pipeline at a table with any number of steps (the raw 3-year series uses 24 to 196).
 NGS = 52
 STEP_COLS = [f"s{i:02d}" for i in range(NGS)]
+
+
+def step_cols(df: pd.DataFrame) -> list[str]:
+    """The step columns actually present in ``df``, in order.
+
+    Always prefer this over the `STEP_COLS` constant when reading a curve table. Indexing a
+    DataFrame with a hardcoded ``s00..s51`` does one of two things and neither is acceptable:
+    it raises for a shorter table, or -- far worse -- it **silently keeps the first 52
+    columns** of a longer one. The second is what happened to the first raw-series sweep: the
+    68/100/156/196-step curves were quietly cropped to their first 52 steps, so the runs
+    compared how much of the 3-year window fits in 52 columns rather than the resolution they
+    were labelled with. They scored, they ranked, and they meant something else.
+    """
+    cols = [c for c in df.columns if len(c) > 1 and c[0] == "s" and c[1:].isdigit()]
+    if not cols:
+        raise ValueError(f"no step columns (s00, s01, ...) in {list(df.columns)[:8]}")
+    return sorted(cols, key=lambda c: int(c[1:]))
 
 LSP_METRICS = ["sos", "pos", "eos", "vsos", "vpos", "veos", "los", "msp", "mau",
                "vmsp", "vmau", "ampl", "ios", "rog", "ros", "sw", "trough", "mos"]
@@ -174,8 +195,9 @@ def _block_lsp(t: Tables, ids: pd.Index, index: str, centre: bool = False,
 
 
 def _block_curve(t: Tables, ids: pd.Index, index: str, px: str = "mean5x5") -> pd.DataFrame:
-    sub = t.curves.xs((index, px), level=("index", "px")).reindex(ids)[STEP_COLS]
-    sub.columns = [f"curve_{c}" for c in STEP_COLS]
+    cols = step_cols(t.curves)
+    sub = t.curves.xs((index, px), level=("index", "px")).reindex(ids)[cols]
+    sub.columns = [f"curve_{c}" for c in cols]
     return sub
 
 
@@ -273,12 +295,12 @@ def _cube_cols(t: Tables, ids: pd.Index, prefixes: tuple[str, ...], agg: str,
 def _block_composite(t: Tables, ids: pd.Index, index: str, px: str = "mean5x5"
                      ) -> pd.DataFrame:
     """Annual statistics of the 52-step curve: level and spread, no shape and no date."""
-    return composites.composite_block(t.curves, ids, index, STEP_COLS, px=px)
+    return composites.composite_block(t.curves, ids, index, step_cols(t.curves), px=px)
 
 
 def _block_contrast(t: Tables, ids: pd.Index, px: str = "mean5x5") -> pd.DataFrame:
     """Differences and ratios between the annual levels of the five indices."""
-    return composites.contrast_block(t.curves, ids, INDICES, STEP_COLS, px=px)
+    return composites.contrast_block(t.curves, ids, INDICES, step_cols(t.curves), px=px)
 
 
 def _block_gm(t: Tables, ids: pd.Index, agg: str = DEFAULT_AGG) -> pd.DataFrame:

@@ -1,0 +1,304 @@
+=== factor de agregacion bajo kfold5_window  2026-08-09 11:28:58
+  X07 kfold5_window        p=  36 [  4.9m]  R2_beta=+0.517 R2_alpha=+0.521
+  X12 kfold5_window        p= 161 [ 14.5m]  R2_beta=+0.522 R2_alpha=+0.525
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X12         161   +0.522      +0.003    +0.525   +0.505    +0.565    +0.495                       todo lo que NO tiene forma, junto
+X07          36   +0.517      +0.002    +0.521   +0.492    +0.565    +0.495 geomediana + las tres MAD: composite sin forma temporal
+  X07 kfold5_window        p=  36 [  5.0m]  R2_beta=+0.519 R2_alpha=+0.519
+  X12 kfold5_window        p= 161 [ 13.2m]  R2_beta=+0.521 R2_alpha=+0.522
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X12         161   +0.521      +0.003    +0.522   +0.506    +0.565    +0.493                       todo lo que NO tiene forma, junto
+X07          36   +0.519      +0.003    +0.519   +0.492    +0.567    +0.498 geomediana + las tres MAD: composite sin forma temporal
+  X07 kfold5_window        p=  36 [  3.8m]  R2_beta=+0.515 R2_alpha=+0.518
+  X12 kfold5_window        p= 161 [ 11.8m]  R2_beta=+0.514 R2_alpha=+0.520
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X07          36   +0.515      +0.003    +0.518   +0.497    +0.569    +0.479 geomediana + las tres MAD: composite sin forma temporal
+X12         161   +0.514      +0.003    +0.520   +0.499    +0.554    +0.489                       todo lo que NO tiene forma, junto
+=== GDM bajo kfold5_window  12:22:19
+--- curve+topo  12:22:19
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 150, in main
+    X_full, _ = feat.build_design(args.spec, index=args.index, derived=args.derived, ids=ids)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/features.py", line 370, in build_design
+    raise ValueError(f"block {name!r} requires --index")
+ValueError: block 'curve' requires --index
+--- gm+topo  12:22:21
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 151, in main
+    D_obs = np.load(d / "dissimilarity_pa.npy").astype(np.float64)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/javier/miniconda3/lib/python3.11/site-packages/numpy/lib/npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/derived/dissimilarity_pa.npy'
+--- composite_all+topo  12:22:23
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 151, in main
+    D_obs = np.load(d / "dissimilarity_pa.npy").astype(np.float64)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/javier/miniconda3/lib/python3.11/site-packages/numpy/lib/npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/derived/dissimilarity_pa.npy'
+--- gm+obscomp_all+seas_all+contrast+topo  12:22:26
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 151, in main
+    D_obs = np.load(d / "dissimilarity_pa.npy").astype(np.float64)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/javier/miniconda3/lib/python3.11/site-packages/numpy/lib/npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/derived/dissimilarity_pa.npy'
+--- curve+gm+obscomp_all+seas_all+contrast+topo  12:22:30
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 150, in main
+    X_full, _ = feat.build_design(args.spec, index=args.index, derived=args.derived, ids=ids)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/features.py", line 370, in build_design
+    raise ValueError(f"block {name!r} requires --index")
+ValueError: block 'curve' requires --index
+--- clim+topo  12:22:32
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 151, in main
+    D_obs = np.load(d / "dissimilarity_pa.npy").astype(np.float64)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/javier/miniconda3/lib/python3.11/site-packages/numpy/lib/npyio.py", line 405, in load
+    fid = stack.enter_context(open(os_fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/derived/dissimilarity_pa.npy'
+--- curve+clim+topo  12:22:34
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 150, in main
+    X_full, _ = feat.build_design(args.spec, index=args.index, derived=args.derived, ids=ids)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/features.py", line 370, in build_design
+    raise ValueError(f"block {name!r} requires --index")
+ValueError: block 'curve' requires --index
+=== grilla de penalizaciones del SGDM  12:22:36
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 278, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/21_run_gdm.py", line 150, in main
+    X_full, _ = feat.build_design(args.spec, index=args.index, derived=args.derived, ids=ids)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/features.py", line 370, in build_design
+    raise ValueError(f"block {name!r} requires --index")
+ValueError: block 'curve' requires --index
+=== fin  2026-08-09 12:22:38
+=== factor de agregacion bajo kfold5_window  2026-08-09 20:53:59
+  [skip] X07 / kfold5_window / mean
+  [skip] X12 / kfold5_window / mean
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X12         161   +0.522      +0.003    +0.525   +0.505    +0.565    +0.495                       todo lo que NO tiene forma, junto
+X07          36   +0.517      +0.002    +0.521   +0.492    +0.565    +0.495 geomediana + las tres MAD: composite sin forma temporal
+  [skip] X07 / kfold5_window / trimmed
+  [skip] X12 / kfold5_window / trimmed
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X12         161   +0.521      +0.003    +0.522   +0.506    +0.565    +0.493                       todo lo que NO tiene forma, junto
+X07          36   +0.519      +0.003    +0.519   +0.492    +0.567    +0.498 geomediana + las tres MAD: composite sin forma temporal
+  [skip] X07 / kfold5_window / center
+  [skip] X12 / kfold5_window / center
+
+-> results/tables/block_screen.csv
+
+===== kfold5_window — ordenado por R2_beta
+row  n_features  R2_beta  R2_beta_sd  R2_alpha  lcbd_pa  pcoa1_pa  pcoa2_pa                                                question
+X07          36   +0.515      +0.003    +0.518   +0.497    +0.569    +0.479 geomediana + las tres MAD: composite sin forma temporal
+X12         161   +0.514      +0.003    +0.520   +0.499    +0.554    +0.489                       todo lo que NO tiene forma, junto
+=== GDM bajo kfold5_window  20:54:05
+--- curve+topo (indice kndvi)  20:54:05
+esquema=kfold5_window  spec=curve+topo  p=69  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 0.8m]  gdm=+0.520 +geo=+0.546 sgdm=+0.502 geo=+0.427 rf=+0.406 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 1.0m]  gdm=+0.507 +geo=+0.514 sgdm=+0.518 geo=+0.388 rf=+0.342 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 0.9m]  gdm=+0.560 +geo=+0.571 sgdm=+0.539 geo=+0.405 rf=+0.383 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 0.7m]  gdm=+0.536 +geo=+0.550 sgdm=+0.511 geo=+0.402 rf=+0.453 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 0.8m]  gdm=+0.502 +geo=+0.521 sgdm=+0.502 geo=+0.417 rf=+0.333 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.525 (sd 0.024)   dev_expl=+0.286
+  GDM con predictores + geografia            rho = +0.541 (sd 0.023)   dev_expl=+0.322
+  SGDM (sCCA fold-local + GDM)               rho = +0.514 (sd 0.015)   dev_expl=+0.264
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.383 (sd 0.049)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- gm+topo   20:58:15
+esquema=kfold5_window  spec=gm+topo  p=32  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 0.4m]  gdm=+0.500 +geo=+0.527 sgdm=+0.493 geo=+0.427 rf=+0.398 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 0.4m]  gdm=+0.501 +geo=+0.521 sgdm=+0.467 geo=+0.388 rf=+0.331 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 0.4m]  gdm=+0.574 +geo=+0.572 sgdm=+0.515 geo=+0.405 rf=+0.374 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 0.4m]  gdm=+0.543 +geo=+0.559 sgdm=+0.521 geo=+0.402 rf=+0.438 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 0.4m]  gdm=+0.515 +geo=+0.531 sgdm=+0.510 geo=+0.417 rf=+0.326 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.527 (sd 0.032)   dev_expl=+0.283
+  GDM con predictores + geografia            rho = +0.542 (sd 0.022)   dev_expl=+0.314
+  SGDM (sCCA fold-local + GDM)               rho = +0.501 (sd 0.022)   dev_expl=+0.251
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.373 (sd 0.047)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- composite_all+topo   21:00:18
+esquema=kfold5_window  spec=composite_all+topo  p=77  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 1.0m]  gdm=+0.505 +geo=+0.529 sgdm=+0.498 geo=+0.427 rf=+0.407 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 0.8m]  gdm=+0.497 +geo=+0.508 sgdm=+0.493 geo=+0.388 rf=+0.349 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 0.8m]  gdm=+0.572 +geo=+0.577 sgdm=+0.544 geo=+0.405 rf=+0.393 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 0.7m]  gdm=+0.521 +geo=+0.543 sgdm=+0.494 geo=+0.402 rf=+0.437 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 0.7m]  gdm=+0.500 +geo=+0.525 sgdm=+0.456 geo=+0.417 rf=+0.325 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.519 (sd 0.031)   dev_expl=+0.275
+  GDM con predictores + geografia            rho = +0.536 (sd 0.026)   dev_expl=+0.313
+  SGDM (sCCA fold-local + GDM)               rho = +0.497 (sd 0.031)   dev_expl=+0.250
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.382 (sd 0.045)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- gm+obscomp_all+seas_all+contrast+topo   21:04:19
+esquema=kfold5_window  spec=gm+obscomp_all+seas_all+contrast+topo  p=157  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 1.5m]  gdm=+0.510 +geo=+0.528 sgdm=+0.490 geo=+0.427 rf=+0.394 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 1.4m]  gdm=+0.482 +geo=+0.493 sgdm=+0.468 geo=+0.388 rf=+0.350 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 1.4m]  gdm=+0.575 +geo=+0.580 sgdm=+0.479 geo=+0.405 rf=+0.360 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 1.4m]  gdm=+0.540 +geo=+0.558 sgdm=+0.491 geo=+0.402 rf=+0.438 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 1.5m]  gdm=+0.515 +geo=+0.533 sgdm=+0.448 geo=+0.417 rf=+0.318 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.524 (sd 0.035)   dev_expl=+0.288
+  GDM con predictores + geografia            rho = +0.538 (sd 0.033)   dev_expl=+0.308
+  SGDM (sCCA fold-local + GDM)               rho = +0.475 (sd 0.018)   dev_expl=+0.225
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.372 (sd 0.046)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- curve+gm+obscomp_all+seas_all+contrast+topo (indice kndvi)  21:11:39
+esquema=kfold5_window  spec=curve+gm+obscomp_all+seas_all+contrast+topo  p=209  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 1.9m]  gdm=+0.518 +geo=+0.534 sgdm=+0.492 geo=+0.427 rf=+0.395 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 2.0m]  gdm=+0.490 +geo=+0.501 sgdm=+0.483 geo=+0.388 rf=+0.349 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 2.0m]  gdm=+0.568 +geo=+0.578 sgdm=+0.484 geo=+0.405 rf=+0.366 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 2.0m]  gdm=+0.546 +geo=+0.563 sgdm=+0.494 geo=+0.402 rf=+0.446 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 2.0m]  gdm=+0.516 +geo=+0.533 sgdm=+0.451 geo=+0.417 rf=+0.320 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.528 (sd 0.030)   dev_expl=+0.293
+  GDM con predictores + geografia            rho = +0.542 (sd 0.030)   dev_expl=+0.314
+  SGDM (sCCA fold-local + GDM)               rho = +0.481 (sd 0.017)   dev_expl=+0.234
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.375 (sd 0.048)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- clim+topo   21:21:40
+esquema=kfold5_window  spec=clim+topo  p=31  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 0.4m]  gdm=+0.496 +geo=+0.505 sgdm=+0.481 geo=+0.427 rf=+0.444 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 0.4m]  gdm=+0.478 +geo=+0.492 sgdm=+0.464 geo=+0.388 rf=+0.318 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 0.4m]  gdm=+0.522 +geo=+0.532 sgdm=+0.513 geo=+0.405 rf=+0.320 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 0.4m]  gdm=+0.472 +geo=+0.485 sgdm=+0.461 geo=+0.402 rf=+0.445 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 0.3m]  gdm=+0.488 +geo=+0.495 sgdm=+0.485 geo=+0.417 rf=+0.375 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.491 (sd 0.019)   dev_expl=+0.259
+  GDM con predictores + geografia            rho = +0.502 (sd 0.018)   dev_expl=+0.270
+  SGDM (sCCA fold-local + GDM)               rho = +0.481 (sd 0.021)   dev_expl=+0.243
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.381 (sd 0.063)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+--- curve+clim+topo (indice kndvi)  21:23:34
+esquema=kfold5_window  spec=curve+clim+topo  p=83  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 0.9m]  gdm=+0.544 +geo=+0.548 sgdm=+0.539 geo=+0.427 rf=+0.424 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 0.8m]  gdm=+0.515 +geo=+0.517 sgdm=+0.510 geo=+0.388 rf=+0.320 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 0.8m]  gdm=+0.586 +geo=+0.586 sgdm=+0.567 geo=+0.405 rf=+0.349 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 0.8m]  gdm=+0.562 +geo=+0.563 sgdm=+0.554 geo=+0.402 rf=+0.469 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 0.8m]  gdm=+0.535 +geo=+0.532 sgdm=+0.520 geo=+0.417 rf=+0.329 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.548 (sd 0.027)   dev_expl=+0.333
+  GDM con predictores + geografia            rho = +0.549 (sd 0.027)   dev_expl=+0.336
+  SGDM (sCCA fold-local + GDM)               rho = +0.538 (sd 0.023)   dev_expl=+0.312
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.378 (sd 0.065)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+=== grilla de penalizaciones del SGDM  21:27:46
+esquema=kfold5_window  spec=curve+gm+obscomp_all+seas_all+contrast+topo  p=209  k_axes=8  sgdm_comp=10
+
+  fold 0 (fold0                 ) n= 224 pares= 24976 [ 1.8m]  gdm=+0.518 +geo=+0.534 sgdm=+0.472 geo=+0.427 rf=+0.395 oracle=+0.425
+  fold 1 (fold1                 ) n= 214 pares= 22791 [ 1.9m]  gdm=+0.490 +geo=+0.501 sgdm=+0.476 geo=+0.388 rf=+0.349 oracle=+0.383
+  fold 2 (fold2                 ) n= 222 pares= 24531 [ 1.9m]  gdm=+0.568 +geo=+0.578 sgdm=+0.482 geo=+0.405 rf=+0.366 oracle=+0.389
+  fold 3 (fold3                 ) n= 204 pares= 20706 [ 1.9m]  gdm=+0.546 +geo=+0.563 sgdm=+0.514 geo=+0.402 rf=+0.446 oracle=+0.518
+  fold 4 (fold4                 ) n= 218 pares= 23653 [ 1.8m]  gdm=+0.516 +geo=+0.533 sgdm=+0.409 geo=+0.417 rf=+0.320 oracle=+0.278
+
+-> results/tables/gdm_comparison.csv
+
+media sobre folds (Spearman contra la disimilitud de Jaccard observada,
+sobre los pares entre parcelas excluidas):
+  GDM solo distancia geografica              rho = +0.408 (sd 0.015)   dev_expl=+0.187
+  GDM con los predictores                    rho = +0.528 (sd 0.030)   dev_expl=+0.293
+  GDM con predictores + geografia            rho = +0.542 (sd 0.030)   dev_expl=+0.314
+  SGDM (sCCA fold-local + GDM)               rho = +0.471 (sd 0.038)   dev_expl=+0.222
+  RF sobre 8 ejes PCoA -> distancia          rho = +0.375 (sd 0.048)
+  TECHO: los 2 ejes verdaderos               rho = +0.318 (sd 0.060)
+  TECHO: los 8 ejes verdaderos               rho = +0.398 (sd 0.086)
+=== fin  2026-08-09 21:37:04

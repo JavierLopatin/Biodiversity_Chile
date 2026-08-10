@@ -1,0 +1,37 @@
+1082 cubes  |  reconstructor=savgol  |  nGS=52 rollWindow=5 rollMode=reflect
+phenosensing: /mnt/rapidita_4T/GitHub/PhenoSensing/phenosensing
+  [100/1082] 0.0 min
+  [200/1082] 0.0 min
+  [300/1082] 0.1 min
+  [400/1082] 0.1 min
+  [500/1082] 0.1 min
+  [600/1082] 0.1 min
+  [700/1082] 0.1 min
+  [800/1082] 0.2 min
+  [900/1082] 0.2 min
+  [1000/1082] 0.2 min
+  [1082/1082] 0.2 min
+
+1082 plots refitted in 0.2 min
+
+Year-boundary step, median over plots:
+
+  index       before      after   shrink  after / typical step
+  ndvi       0.04754    0.02936     1.6x                 3.51x
+  evi        0.02734    0.02039     1.3x                 3.84x
+  kndvi      0.03318    0.02075     1.6x                 2.84x
+  nbr        0.04425    0.02826     1.6x                 2.88x
+  savi       0.02811    0.02082     1.4x                 4.01x
+
+The ratio should come DOWN but NOT to 1. Part of the boundary step is real: a
+multi-year composite joins the end of one year to the start of the next, so if
+productivity changed the two ends genuinely differ. Regressed on the interannual
+trend the step has slope -1.31, against the -1 the compositing predicts. A ratio
+near 1 would mean that signal had been erased too -- which is what `--recon
+harmonic` does. See docs/13_phenology_year_boundary.md.
+
+  -> data/derived/phenoshape_{by_index,pixels,doy_grid}_savgol_reflect.parquet
+  -> data/derived/refit_report_savgol_reflect.csv
+
+Next: scripts/04_recompute_lsp.py on the new curves, then the model matrix.
+

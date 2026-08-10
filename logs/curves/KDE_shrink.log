@@ -1,0 +1,37 @@
+1082 cubes  |  reconstructor=KDE  |  nGS=52 rollWindow=5 rollMode=shrink
+phenosensing: /mnt/rapidita_4T/GitHub/PhenoSensing/phenosensing
+  [100/1082] 0.1 min
+  [200/1082] 0.1 min
+  [300/1082] 0.1 min
+  [400/1082] 0.2 min
+  [500/1082] 0.2 min
+  [600/1082] 0.3 min
+  [700/1082] 0.3 min
+  [800/1082] 0.4 min
+  [900/1082] 0.4 min
+  [1000/1082] 0.4 min
+  [1082/1082] 0.5 min
+
+1082 plots refitted in 0.5 min
+
+Year-boundary step, median over plots:
+
+  index       before      after   shrink  after / typical step
+  ndvi       0.04754    0.02344     2.0x                 2.98x
+  evi        0.02734    0.01769     1.5x                 3.71x
+  kndvi      0.03318    0.01617     2.1x                 2.37x
+  nbr        0.04425    0.02441     1.8x                 2.85x
+  savi       0.02811    0.01794     1.6x                 3.91x
+
+The ratio should come DOWN but NOT to 1. Part of the boundary step is real: a
+multi-year composite joins the end of one year to the start of the next, so if
+productivity changed the two ends genuinely differ. Regressed on the interannual
+trend the step has slope -1.31, against the -1 the compositing predicts. A ratio
+near 1 would mean that signal had been erased too -- which is what `--recon
+harmonic` does. See docs/13_phenology_year_boundary.md.
+
+  -> data/derived/phenoshape_{by_index,pixels,doy_grid}_KDE_shrink.parquet
+  -> data/derived/refit_report_KDE_shrink.csv
+
+Next: scripts/04_recompute_lsp.py on the new curves, then the model matrix.
+

@@ -1,0 +1,22 @@
+start 2026-08-09 20:50
+devices=['0', '1']  epochs<=200  patience=20
+
+[4c] 11 jobs
+  [  1/11] 4c/normalize-global                    ok               0.7m  -> 4c_normalize-global.log
+  [  2/11] 4c/rotation-calendar                   ok               2.9m  -> 4c_rotation-calendar.log
+  [  3/11] 4c/normalize-perSample                 ok               3.1m  -> 4c_normalize-perSample.log
+  [  4/11] 4c/fusion-none                         ok               2.5m  -> 4c_fusion-none.log
+  [  5/11] 4c/fusion-film                         ok               1.7m  -> 4c_fusion-film.log
+  [  6/11] 4c/fusion-patch                        ok               2.0m  -> 4c_fusion-patch.log
+  [  7/11] 4c/width-A                             ok               2.5m  -> 4c_width-A.log
+  [  8/11] 4c/width-C                             ok               1.7m  -> 4c_width-C.log
+  [  9/11] 4c/width-X                             ok               1.6m  -> 4c_width-X.log
+  [ 10/11] 4c/no-augment                          ok               1.0m  -> 4c_no-augment.log
+  [ 11/11] 4c/mixup                               ok               2.5m  -> 4c_mixup.log
+
+[report]
+  scripts/12_model_report.py               -> /mnt/rapidita_4T/GitHub/Biodiversity_Chile/logs/modelling/12_model_report.log
+  scripts/13_interpretability.py --auto    -> /mnt/rapidita_4T/GitHub/Biodiversity_Chile/logs/modelling/13_interpretability.log
+
+done 2026-08-09 21:02
+progress log: /mnt/rapidita_4T/GitHub/Biodiversity_Chile/docs/08_modelling_progress.md

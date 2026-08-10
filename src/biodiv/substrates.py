@@ -100,8 +100,9 @@ def load_curves(index: str | list[str], derived: str = "data/derived",
     t = feat.load_tables(derived)
     ids = pd.Index(t.plots[feat.ID_COL]) if ids is None else pd.Index(ids)
     names = [index] if isinstance(index, str) else list(index)
+    cols = feat.step_cols(t.curves)
     out = np.stack(
-        [t.curves.xs((ix, px), level=("index", "px")).reindex(ids)[STEP_COLS].to_numpy(np.float32)
+        [t.curves.xs((ix, px), level=("index", "px")).reindex(ids)[cols].to_numpy(np.float32)
          for ix in names], axis=1)
     return out, ids
 
@@ -118,8 +119,9 @@ def load_pixel_curves(index: str, derived: str = "data/derived",
     ids = pd.Index(t.plots[feat.ID_COL]) if ids is None else pd.Index(ids)
     px = pd.read_parquet(t.pixels)
     px = px[px["index"] == index]
-    arr = (px.set_index(["plot_id", "y", "x"])[STEP_COLS]
-             .sort_index().to_numpy(np.float32).reshape(-1, 25, NGS))
+    cols = feat.step_cols(px)
+    arr = (px.set_index(["plot_id", "y", "x"])[cols]
+             .sort_index().to_numpy(np.float32).reshape(-1, 25, len(cols)))
     order = pd.Index(sorted(px["plot_id"].unique()))
     cube = pd.Series(list(arr), index=order).reindex(ids)
     out = np.stack(cube.to_numpy())
@@ -259,4 +261,4 @@ def unfold_to_doy(attr: np.ndarray, substrate: str, n: int = NGS) -> np.ndarray:
 def step_to_doy(derived: str = "data/derived") -> np.ndarray:
     """Median real day-of-year of each of the 52 steps, for labelling attribution plots."""
     t = feat.load_tables(derived)
-    return t.doy_grid[STEP_COLS].median(axis=0).to_numpy()
+    return t.doy_grid[feat.step_cols(t.doy_grid)].median(axis=0).to_numpy()

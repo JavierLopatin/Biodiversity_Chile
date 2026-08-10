@@ -1,0 +1,5 @@
+BIODIV_CURVES=_whittaker_shrink
+/home/javier/miniconda3/bin/python scripts/11_run_conv.py --substrate serpentine --scheme kfold5_window --seeds 3 --max-epochs 200 --patience 20 --index kndvi --context clim+topo+area
+
+    C2D02_serpentine_kndvi_whittaker_shrink_ctxclim-topo-area: 17,039 parameters, input (1, 8, 8)
+  C2D02_serpentine_kndvi_whittaker_shrink_ctxclim-topo-area kfold5_window    [  2.0m] hill_q0=+0.590 hill_q1=+0.416 hill_q2=+0.352 lcbd_pa=+0.473 pcoa1_pa=+0.516 pcoa2_pa=+0.471 lcbd_cover=+0.356 pcoa1_cover=+0.307 pcoa2_cover=+0.242 mpd=+0.133 mntd=+0.210 ses_pd=+0.178 ses_mpd=+0.178 ses_mntd=+0.163 dark_n=+0.370

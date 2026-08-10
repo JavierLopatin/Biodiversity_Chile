@@ -1,0 +1,7 @@
+    init from mae_serpentine_all_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    C2D02_serpentine_kndvi_ctxclim-topo-area_maeall_m06: 17,039 parameters, input (1, 8, 8)
+    init from mae_serpentine_all_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_all_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_all_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_all_sep_wB_p2_m0.6.pt: 34 trunk tensors
+  C2D02_serpentine_kndvi_ctxclim-topo-area_maeall_m06 kfold5_window    [  2.0m] hill_q0=+0.564 hill_q1=+0.424 hill_q2=+0.375 lcbd_pa=+0.466 pcoa1_pa=+0.514 pcoa2_pa=+0.452 lcbd_cover=+0.350 pcoa1_cover=+0.310 pcoa2_cover=+0.220 mpd=+0.133 mntd=+0.211 ses_pd=+0.179 ses_mpd=+0.182 ses_mntd=+0.163 dark_n=+0.384

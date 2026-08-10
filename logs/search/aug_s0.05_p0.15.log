@@ -1,0 +1,4 @@
+BIODIV_CURVES=_linear_shrink
+/home/javier/miniconda3/bin/python scripts/11_run_conv.py --substrate serpentine --scheme kfold5_window --seeds 3 --max-epochs 200 --patience 20 --index kndvi --aug-slope 0.05 --aug-prob 0.15 --context clim+topo+area
+
+  [skip] C2D02_serpentine_kndvi_linear_shrink_ctxclim-topo-area_slope005_ap015 / kfold5_window

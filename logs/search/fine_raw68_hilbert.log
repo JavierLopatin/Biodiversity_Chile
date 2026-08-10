@@ -1,0 +1,2 @@
+    C2D07_hilbert_kndvi_raw68_ctxclim-topo-area: 17,039 parameters, input (1, 8, 8)
+  C2D07_hilbert_kndvi_raw68_ctxclim-topo-area kfold5_window    [  2.2m] hill_q0=+0.566 hill_q1=+0.444 hill_q2=+0.402 lcbd_pa=+0.499 pcoa1_pa=+0.521 pcoa2_pa=+0.476 lcbd_cover=+0.417 pcoa1_cover=+0.314 pcoa2_cover=+0.257 mpd=+0.128 mntd=+0.197 ses_pd=+0.174 ses_mpd=+0.177 ses_mntd=+0.156 dark_n=+0.408

@@ -1,0 +1,14 @@
+substrate=serpentine  indices=['ndvi', 'evi', 'kndvi', 'nbr', 'savi']  arch=sep width=B  patch=2  mask=0.75
+curves: BIODIV_CURVES=''
+135,250 unlabelled images of shape (1, 8, 8) (1082 plots x 25 pixels x 5 indices), 2 s to build
+    epoch   1/40  masked MSE 0.01027
+    epoch   6/40  masked MSE 0.00442
+    epoch  11/40  masked MSE 0.00405
+    epoch  16/40  masked MSE 0.00386
+    epoch  21/40  masked MSE 0.00376
+    epoch  26/40  masked MSE 0.00368
+    epoch  31/40  masked MSE 0.00362
+    epoch  36/40  masked MSE 0.00360
+    epoch  40/40  masked MSE 0.00357
+
+  -> results/mae/mae_serpentine_all_sep_wB_p2_m0.75.pt   final masked MSE 0.00357

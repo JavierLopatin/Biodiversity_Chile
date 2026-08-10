@@ -1,0 +1,5 @@
+BIODIV_CURVES=_RBF_reflect
+/home/javier/miniconda3/bin/python scripts/11_run_conv.py --substrate serpentine --scheme kfold5_window --seeds 3 --max-epochs 200 --patience 20 --index kndvi --context clim+topo+area
+
+    C2D02_serpentine_kndvi_RBF_reflect_ctxclim-topo-area: 17,039 parameters, input (1, 8, 8)
+  C2D02_serpentine_kndvi_RBF_reflect_ctxclim-topo-area kfold5_window    [  2.2m] hill_q0=+0.588 hill_q1=+0.425 hill_q2=+0.361 lcbd_pa=+0.484 pcoa1_pa=+0.526 pcoa2_pa=+0.463 lcbd_cover=+0.372 pcoa1_cover=+0.333 pcoa2_cover=+0.233 mpd=+0.126 mntd=+0.206 ses_pd=+0.167 ses_mpd=+0.169 ses_mntd=+0.152 dark_n=+0.387

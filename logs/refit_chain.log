@@ -1,0 +1,64 @@
+[2026-08-09 23:03:31] === waiting for cubes. have 6 of 1082
+[2026-08-10 00:09:32] found archive: data/derived/phenology/phenology_nc.zip (154M) -- checking it is complete
+[2026-08-10 00:11:34] archive complete and valid, extracting into data/derived/phenology
+[2026-08-10 00:11:36] extracted. now 1082 cubes
+[2026-08-10 00:11:36] === re-fitting curves (harmonic, k=3)
+1082 cubes  |  reconstructor=harmonic (k=3)  |  nGS=52 rollWindow=5
+phenosensing: /mnt/rapidita_4T/GitHub/PhenoSensing/phenosensing
+  [100/1082] 0.0 min
+  [200/1082] 0.0 min
+  [300/1082] 0.0 min
+  [400/1082] 0.1 min
+  [500/1082] 0.1 min
+  [600/1082] 0.1 min
+  [700/1082] 0.1 min
+  [800/1082] 0.1 min
+  [900/1082] 0.1 min
+  [1000/1082] 0.1 min
+  [1082/1082] 0.2 min
+
+1082 plots refitted in 0.2 min
+
+Year-boundary step, median over plots:
+
+  index       before      after   shrink  after / typical step
+  ndvi       0.04754    0.00387    12.3x                 0.65x
+  evi        0.02734    0.00267    10.2x                 0.65x
+  kndvi      0.03318    0.00286    11.6x                 0.53x
+  nbr        0.04425    0.00408    10.9x                 0.59x
+  savi       0.02811    0.00270    10.4x                 0.68x
+
+A ratio near or below 1 means the boundary is no longer distinguishable from an
+ordinary week-to-week transition, which is the property that was broken.
+
+  -> data/derived/phenoshape_{by_index,pixels,doy_grid}_v2.parquet
+  -> data/derived/refit_report_v2.csv
+
+Next: scripts/04_recompute_lsp.py on the new curves, then the model matrix.
+refit covers 1082 of 1082 plots in plots_subset
+[2026-08-10 00:11:48] === curves refitted and complete
+[2026-08-10 00:11:48] === convolutional models on the corrected curves
+[2026-08-10 00:16:45] 1-D done
+[2026-08-10 00:20:45] 2-D done
+[2026-08-10 00:35:32] RF control done
+R2 on the corrected curves minus the original, per run and facet:
+
+facet                       alpha  beta_cover  beta_pa   dark  phylo
+stem                                                                
+C1D01_curve1d_evi          -0.025      -0.012   -0.017 -0.014 -0.003
+C1D01_curve1d_kndvi        -0.004      -0.024   -0.012 -0.029  0.008
+C1D01_curve1d_nbr          -0.044      -0.030   -0.034 -0.021  0.003
+C1D01_curve1d_ndvi         -0.035      -0.018   -0.016 -0.016  0.004
+C1D01_curve1d_savi         -0.030      -0.002   -0.002 -0.004  0.003
+C2D01_reshape_kndvi         0.011       0.011    0.011  0.009 -0.008
+C2D02_serpentine_kndvi     -0.028      -0.003   -0.001  0.002 -0.009
+C2D07_hilbert_kndvi        -0.025      -0.009    0.004 -0.018 -0.000
+RF03_curve-topo-area_evi   -0.018      -0.014   -0.010 -0.021 -0.007
+RF03_curve-topo-area_kndvi -0.020      -0.006   -0.007 -0.002  0.000
+RF03_curve-topo-area_nbr   -0.009      -0.007   -0.005 -0.017 -0.015
+RF03_curve-topo-area_ndvi  -0.014      -0.006   -0.005  0.000 -0.000
+RF03_curve-topo-area_savi  -0.015      -0.012   -0.006 -0.017 -0.002
+
+mean delta over everything: -0.0102
+Seed noise is ~0.011, so 2 sd ~ 0.022. Below that, the boundary did not matter.
+[2026-08-10 00:35:33] === chain finished

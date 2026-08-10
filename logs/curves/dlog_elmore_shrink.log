@@ -1,0 +1,37 @@
+1082 cubes  |  reconstructor=dlog_elmore  |  nGS=52 rollWindow=5 rollMode=shrink
+phenosensing: /mnt/rapidita_4T/GitHub/PhenoSensing/phenosensing
+  [100/1082] 0.4 min
+  [200/1082] 0.8 min
+  [300/1082] 1.4 min
+  [400/1082] 1.9 min
+  [500/1082] 2.4 min
+  [600/1082] 2.9 min
+  [700/1082] 3.4 min
+  [800/1082] 3.8 min
+  [900/1082] 4.3 min
+  [1000/1082] 4.8 min
+  [1082/1082] 5.2 min
+
+1082 plots refitted in 5.2 min
+
+Year-boundary step, median over plots:
+
+  index       before      after   shrink  after / typical step
+  ndvi       0.04754    0.01860     2.6x                 7.71x
+  evi        0.02734    0.02151     1.3x                17.95x
+  kndvi      0.03318    0.01051     3.2x                 6.74x
+  nbr        0.04425    0.01152     3.8x                 4.57x
+  savi       0.02811    0.02153     1.3x                19.03x
+
+The ratio should come DOWN but NOT to 1. Part of the boundary step is real: a
+multi-year composite joins the end of one year to the start of the next, so if
+productivity changed the two ends genuinely differ. Regressed on the interannual
+trend the step has slope -1.31, against the -1 the compositing predicts. A ratio
+near 1 would mean that signal had been erased too -- which is what `--recon
+harmonic` does. See docs/13_phenology_year_boundary.md.
+
+  -> data/derived/phenoshape_{by_index,pixels,doy_grid}_dlog_elmore_shrink.parquet
+  -> data/derived/refit_report_dlog_elmore_shrink.csv
+
+Next: scripts/04_recompute_lsp.py on the new curves, then the model matrix.
+

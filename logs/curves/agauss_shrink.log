@@ -1,0 +1,37 @@
+1082 cubes  |  reconstructor=agauss  |  nGS=52 rollWindow=5 rollMode=shrink
+phenosensing: /mnt/rapidita_4T/GitHub/PhenoSensing/phenosensing
+  [100/1082] 1.0 min
+  [200/1082] 2.0 min
+  [300/1082] 3.8 min
+  [400/1082] 5.3 min
+  [500/1082] 6.9 min
+  [600/1082] 7.6 min
+  [700/1082] 8.9 min
+  [800/1082] 10.2 min
+  [900/1082] 11.9 min
+  [1000/1082] 13.1 min
+  [1082/1082] 14.3 min
+
+1082 plots refitted in 14.3 min
+
+Year-boundary step, median over plots:
+
+  index       before      after   shrink  after / typical step
+  ndvi       0.04754    0.02685     1.8x                13.47x
+  evi        0.02734    0.03448     0.8x               212.50x
+  kndvi      0.03318    0.01656     2.0x                11.49x
+  nbr        0.04425    0.01717     2.6x                 9.25x
+  savi       0.02811    0.03491     0.8x               254.96x
+
+The ratio should come DOWN but NOT to 1. Part of the boundary step is real: a
+multi-year composite joins the end of one year to the start of the next, so if
+productivity changed the two ends genuinely differ. Regressed on the interannual
+trend the step has slope -1.31, against the -1 the compositing predicts. A ratio
+near 1 would mean that signal had been erased too -- which is what `--recon
+harmonic` does. See docs/13_phenology_year_boundary.md.
+
+  -> data/derived/phenoshape_{by_index,pixels,doy_grid}_agauss_shrink.parquet
+  -> data/derived/refit_report_agauss_shrink.csv
+
+Next: scripts/04_recompute_lsp.py on the new curves, then the model matrix.
+

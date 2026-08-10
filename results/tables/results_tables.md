@@ -1,6 +1,6 @@
 # Resultados — `kfold5_window`
 
-99 corridas x 15 targets. Generado por `scripts/28_results_tables.py`; no editar a mano.
+114 corridas x 15 targets. Generado por `scripts/28_results_tables.py`; no editar a mano.
 
 `%RMSE` es el RMSE dividido por el rango 1–99 del target, y `sesgo` la media del residuo con el mismo denominador. Los dos son porcentajes de rango, así que se pueden comparar entre facetas; el R² y el Spearman no necesitan normalización.
 
@@ -12,7 +12,7 @@
 | alpha | hill_q1 | MLP06_curve_kndvi | MLP | curve | kndvi | tabular | 1082 | 5 | 0.461 | 0.016 | 0.656 | 14.9 | -0.1 |
 | alpha | hill_q2 | MLP06_curve_kndvi | MLP | curve | kndvi | tabular | 1082 | 5 | 0.408 | 0.022 | 0.584 | 14.5 | -0.2 |
 | beta_cover | lcbd_cover | B03_coords | BASE | coords |  |  | 546 | 3 | 0.411 | 0.007 | 0.616 | 20.4 | -0.8 |
-| beta_cover | pcoa1_cover | RF04_lsp-curve-topo-area_nbr | RF | lsp+curve+topo+area | nbr |  | 546 | 3 | 0.393 | 0.010 | 0.663 | 22.0 | 2.8 |
+| beta_cover | pcoa1_cover | RF03_curve-topo-area_nbr_v2 | RF | curve+topo+area | nbr |  | 546 | 3 | 0.394 | 0.009 | 0.655 | 22.0 | 2.6 |
 | beta_cover | pcoa2_cover | RF06_curve_all-topo-area | RF | curve_all+topo+area |  |  | 546 | 3 | 0.340 | 0.010 | 0.610 | 19.4 | 0.3 |
 | beta_pa | lcbd_pa | B03_coords | BASE | coords |  |  | 1082 | 3 | 0.507 | 0.004 | 0.700 | 17.6 | 0.1 |
 | beta_pa | pcoa1_pa | RF03_curve-topo-area_evi | RF | curve+topo+area | evi |  | 1082 | 3 | 0.574 | 0.005 | 0.770 | 16.0 | -0.1 |
@@ -83,8 +83,8 @@
 | MLP01_lsp_nbr | MLP | nbr | tabular | 5 | 0.176 | 0.132 | 0.205 | 17.1 | 0.2 | 0.381 |
 | C2D01_reshape_nbr | C2D | nbr | reshape | 5 | 0.175 | 0.142 | 0.197 | 17.1 | 0.3 | 0.361 |
 | RF01_lsp-topo-area_kndvi | RF | kndvi |  | 5 | 0.174 | 0.144 | 0.196 | 17.1 | 0.2 | 0.367 |
+| RF03_curve-topo-area_kndvi_v2 | RF | kndvi |  | 5 | 0.174 | 0.120 | 0.198 | 17.1 | 0.2 | 0.368 |
 | RF03_curve-topo-area_kndvi | RF | kndvi |  | 5 | 0.174 | 0.129 | 0.205 | 17.1 | 0.2 | 0.372 |
-| RF03_curve-topo-area_ndvi | RF | ndvi |  | 5 | 0.173 | 0.131 | 0.204 | 17.1 | 0.3 | 0.364 |
 
 ### `dark`
 
