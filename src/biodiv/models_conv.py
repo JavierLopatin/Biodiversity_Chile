@@ -266,13 +266,115 @@ class PhenoNetS(nn.Module):
         return self.head(z)
 
 
+class SEBlock(nn.Module):
+    """Squeeze-and-excitation: recalibrate channels by a learned global weighting.
+
+    ~2c^2/r parameters, so a few hundred at these widths. It earns its place here because
+    the channels are not interchangeable: for `stack5` they are five vegetation indices,
+    for `gaf` the summation and difference fields. A kernel treats them symmetrically;
+    this lets the network learn that one of them matters more for a given plot.
+    """
+
+    def __init__(self, c: int, r: int = 8):
+        super().__init__()
+        h = max(4, c // r)
+        self.fc = nn.Sequential(nn.Linear(c, h), nn.GELU(), nn.Linear(h, c), nn.Sigmoid())
+
+    def forward(self, x):
+        w = self.fc(x.mean(dim=(2, 3)))
+        return x * w[:, :, None, None]
+
+
+class ResSepConv2d(nn.Module):
+    """`SepConv2d` with an identity shortcut, projected when the shape changes.
+
+    The point is depth: without a skip, stacking more separable blocks on 1,082 samples
+    degrades rather than helps. With one, the block starts near the identity and only has
+    to learn a correction.
+    """
+
+    def __init__(self, ci, co, stride=1, p=0.1, pad_mode="zeros", se=False):
+        super().__init__()
+        self.conv = SepConv2d(ci, co, stride=stride, p=p, pad_mode=pad_mode)
+        self.se = SEBlock(co) if se else None
+        self.proj = (nn.Conv2d(ci, co, 1, stride=stride, bias=False)
+                     if (ci != co or stride != 1) else nn.Identity())
+
+    def forward(self, x):
+        h = self.conv(x)
+        if self.se is not None:
+            h = self.se(h)
+        return h + self.proj(x)
+
+
+class MultiScaleBlock(nn.Module):
+    """Kernels 3, 5 and 7 in parallel, concatenated.
+
+    On a 52-step year folded into an 8x8 image, a 3x3 kernel spans about three weeks along
+    a row and two months down a column. Different phenological events live at different
+    scales -- a green-up edge is sharp, a dry-season plateau is broad -- and a single kernel
+    size has to commit to one. Depthwise convolutions keep the three branches affordable.
+    """
+
+    def __init__(self, ci, co, p=0.1, pad_mode="zeros"):
+        super().__init__()
+        single = "zeros" if isinstance(pad_mode, tuple) else pad_mode
+        per = max(4, co // 3)
+        self.branches = nn.ModuleList([
+            nn.Sequential(
+                nn.Conv2d(ci, ci, k, padding=k // 2, groups=ci, bias=False,
+                          padding_mode=single),
+                nn.Conv2d(ci, per, 1, bias=False), nn.BatchNorm2d(per), nn.GELU())
+            for k in (3, 5, 7)])
+        self.mix = nn.Sequential(nn.Conv2d(per * 3, co, 1, bias=False),
+                                 nn.BatchNorm2d(co), nn.GELU(), nn.Dropout2d(p))
+
+    def forward(self, x):
+        return self.mix(torch.cat([b(x) for b in self.branches], dim=1))
+
+
+class PhenoNetV(PhenoNetS):
+    """`PhenoNetS` with the trunk swapped for a different block type.
+
+    Subclassing keeps the stem, the fusion machinery, the head and `forward` identical, so a
+    comparison between backbones changes one thing. `arch` selects the block:
+
+    ``res``    residual separable blocks
+    ``se``     residual separable blocks with squeeze-excitation
+    ``multi``  multi-scale blocks (kernels 3, 5, 7)
+
+    All stay inside the project's <60k parameter budget at width B, which is not a style
+    preference: with 1,082 plots, width X (788k) has already been measured to lose.
+    """
+
+    def __init__(self, *args, arch: str = "res", **kw):
+        super().__init__(*args, **kw)
+        w1, w2, w3 = kw.get("width", PhenoNetS.WIDTHS["B"])
+        p = kw.get("p_conv", 0.1)
+        pad = kw.get("pad_mode", "zeros")
+        if arch in ("res", "se"):
+            se = arch == "se"
+            self.b1 = ResSepConv2d(w1, w2, p=p, pad_mode=pad, se=se)
+            self.b2 = ResSepConv2d(w2, w2, p=p, pad_mode=pad, se=se)
+            self.b3 = ResSepConv2d(w2, w3, stride=2, p=p, pad_mode=pad, se=se)
+            self.b4 = ResSepConv2d(w3, w3, p=p, pad_mode=pad, se=se)
+        elif arch == "multi":
+            self.b1 = MultiScaleBlock(w1, w2, p=p, pad_mode=pad)
+            self.b2 = MultiScaleBlock(w2, w2, p=p, pad_mode=pad)
+            self.b3 = nn.Sequential(MultiScaleBlock(w2, w3, p=p, pad_mode=pad),
+                                    nn.AvgPool2d(2, ceil_mode=True))
+            self.b4 = MultiScaleBlock(w3, w3, p=p, pad_mode=pad)
+        else:
+            raise ValueError(f"unknown arch {arch!r}")
+
+
 def count_params(model: nn.Module) -> int:
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 def build_model(family: str, *, c_in: int, n_out: int, n_ctx: int, width: str = "B",
                 pad_mode="zeros", fusion: str = "late", circular: bool = True,
-                d_in: int | None = None) -> nn.Module:
+                d_in: int | None = None, arch: str = "sep", **kwargs) -> nn.Module:
     """Single entry point so the driver scripts never import three different constructors."""
     from .models_tabular import MLPMulti
     if family == "MLP":
@@ -283,6 +385,8 @@ def build_model(family: str, *, c_in: int, n_out: int, n_ctx: int, width: str = 
         return Pheno1D(c_in=c_in, width=Pheno1D.WIDTHS[width], n_out=n_out, n_ctx=n_ctx,
                        circular=circular)
     if family == "C2D":
-        return PhenoNetS(c_in=c_in, width=PhenoNetS.WIDTHS[width], n_out=n_out, n_ctx=n_ctx,
-                         pad_mode=pad_mode, fusion=fusion)
+        kw = dict(c_in=c_in, width=PhenoNetS.WIDTHS[width], n_out=n_out, n_ctx=n_ctx,
+                  pad_mode=pad_mode, fusion=fusion,
+                  p_conv=kwargs.get("p_conv", 0.1), p_head=kwargs.get("p_head", 0.3))
+        return PhenoNetS(**kw) if arch == "sep" else PhenoNetV(arch=arch, **kw)
     raise ValueError(f"unknown family {family!r}")

@@ -36,27 +36,53 @@ def frac_roll(x: np.ndarray, shift_steps: float) -> np.ndarray:
 
 def augment_curves(curves: np.ndarray, rng: np.random.Generator,
                    jitter_sd: float = 0.5, amp: float = 0.05,
-                   baseline: float = 0.02, noise: float = 0.01) -> np.ndarray:
-    """Apply the four per-sample curve augmentations. ``curves`` is (B, C, 52).
+                   baseline: float = 0.02, noise: float = 0.01,
+                   slope: float = 0.0, prob: float = 1.0) -> np.ndarray:
+    """Apply the per-sample curve augmentations. ``curves`` is (B, C, n).
 
     - **jitter** ``N(0, jitter_sd)`` steps: real uncertainty in the phase anchoring, whose
       within-plot circular sd is 14 days at the median (docs/07).
     - **amplitude** ``U(1-amp, 1+amp)``: calibration drift and fractional-cover variation.
     - **baseline** ``U(-baseline, +baseline)``: residual soil and atmospheric effects.
     - **noise** ``N(0, noise)``: generic regularisation.
+    - **slope** ``U(-slope, +slope)``: a linear tilt across the year, off by default.
+    - **prob**: fraction of samples augmented at all; 1.0 augments every one.
 
-    All four are applied per sample and shared across that sample's channels, because a
+    All are applied per sample and shared across that sample's channels, because a
     calibration or phase error affects every vegetation index of the same plot together.
+
+    **On the slope term, and why it is off by default.** It is the one augmentation the
+    Trait_2DCNN pipeline has that this project lacked (`dataaugment`, from
+    Deep-Chemometrics), and in that paper the choice of augmentation moved the score by as
+    much as the 1D-to-2D transform itself. But a tilt is not a neutral nuisance here: the
+    curve is a composite over three years, and the interannual trend inside it is **real
+    signal** -- regressing the year-boundary step on that trend gives a slope of -0.945
+    against a predicted -1 (`docs/13_phenology_year_boundary.md`). Augmenting with random
+    tilts teaches the model to ignore exactly that. It is exposed so the question can be
+    answered by measurement rather than assumed either way.
+
+    **On `prob`.** Trait_2DCNN augments 15% of samples; this project has always augmented
+    100%. Since the measured ablation has `no-augment` *beating* the default, the amount of
+    augmentation is a live question, not a settled one.
     """
     b = curves.shape[0]
-    out = np.empty_like(curves)
+    out = curves.copy()
     shifts = rng.normal(0.0, jitter_sd, size=b)
     scales = rng.uniform(1.0 - amp, 1.0 + amp, size=b)
     offsets = rng.uniform(-baseline, baseline, size=b)
+    tilts = rng.uniform(-slope, slope, size=b) if slope > 0 else np.zeros(b)
+    hit = rng.random(b) < prob if prob < 1.0 else np.ones(b, dtype=bool)
+    # a ramp from -0.5 to +0.5 across the cycle, so a tilt pivots about the mean and does
+    # not also shift the level -- that is what `baseline` is for
+    ramp = np.linspace(-0.5, 0.5, curves.shape[-1], dtype=curves.dtype)
     for i in range(b):
+        if not hit[i]:
+            continue
         out[i] = frac_roll(curves[i], shifts[i]) * scales[i] + offsets[i]
+        if tilts[i]:
+            out[i] = out[i] + tilts[i] * ramp
     if noise > 0:
-        out += rng.normal(0.0, noise, size=out.shape).astype(out.dtype)
+        out[hit] += rng.normal(0.0, noise, size=out[hit].shape).astype(out.dtype)
     return out
 
 

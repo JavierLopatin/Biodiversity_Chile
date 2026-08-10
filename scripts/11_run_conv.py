@@ -58,52 +58,86 @@ def family_of(substrate: str) -> str:
     return "C1D" if substrate in ("curve1d", "curve5") else "C2D"
 
 
+#: Every factor that can change what a run computes, with the default it is compared
+#: against and the tag it contributes to the run id when it differs.
+#:
+#: This table exists because forgetting one entry is not a cosmetic bug: the run lands in
+#: the directory of the default variant, `already_done` reports it finished, and the job is
+#: skipped in silence -- the log says `[skip]`, the driver says `ok` in 0.0 minutes, and the
+#: results table is missing an ablation everyone believes was measured. That happened to the
+#: three climate-context runs and to mixup / no-augment in stage 4c. Driving the id off one
+#: table, rather than off a hand-written chain of ifs, is what stops it recurring.
+def _variant_tags(args, eff: dict) -> list[str]:
+    """Tags for every setting that differs from its default. `eff` holds the effective
+    values after per-call overrides."""
+    tags = []
+    if eff["width"] != "B":
+        tags.append(f"w{eff['width']}")
+    if eff["rotation"] != "trough":
+        tags.append(eff["rotation"])
+    if eff["normalize"] != "none":
+        tags.append(f"n{eff['normalize']}")
+    if eff["mixup"]:
+        tags.append("mixup")
+    if not eff["augment"]:
+        tags.append("noaug")
+    if getattr(args, "context", feat.CONTEXT_SPEC) != feat.CONTEXT_SPEC:
+        tags.append("ctx" + args.context.replace("+", "-"))
+    if getattr(args, "arch", "sep") != "sep":
+        tags.append(args.arch)
+    if getattr(args, "row_width", 0):
+        tags.append(f"rw{args.row_width}")
+    if getattr(args, "aug_slope", 0.0):
+        tags.append(f"slope{args.aug_slope:g}".replace(".", ""))
+    if getattr(args, "aug_prob", 1.0) != 1.0:
+        tags.append(f"ap{args.aug_prob:g}".replace(".", ""))
+    for name, default in (("weight_decay", 1e-2), ("p_conv", 0.1), ("p_head", 0.3),
+                          ("lr", 3e-3), ("batch_size", 64)):
+        v = getattr(args, name, default)
+        if v != default:
+            tags.append(f"{name.replace('_', '')[:4]}{v:g}".replace(".", "").replace("-", "m"))
+    if getattr(args, "seed_start", 0):
+        tags.append(f"s{args.seed_start}")
+    return tags
+
+
 def run(substrate: str, index: str | None, args, width: str | None = None,
         fusion: str | None = None, rotation: str | None = None,
         normalize: str | None = None, mixup: bool | None = None,
         augment: bool | None = None, tag: str = "") -> None:
-    width = width or args.width
-    fusion = fusion or args.fusion
-    rotation = rotation or args.rotation
-    normalize = normalize or args.normalize
+    eff = {
+        "width": width or args.width,
+        "fusion": fusion or args.fusion,
+        "rotation": rotation or args.rotation,
+        "normalize": normalize or args.normalize,
+        "mixup": args.mixup if mixup is None else mixup,
+        "augment": args.augment if augment is None else augment,
+    }
+    width, fusion = eff["width"], eff["fusion"]
+    rotation, normalize = eff["rotation"], eff["normalize"]
     fam = family_of(substrate)
     base = SUBSTRATE_ID.get(substrate, fam)
     ident = runlog.make_run_id(base + (f"-{tag}" if tag else ""),
                                substrate, index or "", "", fusion)
-    if width != "B":
-        ident += f"_w{width}"
-    if rotation != "trough":
-        ident += f"_{rotation}"
-    if normalize != "none":
-        ident += f"_n{normalize}"
-    # mixup, augment y context TIENEN que entrar en el identificador. Si no, la corrida
-    # colisiona con la variante por defecto del mismo sustrato e indice, `already_done` la
-    # da por hecha y se salta en silencio: el log dice `[skip]`, el trabajo dice `ok` en
-    # 0,0 minutos, y la tabla de resultados queda sin la ablacion que se creia medida.
-    # Paso exactamente eso con las tres corridas de contexto climatico y con mixup /
-    # no-augment de la etapa 4c.
-    if mixup if mixup is not None else args.mixup:
-        ident += "_mixup"
-    if not (augment if augment is not None else args.augment):
-        ident += "_noaug"
-    if getattr(args, "context", feat.CONTEXT_SPEC) != feat.CONTEXT_SPEC:
-        ident += "_ctx" + args.context.replace("+", "-")
-    if mixup:
-        ident += "_mixup"
-    if augment is False:
-        ident += "_noaug"
+    for t in _variant_tags(args, eff):
+        ident += f"_{t}"
 
     cfg = TrainCfg(max_epochs=args.max_epochs, patience=args.patience,
                    batch_size=args.batch_size, lr=args.lr,
-                   augment=args.augment if augment is None else augment,
-                   mixup=args.mixup if mixup is None else mixup)
+                   weight_decay=args.weight_decay,
+                   augment=eff["augment"], mixup=eff["mixup"],
+                   aug=dict(jitter_sd=args.jitter_sd, amp=args.aug_amp,
+                            baseline=args.aug_baseline, noise=args.aug_noise,
+                            slope=args.aug_slope, prob=args.aug_prob))
     if args.px == "center":
         ident += "_ctr"
     run_dl(family=fam, run_id=ident, scheme=args.scheme, substrate=substrate, index=index,
            px=args.px,
            width=width, fusion=fusion, rotation=rotation, normalize=normalize,
-           ctx_spec=args.context,
-           seeds=tuple(range(args.seeds)), derived=args.derived, out_root=Path(args.out),
+           ctx_spec=args.context, arch=args.arch,
+           p_conv=args.p_conv, p_head=args.p_head,
+           seeds=tuple(range(args.seed_start, args.seed_start + args.seeds)),
+           derived=args.derived, out_root=Path(args.out),
            train_cfg=cfg, force=args.force, save_state=True,
            notes=f"{fam} on {substrate}")
 
@@ -159,6 +193,30 @@ def main() -> None:
     p.add_argument("--out", default="results/models")
     p.add_argument("--px", default="mean5x5", choices=["mean5x5", "center"],
                    help="pixel level of the curve and of the topographic context")
+    p.add_argument("--seed-start", type=int, default=0, dest="seed_start",
+                   help="first seed. The search selects with 0..n-1 and the winners are "
+                        "confirmed with a disjoint block, so the reported number is not the "
+                        "maximum of the search")
+    p.add_argument("--arch", default="sep", choices=["sep", "res", "se", "multi"],
+                   help="2-D backbone: separable (current), residual, squeeze-excitation, "
+                        "or multi-scale")
+    p.add_argument("--row-width", type=int, default=0, dest="row_width",
+                   help="row width of the reshape/serpentine fold; 0 keeps the square "
+                        "layout. Different widths put different week pairs side by side")
+    p.add_argument("--weight-decay", type=float, default=1e-2, dest="weight_decay")
+    p.add_argument("--p-conv", type=float, default=0.1, dest="p_conv")
+    p.add_argument("--p-head", type=float, default=0.3, dest="p_head")
+    p.add_argument("--jitter-sd", type=float, default=0.5, dest="jitter_sd")
+    p.add_argument("--aug-amp", type=float, default=0.05, dest="aug_amp")
+    p.add_argument("--aug-baseline", type=float, default=0.02, dest="aug_baseline")
+    p.add_argument("--aug-noise", type=float, default=0.01, dest="aug_noise")
+    p.add_argument("--aug-slope", type=float, default=0.0, dest="aug_slope",
+                   help="linear tilt, the term Trait_2DCNN has and this project lacks. "
+                        "Careful: the interannual trend is real signal (docs/13), so making "
+                        "the model invariant to it may cost rather than help")
+    p.add_argument("--aug-prob", type=float, default=1.0, dest="aug_prob",
+                   help="probability of applying augmentation to a sample; Trait_2DCNN "
+                        "uses 0.15, this project has always used 1.0")
     p.add_argument("--context", default=feat.CONTEXT_SPEC,
                    help="feature spec for the context vector fused into the head; "
                         "'clim+topo+area' reproduces the winning screening block X17")

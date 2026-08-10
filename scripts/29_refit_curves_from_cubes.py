@@ -111,7 +111,8 @@ def year_boundary_step(curves: np.ndarray, doy: np.ndarray) -> tuple[float, floa
 # per-plot work
 # --------------------------------------------------------------------------------------
 
-def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str) -> dict:
+def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
+               roll_mode: str = "shrink", ngs: int = NGS) -> dict:
     """Re-fit every index of one cube. Returns curves, pixels and a diagnostic row.
 
     Runs in a worker process, so it takes plain types and imports `phenosensing` itself.
@@ -133,8 +134,8 @@ def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str) -> dict
             if f"obs_{index}" not in ds:
                 continue
             da = observations(ds, index)
-            shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=ROLL, nGS=NGS,
-                                        recon_params=kw or None)
+            shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=ROLL, nGS=ngs,
+                                        recon_params=kw or None, rollMode=roll_mode)
             arr = shape.values                       # (doy, y, x)
             out["doy"] = shape["doy"].values.astype(float)
 
@@ -185,6 +186,14 @@ def main() -> None:
                    help="reconstructor; 'harmonic' also closes the year, 'linear' relies "
                         "only on the moving-average fix")
     p.add_argument("--n-harmonics", type=int, default=3, dest="n_harmonics")
+    p.add_argument("--roll-mode", default="shrink", dest="roll_mode",
+                   choices=["shrink", "reflect", "wrap", "legacy"],
+                   help="edge handling of the moving average; 'wrap' deletes the "
+                        "interannual trend and is here only for reproducing old output")
+    p.add_argument("--ngs", type=int, default=NGS,
+                   help="steps per cycle. 52 is weekly and was a choice, not a constraint: "
+                        "the image a 2-D model sees is sqrt(ngs) on a side, and the paper "
+                        "this design comes from flags image size as understudied")
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--limit", type=int, default=None, help="first N cubes, for a trial run")
     p.add_argument("--phenosensing", default=str(DEFAULT_PHENO))
@@ -203,7 +212,7 @@ def main() -> None:
 
     print(f"{len(cubes)} cubes  |  reconstructor={args.recon}"
           f"{f' (k={args.n_harmonics})' if args.recon == 'harmonic' else ''}"
-          f"  |  nGS={NGS} rollWindow={ROLL}")
+          f"  |  nGS={args.ngs} rollWindow={ROLL} rollMode={args.roll_mode}")
     print(f"phenosensing: {Path(phenosensing.__file__).parent}")
     if args.recon not in list_reconstructors():
         raise SystemExit(
@@ -220,7 +229,7 @@ def main() -> None:
     curves, pixels, reports, doy_rows, failed = [], [], [], [], []
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         futs = {ex.submit(refit_plot, str(c), args.recon, args.n_harmonics,
-                          args.phenosensing): c for c in cubes}
+                          args.phenosensing, args.roll_mode, args.ngs): c for c in cubes}
         for i, fut in enumerate(as_completed(futs), 1):
             cube = futs[fut]
             try:

@@ -77,7 +77,8 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
            seeds: tuple[int, ...] = (0, 1, 2, 3, 4), derived: str = "data/derived",
            out_root: Path = runlog.RESULTS, train_cfg: TrainCfg | None = None,
            force: bool = False, notes: str = "", verbose: bool = False,
-           save_state: bool = False) -> pd.DataFrame | None:
+           save_state: bool = False, arch: str = "sep",
+           p_conv: float = 0.1, p_head: float = 0.3) -> pd.DataFrame | None:
     cfg_t = train_cfg or TrainCfg()
     cfg = runlog.RunConfig(
         run_id=run_id, family=family, scheme=scheme,
@@ -157,7 +158,8 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
                 imgs = norm(images)
                 src = curves
                 ctx_in = ctx_all if fusion in ("late", "film") else np.zeros((len(ids), 0), np.float32)
-                model = build_model(family, c_in=imgs.shape[1], n_out=n_out,
+                model = build_model(family, arch=arch, p_conv=p_conv, p_head=p_head,
+                                    c_in=imgs.shape[1], n_out=n_out,
                                     n_ctx=ctx_in.shape[1], width=width,
                                     pad_mode=pad_mode, fusion=fusion)
 
