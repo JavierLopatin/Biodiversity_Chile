@@ -231,10 +231,16 @@ class PhenoNetS(nn.Module):
         self.pool = nn.AdaptiveAvgPool2d(1)
 
         self.film = FiLM(n_ctx, widths=(w2, w3)) if fusion == "film" else None
-        self.patch = TopoPatchBranch(topo_patch_channels) if fusion == "patch" else None
+        self.patch = (TopoPatchBranch(topo_patch_channels)
+                      if fusion in ("patch", "patchctx") else None)
 
+        # `patch` REEMPLAZA al vector de contexto; `patchctx` lo AÑADE. La distincion importa
+        # porque la ablacion 4c comparaba "parche 2D en vez del resumen" y perdia por 0,04
+        # contra `late` -- lo que no dice si el parche aporta algo ENCIMA del resumen, que es
+        # otra pregunta. `patchctx` la responde con un solo factor de diferencia contra `late`.
+        pemb = self.patch.emb if self.patch else 0
         extra = {"none": 0, "film": 0, "late": n_ctx,
-                 "patch": (self.patch.emb if self.patch else 0)}[fusion]
+                 "patch": pemb, "patchctx": n_ctx + pemb}[fusion]
         self.head = nn.Sequential(
             nn.Dropout(p_head), nn.Linear(w3 + extra, w3), nn.GELU(),
             nn.Dropout(p_head), nn.Linear(w3, n_out))
@@ -255,6 +261,8 @@ class PhenoNetS(nn.Module):
             z = torch.cat([z, ctx], dim=1)
         elif self.fusion == "patch" and patch is not None:
             z = torch.cat([z, self.patch(patch)], dim=1)
+        elif self.fusion == "patchctx" and patch is not None and ctx is not None:
+            z = torch.cat([z, ctx, self.patch(patch)], dim=1)
         return self.head(z)
 
 

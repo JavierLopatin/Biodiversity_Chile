@@ -1,7 +1,9 @@
 # La curva fenológica no cierra el año
 
-**Estado:** diagnosticado y medido, **no corregido**. El arreglo correcto exige reajustar
-desde las observaciones crudas (`data/derived/phenology/*.nc`), que no están en esta máquina.
+**Estado:** diagnosticado, medido y **corregido upstream** el 2026-08-09
+(`PhenoSensing` commit `eb2dff8`, 19 tests nuevos). Falta **re-extraer** desde las
+observaciones crudas (`data/derived/phenology/*.nc`) para que este proyecto se beneficie;
+la descarga de los cubos está en curso.
 
 **Alcance:** el defecto está en **PhenoPY / `phenosensing`**, no en este proyecto. Cualquier
 uso de `PhenoShape` hereda el problema, así que este documento está escrito para servir
@@ -135,14 +137,20 @@ zanjarlo.
 
 ## 4. El arreglo, en tres niveles
 
-### Nivel 1 — upstream, en `phenosensing` (el correcto)
+### Nivel 1 — upstream, en `phenosensing` — **HECHO** (`eb2dff8`)
 
-1. **`_moving_average` circular.** Una línea. Es un arreglo estrictamente mejor para
-   cualquier usuario: no hay caso en que copiar los extremos crudos sea preferible.
+1. ✅ **`_moving_average` con relleno real**, `mode` reenviado a `np.pad`: `"wrap"` por
+   defecto (correcto para un ciclo), `"reflect"` para series abiertas y `"legacy"` para
+   reproducir la salida anterior.
+
+   **Y la ruta numba también.** `_numba._mov_avg` tenía su propia copia de la misma lógica
+   y es la que corre de verdad cuando numba está instalado — que es el caso. Arreglar sólo
+   la versión numpy no habría cambiado nada en producción. El test lo descubrió cayendo en
+   esa trampa: comparaba la ruta arreglada contra sí misma.
 2. **Una grilla de salida fija en `[1, 365]`** en vez de `[min(x), max(x)]`, para que curvas
    de distintos píxeles sean comparables paso a paso, con extrapolación circular en los
    huecos.
-3. **Al menos un reconstructor periódico.** El más barato es una regresión armónica —serie
+3. ✅ **Reconstructor `harmonic`.** El más barato es una regresión armónica —serie
    de Fourier truncada, periódica por construcción— que además es el estándar en la
    literatura de fenología satelital (HANTS, y las series armónicas de Zhu & Woodcock).
    Encaja en el registro sin tocar nada más:
@@ -164,9 +172,10 @@ zanjarlo.
    varianza y reduce el salto de frontera **5,6×** (0,031 → 0,0055). Ajustado sobre las
    observaciones crudas debería ir mejor, porque no arrastra el artefacto de borde del paso
    previo.
-4. **Un test de regresión que fije la periodicidad**: para toda curva reconstruida,
-   `|f(paso 0) − f(paso n−1)|` no puede exceder el cambio típico entre pasos consecutivos.
-   Es la comprobación que habría atrapado esto.
+4. ✅ **`tests/test_periodicity.py`**, 19 tests. El que importa es
+   `test_phenoshape_curve_closes_the_year`: para todo píxel reconstruido, el salto de
+   envolvente no puede superar 3× el paso típico dentro de la curva. Falla con el código
+   viejo. Suite: 59 → 78 pasando, con los mismos 5 fallos preexistentes.
 
 ### Nivel 2 — en este proyecto, al re-extraer
 
@@ -212,5 +221,9 @@ El paso 3 hay que decidirlo **antes** de mirar el resultado, o el test no distin
   —`step_to_doy` no es monótono porque las curvas están ancladas al valle (DOY 108), así que
   `plot` unía diciembre con enero—; el escalón apareció al corregirla.
 - Mediciones y figuras: `notebooks/04_substrates_2d.ipynb` §1b.
-- Código citado: `phenosensing` en `/mnt/rapidita_4T/GitHub/PhenoPY`, commit en uso al
-  2026-08-09.
+- Código citado: `phenosensing` en `/mnt/rapidita_4T/GitHub/PhenoSensing`
+  (`github.com/JavierLopatin/PhenoSensing`), diagnosticado sobre `1a800a8`, corregido en
+  `eb2dff8`.
+- **Deuda aparte que apareció al correr la suite:** `tests/golden/` está desactualizado y
+  fallaba **antes** de este arreglo — 78 % de los elementos no coinciden, con diferencia
+  máxima de 275 días. No sirvió de red de seguridad y conviene regenerarlo.

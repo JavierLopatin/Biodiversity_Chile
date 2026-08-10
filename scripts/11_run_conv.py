@@ -145,7 +145,7 @@ def main() -> None:
     p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=5)
     p.add_argument("--width", default="B", choices=["A", "B", "C", "X"])
-    p.add_argument("--fusion", default="late", choices=["none", "late", "film", "patch"])
+    p.add_argument("--fusion", default="late", choices=["none", "late", "film", "patch", "patchctx"])
     p.add_argument("--rotation", default="trough", choices=["trough", "calendar"])
     p.add_argument("--normalize", default="none", choices=["none", "global", "perSample"])
     p.add_argument("--augment", action="store_true", default=True)

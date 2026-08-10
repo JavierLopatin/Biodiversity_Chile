@@ -116,7 +116,7 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
         builder = substrate_builder(substrate, normalize=normalize)
 
     patches = None
-    if fusion == "patch":
+    if fusion in ("patch", "patchctx"):
         patches, _ = sub.load_topo_patches(derived, ids)
 
     cv = cvmod.load_schemes(Path(derived) / "cv_folds_modelling.parquet")
@@ -175,8 +175,9 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
 
             model, hist, resid_val = train_one_fold(
                 model, ds(ifit, True), ds(ival, False), cfg_t, seed=seed,
-                use_patch=(fusion == "patch"), verbose=verbose)
-            pred_s = predict(model, ds(ite, False), cfg_t, use_patch=(fusion == "patch"))
+                use_patch=(fusion in ("patch", "patchctx")), verbose=verbose)
+            pred_s = predict(model, ds(ite, False), cfg_t,
+                             use_patch=(fusion in ("patch", "patchctx")))
 
             pred = tg.inverse_with_smearing(pred_s, scaler, resid_val,
                                             y_train=Y_full[itr], seed=seed)
