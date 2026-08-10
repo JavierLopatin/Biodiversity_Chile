@@ -37,6 +37,11 @@ data/*
 
 # Los cubos .nc por parcela (~360 MB) siguen fuera — ver docs/09_predictors.md §1.
 data/derived/phenology/*.nc
+# el archivo de transferencia de los cubos y su descarga parcial: 346 MB que se
+# reconstruyen desde la maquina con datacube, nunca versionados
+data/derived/phenology/*.zip
+data/derived/phenology/*.crdownload
+data/derived/phenology/*.part
 # --- PDFs de referencia ---
 paper_examples/
 *.pdf
