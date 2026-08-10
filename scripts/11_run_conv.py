@@ -99,7 +99,14 @@ def _variant_tags(args, eff: dict) -> list[str]:
     if getattr(args, "seed_start", 0):
         tags.append(f"s{args.seed_start}")
     if getattr(args, "init_from", None):
-        tags.append("mae")
+        # el checkpoint entero, no un "mae" plano. Tres preentrenamientos distintos con la
+        # misma etiqueta colisionan en un unico run_id: dos se pisan y el tercero sale
+        # `[skip]` por `already_done`, reportando ok sin computar. Ya paso -- con
+        # `--context`, con `mixup`, con `no-augment`, y aqui otra vez.
+        stem = Path(args.init_from).stem
+        for drop in ("mae_", f"{args.substrate}_", "_sep", "_wB", "_p2"):
+            stem = stem.replace(drop, "", 1)
+        tags.append("mae" + stem.strip("_").replace(".", "").replace("-", ""))
     return tags
 
 
