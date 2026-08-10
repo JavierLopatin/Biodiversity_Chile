@@ -98,6 +98,8 @@ def _variant_tags(args, eff: dict) -> list[str]:
             tags.append(f"{name.replace('_', '')[:4]}{v:g}".replace(".", "").replace("-", "m"))
     if getattr(args, "seed_start", 0):
         tags.append(f"s{args.seed_start}")
+    if getattr(args, "init_from", None):
+        tags.append("mae")
     return tags
 
 
@@ -134,7 +136,7 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
     run_dl(family=fam, run_id=ident, scheme=args.scheme, substrate=substrate, index=index,
            px=args.px,
            width=width, fusion=fusion, rotation=rotation, normalize=normalize,
-           ctx_spec=args.context, arch=args.arch,
+           ctx_spec=args.context, arch=args.arch, init_from=args.init_from,
            p_conv=args.p_conv, p_head=args.p_head,
            seeds=tuple(range(args.seed_start, args.seed_start + args.seeds)),
            derived=args.derived, out_root=Path(args.out),
@@ -220,6 +222,10 @@ def main() -> None:
     p.add_argument("--context", default=feat.CONTEXT_SPEC,
                    help="feature spec for the context vector fused into the head; "
                         "'clim+topo+area' reproduces the winning screening block X17")
+    p.add_argument("--init-from", default=None, dest="init_from",
+                   help="checkpoint from scripts/31_pretrain_mae.py. Loads the pretrained "
+                        "trunk; everything else about the run is unchanged, so the "
+                        "comparison against the same run without it isolates pretraining")
     p.add_argument("--force", action="store_true")
     p.add_argument("--count-params", action="store_true")
     p.add_argument("--shapes", action="store_true")

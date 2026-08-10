@@ -78,7 +78,8 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
            out_root: Path = runlog.RESULTS, train_cfg: TrainCfg | None = None,
            force: bool = False, notes: str = "", verbose: bool = False,
            save_state: bool = False, arch: str = "sep",
-           p_conv: float = 0.1, p_head: float = 0.3) -> pd.DataFrame | None:
+           p_conv: float = 0.1, p_head: float = 0.3,
+           init_from: str | None = None) -> pd.DataFrame | None:
     cfg_t = train_cfg or TrainCfg()
     cfg = runlog.RunConfig(
         run_id=run_id, family=family, scheme=scheme,
@@ -162,6 +163,19 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
                                     c_in=imgs.shape[1], n_out=n_out,
                                     n_ctx=ctx_in.shape[1], width=width,
                                     pad_mode=pad_mode, fusion=fusion)
+                if init_from:
+                    # Fine-tuning: the trunk starts from the masked-autoencoder weights and
+                    # everything else is identical, so a comparison against the same run
+                    # without `init_from` isolates pretraining. `load_trunk` raises on a
+                    # shape mismatch rather than skipping, because a checkpoint that is
+                    # silently ignored looks exactly like pretraining that did not help.
+                    import torch as _torch
+                    from .mae import load_trunk
+                    _ck = _torch.load(init_from, map_location="cpu", weights_only=False)
+                    n_loaded = load_trunk(model, _ck["trunk"])
+                    if seed == seeds[0]:
+                        print(f"    init from {Path(init_from).name}: "
+                              f"{n_loaded} trunk tensors")
 
             if n_params is None:
                 n_params = count_params(model)
