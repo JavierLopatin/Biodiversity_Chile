@@ -1,0 +1,2 @@
+    C2D10_stack5_raw36_ctxclim-topo-area: 17,039 parameters, input (1, 5, 36)
+  C2D10_stack5_raw36_ctxclim-topo-area     kfold5_window    [  2.3m] hill_q0=+0.587 hill_q1=+0.409 hill_q2=+0.348 lcbd_pa=+0.457 pcoa1_pa=+0.519 pcoa2_pa=+0.459 lcbd_cover=+0.324 pcoa1_cover=+0.317 pcoa2_cover=+0.240 mpd=+0.120 mntd=+0.200 ses_pd=+0.162 ses_mpd=+0.169 ses_mntd=+0.149 dark_n=+0.365

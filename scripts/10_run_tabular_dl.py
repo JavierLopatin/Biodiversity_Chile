@@ -57,6 +57,9 @@ def main() -> None:
     p.add_argument("--index", default=None)
     p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=5)
+    p.add_argument("--seed-start", type=int, default=0, dest="seed_start",
+                   help="first seed. Disjoint seeds {10..14} confirm a run selected on "
+                        "{0,1,2}; the tag lands in the run id so the two do not collide")
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--out", default="results/models")
     p.add_argument("--max-epochs", type=int, default=300)
@@ -72,7 +75,7 @@ def main() -> None:
     todo = sorted(MODELS) if args.all else ([args.model] if args.model else [])
     if not todo:
         p.error("give --model or --all")
-    seeds = tuple(range(args.seeds))
+    seeds = tuple(range(args.seed_start, args.seed_start + args.seeds))
 
     for name in todo:
         meta = MODELS[name]
@@ -81,7 +84,8 @@ def main() -> None:
             spec = meta["spec"]
             run_dl(
                 family="MLP",
-                run_id=runlog.make_run_id(name, spec.replace("+", "-"), ix or ""),
+                run_id=runlog.make_run_id(name, spec.replace("+", "-"), ix or "")
+                       + (f"_s{seeds[0]}" if seeds[0] else ""),
                 scheme=args.scheme, substrate="tabular", index=ix, features_spec=spec,
                 width=meta["width"], fusion="late", target_set="all", seeds=seeds,
                 ctx_spec=args.context or meta.get("ctx", feat.CONTEXT_SPEC),

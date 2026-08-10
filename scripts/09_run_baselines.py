@@ -100,7 +100,8 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
     tag = spec.replace("+", "-")
     idx = index if meta["per_index"] else ""
     cfg = runlog.RunConfig(
-        run_id=runlog.make_run_id(model + ("c" if px == "center" else ""), tag, idx),
+        run_id=runlog.make_run_id(model + ("c" if px == "center" else ""), tag, idx)
+                + (f"_s{seeds[0]}" if seeds[0] else ""),
         family=meta["family"], scheme=scheme, features=spec, index=idx,
         target_set=target_set, seeds=tuple(seeds),
         model="RF-multioutput" if multioutput else ("mean" if meta.get("mean_only") else "RF"),
@@ -207,6 +208,9 @@ def main() -> None:
     p.add_argument("--index", default=None, help="vegetation index; omit to sweep all five")
     p.add_argument("--scheme", default="kfold5_window")
     p.add_argument("--seeds", type=int, default=3)
+    p.add_argument("--seed-start", type=int, default=0, dest="seed_start",
+                   help="first seed. Disjoint seeds {10..14} confirm a run selected on "
+                        "{0,1,2}; the tag lands in the run id so the two do not collide")
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--target-set", default="all")
     p.add_argument("--out", default="results/models")
@@ -215,7 +219,7 @@ def main() -> None:
     p.add_argument("--force", action="store_true")
     args = p.parse_args()
 
-    seeds = list(range(args.seeds))
+    seeds = list(range(args.seed_start, args.seed_start + args.seeds))
     root = Path(args.out)
     todo = sorted(MODELS) if args.all else ([args.model] if args.model else [])
     if not todo and args.model != "RF07":

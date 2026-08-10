@@ -1,0 +1,2 @@
+    C2D01_reshape_kndvi_raw100_ctxclim-topo-area: 17,039 parameters, input (1, 10, 10)
+  C2D01_reshape_kndvi_raw100_ctxclim-topo-area kfold5_window    [  1.8m] hill_q0=+0.612 hill_q1=+0.475 hill_q2=+0.420 lcbd_pa=+0.501 pcoa1_pa=+0.508 pcoa2_pa=+0.495 lcbd_cover=+0.397 pcoa1_cover=+0.335 pcoa2_cover=+0.232 mpd=+0.134 mntd=+0.201 ses_pd=+0.177 ses_mpd=+0.175 ses_mntd=+0.157 dark_n=+0.396

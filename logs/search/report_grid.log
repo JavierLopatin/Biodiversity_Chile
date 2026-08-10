@@ -1,0 +1,37 @@
+117 convolutional runs under kfold5_window
+
+facet                                                                        alpha  beta_pa  beta_cover  phylo   dark   mean
+run_id                                                    family substrate                                                  
+C2D02_serpentine_kndvi_raw36_ctxclim-topo-area            C2D    serpentine  0.508    0.509       0.328  0.175  0.394  0.383
+C2D02_serpentine_kndvi_raw100_ctxclim-topo-area           C2D    serpentine  0.517    0.494       0.322  0.169  0.405  0.381
+C2D02_serpentine_kndvi_raw24_ctxclim-topo-area            C2D    serpentine  0.507    0.498       0.315  0.166  0.407  0.379
+C2D02_serpentine_kndvi_raw156_ctxclim-topo-area           C2D    serpentine  0.509    0.492       0.315  0.173  0.403  0.378
+C2D01_reshape_kndvi_raw100_ctxclim-topo-area              C2D    reshape     0.502    0.502       0.321  0.169  0.396  0.378
+C2D02_serpentine_kndvi_raw68_ctxclim-topo-area            C2D    serpentine  0.495    0.507       0.322  0.173  0.390  0.377
+C2D02_serpentine_kndvi_raw48_ctxclim-topo-area            C2D    serpentine  0.496    0.504       0.314  0.162  0.410  0.377
+C2D01_reshape_kndvi_raw36_ctxclim-topo-area               C2D    reshape     0.504    0.509       0.325  0.160  0.385  0.377
+C2D01_reshape_kndvi_raw48_ctxclim-topo-area               C2D    reshape     0.499    0.506       0.322  0.164  0.389  0.376
+C2D01_reshape_kndvi_raw24_ctxclim-topo-area               C2D    reshape     0.487    0.503       0.311  0.162  0.414  0.375
+C2D02_serpentine_kndvi_raw60_ctxclim-topo-area            C2D    serpentine  0.495    0.503       0.320  0.163  0.396  0.375
+C2D01_reshape_kndvi_raw60_ctxclim-topo-area               C2D    reshape     0.491    0.502       0.324  0.157  0.399  0.375
+C2D07_hilbert_kndvi_raw68_ctxclim-topo-area               C2D    hilbert     0.471    0.498       0.329  0.166  0.408  0.375
+C2D01_reshape_kndvi_raw156_ctxclim-topo-area              C2D    reshape     0.478    0.493       0.318  0.162  0.418  0.374
+C2D02_serpentine_kndvi_raw196_ctxclim-topo-area           C2D    serpentine  0.498    0.493       0.315  0.159  0.396  0.372
+C2D01_reshape_kndvi_raw68_ctxclim-topo-area               C2D    reshape     0.491    0.494       0.316  0.165  0.391  0.372
+C2D01_reshape_kndvi_raw196_ctxclim-topo-area              C2D    reshape     0.484    0.499       0.318  0.164  0.390  0.371
+C2D02_serpentine_kndvi_linear_shrink_wC_ctxclim-topo-area C2D    serpentine  0.455    0.496       0.313  0.156  0.397  0.363
+C2D02_serpentine_kndvi_RBF_reflect_ctxclim-topo-area      C2D    serpentine  0.458    0.491       0.313  0.164  0.387  0.363
+C2D02_serpentine_kndvi_RBF_shrink_ctxclim-topo-area       C2D    serpentine  0.459    0.496       0.309  0.166  0.382  0.363
+
+best run of each family (mean over the five facets):
+
+family
+MLP     0.386
+C2D     0.383
+RF      0.367
+BASE    0.363
+C1D     0.359
+
+  still 0.003 behind   (seed noise ~0.011, so 2 sd = 0.022)
+
+  -> results/tables/cnn_search.csv
