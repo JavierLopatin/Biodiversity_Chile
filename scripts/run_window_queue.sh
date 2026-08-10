@@ -36,19 +36,30 @@ for agg in mean trimmed center; do
   python scripts/19_screen_blocks.py --rows X07 X12 --schemes "$SCHEME" --agg "$agg"
 done
 
+# `dissimilarity_pa.npy` esta en .gitignore (4,7 MB de matriz 1082x1082) asi que no viaja
+# entre maquinas; el script 20 lo reconstruye en un minuto y es la respuesta del GDM.
+if [ ! -f data/derived/dissimilarity_pa.npy ]; then
+  echo "=== reconstruyendo dissimilarity_pa.npy  $(date +%H:%M:%S)"
+  python scripts/20_composition_axes.py --k 16
+fi
+
 echo "=== GDM bajo $SCHEME  $(date +%H:%M:%S)"
 # Las cinco filas que ya existen estan bajo kfold5_owner y no son comparables con nada de lo
 # demas; se rehacen. Las dos con clima son las que nunca corrieron.
+# Los bloques por indice (`curve`) exigen --index; los que ya agregan los cinco (`curve_all`,
+# `gm`, `composite_all`) lo rechazan. kNDVI es el indice que gano el cribado.
 for spec in \
-    "curve+topo" \
-    "gm+topo" \
-    "composite_all+topo" \
-    "gm+obscomp_all+seas_all+contrast+topo" \
-    "curve+gm+obscomp_all+seas_all+contrast+topo" \
-    "clim+topo" \
-    "curve+clim+topo"; do
-  echo "--- $spec  $(date +%H:%M:%S)"
-  python scripts/21_run_gdm.py --scheme "$SCHEME" --spec "$spec"
+    "curve+topo|kndvi" \
+    "gm+topo|" \
+    "composite_all+topo|" \
+    "gm+obscomp_all+seas_all+contrast+topo|" \
+    "curve+gm+obscomp_all+seas_all+contrast+topo|kndvi" \
+    "clim+topo|" \
+    "curve+clim+topo|kndvi"; do
+  sp="${spec%%|*}"; ix="${spec##*|}"
+  echo "--- $sp ${ix:+(indice $ix)}  $(date +%H:%M:%S)"
+  python scripts/21_run_gdm.py --scheme "$SCHEME" --spec "$sp" ${ix:+--index "$ix"} || \
+    echo "    FALLO en $sp — sigue con el resto"
 done
 
 # El BLAS recupera sus hebras: la grilla de sCCA es algebra lineal densa, no bosques.
@@ -56,6 +67,6 @@ export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4
 
 echo "=== grilla de penalizaciones del SGDM  $(date +%H:%M:%S)"
 python scripts/21_run_gdm.py --scheme "$SCHEME" \
-  --spec "curve+gm+obscomp_all+seas_all+contrast+topo" --sgdm-grid
+  --spec "curve+gm+obscomp_all+seas_all+contrast+topo" --index kndvi --sgdm-grid
 
 echo "=== fin  $(date +%F\ %H:%M:%S)"

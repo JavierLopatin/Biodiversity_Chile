@@ -76,6 +76,18 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
         ident += f"_{rotation}"
     if normalize != "none":
         ident += f"_n{normalize}"
+    # mixup, augment y context TIENEN que entrar en el identificador. Si no, la corrida
+    # colisiona con la variante por defecto del mismo sustrato e indice, `already_done` la
+    # da por hecha y se salta en silencio: el log dice `[skip]`, el trabajo dice `ok` en
+    # 0,0 minutos, y la tabla de resultados queda sin la ablacion que se creia medida.
+    # Paso exactamente eso con las tres corridas de contexto climatico y con mixup /
+    # no-augment de la etapa 4c.
+    if mixup if mixup is not None else args.mixup:
+        ident += "_mixup"
+    if not (augment if augment is not None else args.augment):
+        ident += "_noaug"
+    if getattr(args, "context", feat.CONTEXT_SPEC) != feat.CONTEXT_SPEC:
+        ident += "_ctx" + args.context.replace("+", "-")
     if mixup:
         ident += "_mixup"
     if augment is False:
