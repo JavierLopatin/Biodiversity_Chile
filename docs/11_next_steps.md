@@ -164,6 +164,21 @@ requiere volver a una máquina con credenciales.
 
 Ninguna bloquea lo de arriba; van anotadas para que no se descubran dos veces.
 
+- **Nunca encadenar colas con `pgrep -f` sobre texto de comando.** Ha fallado **tres veces**
+  en este repo y cuesta horas cada vez, siempre en silencio: `pgrep -f "X"` matchea cualquier
+  proceso cuyo *cmdline mencione* `X`, y un shell de monitoreo lanzado desde una sesión
+  interactiva lleva el comando entero en su cmdline. El truco de `[3]0_search` sólo protege
+  contra el propio `grep`, no contra otro proceso que nombre la cadena.
+
+  | cuándo | qué pasó |
+  |---|---|
+  | cola de GDM | bloqueada 40 min por un shell que esperaba la misma cadena |
+  | monitor de `patchctx` | reportó «corriendo» 9 h después de terminar |
+  | etapas MAE y serie cruda | paradas **6,5 h** con el log vacío, esperándose a un waiter |
+
+  Lo correcto es encadenar por **dependencia explícita** —un script padre que llama a los
+  hijos en orden— o esperar un PID concreto. Nunca adivinar por texto.
+
 - **La curva fenológica no cierra el año.** Escalón sistemático de ~4× el cambio semanal
   típico entre DOY 364 y DOY 1, negativo en el 67–71 % de las parcelas. El defecto es de
   `phenosensing`, no de este repo, y afecta a todo lo convolucional porque cinco sustratos

@@ -111,8 +111,55 @@ def year_boundary_step(curves: np.ndarray, doy: np.ndarray) -> tuple[float, floa
 # per-plot work
 # --------------------------------------------------------------------------------------
 
+def raw_series(da, ngs: int, roll: int = 3) -> tuple[np.ndarray, np.ndarray]:
+    """Interpolate the raw observations onto a regular grid over the WHOLE window.
+
+    The alternative to `PhenoShape`, and a different object. PhenoShape collapses three
+    years onto one composite year, which averages the interannual variation away -- and that
+    variation is real signal: the year-boundary step of the composite tracks the interannual
+    trend with a regression slope of -0.945 against a predicted -1
+    (`docs/13_phenology_year_boundary.md`). A series kept in calendar time never destroys it.
+
+    It also gives a bigger image. With three years at weekly spacing the grid is 156 steps,
+    which folds to 13x13 against the 8x8 of a 52-step composite -- and the paper this design
+    comes from flags image size and fold topology as the axis nobody has studied.
+
+    The cost is honest and worth stating: a weekly grid over 1,088 days is ~0.8 real
+    observations per step, against ~2.4 for the composite, so more of the curve is
+    interpolation. Whether the extra interannual signal beats the extra smoothing is exactly
+    what the experiment measures.
+
+    Returns ``(curves, doy)`` shaped ``(ngs, y, x)`` and ``(ngs,)``.
+    """
+    t = da["time"].values.astype("datetime64[D]").astype(float)
+    grid = np.linspace(t.min(), t.max(), ngs)
+    arr = np.asarray(da.values, dtype=float)               # (time, y, x)
+    ny, nx = arr.shape[1], arr.shape[2]
+    out = np.full((ngs, ny, nx), np.nan)
+    for yy in range(ny):
+        for xx in range(nx):
+            v = arr[:, yy, xx]
+            ok = np.isfinite(v)
+            if ok.sum() < 5:
+                continue
+            o = np.argsort(t[ok])
+            g = np.interp(grid, t[ok][o], v[ok][o])
+            if roll and roll > 1:                          # same shrinking-window smoother
+                c = np.cumsum(np.insert(g, 0, 0.0))
+                h = roll // 2
+                lo = np.maximum(np.arange(ngs) - h, 0)
+                hi = np.minimum(np.arange(ngs) + h + 1, ngs)
+                g = (c[hi] - c[lo]) / (hi - lo)
+            out[:, yy, xx] = g
+    # the grid coordinate is calendar day-of-year, so downstream labelling still reads as a
+    # date; the year is not recoverable from it, which is fine because nothing downstream
+    # uses it for anything but axis labels
+    doy = ((grid - grid.min()) % 365.25) + 1
+    return out, doy
+
+
 def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
-               roll_mode: str = "shrink", ngs: int = NGS) -> dict:
+               roll_mode: str = "shrink", ngs: int = NGS, raw: bool = False) -> dict:
     """Re-fit every index of one cube. Returns curves, pixels and a diagnostic row.
 
     Runs in a worker process, so it takes plain types and imports `phenosensing` itself.
@@ -134,10 +181,14 @@ def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
             if f"obs_{index}" not in ds:
                 continue
             da = observations(ds, index)
-            shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=ROLL, nGS=ngs,
-                                        recon_params=kw or None, rollMode=roll_mode)
-            arr = shape.values                       # (doy, y, x)
-            out["doy"] = shape["doy"].values.astype(float)
+            if raw:
+                arr, gdoy = raw_series(da, ngs, roll=ROLL)
+                out["doy"] = gdoy
+            else:
+                shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=ROLL, nGS=ngs,
+                                            recon_params=kw or None, rollMode=roll_mode)
+                arr = shape.values                   # (doy, y, x)
+                out["doy"] = shape["doy"].values.astype(float)
 
             # plot level: the 5x5 mean and the centre pixel, matching what script 02 wrote
             cy, cx = arr.shape[1] // 2, arr.shape[2] // 2
@@ -190,6 +241,10 @@ def main() -> None:
                    choices=["shrink", "reflect", "wrap", "legacy"],
                    help="edge handling of the moving average; 'wrap' deletes the "
                         "interannual trend and is here only for reproducing old output")
+    p.add_argument("--raw-series", action="store_true", dest="raw",
+                   help="skip PhenoShape: interpolate the raw observations over the whole "
+                        "3-year window instead of collapsing them to a composite year. "
+                        "Keeps the interannual variation the composite averages away")
     p.add_argument("--ngs", type=int, default=NGS,
                    help="steps per cycle. 52 is weekly and was a choice, not a constraint: "
                         "the image a 2-D model sees is sqrt(ngs) on a side, and the paper "
@@ -210,8 +265,9 @@ def main() -> None:
     import phenosensing
     from phenosensing.reconstruction import list_reconstructors
 
-    print(f"{len(cubes)} cubes  |  reconstructor={args.recon}"
-          f"{f' (k={args.n_harmonics})' if args.recon == 'harmonic' else ''}"
+    print(f"{len(cubes)} cubes  |  "
+          f"{'RAW 3-year series' if args.raw else f'reconstructor={args.recon}'}"
+          f"{f' (k={args.n_harmonics})' if (args.recon == 'harmonic' and not args.raw) else ''}"
           f"  |  nGS={args.ngs} rollWindow={ROLL} rollMode={args.roll_mode}")
     print(f"phenosensing: {Path(phenosensing.__file__).parent}")
     if args.recon not in list_reconstructors():
@@ -229,7 +285,8 @@ def main() -> None:
     curves, pixels, reports, doy_rows, failed = [], [], [], [], []
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         futs = {ex.submit(refit_plot, str(c), args.recon, args.n_harmonics,
-                          args.phenosensing, args.roll_mode, args.ngs): c for c in cubes}
+                          args.phenosensing, args.roll_mode, args.ngs,
+                          args.raw): c for c in cubes}
         for i, fut in enumerate(as_completed(futs), 1):
             cube = futs[fut]
             try:
