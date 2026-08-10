@@ -10,7 +10,9 @@ What changes. The curves shipped in `phenoshape_by_index.parquet` were fitted be
 `PhenoSensing` commit `eb2dff8`, so they carry the year-boundary artefact documented in
 `docs/13_phenology_year_boundary.md`: a step between DOY 364 and DOY 1 of ~4x the typical
 week-to-week change, negative in 67-71% of plots. Measured on six real cubes, fixing the
-moving average alone shrinks it 2.7x and adding the `harmonic` reconstructor 5.0x.
+moving average alone shrinks it ~1.5x, which is the intended amount: the rest of the step
+is a real interannual signal and must survive. `--recon harmonic` shrinks it 10x by forcing
+`f(1) = f(365)`, and in doing so deletes that signal -- do not use it here.
 
 TWO TRAPS, both hit while developing this and both handled below:
 
@@ -268,8 +270,12 @@ def main() -> None:
         bv = rep[b].median() if b in rep else np.nan
         shrink = f"{bv/av:.1f}x" if np.isfinite(bv) and av > 0 else "--"
         print(f"  {ix:7s} {bv:10.5f} {av:10.5f} {shrink:>8s} {av/st:20.2f}x")
-    print("\nA ratio near or below 1 means the boundary is no longer distinguishable from an\n"
-          "ordinary week-to-week transition, which is the property that was broken.")
+    print("\nThe ratio should come DOWN but NOT to 1. Part of the boundary step is real: a\n"
+          "multi-year composite joins the end of one year to the start of the next, so if\n"
+          "productivity changed the two ends genuinely differ. Regressed on the interannual\n"
+          "trend the step has slope -1.31, against the -1 the compositing predicts. A ratio\n"
+          "near 1 would mean that signal had been erased too -- which is what `--recon\n"
+          "harmonic` does. See docs/13_phenology_year_boundary.md.")
 
     print(f"\n  -> {out}/phenoshape_{{by_index,pixels,doy_grid}}{sfx}.parquet")
     print(f"  -> {out}/refit_report{sfx}.csv")

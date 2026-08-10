@@ -1,33 +1,37 @@
 #!/usr/bin/env python3
 # ---
-# Source for `notebooks/06_year_boundary_fix.ipynb`.
+# Source for `notebooks/06_year_boundary.ipynb`.
 #
-#     python notebooks/build_notebook.py notebooks/06_year_boundary_fix.py
+#     python notebooks/build_notebook.py notebooks/06_year_boundary.py
 #
 # Edit the .py, never the .ipynb.
 # ---
 
 # %% [markdown]
-# # The phenological year did not close — diagnosis and fix
+# # The year boundary of a phenological curve
 #
-# A phenological curve describes one cycle, so its last step is adjacent to its first.
-# Nothing in `PhenoShape` enforced that, and the two ends drifted apart by ~4x the typical
-# week-to-week change, systematically in one direction.
+# There is a step between DOY 364 and DOY 1 of ~4x the typical week-to-week change,
+# systematically in one direction. This notebook is the record of what it turned out to be.
 #
-# This notebook is the record of the whole thing: the measurement on 1,082 plots, the two
-# causes located in the library code, the fix, and its verification on real Landsat cubes.
+# **The first version of this notebook got it wrong.** It treated the whole step as a defect
+# and proposed closing the year. J. Lopatin objected that a curve composited over *several*
+# years need not close — the end of one year joins the start of the *next*, and if
+# productivity changed between years the two ends genuinely differ. He was right, and
+# chasing the objection turned up a third problem larger than the two original ones.
+#
+# What it actually is:
+#
+# | | | fixed in |
+# |---|---|---|
+# | **A** | `PhenoShape` depends on the **arrival order** of the observations | `429cbe0` |
+# | **B** | the moving average left 4 of 52 steps **unsmoothed** | `eb2dff8` |
+# | **C** | closing the year **deletes the interannual trend** | `429cbe0` |
 #
 # | | |
 # |---|---|
 # | full write-up | `docs/13_phenology_year_boundary.md` |
-# | upstream fix | `PhenoSensing` commit `eb2dff8`, `tests/test_periodicity.py` (19 tests) |
+# | upstream | `PhenoSensing` `eb2dff8` + `429cbe0`, `tests/test_periodicity.py` (21 tests) |
 # | how it was found | `notebooks/04_substrates_2d.ipynb` §1b |
-#
-# **Why it is not cosmetic.** Five of the project's substrates pad `circular` on the time
-# axis and `reshape`/`serpentine`/`hilbert` pad by wrapping. All of them assume December
-# joins January. A kernel crossing that boundary reads a vegetation collapse that never
-# happened — which is a plausible, and still undemonstrated, reason the CNNs never beat the
-# Random Forest.
 
 # %%
 import sys
@@ -128,6 +132,112 @@ axes[2].set_title(f"{100*(jump<0).mean():.0f} % negative — a bias, not noise",
 for ax in axes:
     ax.grid(alpha=0.25)
 plt.tight_layout(); plt.show()
+
+# %% [markdown]
+# ## 1c. How much of the step is real? The decomposition
+#
+# The compositing makes a quantitative prediction. Observations at DOY 1 average about 364
+# days **earlier** in real time than those at DOY 364, so with an interannual slope `s` the
+# step should be `≈ −s`. If the step were pure artefact, it would not track the trend at all.
+#
+# Estimating the trend per plot by removing the seasonal cycle with two harmonics:
+
+# %%
+from scipy import stats as st                       # noqa: E402
+
+rows = []
+for path in sorted(CUBES.glob("*.nc"))[:250]:
+    with xr.open_dataset(path) as ds:
+        if "obs_kndvi" not in ds:
+            continue
+        v = ds["obs_kndvi"].values.reshape(ds.sizes["time"], -1).mean(axis=1)
+        t = ds.time.values.astype("datetime64[D]").astype(float) / 365.25
+        d = ds.time.dt.dayofyear.values.astype(float)
+        ok = np.isfinite(v)
+        if ok.sum() < 30:
+            continue
+        w = 2 * np.pi * d[ok] / 365.25
+        X = np.column_stack([np.ones(ok.sum()), t[ok] - t[ok].mean(),
+                             np.cos(w), np.sin(w), np.cos(2 * w), np.sin(2 * w)])
+        slope = np.linalg.lstsq(X, v[ok], rcond=None)[0][1]
+        c = ds["phenoshape"].sel(index="kndvi").values
+        j = int(np.argmin(np.diff(ds.doy.values)))
+        f = c.reshape(c.shape[0], -1).T
+        rows.append(dict(slope=slope, jump=float(np.median(f[:, j + 1] - f[:, j]))))
+
+dec = pd.DataFrame(rows)
+r = st.pearsonr(dec.slope, dec.jump)
+b = np.polyfit(dec.slope, dec.jump, 1)[0]
+print(f"n = {len(dec)} plots\n")
+print(f"  regression slope of jump ~ trend : {b:+.3f}   (compositing predicts -1)")
+print(f"  correlation                      : r = {r[0]:+.3f}  (p = {r[1]:.1e})")
+print(f"  variance of the jump explained   : {100*r[0]**2:.1f} %")
+print(f"  median interannual trend         : {dec.slope.median():+.4f} kNDVI/year")
+print(f"  median jump                      : {dec.jump.median():+.4f}")
+
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.scatter(dec.slope, dec.jump, s=10, alpha=0.4, color="#2f6f7f")
+xs = np.linspace(dec.slope.min(), dec.slope.max(), 10)
+ax.plot(xs, -xs, "k--", lw=1, label="prediction if it were pure trend (slope -1)")
+ax.plot(xs, np.polyval(np.polyfit(dec.slope, dec.jump, 1), xs), color="#c1553b", lw=1.6,
+        label=f"observed (slope {b:+.2f})")
+ax.set_xlabel("interannual trend (kNDVI / year)")
+ax.set_ylabel("year-boundary step")
+ax.legend(fontsize=8, frameon=False); ax.grid(alpha=0.25)
+ax.set_title("Part of the step is real. The rest is the edge artefact.", fontsize=10)
+plt.tight_layout(); plt.show()
+
+# %% [markdown]
+# **The slope lands at −0.945 against a predicted −1.** That is not a coincidence: the
+# mechanism is real and sits exactly where the arithmetic puts it. It accounts for ~16 % of
+# the variance and about a third of the median magnitude. The remaining 84 % is the edge
+# artefact.
+#
+# So the two mechanisms coexist, and a "fix" that drives the step to zero is deleting the
+# real part along with the artefact.
+
+# %% [markdown]
+# ## 1d. The problem nobody was looking for: the curve was not reproducible
+#
+# Before believing any refit, it has to reproduce the stored curve when asked to do the same
+# thing. It did — for 690 plots, bit for bit. For the other 392 it did not.
+#
+# The discriminator is not noise, cloud cover or plot size. It is whether the time series has
+# **two observations sharing a day of year**, which three years of a 16-day revisit make
+# common.
+#
+# `_getPheno0` sorted by DOY with `argsort()` — quicksort, which is **not stable** — so tied
+# observations came out in an arbitrary order. And `_fillNaN` interpolates over **array
+# positions**, not over DOY, so a different tie order fills the gaps differently and the
+# curve changes.
+
+# %%
+def curve(y, d, how):
+    """One pixel, reconstructed with a chosen tie-breaking rule."""
+    from phenosensing.utils import _getPheno, _moving_average
+    if how == "lexsort":
+        i = np.lexsort((np.nan_to_num(y, nan=np.inf), d))
+    else:
+        i = d.argsort(kind=how)
+    return _moving_average(_getPheno(y[i].copy(), d[i], 52, "linear"), 5)
+
+
+ds = xr.open_dataset(CUBES / "PCL0916.nc")
+doy_obs = ds.time.dt.dayofyear.values
+v = ds["obs_ndvi"].values[:, 2, 2].astype(float)
+rng = np.random.default_rng(0)
+
+print("Feeding the SAME observations in a different order must give the same curve:\n")
+for how in ["quicksort", "stable", "lexsort"]:
+    ref = curve(v, doy_obs, how)
+    worst = max(float(np.nanmax(np.abs(curve(v[p], doy_obs[p], how) - ref)))
+                for p in (rng.permutation(len(doy_obs)) for _ in range(20)))
+    verdict = "reproducible" if worst < 1e-9 else "NOT reproducible"
+    print(f"  {how:10s} max difference under permutation: {worst:.2e}   <- {verdict}")
+
+print("\n`stable` is not enough: it preserves the INPUT order among ties, so permuting the")
+print("rows still changes the answer. `lexsort` breaks ties by the observed value, which is")
+print("a property of the data rather than of how it arrived.")
 
 # %% [markdown]
 # ## 2. Cause one — the moving average left the ends unsmoothed
@@ -340,26 +450,44 @@ if cube_files:
 # %% [markdown]
 # ## 5. What is done and what is left
 #
-# **Done, upstream in `PhenoSensing` (`eb2dff8`)**
+# **Fixed upstream in `PhenoSensing`**
 #
-# - `_moving_average` pads properly, `mode` forwarded to `np.pad`: `"wrap"` by default,
-#   `"reflect"` for open series, `"legacy"` to reproduce pre-fix output.
-# - `_numba._mov_avg` fixed to match, and the two are pinned against each other.
-# - `harmonic` reconstructor registered.
-# - `tests/test_periodicity.py`, 19 tests. The regression guard is
-#   `test_phenoshape_curve_closes_the_year`: for every pixel, the wrap-around step may not
-#   exceed 3x the typical step. It fails on the old code. Suite went 59 → 78 passing, with
-#   the same 5 pre-existing failures.
+# - `429cbe0` — `np.lexsort((y, doy))` in `_getPheno0`: ties break by the observed value, so
+#   the curve no longer depends on arrival order. Verified permutation-invariant.
+# - `429cbe0` — `mode="shrink"` is the new default for `_moving_average`: average over the
+#   neighbours that exist, window narrowing at the ends. **Surgical** — wherever the full
+#   window fits it is the same `"valid"` convolution as always, so only steps 0, 1, 50 and 51
+#   change. `wrap` is kept but documented as single-cycle only: it drives the trend slope to
+#   −0.16 instead of −1.31.
+# - `429cbe0` — `harmonic` kept and reframed: right when periodicity is wanted, wrong as a
+#   default for a composite, with the number in its docstring.
+# - `tests/test_periodicity.py`, 21 tests. The old `test_phenoshape_curve_closes_the_year`
+#   asserted a property that must **not** hold and is gone. In its place: the curve is
+#   invariant to observation order, tied DOYs do not change it, and an injected interannual
+#   trend still reaches the boundary. Suite 78 → 80, same 5 pre-existing failures.
+#
+# **The three curve variants**
+#
+# | | smoothing | order | periodicity | interannual trend |
+# |---|---|---|---|---|
+# | original | broken | irreproducible for 392 plots | not imposed | present + artefact |
+# | `_v2` (harmonic + wrap) | correct | reproducible | **imposed twice** | **destroyed** |
+# | **`_v2lin`** (linear + shrink) | correct | reproducible | not imposed | **preserved** |
+#
+# `_v2lin` shrinks the boundary step only **1.4–1.7x**, leaving it at 2.1–3.1x a typical
+# step. That is the intended outcome, not a shortfall: part of the step is real.
 #
 # **Left**
 #
-# - **Re-extract this project's curves** from the cubes. The download is in progress; the
-#   adapter is `scripts/29_refit_curves_from_cubes.py`, not yet written.
-# - Then re-derive `phenoshape_*`, the LSP, and re-run the model matrix. Topography, climate,
-#   the biodiversity/phylogeny/dark responses and the geomedian blocks are unaffected.
-# - **Open upstream item, deliberately left out of the commit:** `xnew = linspace(min(x),
-#   max(x))` spans the observed range rather than `[1, 365]`, so curves from different pixels
-#   are not comparable step by step. A more invasive API change, worth reviewing separately.
-# - **Separate upstream debt found while running the suite:** `tests/golden/` was already
-#   failing before this fix — 78 % of elements mismatched, max difference 275 days. It was no
-#   safety net and should be regenerated.
+# - Decide whether `_v2lin` becomes the default. Criterion fixed in advance: adopt if R2
+#   does not fall more than 1 sd (0.011) below the original in any facet. It is not asked to
+#   improve — it fixes a measurable defect, and the check is only that it costs nothing.
+# - LSP metrics are still computed on the original curves.
+# - **The boundary step is a predictor**, not noise: it encodes the productivity trend over
+#   the causal window. A `trend` feature block is proposed and unimplemented.
+# - Upstream, still open: `xnew = linspace(min(x), max(x))` spans the observed range rather
+#   than `[1, 365]`, so curves from different pixels are not comparable step by step. And
+#   `tests/golden/` was already stale before any of this — 78 % of elements mismatched.
+#
+# **Already settled, negatively:** closing the year does *not* explain why the CNNs never
+# beat the Random Forest. The `_v2` refit closed it 10x and R2 did not improve on any facet.
