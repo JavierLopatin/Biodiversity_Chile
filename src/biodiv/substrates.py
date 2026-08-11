@@ -169,6 +169,30 @@ def make_substrate(name: str, index: str | None = None, derived: str = "data/der
         return Substrate(name, cube[:, None, :, :], ids, PAD_MODE[name], cube,
                          rows=[f"px{i:02d}" for i in range(cube.shape[1])])
 
+    if name.endswith("_5idx"):
+        # The same signal-to-image transform applied to each of the five vegetation indices,
+        # stacked as **channels** of one image.
+        #
+        # This exists to remove an asymmetry that was running against the convolution: RF06
+        # and MLP07 read all five indices, while every C2D run read one. The comparison was
+        # not five indices against one *representation*, it was five indices against one.
+        # `stack5` is not the same thing -- there the five indices are five rows of a single
+        # image, so a kernel spans indices and weeks at once; here each index keeps its own
+        # spatial layout and the mixing happens in the channel dimension, exactly as the
+        # tabular models mix them.
+        base = name[:-5]
+        curves, ids = load_curves(INDICES, derived, px, ids)
+        curves = _rotate(curves, rotation)
+        tf = make_transform(base, normalize=normalize, **tf_kw)
+        chans = []
+        for c in range(curves.shape[1]):
+            im = np.stack([tf.transform(x) for x in curves[:, c, :]])
+            chans.append(im[:, None] if im.ndim == 3 else np.transpose(im, (0, 3, 1, 2)))
+        imgs = np.concatenate(chans, axis=1)
+        return Substrate(name, np.ascontiguousarray(imgs, dtype=np.float32), ids,
+                         PAD_MODE[base], curves,
+                         rows=[f"row{i}" for i in range(imgs.shape[2])])
+
     if index is None:
         raise ValueError(f"substrate {name!r} needs --index")
     curves, ids = load_curves(index, derived, px, ids)

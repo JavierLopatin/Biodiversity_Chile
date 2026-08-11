@@ -1,0 +1,3 @@
+scheme=kfold5_window  seeds=[10, 11, 12, 13, 14]  targets=all
+
+  B03_coords_s10                           kfold5_window    [243.5s] hill_q0=+0.665 hill_q1=+0.433 hill_q2=+0.376 lcbd_pa=+0.506 pcoa1_pa=+0.513 pcoa2_pa=+0.506 lcbd_cover=+0.416 pcoa1_cover=+0.378 pcoa2_cover=+0.247 mpd=-0.012 mntd=+0.141 ses_pd=+0.103 ses_mpd=+0.121 ses_mntd=+0.094 dark_n=+0.380

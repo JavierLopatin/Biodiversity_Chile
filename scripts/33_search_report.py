@@ -173,14 +173,26 @@ def main() -> None:
         for rid in conf.index:
             base = rid.replace("_s10", "")
             if base in r2.index:
-                rows.append(dict(corrida=base, busqueda=r2.loc[base, "media"],
+                rows.append(dict(corrida=base, familia=r2.loc[base, "family"],
+                                 busqueda=r2.loc[base, "media"],
                                  confirmacion=conf.loc[rid, "media"],
                                  contraccion=conf.loc[rid, "media"] - r2.loc[base, "media"]))
+        # cada familia tiene que estar confirmada en SU mejor configuracion. Confirmar la CNN
+        # sobre la serie cruda y al MLP sobre el ano compuesto compararia lo mejor de una
+        # contra lo segundo de la otra, que es el sesgo que esta seccion existe para quitar.
+        faltan = [f for f in sorted(set(r2["family"]))
+                  if f in set(best["family"])
+                  and best.loc[best["family"] == f].index[0]
+                  not in {r["corrida"] for r in rows}]
+        if faltan:
+            A(f"> **Pendiente:** sin confirmar en su mejor configuracion: "
+              f"{', '.join(faltan)}. La tabla de abajo no es comparable entre familias "
+              f"hasta que lo esten.\n")
         if rows:
             cf = pd.DataFrame(rows).sort_values("confirmacion", ascending=False)
-            A(md_table(cf, ["corrida", "busqueda", "confirmacion", "contraccion"],
-                       ["corrida", "seleccion {0,1,2}", "**confirmacion {10..14}**",
-                        "contraccion"]))
+            A(md_table(cf, ["corrida", "familia", "busqueda", "confirmacion", "contraccion"],
+                       ["corrida", "familia", "seleccion {0,1,2}",
+                        "**confirmacion {10..14}**", "contraccion"]))
             A(f"\nContraccion mediana: **{cf['contraccion'].median():+.3f}**.\n")
 
     # ---------------------------------------------------------------- 4. lo que no funciono

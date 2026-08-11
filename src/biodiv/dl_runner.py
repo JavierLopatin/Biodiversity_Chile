@@ -46,12 +46,21 @@ def substrate_builder(name: str, normalize: str = "none", **tf_kw):
         return lambda c: c[:, None, :, :]
 
     from .transforms1d import make_transform
-    tf = make_transform(name, normalize=normalize, **tf_kw)
 
-    def build(c):
-        imgs = np.stack([tf.transform(x) for x in c[:, 0, :]])
-        return imgs[:, None] if imgs.ndim == 3 else np.transpose(imgs, (0, 3, 1, 2))
-    return build
+    def _one(tf, x):
+        im = np.stack([tf.transform(v) for v in x])
+        return im[:, None] if im.ndim == 3 else np.transpose(im, (0, 3, 1, 2))
+
+    if name.endswith("_5idx"):
+        # the five indices as channels. This has to mirror `substrates.make_substrate`
+        # exactly: it is the same transform re-applied per batch to the *augmented* curves,
+        # so a divergence between the two would train on one image and evaluate on another.
+        tf = make_transform(name[:-5], normalize=normalize, **tf_kw)
+        return lambda c: np.concatenate([_one(tf, c[:, k, :]) for k in range(c.shape[1])],
+                                        axis=1)
+
+    tf = make_transform(name, normalize=normalize, **tf_kw)
+    return lambda c: _one(tf, c[:, 0, :])
 
 
 def _global_standardise(train_imgs: np.ndarray):

@@ -1,0 +1,2 @@
+    C1D01_curve1d_kndvi_raw36_ctxclim-topo-area_s10: 16,399 parameters, input (1, 36)
+  C1D01_curve1d_kndvi_raw36_ctxclim-topo-area_s10 kfold5_window    [  3.6m] hill_q0=+0.585 hill_q1=+0.420 hill_q2=+0.361 lcbd_pa=+0.476 pcoa1_pa=+0.530 pcoa2_pa=+0.486 lcbd_cover=+0.343 pcoa1_cover=+0.334 pcoa2_cover=+0.255 mpd=+0.137 mntd=+0.201 ses_pd=+0.170 ses_mpd=+0.167 ses_mntd=+0.163 dark_n=+0.381

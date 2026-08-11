@@ -1,0 +1,3 @@
+scheme=kfold5_window  seeds=[10, 11, 12, 13, 14]  targets=all
+
+  RF06_curve_all-topo-area_s10             kfold5_window    [499.2s] hill_q0=+0.593 hill_q1=+0.394 hill_q2=+0.305 lcbd_pa=+0.496 pcoa1_pa=+0.565 pcoa2_pa=+0.491 lcbd_cover=+0.327 pcoa1_cover=+0.379 pcoa2_cover=+0.339 mpd=+0.120 mntd=+0.126 ses_pd=+0.175 ses_mpd=+0.178 ses_mntd=+0.149 dark_n=+0.391

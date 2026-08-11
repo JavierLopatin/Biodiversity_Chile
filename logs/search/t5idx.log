@@ -1,0 +1,9 @@
+  [skip] C2M02_serpentine_5idx_ndvi_raw36_ctxclim-topo-area / kfold5_window
+    C2M02_serpentine_5idx_evi_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 6, 6)
+  C2M02_serpentine_5idx_evi_raw36_ctxclim-topo-area kfold5_window    [  1.0m] hill_q0=+0.658 hill_q1=+0.495 hill_q2=+0.418 lcbd_pa=+0.516 pcoa1_pa=+0.538 pcoa2_pa=+0.519 lcbd_cover=+0.425 pcoa1_cover=+0.381 pcoa2_cover=+0.249 mpd=+0.139 mntd=+0.198 ses_pd=+0.183 ses_mpd=+0.180 ses_mntd=+0.160 dark_n=+0.402
+    C2M02_serpentine_5idx_kndvi_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 6, 6)
+  C2M02_serpentine_5idx_kndvi_raw36_ctxclim-topo-area kfold5_window    [  0.7m] hill_q0=+0.610 hill_q1=+0.446 hill_q2=+0.390 lcbd_pa=+0.494 pcoa1_pa=+0.530 pcoa2_pa=+0.469 lcbd_cover=+0.402 pcoa1_cover=+0.357 pcoa2_cover=+0.184 mpd=+0.113 mntd=+0.206 ses_pd=+0.180 ses_mpd=+0.160 ses_mntd=+0.170 dark_n=+0.397
+    C2M02_serpentine_5idx_nbr_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 6, 6)
+  C2M02_serpentine_5idx_nbr_raw36_ctxclim-topo-area kfold5_window    [  1.0m] hill_q0=+0.624 hill_q1=+0.470 hill_q2=+0.402 lcbd_pa=+0.501 pcoa1_pa=+0.532 pcoa2_pa=+0.523 lcbd_cover=+0.422 pcoa1_cover=+0.408 pcoa2_cover=+0.276 mpd=+0.131 mntd=+0.189 ses_pd=+0.167 ses_mpd=+0.160 ses_mntd=+0.157 dark_n=+0.406
+    C2M02_serpentine_5idx_savi_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 6, 6)
+  C2M02_serpentine_5idx_savi_raw36_ctxclim-topo-area kfold5_window    [  1.0m] hill_q0=+0.624 hill_q1=+0.470 hill_q2=+0.402 lcbd_pa=+0.501 pcoa1_pa=+0.532 pcoa2_pa=+0.523 lcbd_cover=+0.422 pcoa1_cover=+0.408 pcoa2_cover=+0.276 mpd=+0.131 mntd=+0.189 ses_pd=+0.167 ses_mpd=+0.160 ses_mntd=+0.157 dark_n=+0.406

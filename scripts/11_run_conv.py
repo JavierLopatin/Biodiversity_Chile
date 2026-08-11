@@ -52,6 +52,10 @@ STAGE_4A = ["reshape", "serpentine", "gaf", "mtf", "ndi", "cwt", "hilbert", "cos
 SUBSTRATE_ID = {s: f"C2D{i + 1:02d}" for i, s in enumerate(STAGE_4A)}
 SUBSTRATE_ID["curve1d"] = "C1D01"
 SUBSTRATE_ID["curve5"] = "C1D02"
+#: los cinco indices como canales del mismo sustrato. Id propio para que no colisione con
+#: la version de un indice -- ver tests/test_run_ids.py.
+for _i, _s in enumerate(STAGE_4A):
+    SUBSTRATE_ID[f"{_s}_5idx"] = f"C2M{_i + 1:02d}"
 
 
 def family_of(substrate: str) -> str:
@@ -126,8 +130,15 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
     rotation, normalize = eff["rotation"], eff["normalize"]
     fam = family_of(substrate)
     base = SUBSTRATE_ID.get(substrate, fam)
+    # los sustratos `_5idx` cargan los cinco indices y **ignoran** `--index`. Dejar que el
+    # valor por defecto de la bandera entre en el id produce `serpentine_5idx_evi`, que
+    # nombra un indice que la corrida no uso -- y hace creer que hay cinco corridas distintas
+    # donde hay una sola repetida.
+    if substrate.endswith("_5idx"):
+        index = None
     ident = runlog.make_run_id(base + (f"-{tag}" if tag else ""),
-                               substrate, index or "", "", fusion)
+                               substrate, index or ("all" if substrate.endswith("_5idx")
+                                                    else ""), "", fusion)
     for t in _variant_tags(args, eff):
         ident += f"_{t}"
 
