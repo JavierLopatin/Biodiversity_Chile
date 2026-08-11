@@ -1,0 +1,2 @@
+    C2D09_spectrogram_kndvi_raw36_ctxclim-topo-area_s10: 17,039 parameters, input (1, 9, 10)
+  C2D09_spectrogram_kndvi_raw36_ctxclim-topo-area_s10 kfold5_window    [  6.0m] hill_q0=+0.580 hill_q1=+0.469 hill_q2=+0.430 lcbd_pa=+0.501 pcoa1_pa=+0.519 pcoa2_pa=+0.481 lcbd_cover=+0.388 pcoa1_cover=+0.342 pcoa2_cover=+0.226 mpd=+0.124 mntd=+0.201 ses_pd=+0.165 ses_mpd=+0.164 ses_mntd=+0.160 dark_n=+0.391

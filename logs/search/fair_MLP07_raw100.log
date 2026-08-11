@@ -1,0 +1,2 @@
+    MLP07_curve_all_raw100: 37,199 parameters, input (537,)
+  MLP07_curve_all_raw100                   kfold5_window    [  0.9m] hill_q0=+0.487 hill_q1=+0.482 hill_q2=+0.437 lcbd_pa=+0.484 pcoa1_pa=+0.534 pcoa2_pa=+0.517 lcbd_cover=+0.404 pcoa1_cover=+0.348 pcoa2_cover=+0.274 mpd=+0.130 mntd=+0.193 ses_pd=+0.167 ses_mpd=+0.172 ses_mntd=+0.142 dark_n=+0.396

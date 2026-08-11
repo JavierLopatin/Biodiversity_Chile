@@ -1,0 +1,2 @@
+    MLP06_curve_kndvi_raw100: 27,279 parameters, input (137,)
+  MLP06_curve_kndvi_raw100                 kfold5_window    [  0.7m] hill_q0=+0.603 hill_q1=+0.501 hill_q2=+0.453 lcbd_pa=+0.511 pcoa1_pa=+0.542 pcoa2_pa=+0.535 lcbd_cover=+0.423 pcoa1_cover=+0.371 pcoa2_cover=+0.231 mpd=+0.127 mntd=+0.209 ses_pd=+0.164 ses_mpd=+0.178 ses_mntd=+0.143 dark_n=+0.427
