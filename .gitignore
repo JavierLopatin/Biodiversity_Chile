@@ -133,3 +133,16 @@ renv/sandbox/
 # es el criterio por el que las demas tablas derivadas si se versionan.
 data/derived/cube_predictors_pixels.parquet
 data/derived/dissimilarity_pa.npy
+
+# Variantes de curva de la busqueda (scripts/29 --suffix): `phenoshape_*_<recon>_<borde>`,
+# `*_rawNN`, `*_v2`, y sus `refit_report_*`. A diferencia de las tablas canonicas de arriba,
+# NO necesitan el datacube: se regeneran en ~12 s cada una desde los .nc que ya estan en
+# disco. Versionarlas costo 2,3 GB y un push rechazado por GitHub (limite de 2 GiB por pack).
+# Las cinco canonicas -- phenoshape_by_index, phenoshape_doy_grid, phenoshape_pixels y sus
+# .csv -- siguen versionadas por las negaciones de arriba, porque esas si lo necesitan.
+data/derived/phenoshape_by_index_*.parquet
+data/derived/phenoshape_by_index_*.csv
+data/derived/phenoshape_doy_grid_*.parquet
+data/derived/phenoshape_doy_grid_*.csv
+data/derived/phenoshape_pixels_*.parquet
+data/derived/refit_report_*.csv
