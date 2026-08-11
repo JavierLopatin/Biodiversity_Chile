@@ -1,0 +1,6 @@
+    C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area: 17,615 parameters, input (5, 10, 10)
+  C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area kfold5_window    [  3.0m] hill_q0=+0.622 hill_q1=+0.476 hill_q2=+0.427 lcbd_pa=+0.494 pcoa1_pa=+0.523 pcoa2_pa=+0.501 lcbd_cover=+0.380 pcoa1_cover=+0.324 pcoa2_cover=+0.273 mpd=+0.133 mntd=+0.201 ses_pd=+0.185 ses_mpd=+0.184 ses_mntd=+0.164 dark_n=+0.394
+  [skip] C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area / kfold5_window
+  [skip] C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area / kfold5_window
+  [skip] C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area / kfold5_window
+  [skip] C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area / kfold5_window

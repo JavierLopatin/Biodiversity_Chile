@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/11_run_conv.py", line 306, in <module>
+    main()
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/11_run_conv.py", line 264, in main
+    run(args.substrate, ix, args)
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/scripts/11_run_conv.py", line 154, in run
+    run_dl(family=fam, run_id=ident, scheme=args.scheme, substrate=substrate, index=index,
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/dl_runner.py", line 124, in run_dl
+    s = sub.make_substrate(substrate, index=index, derived=derived, px=px,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/substrates.py", line 186, in make_substrate
+    tf = make_transform(base, normalize=normalize, **tf_kw)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rapidita_4T/GitHub/Biodiversity_Chile/src/biodiv/transforms1d.py", line 271, in make_transform
+    return TRANSFORMS[name](normalize=normalize, **kw)
+           ~~~~~~~~~~^^^^^^
+KeyError: 'C2M02_serpentine'

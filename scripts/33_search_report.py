@@ -195,6 +195,22 @@ def main() -> None:
                         "**confirmacion {10..14}**", "contraccion"]))
             A(f"\nContraccion mediana: **{cf['contraccion'].median():+.3f}**.\n")
 
+    # ---------------------------------------------------------------- 3b. el piso de ruido
+    A("\n## 3b. El piso de ruido, medido por accidente\n")
+    A("Al anadir los sustratos `_5idx`, el bucle por defecto corrio los cinco indices sobre "
+      "un sustrato que **ignora** el indice: cinco corridas de configuracion identica, misma "
+      "semilla, mismo fold, mismos datos. Dieron:\n")
+    A("| repeticion | media |\n|---|---:|\n"
+      "| 1 | 0.3946 |\n| 2 | 0.3935 |\n| 3 | 0.3907 |\n| 4 | 0.3907 |\n| 5 | 0.3713 |")
+    A("\nDispersion **0,023**, desviacion 0,010 -- a semilla fija. No es ruido de semilla: es "
+      "no-determinismo de GPU (autotune de cuDNN, reducciones atomicas). Es tan grande como "
+      "la distancia entre familias, y de ahi salen dos reglas que este informe respeta:\n")
+    A("- **Ninguna corrida de una sola semilla es interpretable.** Una prueba rapida de esta "
+      "misma configuracion dio 0,395 y parecia batir al MLP; con tres semillas da 0,377. Era "
+      "el extremo afortunado del rango.\n"
+      "- **Una diferencia por debajo de 0,022 (2 sd) no distingue dos modelos.** Es el "
+      "criterio que se fijo antes de mirar los resultados y no se ha movido despues.\n")
+
     # ---------------------------------------------------------------- 4. lo que no funciono
     A("\n## 4. Lo que se probo y no funciono\n")
     A("Se publica entero. Que la mayoria de las combinaciones no mejore es tan informativo "
@@ -208,6 +224,10 @@ def main() -> None:
          "0,342-0,359, todas por debajo de la separable simple de 17k parametros."),
         ("aumentacion: termino de pendiente, magnitudes escaladas, probabilidad 0,15",
          "0,355-0,362. Ninguna variante supera a no aumentar."),
+        ("los cinco indices como canales de la imagen (`_5idx`)",
+         "0,370-0,382 contra 0,383 de un solo indice. Corregia una asimetria real -- RF06 y "
+         "MLP07 leen cinco indices y cada C2D leia uno -- pero la asimetria no era lo que "
+         "costaba la comparacion."),
         ("preentrenamiento por enmascarado (MAE) sobre 135.250 curvas de pixel",
          "0,359 contra 0,362 sin preentrenar. El MAE aprende (MSE de reconstruccion 0,0095 "
          "-> 0,0031) pero no transfiere: las 135.250 curvas salen de las ventanas 5x5 de las "

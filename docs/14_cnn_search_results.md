@@ -2,7 +2,7 @@
 
 **Esquema:** `kfold5_window` unicamente. **Metrica:** R2 fuera de muestra, promediado primero dentro de cada faceta y luego entre las cinco, para que beta (3 targets por estrato) no pese el triple que diversidad oscura (1 target).
 
-**Generado por** `scripts/33_search_report.py` desde `results/models/summary.csv` (193 corridas). No editar a mano.
+**Generado por** `scripts/33_search_report.py` desde `results/models/summary.csv` (195 corridas). No editar a mano.
 
 
 ## 1. Mejor corrida de cada familia
@@ -10,12 +10,12 @@
 | corrida | alfa | beta p/a | beta cob. | filo | oscura | **media** |
 |---|---:|---:|---:|---:|---:|---:|
 | MLP06_curve_kndvi_raw100 | 0.519 | 0.529 | 0.342 | 0.164 | 0.427 | 0.396 |
-| C2M02_serpentine_5idx_evi_raw36_ctxclim-topo-area | 0.523 | 0.524 | 0.352 | 0.172 | 0.402 | 0.395 |
+| C2D02_serpentine_kndvi_raw36_ctxclim-topo-area | 0.508 | 0.509 | 0.328 | 0.175 | 0.394 | 0.383 |
 | RF06_curve_all-topo-area_raw100 | 0.422 | 0.534 | 0.378 | 0.159 | 0.413 | 0.381 |
 | B03_coords | 0.490 | 0.508 | 0.344 | 0.090 | 0.382 | 0.363 |
 | C1D01_curve1d_kndvi_raw36_ctxclim-topo-area | 0.461 | 0.491 | 0.309 | 0.163 | 0.375 | 0.360 |
 
-Diferencia entre el primero y el segundo: **0.002**. El ruido de semilla medido en este proyecto es ~0,011 de desviacion, asi que 2 sd = 0,022 es el umbral por debajo del cual dos corridas no se distinguen.
+Diferencia entre el primero y el segundo: **0.013**. El ruido de semilla medido en este proyecto es ~0,011 de desviacion, asi que 2 sd = 0,022 es el umbral por debajo del cual dos corridas no se distinguen.
 
 
 ## 2. La serie cruda de 3 anos contra el ano compuesto
@@ -58,8 +58,6 @@ La pregunta que decide la interpretacion: si la serie cruda sube a todas las fam
 
 La busqueda selecciono sobre las semillas {0,1,2} y reporta el maximo, lo que sobrestima. Estas corridas repiten las finalistas con semillas **{10..14}**, que no participaron en la seleccion. Se aplica tambien a los competidores: si solo se contrajera la CNN, la comparacion quedaria sesgada al reves.
 
-> **Pendiente:** sin confirmar en su mejor configuracion: C2D. La tabla de abajo no es comparable entre familias hasta que lo esten.
-
 | corrida | familia | seleccion {0,1,2} | **confirmacion {10..14}** | contraccion |
 |---|---:|---:|---:|---:|
 | MLP06_curve_kndvi_raw100 | MLP | 0.396 | 0.396 | 0.000 |
@@ -80,6 +78,24 @@ La busqueda selecciono sobre las semillas {0,1,2} y reporta el maximo, lo que so
 Contraccion mediana: **+0.000**.
 
 
+## 3b. El piso de ruido, medido por accidente
+
+Al anadir los sustratos `_5idx`, el bucle por defecto corrio los cinco indices sobre un sustrato que **ignora** el indice: cinco corridas de configuracion identica, misma semilla, mismo fold, mismos datos. Dieron:
+
+| repeticion | media |
+|---|---:|
+| 1 | 0.3946 |
+| 2 | 0.3935 |
+| 3 | 0.3907 |
+| 4 | 0.3907 |
+| 5 | 0.3713 |
+
+Dispersion **0,023**, desviacion 0,010 -- a semilla fija. No es ruido de semilla: es no-determinismo de GPU (autotune de cuDNN, reducciones atomicas). Es tan grande como la distancia entre familias, y de ahi salen dos reglas que este informe respeta:
+
+- **Ninguna corrida de una sola semilla es interpretable.** Una prueba rapida de esta misma configuracion dio 0,395 y parecia batir al MLP; con tres semillas da 0,377. Era el extremo afortunado del rango.
+- **Una diferencia por debajo de 0,022 (2 sd) no distingue dos modelos.** Es el criterio que se fijo antes de mirar los resultados y no se ha movido despues.
+
+
 ## 4. Lo que se probo y no funciono
 
 Se publica entero. Que la mayoria de las combinaciones no mejore es tan informativo como que una lo haga, y sin la rejilla completa el ganador no se puede interpretar.
@@ -90,6 +106,7 @@ Se publica entero. Que la mayoria de las combinaciones no mejore es tan informat
 | combinar los factores positivos de la ablacion 4c | `ctx`+`noaug`+`wC` no se suman: 0,356-0,363 contra 0,362 de `ctx` solo. |
 | tres arquitecturas nuevas (residual, squeeze-excitation, multiescala) | 0,342-0,359, todas por debajo de la separable simple de 17k parametros. |
 | aumentacion: termino de pendiente, magnitudes escaladas, probabilidad 0,15 | 0,355-0,362. Ninguna variante supera a no aumentar. |
+| los cinco indices como canales de la imagen (`_5idx`) | 0,370-0,382 contra 0,383 de un solo indice. Corregia una asimetria real -- RF06 y MLP07 leen cinco indices y cada C2D leia uno -- pero la asimetria no era lo que costaba la comparacion. |
 | preentrenamiento por enmascarado (MAE) sobre 135.250 curvas de pixel | 0,359 contra 0,362 sin preentrenar. El MAE aprende (MSE de reconstruccion 0,0095 -> 0,0031) pero no transfiere: las 135.250 curvas salen de las ventanas 5x5 de las mismas 1.082 parcelas y son casi redundantes con ellas (dimension de participacion 1,3 contra 1,2). 125x mas imagenes cubriendo 1,08x mas espacio. |
 
 ## 5. Metricas por faceta, finalistas
@@ -100,13 +117,12 @@ Se publica entero. Que la mayoria de las combinaciones no mejore es tan informat
 | corrida | alfa | beta p/a | beta cob. | filo | oscura | **media** |
 |---|---:|---:|---:|---:|---:|---:|
 | MLP06_curve_kndvi_raw100 | 0.519 | 0.529 | 0.342 | 0.164 | 0.427 | 0.396 |
-| C2M02_serpentine_5idx_evi_raw36_ctxclim-topo-area | 0.523 | 0.524 | 0.352 | 0.172 | 0.402 | 0.395 |
-| C2M02_serpentine_5idx_ndvi_raw36_ctxclim-topo-area | 0.510 | 0.524 | 0.333 | 0.169 | 0.432 | 0.393 |
 | MLP06_curve_kndvi_raw36 | 0.504 | 0.508 | 0.338 | 0.188 | 0.416 | 0.391 |
-| C2M02_serpentine_5idx_nbr_raw36_ctxclim-topo-area | 0.499 | 0.519 | 0.369 | 0.161 | 0.406 | 0.391 |
 | MLP07_curve_all_raw36 | 0.484 | 0.520 | 0.351 | 0.162 | 0.415 | 0.387 |
 | MLP06_curve_kndvi | 0.494 | 0.497 | 0.345 | 0.178 | 0.414 | 0.386 |
 | C2D02_serpentine_kndvi_raw36_ctxclim-topo-area | 0.508 | 0.509 | 0.328 | 0.175 | 0.394 | 0.383 |
+| C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area | 0.508 | 0.506 | 0.326 | 0.173 | 0.394 | 0.382 |
+| C2D02_serpentine_kndvi_raw100_ctxclim-topo-area | 0.517 | 0.494 | 0.322 | 0.169 | 0.405 | 0.381 |
 | RF06_curve_all-topo-area_raw100 | 0.422 | 0.534 | 0.378 | 0.159 | 0.413 | 0.381 |
 | B03_coords | 0.490 | 0.508 | 0.344 | 0.090 | 0.382 | 0.363 |
 | C1D01_curve1d_kndvi_raw36_ctxclim-topo-area | 0.461 | 0.491 | 0.309 | 0.163 | 0.375 | 0.360 |
@@ -116,13 +132,12 @@ Se publica entero. Que la mayoria de las combinaciones no mejore es tan informat
 | corrida | alfa | beta p/a | beta cob. | filo | oscura | **media** |
 |---|---:|---:|---:|---:|---:|---:|
 | MLP06_curve_kndvi_raw100 | 13.9 | 16.7 | 21.2 | 17.2 | 18.1 | 17.4 |
-| C2M02_serpentine_5idx_evi_raw36_ctxclim-topo-area | 13.8 | 16.7 | 21.0 | 17.1 | 18.5 | 17.4 |
-| C2M02_serpentine_5idx_ndvi_raw36_ctxclim-topo-area | 14.0 | 16.7 | 21.3 | 17.1 | 18.1 | 17.5 |
 | MLP06_curve_kndvi_raw36 | 14.1 | 17.0 | 21.3 | 16.9 | 18.3 | 17.5 |
-| C2M02_serpentine_5idx_nbr_raw36_ctxclim-topo-area | 14.2 | 16.8 | 20.8 | 17.2 | 18.5 | 17.5 |
 | MLP07_curve_all_raw36 | 14.4 | 16.8 | 21.1 | 17.2 | 18.3 | 17.6 |
 | MLP06_curve_kndvi | 14.2 | 17.2 | 21.2 | 17.0 | 18.3 | 17.6 |
 | C2D02_serpentine_kndvi_raw36_ctxclim-topo-area | 14.0 | 17.0 | 21.4 | 17.1 | 18.6 | 17.6 |
+| C2M02_serpentine_5idx_all_raw100_ctxclim-topo-area | 14.0 | 17.1 | 21.5 | 17.1 | 18.6 | 17.7 |
+| C2D02_serpentine_kndvi_raw100_ctxclim-topo-area | 13.9 | 17.3 | 21.5 | 17.1 | 18.5 | 17.7 |
 | RF06_curve_all-topo-area_raw100 | 15.1 | 16.6 | 20.7 | 17.3 | 18.3 | 17.6 |
 | B03_coords | 14.2 | 17.0 | 21.2 | 17.9 | 18.8 | 17.8 |
 | C1D01_curve1d_kndvi_raw36_ctxclim-topo-area | 14.7 | 17.3 | 21.8 | 17.2 | 18.9 | 18.0 |
@@ -133,11 +148,11 @@ Promediando **todas** las corridas, las facetas no son igual de predecibles:
 
 | faceta | R2 medio de todas las corridas |
 |---|---:|
-| beta p/a | 0.458 |
+| beta p/a | 0.459 |
 | alfa | 0.405 |
 | oscura | 0.345 |
 | beta cob. | 0.283 |
 | filo | 0.154 |
 
-La faceta **filo** es la mas dificil por un margen amplio (0.154 contra 0.458 de beta p/a), y eso ordena el ranking entero: las corridas que ganan lo hacen sobre todo por ahi.
+La faceta **filo** es la mas dificil por un margen amplio (0.154 contra 0.459 de beta p/a), y eso ordena el ranking entero: las corridas que ganan lo hacen sobre todo por ahi.
 

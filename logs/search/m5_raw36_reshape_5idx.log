@@ -1,0 +1,6 @@
+    C2M01_reshape_5idx_all_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 6, 6)
+  C2M01_reshape_5idx_all_raw36_ctxclim-topo-area kfold5_window    [  2.4m] hill_q0=+0.628 hill_q1=+0.470 hill_q2=+0.409 lcbd_pa=+0.487 pcoa1_pa=+0.511 pcoa2_pa=+0.491 lcbd_cover=+0.380 pcoa1_cover=+0.330 pcoa2_cover=+0.238 mpd=+0.120 mntd=+0.205 ses_pd=+0.168 ses_mpd=+0.170 ses_mntd=+0.149 dark_n=+0.380
+  [skip] C2M01_reshape_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M01_reshape_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M01_reshape_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M01_reshape_5idx_all_raw36_ctxclim-topo-area / kfold5_window

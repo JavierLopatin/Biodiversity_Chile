@@ -1,0 +1,6 @@
+    C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area: 17,615 parameters, input (5, 8, 8)
+  C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area kfold5_window    [  3.6m] hill_q0=+0.606 hill_q1=+0.471 hill_q2=+0.416 lcbd_pa=+0.498 pcoa1_pa=+0.535 pcoa2_pa=+0.508 lcbd_cover=+0.388 pcoa1_cover=+0.348 pcoa2_cover=+0.252 mpd=+0.121 mntd=+0.204 ses_pd=+0.164 ses_mpd=+0.162 ses_mntd=+0.153 dark_n=+0.385
+  [skip] C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area / kfold5_window
+  [skip] C2M07_hilbert_5idx_all_raw36_ctxclim-topo-area / kfold5_window
