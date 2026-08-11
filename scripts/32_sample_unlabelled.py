@@ -144,6 +144,12 @@ def main() -> None:
     p.add_argument("--patch", type=int, default=5)
     p.add_argument("--window", type=int, default=3, help="years, as in scripts/01")
     p.add_argument("--resolution", type=int, default=30)
+    p.add_argument("--cell-km", type=float, default=10.0, dest="cell_km",
+                   help="side of the grouping cell. Loads are grouped by (cell, year) as in "
+                        "scripts/02; ungrouped, n=4000 would be ~8000 dc.load calls. The "
+                        "cell size trades calls against peak memory, because the whole cell "
+                        "is materialised at once (measured for n=4000: 20 km -> 261 loads "
+                        "and 2.2 GB, 10 km -> 490 and 0.6 GB, 5 km -> 957 and 0.1 GB)")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--out", default="data/derived/unlabelled")
@@ -159,14 +165,26 @@ def main() -> None:
     pts["win_start"] = pts["Year"] - (args.window - 1)
     pts["win_end"] = pts["Year"]
     pts["sample_id"] = [f"U{i:05d}" for i in range(len(pts))]
-    print(f"{len(pts)} candidate windows, strata={args.strata}")
+    # same grouping key as scripts/01, so the loads batch exactly as the labelled extraction
+    # does. Ungrouped, n=4000 means 4000 `dc.load` calls for the imagery plus 4000 for the
+    # land cover; grouped, it is one per (cell, year) pair.
+    km = args.cell_km * 1000
+    pts["cell"] = ((pts["X"] / km).round().astype(int).astype(str) + "_"
+                   + (pts["Y"] / km).round().astype(int).astype(str))
+    groups = list(pts.groupby(["cell", "Year"], sort=True))
+    print(f"{len(pts)} candidate windows, strata={args.strata}, "
+          f"{len(groups)} loads (cell x year)")
 
     if args.dry_run:
         print("\n" + pts.head().to_string(index=False))
+        print(f"\nsamples per load: median {pts.groupby(['cell', 'Year']).size().median():.0f}, "
+              f"max {pts.groupby(['cell', 'Year']).size().max()}")
         print("\nwould then, on the datacube machine:")
-        print("  1. read landcover_chile_2014 at each centre and record the class")
-        print("  2. load the causal window per point and compute the five indices")
-        print("  3. write one .nc per sample, same layout as data/derived/phenology/")
+        print("  1. read landcover_chile_2014 over each cell and record the class per centre")
+        print(f"  2. load the causal window per cell and compute the five indices")
+        print(f"  3. crop {args.patch}x{args.patch} pixels around each centre -- the same "
+              "geometry as the labelled plots")
+        print("  4. write one .nc per sample, same layout as data/derived/phenology/")
         return
 
     import datacube
@@ -186,40 +204,70 @@ def main() -> None:
     outdir.mkdir(parents=True, exist_ok=True)
     rows, t0 = [], time.time()
 
-    for i, pt in pts.iterrows():
-        try:
-            buf = args.patch * args.resolution
-            bbox = (pt.X - buf, pt.Y - buf, pt.X + buf, pt.Y + buf)
+    half = args.patch // 2
+    buf = args.patch * args.resolution
 
+    def crop(da, x: float, y: float):
+        """The `patch`x`patch` pixels around (x, y), by nearest centre.
+
+        Identical to `extract_plot` in `scripts/02`: the pretraining images have to be the
+        same *kind* of object as the fine-tuning ones. Writing the whole loaded window
+        instead would hand the autoencoder 10x10 images to learn from and then fine-tune it
+        on 5x5 ones, so any transfer result would be confounded with a change of geometry.
+        """
+        iy = int(np.abs(da.y.values - y).argmin())
+        ix = int(np.abs(da.x.values - x).argmin())
+        return da.isel(y=slice(max(0, iy - half), iy + half + 1),
+                       x=slice(max(0, ix - half), ix + half + 1))
+
+    for gi, ((cell, year), g) in enumerate(groups, 1):
+        bbox = (g["X"].min() - buf, g["Y"].min() - buf,
+                g["X"].max() + buf, g["Y"].max() + buf)
+        try:
             lc = dc.load(product="landcover_chile_2014", x=(bbox[0], bbox[2]),
                          y=(bbox[1], bbox[3]), output_crs="EPSG:32719",
                          resolution=(-args.resolution, args.resolution))
-            code = int(np.asarray(lc.to_array().values).ravel()[0]) if lc else -1
-            name = legend.get(code, str(code))
-            anthropic = is_anthropic(name)
-            if args.natural_only and anthropic:
-                continue
-
-            ds = cubemod.load_window(dc, bbox, int(pt.win_start), int(pt.win_end),
-                                     args.resolution)
+            ds = cubemod.load_window(dc, bbox, int(g["win_start"].iloc[0]),
+                                     int(g["win_end"].iloc[0]), args.resolution)
             if ds is None:
-                continue
+                raise ValueError("no datasets in window")
             idx, _ = cubemod.to_indices(ds)
-            out = idx.assign_attrs(sample_id=pt.sample_id, landcover_code=code,
-                                   landcover=name, anthropic=int(anthropic),
-                                   win_start=int(pt.win_start), win_end=int(pt.win_end),
-                                   X=float(pt.X), Y=float(pt.Y))
-            out.to_netcdf(outdir / f"{pt.sample_id}.nc")
-            rows.append(dict(sample_id=pt.sample_id, X=pt.X, Y=pt.Y, year=int(pt.Year),
-                             landcover_code=code, landcover=name,
-                             anthropic=int(anthropic), n_obs=int(out.sizes.get("time", 0))))
-        except Exception as e:                        # one bad window must not end the run
-            rows.append(dict(sample_id=pt.sample_id, X=pt.X, Y=pt.Y, year=int(pt.Year),
-                             error=f"{type(e).__name__}: {e}"))
-        if (i + 1) % 100 == 0:
-            ok = sum("error" not in r for r in rows)
-            print(f"  [{i+1}/{len(pts)}] {ok} written, {(time.time()-t0)/60:.1f} min",
-                  flush=True)
+            idx = idx.compute() if hasattr(idx, "compute") else idx
+        except Exception as e:                  # a bad cell must not end the run
+            for _, pt in g.iterrows():
+                rows.append(dict(sample_id=pt.sample_id, X=pt.X, Y=pt.Y, year=int(pt.Year),
+                                 error=f"load: {type(e).__name__}: {e}"))
+            print(f"  [{gi}/{len(groups)}] {cell} {year}: LOAD FAILED -- {e}", flush=True)
+            continue
+
+        lcv = lc.to_array().squeeze("variable", drop=True) if lc else None
+        ok_cell = 0
+        for _, pt in g.iterrows():
+            try:
+                code = (int(crop(lcv, pt.X, pt.Y).values.ravel()[0])
+                        if lcv is not None else -1)
+                name = legend.get(code, str(code))
+                anthropic = is_anthropic(name)
+                if args.natural_only and anthropic:
+                    continue
+                out = crop(idx, pt.X, pt.Y).assign_attrs(
+                    sample_id=pt.sample_id, landcover_code=code, landcover=name,
+                    anthropic=int(anthropic), win_start=int(pt.win_start),
+                    win_end=int(pt.win_end), X=float(pt.X), Y=float(pt.Y))
+                out.to_netcdf(outdir / f"{pt.sample_id}.nc")
+                rows.append(dict(sample_id=pt.sample_id, X=pt.X, Y=pt.Y, year=int(pt.Year),
+                                 landcover_code=code, landcover=name,
+                                 anthropic=int(anthropic),
+                                 n_obs=int(out.sizes.get("time", 0)),
+                                 patch_y=int(out.sizes.get("y", 0)),
+                                 patch_x=int(out.sizes.get("x", 0))))
+                ok_cell += 1
+            except Exception as e:
+                rows.append(dict(sample_id=pt.sample_id, X=pt.X, Y=pt.Y, year=int(pt.Year),
+                                 error=f"{type(e).__name__}: {e}"))
+        done = sum("error" not in r for r in rows)
+        print(f"  [{gi}/{len(groups)}] {cell} {year}: {ok_cell}/{len(g)} -- "
+              f"{done} written, {(time.time()-t0)/60:.1f} min", flush=True)
 
     man = pd.DataFrame(rows)
     man.to_csv(outdir / "manifest.csv", index=False)
