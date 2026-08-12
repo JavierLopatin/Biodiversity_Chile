@@ -155,6 +155,125 @@ def grouped_kfold(df: pd.DataFrame, group_col: str, k: int = 5, seed: int = 42,
     return out
 
 
+#: Cortes de los bloques temporales, elegidos para igualar tamaños sin partir un año de
+#: censo. Los 16 años de censo (2003-2026) están muy desiguales -- 2 parcelas en 2003 contra
+#: 254 en 2022 -- así que un corte cada 3 años calendario daría folds de 2 y de 350.
+TIME_EDGES = [2002, 2011, 2015, 2018, 2021, 2024, 2027]
+
+
+def time_block(years: pd.Series, edges: list[int] | None = None) -> pd.Series:
+    """Año de censo -> índice de bloque temporal."""
+    e = TIME_EDGES if edges is None else edges
+    return pd.cut(years.astype(int), e, labels=False).astype(int)
+
+
+def _buffered_train(plots: pd.DataFrame, test_mask: pd.Series) -> pd.Series:
+    """Entrenamiento válido para ese test: fuera del test y **sin solape de ventana causal**.
+
+    La ventana causal dura 3 años (`win_start`..`win_end`), así que una parcela de 2013 y una
+    de 2014 comparten observaciones Landsat de 2012 y 2013. Un bloque temporal sin este
+    filtro deja entrar por la puerta del tiempo la misma fuga que `window_components` cierra
+    en el espacio: el modelo vería el año que se le está pidiendo predecir.
+
+    El precio es real -- entre 31 y 306 parcelas de entrenamiento según el fold -- y se paga
+    a propósito: sin él, el esquema mediría interpolación temporal disfrazada de
+    extrapolación.
+    """
+    lo = int(plots.loc[test_mask, "win_start"].min())
+    hi = int(plots.loc[test_mask, "win_end"].max())
+    overlaps = (plots["win_end"] >= lo) & (plots["win_start"] <= hi)
+    return ~test_mask & ~overlaps
+
+
+def _emit(plots: pd.DataFrame, folds: list[tuple[str, pd.Series, pd.Series]]) -> pd.DataFrame:
+    """Tabla larga (fold, held_out, id, split) a partir de máscaras test/train.
+
+    Una parcela que no aparece en ningún lado de un fold simplemente **no tiene fila** en él:
+    es el buffer, y `cv.iter_folds` la deja fuera de los dos conjuntos sin más.
+    """
+    rows = []
+    for i, (name, te, tr) in enumerate(folds):
+        for mask, split in ((te, "test"), (tr, "train")):
+            ids = plots.loc[mask, "PlotObservationID"]
+            if len(ids):
+                rows.append(pd.DataFrame({"fold": i, "held_out": name,
+                                          "PlotObservationID": ids, "split": split}))
+    if not rows:
+        # Que ningún fold califique es un resultado legítimo -- p.ej. `time_within_owner` en
+        # un conjunto donde ningún contribuyente abarca dos periodos. Devolver la tabla vacía
+        # con sus columnas deja que el consumidor lo vea; reventar aquí lo convertiría en un
+        # fallo de programa en vez de en un dato sobre el diseño de muestreo.
+        return pd.DataFrame({"fold": pd.Series(dtype=int),
+                             "held_out": pd.Series(dtype=str),
+                             "PlotObservationID": pd.Series(dtype=object),
+                             "split": pd.Series(dtype=str)})
+    return pd.concat(rows, ignore_index=True)
+
+
+def time_kfold(plots: pd.DataFrame, edges: list[int] | None = None) -> pd.DataFrame:
+    """Leave-time-out con bloques rodantes: cada parcela es test exactamente una vez.
+
+    Meyer et al. (2018) lo llaman LTO y es el esquema que un revisor pedirá por su nombre
+    cuando el modelo se ofrezca para predecir en años no muestreados.
+    """
+    tb = time_block(plots["Year"], edges)
+    folds = []
+    for b in sorted(tb.unique()):
+        te = tb == b
+        yrs = plots.loc[te, "Year"]
+        folds.append((f"t{b}_{int(yrs.min())}-{int(yrs.max())}", te,
+                      _buffered_train(plots, te)))
+    return _emit(plots, folds)
+
+
+def loc_time_kfold(plots: pd.DataFrame, loc_fold: pd.Series,
+                   edges: list[int] | None = None, min_test: int = 5) -> pd.DataFrame:
+    """LLTO: test = grupo espacial x bloque temporal, y el entrenamiento excluye los dos.
+
+    El caso duro y el que se parece a un mapa proyectado a un año nuevo: sitio que el modelo
+    no vio, en un tiempo que tampoco vio. ``loc_fold`` debe venir de un esquema que ya cierre
+    la fuga de ventana -- en este proyecto, los folds de `kfold5_window`.
+    """
+    tb = time_block(plots["Year"], edges)
+    folds = []
+    for s in sorted(pd.unique(loc_fold.dropna())):
+        for b in sorted(tb.unique()):
+            te = (loc_fold == s) & (tb == b)
+            if int(te.sum()) < min_test:
+                continue
+            folds.append((f"s{int(s)}t{b}", te,
+                          _buffered_train(plots, te) & (loc_fold != s)))
+    return _emit(plots, folds)
+
+
+def time_within_owner(plots: pd.DataFrame, edges: list[int] | None = None,
+                      min_test: int = 15) -> pd.DataFrame:
+    """Holdout temporal para contribuyentes que abarcan varios periodos.
+
+    **El control del confundido.** En estos datos, contribuyente y año están casi
+    superpuestos (Cramér's V = 0,732), así que un LTO puro no distingue no-estacionariedad
+    temporal del salto de nivel entre contribuyentes, que ya se sabe que domina alfa
+    (eta^2 = 0,72). Aquí el contribuyente del test **sí** está en el entrenamiento, con sus
+    parcelas de otro periodo, de modo que su nivel es aprendible y lo único retenido es el
+    tiempo.
+
+    Sólo entran contribuyentes presentes dentro y fuera del bloque de test; en estos datos
+    son Galleguillos, Ovalle y Miranda (507 parcelas).
+    """
+    tb = time_block(plots["Year"], edges)
+    folds = []
+    for b in sorted(tb.unique()):
+        inb = tb == b
+        # contribuyentes con parcelas dentro y fuera del bloque
+        multi = {o for o in plots.loc[inb, "Owner"].unique()
+                 if (plots["Owner"].eq(o) & ~inb).any()}
+        te = inb & plots["Owner"].isin(multi)
+        if int(te.sum()) < min_test:
+            continue
+        folds.append((f"t{b}_within", te, _buffered_train(plots, te)))
+    return _emit(plots, folds)
+
+
 def fold_report(df: pd.DataFrame, cv: pd.DataFrame, response: str = "richness") -> pd.DataFrame:
     """Per-fold composition of the response — always report this next to any score.
 

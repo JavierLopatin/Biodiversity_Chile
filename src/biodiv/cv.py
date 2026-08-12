@@ -40,11 +40,27 @@ SCHEME_GROUP = {
     "lodo_dataset": "metadata_id",
     "kfold5_window": "window_component",
     "kfold5_owner_window": "owner_window",
+    # Los esquemas temporales agrupan por bloque de años: la partición interna de la parada
+    # temprana tiene que respetar la misma estructura, o el modelo elige cuándo parar mirando
+    # un año adyacente y el esquema deja de medir extrapolación temporal.
+    "kfold_time": "time_block",
+    "kfold_loc_time": "time_block",
+    "time_within_owner": "time_block",
 }
 
 #: LODO schemes do not partition the plots — groups below the minimum size are never a test
 #: fold — so a pooled out-of-fold table is undefined for them and metrics are per-fold.
 NON_PARTITIONING = {"lodo_owner", "lodo_dataset"}
+
+#: Esquemas que **sí** parten lo que cubren -- cada parcela suya es test exactamente una vez--
+#: pero que deliberadamente no cubren las 1.082. `time_within_owner` sólo puede evaluar
+#: contribuyentes presentes dentro y fuera del bloque temporal (688 parcelas): en los demás,
+#: retener el tiempo equivale a retener al contribuyente y el resultado no sería
+#: interpretable. La distinción importa porque estos esquemas conservan el chequeo de
+#: duplicados, que los LODO no pueden tener, y su OOF agrupado es válido para el subconjunto
+#: que cubren -- pero comparar su R² contra el de un esquema completo compara dos muestras
+#: distintas.
+SUBSET_SCHEMES = {"time_within_owner"}
 
 
 def load_schemes(path: Path | str = "data/derived/cv_folds_modelling.parquet") -> pd.DataFrame:
@@ -93,6 +109,9 @@ def ensure_group_col(plots: pd.DataFrame, group_col: str) -> pd.DataFrame:
     elif group_col == "owner_window":
         w = window_components(out).to_numpy()
         out[group_col] = [f"{o}|{x}" for o, x in zip(out["Owner"], w)]
+    elif group_col == "time_block":
+        from .cv_groups import time_block
+        out[group_col] = time_block(out["Year"]).to_numpy()
     else:
         raise KeyError(
             f"{group_col!r} is neither a column of the plots table nor a derived grouping "

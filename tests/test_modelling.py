@@ -79,7 +79,12 @@ def test_partitioning_schemes_cover_every_plot_once(cv, ids):
             continue
         sfolds = cvmod.scheme_folds(cv, scheme)
         test_ids = sfolds.loc[sfolds["split"] == "test", "PlotObservationID"]
-        assert len(test_ids) == len(ids), scheme
+        # los esquemas de subconjunto cubren menos, pero siguen sin repetir una parcela: es
+        # justo la distinción que `SUBSET_SCHEMES` documenta
+        if scheme not in cvmod.SUBSET_SCHEMES:
+            assert len(test_ids) == len(ids), scheme
+        else:
+            assert 0 < len(test_ids) < len(ids), scheme
         assert test_ids.duplicated().sum() == 0, scheme
 
 

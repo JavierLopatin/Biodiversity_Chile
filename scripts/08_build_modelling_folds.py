@@ -115,6 +115,28 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
     add(cv_groups.leave_one_group_out(plots, "Owner", min_size=min_lodo), "lodo_owner")
     add(cvmod.random_kfold(plots, k=k, seed=seed), "kfold5_random")
 
+    # ---------------------------------------------------------------- temporales
+    # Todo lo de arriba bloquea el espacio y **agrupa los años**, así que ninguno dice si el
+    # modelo transfiere a un año que no vio. Los tres de abajo lo prueban, y los tres
+    # excluyen del entrenamiento las parcelas cuya ventana causal de 3 años solapa con la del
+    # test: sin eso, el modelo ve el año que se le pide predecir.
+    tb = cv_groups.time_block(plots["Year"])
+    print(f"  [tiempo] {tb.nunique()} bloques: "
+          + ", ".join(f"{int(b)}={int((tb == b).sum())}" for b in sorted(tb.unique())))
+    add(cv_groups.time_kfold(plots), "kfold_time")
+
+    # el grupo espacial del LLTO sale de kfold5_window, que ya cierra la fuga de ventana
+    win = pd.concat(schemes)
+    win = win[(win["scheme"] == "kfold5_window") & (win["split"] == "test")]
+    loc_fold = plots[ID_COL].map(win.set_index(ID_COL)["fold"])
+    # `min_test=1`: lo que se reporta de este esquema es el OOF **agrupado** sobre las 1.082
+    # parcelas, no la métrica de cada celda por separado, así que ninguna celda puede
+    # quedarse fuera. Con el umbral por defecto se perdían 3 parcelas y el esquema dejaba de
+    # ser una partición.
+    add(cv_groups.loc_time_kfold(plots, loc_fold, min_test=1), "kfold_loc_time")
+
+    add(cv_groups.time_within_owner(plots), "time_within_owner")
+
     out = pd.concat(schemes, ignore_index=True)
     # keep the primary block scheme under a stable name regardless of the audited sizes
     primary = f"kfold5_block{int(primary_km)}"
