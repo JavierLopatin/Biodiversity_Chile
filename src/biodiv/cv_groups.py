@@ -20,6 +20,37 @@ import numpy as np
 import pandas as pd
 
 
+def union_groups(plots: pd.DataFrame, a: str, b: str) -> pd.Series:
+    """Merge two groupings: two plots share a group if they share *either* label.
+
+    Vive aqui y no en `scripts/08` porque `cv.ensure_group_col` tiene que reconstruir
+    **la misma** agrupacion para la particion interna de la parada temprana. Pegar las dos
+    etiquetas (`f"{owner}|{window}"`) da una agrupacion mas FINA, no mas gruesa, y dejaria
+    la particion interna partiendo grupos que la externa mantiene unidos -- en silencio.
+
+    Not the same as pasting the two labels together, which would make the grouping *finer*
+    rather than coarser and would let a shared window straddle a fold boundary whenever the
+    two plots have different owners — exactly the 47-plot case this is meant to close.
+    """
+    idx = {v: i for i, v in enumerate(pd.unique(plots[a]))}
+    off = len(idx)
+    idx.update({v: off + i for i, v in enumerate(pd.unique(plots[b]))})
+    parent = np.arange(len(idx))
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    for va, vb in zip(plots[a], plots[b]):
+        ra, rb = find(idx[va]), find(idx[vb])
+        if ra != rb:
+            parent[max(ra, rb)] = min(ra, rb)
+    return pd.Series([f"u{find(idx[v])}" for v in plots[a]], index=plots.index)
+
+
+
 def leave_one_group_out(df: pd.DataFrame, group_col: str, min_size: int = 20) -> pd.DataFrame:
     """One row per (fold, plot). Every group with >= min_size plots becomes a test fold.
 

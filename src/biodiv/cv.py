@@ -107,8 +107,9 @@ def ensure_group_col(plots: pd.DataFrame, group_col: str) -> pd.DataFrame:
     elif group_col == "window_component":
         out[group_col] = window_components(out).to_numpy()
     elif group_col == "owner_window":
-        w = window_components(out).to_numpy()
-        out[group_col] = [f"{o}|{x}" for o, x in zip(out["Owner"], w)]
+        from .cv_groups import union_groups
+        out["window_component"] = window_components(out).to_numpy()
+        out[group_col] = union_groups(out, "Owner", "window_component")
     elif group_col == "time_block":
         from .cv_groups import time_block
         out[group_col] = time_block(out["Year"]).to_numpy()

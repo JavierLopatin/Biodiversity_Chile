@@ -1,0 +1,3 @@
+scheme=kfold_time  seeds=[0, 1, 2]  targets=all
+
+  RF06_curve_all-topo-area_raw100          kfold_time       [731.8s] hill_q0=+0.043 hill_q1=-0.167 hill_q2=-0.238 lcbd_pa=+0.271 pcoa1_pa=+0.337 pcoa2_pa=+0.254 lcbd_cover=-0.249 pcoa1_cover=+0.050 pcoa2_cover=+0.054 mpd=+0.008 mntd=-0.051 ses_pd=+0.048 ses_mpd=+0.080 ses_mntd=+0.008 dark_n=+0.061

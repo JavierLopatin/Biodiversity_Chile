@@ -47,31 +47,6 @@ from biodiv import cv_groups            # noqa: E402
 ID_COL = "PlotObservationID"
 
 
-def _union_groups(plots: pd.DataFrame, a: str, b: str) -> pd.Series:
-    """Merge two groupings: two plots share a group if they share *either* label.
-
-    Not the same as pasting the two labels together, which would make the grouping *finer*
-    rather than coarser and would let a shared window straddle a fold boundary whenever the
-    two plots have different owners — exactly the 47-plot case this is meant to close.
-    """
-    idx = {v: i for i, v in enumerate(pd.unique(plots[a]))}
-    off = len(idx)
-    idx.update({v: off + i for i, v in enumerate(pd.unique(plots[b]))})
-    parent = np.arange(len(idx))
-
-    def find(x: int) -> int:
-        while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    for va, vb in zip(plots[a], plots[b]):
-        ra, rb = find(idx[va]), find(idx[vb])
-        if ra != rb:
-            parent[max(ra, rb)] = min(ra, rb)
-    return pd.Series([f"u{find(idx[v])}" for v in plots[a]], index=plots.index)
-
-
 def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
           k: int = 5, seed: int = 42, min_lodo: int = 20) -> pd.DataFrame:
     schemes: list[pd.DataFrame] = []
@@ -107,7 +82,7 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
 
     # The union of the two groupings: the strictest partition in the project. A fold
     # boundary crosses neither a contributor nor a shared extraction window.
-    plots["owner_window"] = _union_groups(plots, "Owner", "window_component")
+    plots["owner_window"] = cv_groups.union_groups(plots, "Owner", "window_component")
     print(f"  [owner_window] {plots['owner_window'].nunique()} grupos")
     add(cv_groups.grouped_kfold(plots, "owner_window", k=k, seed=seed,
                                 stratify_on="richness"), "kfold5_owner_window")
