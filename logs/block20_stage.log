@@ -1,1 +1,70 @@
 === kfold5_block20 para los cabezas  09:51:05
+=== fin  2026-08-12 09:59:51
+media sobre las cinco facetas, mismo modelo bajo cada esquema:
+
+scheme   kfold5_window  kfold5_block20  kfold_time  kfold_loc_time  time_within_owner
+familia                                                                              
+BASE             0.363             NaN       0.001          -0.055             -0.100
+C1D              0.360           0.137      -0.104          -0.152                NaN
+C2D              0.383           0.180      -0.121          -0.164             -0.388
+MLP              0.396           0.186      -0.082          -0.160             -0.352
+RF               0.381           0.248       0.040          -0.000             -0.030
+
+caida respecto de kfold5_window:
+scheme   kfold5_block20  kfold_time  kfold_loc_time  time_within_owner
+familia                                                               
+BASE                NaN      -0.361          -0.418             -0.463
+C1D              -0.223      -0.464          -0.512                NaN
+C2D              -0.203      -0.504          -0.547             -0.770
+MLP              -0.210      -0.478          -0.556             -0.748
+RF               -0.133      -0.342          -0.381             -0.411
+
+descomposicion, para las familias con los tres esquemas:
+  C1D   tiempo -0.464  sitio -0.223  ambos -0.512   (interaccion +0.175)
+  C2D   tiempo -0.504  sitio -0.203  ambos -0.547   (interaccion +0.160)
+  MLP   tiempo -0.478  sitio -0.210  ambos -0.556   (interaccion +0.132)
+  RF    tiempo -0.342  sitio -0.133  ambos -0.381   (interaccion +0.093)
+
+comparacion sobre las mismas 688 parcelas de `time_within_owner`:
+
+         kfold5_window  kfold_time  time_within_owner
+familia                                              
+MLP              0.330      -0.359             -0.352
+RF               0.356      -0.030             -0.030
+C2D              0.323      -0.296             -0.388
+C1D              0.294      -0.260                NaN
+BASE             0.295      -0.103             -0.100
+
+efecto temporal AISLADO (mismo subconjunto, mismo contribuyente en el entrenamiento):
+familia
+MLP    -0.682
+RF     -0.386
+C2D    -0.711
+C1D       NaN
+BASE   -0.395
+
+la respuesta misma, por bloque temporal (riqueza):
+      n  media     sd       anos
+tb                              
+0   112   6.23  10.29  2003-2010
+1   228   9.21   5.97  2012-2014
+2    35   4.86   1.87  2017-2018
+3   300   5.40   3.95  2019-2021
+4   298   9.05  10.48  2022-2024
+5   109   4.41   2.59  2025-2026
+
+  la media va de 4.4 a 9.2 y la sd de 1.9 a 10.5. Retener un bloque es pedirle al modelo un nivel
+  y una dispersion que no vio, asi que la caida NO se puede leer sin mas como que la
+  relacion fenologia-diversidad cambie en el tiempo.
+
+por faceta bajo kfold_loc_time (sitio nuevo y ano nuevo):
+         alpha  beta_pa  beta_cover  phylo   dark  media
+familia                                                 
+RF      -0.263    0.243      -0.054 -0.047  0.120 -0.000
+BASE    -0.123   -0.106      -0.000  0.012 -0.057 -0.055
+C1D     -0.269   -0.003      -0.052 -0.011 -0.423 -0.152
+MLP     -0.407    0.022      -0.011 -0.051 -0.352 -0.160
+C2D     -0.302   -0.078      -0.018 -0.035 -0.387 -0.164
+
+  -> results/tables/temporal_validation.csv
+  -> docs/16_stemp_protocol.md   (97 bloques, 4 campos pendientes)

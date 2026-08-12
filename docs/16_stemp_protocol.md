@@ -2,7 +2,7 @@
 
 Protocolo de reporte para modelos espacio-temporales de aprendizaje automático (Linnenbrink et al. 2026). Los campos son los de su Tabla A1; **en negrita** los obligatorios.
 
-**Generado por** `scripts/38_stemp_protocol.py`. No editar a mano: cada cifra sale de `results/`. 222 corridas en la tabla de origen.
+**Generado por** `scripts/38_stemp_protocol.py`. No editar a mano: cada cifra sale de `results/`. 228 corridas en la tabla de origen.
 
 
 ## 1. Overview
@@ -88,13 +88,13 @@ Distancia a la que cada esquema evalúa, contra los 13.23 km a los que el domini
 
 R² medio del **mismo modelo** bajo cada esquema:
 
-| familia | `kfold5_window` | `kfold_time` |
-|---|---:|---:|
-| BASE | 0.363 | 0.001 |
-| C1D | 0.360 | **PENDIENTE** |
-| C2D | 0.383 | -0.121 |
-| MLP | 0.396 | -0.082 |
-| RF | 0.381 | **PENDIENTE** |
+| familia | `kfold5_block20` | `kfold5_window` | `kfold_loc_time` | `kfold_time` | `time_within_owner` |
+|---|---:|---:|---:|---:|---:|
+| BASE | 0.167 | 0.363 | -0.055 | 0.001 | -0.100 |
+| C1D | 0.137 | 0.360 | -0.152 | -0.104 | **PENDIENTE** |
+| C2D | 0.180 | 0.383 | -0.164 | -0.121 | -0.388 |
+| MLP | 0.186 | 0.396 | -0.160 | -0.082 | -0.352 |
+| RF | 0.248 | 0.381 | -0.000 | 0.040 | -0.030 |
 
 
 ### 2.6 Interpretation, uncertainty and limitations
@@ -120,7 +120,7 @@ R² medio del **mismo modelo** bajo cada esquema:
 | Prediction resolution | 30 m, año a año dentro de 2003–2026 |
 | Map evaluation strategy | PENDIENTE hasta que exista mapa. El esquema adecuado **no** es `kfold5_window` sino uno cuya distancia de evaluación se parezca a la del mapa (`kfold5_block20`, `kfold_loc_time`) |
 | **Uncertainty quantification** | **Área de aplicabilidad** (Meyer & Pebesma 2021) sobre 16,950 muestras de cobertura nativa: **88.2 % dentro**. Umbral DI = 0.352 desde los folds de `kfold5_block20`; DI del dominio mediana 0.204, p95 0.429 |
-| Map accuracy | **PENDIENTE** |
+| Map accuracy | Estimada con `kfold5_block20`, cuya distancia de evaluacion (12,1 km) se parece a la del mapa (13,2 km): RF 0.248, MLP 0.186, C2D 0.180, BASE 0.167, C1D 0.137. **El orden se invierte respecto de `kfold5_window`**: el RF pasa de tercero a primero por 0,062, muy por encima del ruido |
 | Threshold selection | No aplica: las respuestas son continuas |
 | Post-processing | No aplica |
 

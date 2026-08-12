@@ -268,7 +268,17 @@ def main() -> None:
                 f"dominio mediana {aoa['di_median']:.3f}, p95 {aoa['di_p95']:.3f}", True))
     else:
         A(field("Uncertainty quantification", PEND, True))
-    A(field("Map accuracy", PEND))
+    b20 = (tmp[tmp.scheme == "kfold5_block20"].set_index("familia")["media"]
+           if tmp is not None and "kfold5_block20" in set(tmp.scheme) else None)
+    if b20 is not None and len(b20):
+        A(field("Map accuracy",
+                "Estimada con `kfold5_block20`, cuya distancia de evaluacion (12,1 km) se "
+                "parece a la del mapa (13,2 km): "
+                + ", ".join(f"{k} {v:.3f}" for k, v in b20.sort_values(ascending=False).items())
+                + ". **El orden se invierte respecto de `kfold5_window`**: el RF pasa de "
+                  "tercero a primero por 0,062, muy por encima del ruido"))
+    else:
+        A(field("Map accuracy", PEND))
     A(field("Threshold selection", "No aplica: las respuestas son continuas"))
     A(field("Post-processing", "No aplica"))
 
