@@ -145,6 +145,24 @@ def main() -> None:
                   "entrenamiento):")
             print((cmp["time_within_owner"] - cmp["kfold5_window"]).round(3).to_string())
 
+    # ---------------------------------------------------------------- que cambia en el tiempo
+    # Antes de leer la caida como "la relacion fenologia-diversidad no es estacionaria", hay
+    # que mirar si lo que cambia es la RESPUESTA. Si cada bloque tiene una distribucion
+    # distinta, retener un bloque es pedirle al modelo un nivel que no vio, y eso no es lo
+    # mismo que un cambio en la relacion.
+    from biodiv import cv_groups as cg
+    plots = pd.read_parquet(ROOT / "data" / "derived" / "plots_subset.parquet")
+    plots["tb"] = cg.time_block(plots["Year"])
+    g = plots.groupby("tb").agg(n=("richness", "size"), media=("richness", "mean"),
+                                sd=("richness", "std"),
+                                anos=("Year", lambda s: f"{int(s.min())}-{int(s.max())}"))
+    print("\nla respuesta misma, por bloque temporal (riqueza):")
+    print(g.round(2).to_string())
+    print(f"\n  la media va de {g.media.min():.1f} a {g.media.max():.1f} y la sd de "
+          f"{g.sd.min():.1f} a {g.sd.max():.1f}. Retener un bloque es pedirle al modelo un "
+          "nivel\n  y una dispersion que no vio, asi que la caida NO se puede leer sin mas "
+          "como que la\n  relacion fenologia-diversidad cambie en el tiempo.")
+
     # por faceta, sólo para el esquema más exigente
     hard = d[d.scheme == "kfold_loc_time"]
     if len(hard):
