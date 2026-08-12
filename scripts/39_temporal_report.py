@@ -82,17 +82,24 @@ def main() -> None:
         drop = piv.sub(piv["kfold5_window"], axis=0).drop(columns="kfold5_window")
         print(drop.round(3).to_string())
 
-        print("\ndescomposicion, para las familias con los tres esquemas:")
-        for fam in piv.index:
-            r = piv.loc[fam]
-            if r[["kfold_time", "kfold_loc_time", "kfold5_block20"]].isna().any():
-                continue
-            dt = r["kfold_time"] - r["kfold5_window"]
-            ds = r["kfold5_block20"] - r["kfold5_window"]
-            dst = r["kfold_loc_time"] - r["kfold5_window"]
-            extra = dst - dt - ds
-            print(f"  {fam:5s} tiempo {dt:+.3f}  sitio {ds:+.3f}  ambos {dst:+.3f}"
-                  f"   (interaccion {extra:+.3f})")
+        need = ["kfold5_window", "kfold_time", "kfold_loc_time", "kfold5_block20"]
+        missing = [c for c in need if c not in piv.columns]
+        if missing:
+            print(f"\ndescomposicion sitio/tiempo: falta {', '.join(missing)}. "
+                  "Sin el termino espacial puro no se puede separar cuanto de la caida del "
+                  "LLTO es el sitio y cuanto el ano; correr esos esquemas para los cabezas "
+                  "de familia.")
+        else:
+            print("\ndescomposicion, para las familias con los tres esquemas:")
+            for fam in piv.index:
+                r = piv.loc[fam]
+                if r[need].isna().any():
+                    continue
+                dt = r["kfold_time"] - r["kfold5_window"]
+                ds = r["kfold5_block20"] - r["kfold5_window"]
+                dst = r["kfold_loc_time"] - r["kfold5_window"]
+                print(f"  {fam:5s} tiempo {dt:+.3f}  sitio {ds:+.3f}  ambos {dst:+.3f}"
+                      f"   (interaccion {dst - dt - ds:+.3f})")
 
     # por faceta, sólo para el esquema más exigente
     hard = d[d.scheme == "kfold_loc_time"]

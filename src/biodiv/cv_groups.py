@@ -241,7 +241,7 @@ def _emit(plots: pd.DataFrame, folds: list[tuple[str, pd.Series, pd.Series]]) ->
     return pd.concat(rows, ignore_index=True)
 
 
-def time_kfold(plots: pd.DataFrame, edges: list[int] | None = None) -> pd.DataFrame:
+def kfold_time(plots: pd.DataFrame, edges: list[int] | None = None) -> pd.DataFrame:
     """Leave-time-out con bloques rodantes: cada parcela es test exactamente una vez.
 
     Meyer et al. (2018) lo llaman LTO y es el esquema que un revisor pedirá por su nombre
@@ -257,7 +257,7 @@ def time_kfold(plots: pd.DataFrame, edges: list[int] | None = None) -> pd.DataFr
     return _emit(plots, folds)
 
 
-def loc_time_kfold(plots: pd.DataFrame, loc_fold: pd.Series,
+def kfold_loc_time(plots: pd.DataFrame, loc_fold: pd.Series,
                    edges: list[int] | None = None, min_test: int = 5) -> pd.DataFrame:
     """LLTO: test = grupo espacial x bloque temporal, y el entrenamiento excluye los dos.
 

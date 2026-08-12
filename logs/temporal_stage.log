@@ -1,3 +1,28 @@
 === kfold_time  08:39:50
 scripts/run_temporal_stage.sh: línea 43: wait: pid 3763310 no es un proceso hijo de este intérprete de ordenes
 scripts/run_temporal_stage.sh: línea 43: wait: pid 3763311 no es un proceso hijo de este intérprete de ordenes
+=== kfold_loc_time  08:53:11
+scripts/run_temporal_stage.sh: línea 43: wait: pid 3827346 no es un proceso hijo de este intérprete de ordenes
+scripts/run_temporal_stage.sh: línea 43: wait: pid 3827347 no es un proceso hijo de este intérprete de ordenes
+=== fin  2026-08-12 09:29:47
+media sobre las cinco facetas, mismo modelo bajo cada esquema:
+
+scheme   kfold5_window  kfold_time  kfold_loc_time
+familia                                           
+BASE             0.363       0.001          -0.055
+C1D              0.360      -0.104          -0.152
+C2D              0.383      -0.121          -0.164
+MLP              0.396      -0.082          -0.160
+RF               0.381       0.040          -0.000
+
+caida respecto de kfold5_window:
+scheme   kfold_time  kfold_loc_time
+familia                            
+BASE         -0.361          -0.418
+C1D          -0.464          -0.512
+C2D          -0.504          -0.547
+MLP          -0.478          -0.556
+RF           -0.342          -0.381
+
+descomposicion, para las familias con los tres esquemas:
+(el informe se genera aparte)

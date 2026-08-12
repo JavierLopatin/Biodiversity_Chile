@@ -1,0 +1,2 @@
+    MLP06_curve_kndvi_raw100: 27,279 parameters, input (137,)
+  MLP06_curve_kndvi_raw100                 kfold_loc_time   [  1.6m] hill_q0=-0.495 hill_q1=-0.344 hill_q2=-0.381 lcbd_pa=-0.075 pcoa1_pa=+0.026 pcoa2_pa=+0.115 lcbd_cover=+0.060 pcoa1_cover=-0.127 pcoa2_cover=+0.034 mpd=+0.028 mntd=-0.163 ses_pd=-0.046 ses_mpd=+0.000 ses_mntd=-0.073 dark_n=-0.352

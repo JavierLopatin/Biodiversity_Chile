@@ -69,7 +69,7 @@ def test_time_block_covers_every_census_year():
 
 def test_time_kfold_no_overlap_and_full_coverage():
     p = synth()
-    t = cg.time_kfold(p)
+    t = cg.kfold_time(p)
     seen = []
     for f, te, tr in as_folds(t, p):
         assert not (te & tr), f"fold {f}: parcela en train y test a la vez"
@@ -79,13 +79,13 @@ def test_time_kfold_no_overlap_and_full_coverage():
 
 def test_time_kfold_buffer_holds():
     p = synth()
-    assert_buffer_holds(cg.time_kfold(p), p)
+    assert_buffer_holds(cg.kfold_time(p), p)
 
 
 def test_buffer_actually_removes_plots():
     """Si el buffer no quitara nada, el test de arriba pasaría por vacuidad."""
     p = synth()
-    t = cg.time_kfold(p)
+    t = cg.kfold_time(p)
     dropped = [len(p) - len(g) for _, g in t.groupby("fold")]
     assert max(dropped) > 0, "el buffer no excluyó ninguna parcela en ningún fold"
 
@@ -110,7 +110,7 @@ def test_without_buffer_the_invariant_would_fail():
 def test_loc_time_excludes_both_the_place_and_the_time():
     p = synth()
     loc = pd.Series(np.arange(len(p)) % 5, index=p.index)
-    t = cg.loc_time_kfold(p, loc, min_test=1)
+    t = cg.kfold_loc_time(p, loc, min_test=1)
     lookup = dict(zip(p[ID], loc))
     tb = dict(zip(p[ID], cg.time_block(p["Year"])))
     for f, te, tr in as_folds(t, p):
@@ -124,7 +124,7 @@ def test_loc_time_excludes_both_the_place_and_the_time():
 def test_loc_time_buffer_holds():
     p = synth()
     loc = pd.Series(np.arange(len(p)) % 5, index=p.index)
-    assert_buffer_holds(cg.loc_time_kfold(p, loc, min_test=1), p)
+    assert_buffer_holds(cg.kfold_loc_time(p, loc, min_test=1), p)
 
 
 # ----------------------------------------------------------------- within-owner

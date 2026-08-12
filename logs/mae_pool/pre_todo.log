@@ -1,0 +1,14 @@
+substrate=serpentine  indices=['kndvi']  arch=sep width=B  patch=2  mask=0.6
+16,950 unlabelled images of shape (1, 10, 10) from data/derived/unlabelled (kndvi, 100 steps), 3 s to build
+by land cover: {'Shrubland': 10258, 'Secondary Forest': 1967, 'Grassland': 1921, 'Primary Forest': 1298, 'Wetland': 950, 'Forest': 474, 'Steppe': 66, 'Dwarf forest': 16}
+    epoch   1/40  masked MSE 0.02062
+    epoch   6/40  masked MSE 0.00697
+    epoch  11/40  masked MSE 0.00628
+    epoch  16/40  masked MSE 0.00592
+    epoch  21/40  masked MSE 0.00572
+    epoch  26/40  masked MSE 0.00560
+    epoch  31/40  masked MSE 0.00555
+    epoch  36/40  masked MSE 0.00555
+    epoch  40/40  masked MSE 0.00548
+
+  -> results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6_mb.pt   final masked MSE 0.00548

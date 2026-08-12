@@ -1,0 +1,14 @@
+substrate=serpentine  indices=['kndvi']  arch=sep width=B  patch=2  mask=0.6
+10,258 unlabelled images of shape (1, 10, 10) from data/derived/unlabelled (kndvi, 100 steps), 2 s to build
+by land cover: {'Shrubland': 10258}
+    epoch   1/40  masked MSE 0.02096
+    epoch   6/40  masked MSE 0.00669
+    epoch  11/40  masked MSE 0.00595
+    epoch  16/40  masked MSE 0.00571
+    epoch  21/40  masked MSE 0.00543
+    epoch  26/40  masked MSE 0.00537
+    epoch  31/40  masked MSE 0.00532
+    epoch  36/40  masked MSE 0.00527
+    epoch  40/40  masked MSE 0.00533
+
+  -> results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt   final masked MSE 0.00533

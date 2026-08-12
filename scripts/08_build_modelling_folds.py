@@ -98,7 +98,7 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
     tb = cv_groups.time_block(plots["Year"])
     print(f"  [tiempo] {tb.nunique()} bloques: "
           + ", ".join(f"{int(b)}={int((tb == b).sum())}" for b in sorted(tb.unique())))
-    add(cv_groups.time_kfold(plots), "kfold_time")
+    add(cv_groups.kfold_time(plots), "kfold_time")
 
     # El grupo espacial del LLTO sale de `kfold5_block20`, no de `kfold5_window`: retener un
     # fold de ventana deja el test a 0,47 km de su entrenamiento, y un "sitio nuevo" a medio
@@ -111,7 +111,7 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
     # parcelas, no la métrica de cada celda por separado, así que ninguna celda puede
     # quedarse fuera. Con el umbral por defecto se perdían 3 parcelas y el esquema dejaba de
     # ser una partición.
-    add(cv_groups.loc_time_kfold(plots, loc_fold, min_test=1), "kfold_loc_time")
+    add(cv_groups.kfold_loc_time(plots, loc_fold, min_test=1), "kfold_loc_time")
 
     add(cv_groups.time_within_owner(plots), "time_within_owner")
 
