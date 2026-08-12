@@ -78,6 +78,25 @@ La busqueda selecciono sobre las semillas {0,1,2} y reporta el maximo, lo que so
 Contraccion mediana: **+0.000**.
 
 
+## 3c. Sesgo de selección
+
+La confirmación de arriba cambia la semilla pero **no los folds**, así que no toca el otro sesgo: elegir el ganador entre ~200 corridas mirando la misma partición sobre la que después se reporta (Hastie et al. 2009, §7.10.2; es el primer aviso de STeMP). `scripts/35_selection_audit.py` lo mide sin reentrenar nada — elige el ganador sobre 4 de los 5 folds y lo puntúa en el quinto, desde los `oof_predictions.csv` que ya están en disco.
+
+Globalmente el sesgo es **+0.0000**: `MLP06_curve_kndvi_raw100` gana en los cinco subconjuntos, así que el titular no está inflado — el ganador es robusto, no afortunado.
+
+Por familia, en cambio, **el sesgo escala con cuánto se buscó**, que es exactamente lo que predice la teoría:
+
+| familia | corridas probadas | honesta | ingenua | sesgo |
+|---|---:|---:|---:|---:|
+| BASE | 4 | 0,360 | 0,360 | 0,0000 |
+| MLP | 20 | 0,393 | 0,393 | 0,0000 |
+| RF | 39 | 0,378 | 0,378 | 0,0000 |
+| C1D | 18 | 0,348 | 0,356 | +0,0073 |
+| **C2D** | **114** | **0,365** | **0,379** | **+0,0142** |
+
+**Consecuencia para la conclusión del paper.** La brecha honesta entre la C2D y el MLP no es 0,013 sino **0,028**, por encima del umbral de 2 sd = 0,022. Con la selección auditada, la convolución no empata: pierde por más que el ruido.
+
+
 ## 3b. El piso de ruido, medido por accidente
 
 Al anadir los sustratos `_5idx`, el bucle por defecto corrio los cinco indices sobre un sustrato que **ignora** el indice: cinco corridas de configuracion identica, misma semilla, mismo fold, mismos datos. Dieron:
