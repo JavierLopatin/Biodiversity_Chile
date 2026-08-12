@@ -1,0 +1,7 @@
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt: 34 trunk tensors
+    C2D02_serpentine_kndvi_raw100_ctxclim-topo-area_maekndvi_m06_mbShrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest: 17,039 parameters, input (1, 10, 10)
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt: 34 trunk tensors
+  C2D02_serpentine_kndvi_raw100_ctxclim-topo-area_maekndvi_m06_mbShrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest kfold5_window    [  2.3m] hill_q0=+0.623 hill_q1=+0.484 hill_q2=+0.437 lcbd_pa=+0.501 pcoa1_pa=+0.532 pcoa2_pa=+0.476 lcbd_cover=+0.402 pcoa1_cover=+0.373 pcoa2_cover=+0.180 mpd=+0.113 mntd=+0.160 ses_pd=+0.149 ses_mpd=+0.137 ses_mntd=+0.155 dark_n=+0.389

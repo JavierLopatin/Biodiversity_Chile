@@ -2,7 +2,7 @@
 
 **Esquema:** `kfold5_window` unicamente. **Metrica:** R2 fuera de muestra, promediado primero dentro de cada faceta y luego entre las cinco, para que beta (3 targets por estrato) no pese el triple que diversidad oscura (1 target).
 
-**Generado por** `scripts/33_search_report.py` desde `results/models/summary.csv` (195 corridas). No editar a mano.
+**Generado por** `scripts/33_search_report.py` desde `results/models/summary.csv` (201 corridas). No editar a mano.
 
 
 ## 1. Mejor corrida de cada familia
@@ -48,9 +48,12 @@ La pregunta que decide la interpretacion: si la serie cruda sube a todas las fam
 |---|---:|---:|---:|---:|
 | C2D02_serpentine_kndvi_ctxclim-topo-area | C2D | 0.362 | 0.383 | 0.021 |
 | C2D01_reshape_kndvi_ctxclim-topo-area | C2D | 0.358 | 0.378 | 0.020 |
+| C2D02_serpentine_kndvi_ctxclim-topo-area_maeall_m06 | C2D | 0.356 | 0.374 | 0.017 |
 | RF06_curve_all-topo-area | RF | 0.367 | 0.381 | 0.014 |
 | MLP07_curve_all | MLP | 0.373 | 0.387 | 0.014 |
+| C2D02_serpentine_kndvi_ctxclim-topo-area_maeall_m075 | C2D | 0.358 | 0.370 | 0.012 |
 | MLP06_curve_kndvi | MLP | 0.386 | 0.396 | 0.010 |
+| C2D02_serpentine_kndvi_ctxclim-topo-area_maekndvi_m06 | C2D | 0.357 | 0.366 | 0.010 |
 | C1D01_curve1d_kndvi_ctxclim-topo-area | C1D | 0.359 | 0.360 | 0.001 |
 
 
@@ -167,11 +170,11 @@ Promediando **todas** las corridas, las facetas no son igual de predecibles:
 
 | faceta | R2 medio de todas las corridas |
 |---|---:|
-| beta p/a | 0.459 |
-| alfa | 0.405 |
-| oscura | 0.345 |
-| beta cob. | 0.283 |
+| beta p/a | 0.460 |
+| alfa | 0.408 |
+| oscura | 0.346 |
+| beta cob. | 0.284 |
 | filo | 0.154 |
 
-La faceta **filo** es la mas dificil por un margen amplio (0.154 contra 0.459 de beta p/a), y eso ordena el ranking entero: las corridas que ganan lo hacen sobre todo por ahi.
+La faceta **filo** es la mas dificil por un margen amplio (0.154 contra 0.460 de beta p/a), y eso ordena el ranking entero: las corridas que ganan lo hacen sobre todo por ahi.
 

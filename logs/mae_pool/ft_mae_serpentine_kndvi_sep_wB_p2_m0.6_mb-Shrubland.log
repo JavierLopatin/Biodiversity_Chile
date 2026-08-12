@@ -1,0 +1,7 @@
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt: 34 trunk tensors
+    C2D02_serpentine_kndvi_raw100_ctxclim-topo-area_maekndvi_m06_mbShrubland: 17,039 parameters, input (1, 10, 10)
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland.pt: 34 trunk tensors
+  C2D02_serpentine_kndvi_raw100_ctxclim-topo-area_maekndvi_m06_mbShrubland kfold5_window    [  2.1m] hill_q0=+0.604 hill_q1=+0.498 hill_q2=+0.454 lcbd_pa=+0.495 pcoa1_pa=+0.531 pcoa2_pa=+0.477 lcbd_cover=+0.392 pcoa1_cover=+0.370 pcoa2_cover=+0.184 mpd=+0.098 mntd=+0.156 ses_pd=+0.127 ses_mpd=+0.120 ses_mntd=+0.138 dark_n=+0.386

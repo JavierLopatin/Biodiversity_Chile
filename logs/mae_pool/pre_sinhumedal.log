@@ -7,3 +7,8 @@ by land cover: {'Shrubland': 10258, 'Secondary Forest': 1967, 'Grassland': 1921,
     epoch  16/40  masked MSE 0.00589
     epoch  21/40  masked MSE 0.00561
     epoch  26/40  masked MSE 0.00553
+    epoch  31/40  masked MSE 0.00543
+    epoch  36/40  masked MSE 0.00545
+    epoch  40/40  masked MSE 0.00542
+
+  -> results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6_mb-Shrubland+SecondaryForest+PrimaryForest+Forest+Grassland+Steppe+Dwarfforest.pt   final masked MSE 0.00542

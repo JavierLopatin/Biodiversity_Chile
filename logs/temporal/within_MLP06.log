@@ -1,0 +1,2 @@
+    MLP06_curve_kndvi_raw100: 27,279 parameters, input (137,)
+  MLP06_curve_kndvi_raw100                 time_within_owner [  0.4m] hill_q0=-1.440 hill_q1=-1.603 hill_q2=-1.949 lcbd_pa=-0.010 pcoa1_pa=+0.126 pcoa2_pa=+0.007 lcbd_cover=+0.103 pcoa1_cover=-0.243 pcoa2_cover=+0.099 mpd=+0.044 mntd=-0.164 ses_pd=-0.001 ses_mpd=+0.037 ses_mntd=-0.010 dark_n=-0.105
