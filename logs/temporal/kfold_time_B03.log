@@ -1,0 +1,3 @@
+scheme=kfold_time  seeds=[0, 1, 2]  targets=all
+
+  [skip] B03_coords / kfold_time

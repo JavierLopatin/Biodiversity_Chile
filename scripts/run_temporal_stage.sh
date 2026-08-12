@@ -13,7 +13,13 @@ cd "$(dirname "$0")/.."
 export PYTHONPATH="$PWD/src:${PYTHONPATH:-}"
 mkdir -p logs/temporal
 
-SCHEMES="kfold_time kfold_loc_time time_within_owner kfold5_block20"
+# `kfold_loc_time` es la validacion titular: la unica que retiene sitio Y tiempo a la vez,
+# y la que evalua a 14,1 km, algo por encima de los 13,2 km del mapa.
+#
+# `kfold_time` se conserva porque el LLTO solo dice CUANTO cae, no por que: sin la caida
+# temporal por separado, un R2 bajo en LLTO no distingue "sitio nuevo" de "tiempo nuevo".
+# Cuesta 6 folds contra los 29 del otro.
+SCHEMES="kfold_time kfold_loc_time"
 
 for sc in $SCHEMES; do
   echo "=== $sc  $(date +%H:%M:%S)"

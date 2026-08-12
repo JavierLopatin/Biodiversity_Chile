@@ -1,0 +1,13 @@
+{
+  "index": "kndvi",
+  "ngs": 100,
+  "scheme": "kfold5_block20",
+  "curves": "_raw100",
+  "threshold": 0.35179091034614085,
+  "mean_pairwise": 12.342283181329979,
+  "n_train": 1082,
+  "n_domain": 16950,
+  "fraction_inside": 0.8815929203539823,
+  "di_median": 0.20396607646964865,
+  "di_p95": 0.42898730349388203
+}

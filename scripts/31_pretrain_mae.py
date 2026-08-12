@@ -84,10 +84,13 @@ def pixel_images(substrate: str, indices: list[str], derived: str, ids,
     return np.concatenate(imgs), np.concatenate(owner)
 
 
-def unlabelled_images(substrate: str, index: str, updir: Path, ngs: int,
-                      normalize: str, landcover: str | None = None
-                      ) -> tuple[np.ndarray, pd.DataFrame]:
-    """The MapBiomas-masked pool, from observation-level series to model substrate.
+def unlabelled_curves(index: str, updir: Path, ngs: int,
+                      landcover: str | None = None) -> tuple[np.ndarray, pd.DataFrame]:
+    """The MapBiomas-masked pool as ``(N, ngs)`` curves, plus the manifest of what survived.
+
+    Split out of `unlabelled_images` because `scripts/37_aoa.py` needs the curves and not the
+    substrate transform of them. Two copies of this gridding would be exactly the silent
+    divergence `biodiv.curves` exists to prevent.
 
     `scripts/32` stores observations with their dates rather than a fixed grid, because
     `docs/14` section 2 could only measure that step resolution does not matter (eight of
@@ -123,10 +126,17 @@ def unlabelled_images(substrate: str, index: str, updir: Path, ngs: int,
             kept.append(sid)
     if not rows:
         raise SystemExit(f"no usable series in {updir} (index={index!r})")
+    return (np.asarray(rows, dtype=np.float32),
+            man[man["sample_id"].isin(kept)].reset_index(drop=True))
 
-    arr = np.asarray(rows, dtype=np.float32)[:, None, :]          # (N, 1, ngs)
+
+def unlabelled_images(substrate: str, index: str, updir: Path, ngs: int,
+                      normalize: str, landcover: str | None = None
+                      ) -> tuple[np.ndarray, pd.DataFrame]:
+    """The same pool, transformed into the model's substrate."""
+    arr, man = unlabelled_curves(index, updir, ngs, landcover)
     tf = substrate_builder(substrate, normalize=normalize)
-    return tf(arr), man[man["sample_id"].isin(kept)].reset_index(drop=True)
+    return tf(arr[:, None, :]), man
 
 
 def main() -> None:
