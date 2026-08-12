@@ -250,6 +250,13 @@ def main() -> None:
          "-> 0,0031) pero no transfiere: las 135.250 curvas salen de las ventanas 5x5 de las "
          "mismas 1.082 parcelas y son casi redundantes con ellas (dimension de participacion "
          "1,3 contra 1,2). 125x mas imagenes cubriendo 1,08x mas espacio."),
+        ("MAE sobre 16.950 series **territoriales** nuevas (MapBiomas, 1.449 celdas)",
+         "0,374 contra 0,382 sin preentrenar, y ninguna de las tres ablaciones de cobertura "
+         "mejora. Este es el resultado que cierra la hipotesis: la reconstruccion es **mas "
+         "dificil** en este pool (MSE 0,0053 contra 0,0031), o sea que si es mas diverso y el "
+         "autoencoder si aprendio la tarea mas dura -- y aun asi no transfiere. La falta de "
+         "datos sin etiquetar deja de ser la explicacion: el cuello de botella son las 1.082 "
+         "etiquetas."),
     ]
     A("| se probo | resultado |")
     A("|---|---|")
