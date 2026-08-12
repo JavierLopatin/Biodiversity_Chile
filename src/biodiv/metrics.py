@@ -24,6 +24,30 @@ from scipy import stats
 METRIC_NAMES = ["n", "R2", "RMSE", "nRMSE", "MAE", "Bias", "spearman"]
 
 
+def by_facet(summary: pd.DataFrame, metric: str = "R2") -> pd.DataFrame:
+    """Una fila por corrida, una columna por faceta, más ``media`` y ``family``.
+
+    **La media es sobre las cinco facetas, no sobre los quince targets.** Beta aporta tres
+    targets por estrato y diversidad oscura uno; promediar targets le daría a beta el triple
+    de peso, y el ranking de modelos cambiaría por un detalle de cuántas respuestas se
+    definieron para cada faceta.
+
+    Vive aquí, y no en el script que la usó primero, porque `scripts/33_search_report.py` y
+    `scripts/39_temporal_report.py` publican tablas que un lector va a comparar entre sí: dos
+    copias de este promedio serían dos numeros distintos con el mismo nombre.
+    """
+    from . import targets as tg
+
+    out = {}
+    for rid, g in summary.groupby("run_id"):
+        row = {f: g[g["target"].isin(ts)][metric].mean() for f, ts in tg.FACETS.items()}
+        row["media"] = float(np.mean([row[f] for f in tg.FACETS]))
+        row["family"] = g["family"].iloc[0]
+        out[rid] = row
+    cols = list(tg.FACETS) + ["media"]
+    return pd.DataFrame(out).T.astype({c: float for c in cols})
+
+
 def _one(pred: np.ndarray, obs: np.ndarray) -> dict[str, float]:
     ok = np.isfinite(pred) & np.isfinite(obs)
     n = int(ok.sum())

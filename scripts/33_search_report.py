@@ -22,7 +22,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from biodiv import metrics as mx                # noqa: E402
 from biodiv import targets as tg                # noqa: E402
+
+#: la media por facetas vive en `biodiv.metrics` para que este informe y el
+#: temporal no publiquen dos numeros distintos con el mismo nombre
+by_facet = mx.by_facet
 
 PRIMARY = "kfold5_window"
 FACET_ES = {"alpha": "alfa", "beta_pa": "beta p/a", "beta_cover": "beta cob.",
@@ -35,21 +40,6 @@ def load(scheme: str = PRIMARY) -> pd.DataFrame:
     if s.empty:
         raise SystemExit(f"sin filas con scheme={scheme!r}")
     return s
-
-
-def by_facet(s: pd.DataFrame, metric: str = "R2") -> pd.DataFrame:
-    """Una fila por corrida, una columna por faceta, mas la media de las cinco.
-
-    La media es sobre FACETAS, no sobre targets: las facetas tienen 1 a 3 targets cada una y
-    promediar targets le daria a beta el triple de peso que a diversidad oscura.
-    """
-    out = {}
-    for rid, g in s.groupby("run_id"):
-        row = {f: g[g["target"].isin(ts)][metric].mean() for f, ts in tg.FACETS.items()}
-        row["media"] = float(np.mean([row[f] for f in tg.FACETS]))
-        row["family"] = g["family"].iloc[0]
-        out[rid] = row
-    return pd.DataFrame(out).T.astype({f: float for f in list(tg.FACETS) + ["media"]})
 
 
 def curve_of(rid: str) -> str:
