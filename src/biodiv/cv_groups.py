@@ -231,8 +231,15 @@ def loc_time_kfold(plots: pd.DataFrame, loc_fold: pd.Series,
     """LLTO: test = grupo espacial x bloque temporal, y el entrenamiento excluye los dos.
 
     El caso duro y el que se parece a un mapa proyectado a un año nuevo: sitio que el modelo
-    no vio, en un tiempo que tampoco vio. ``loc_fold`` debe venir de un esquema que ya cierre
-    la fuga de ventana -- en este proyecto, los folds de `kfold5_window`.
+    no vio, en un tiempo que tampoco vio.
+
+    ``loc_fold`` tiene que venir de un esquema que separe **de verdad** en el espacio. En
+    este proyecto eso es `kfold5_block20` (bloques de 20 km, mediana test-entrenamiento
+    11,4 km) y **no** `kfold5_window`: los componentes de ventana cierran la fuga de píxeles
+    pero reparten componentes vecinos entre folds, así que retener un fold deja la parcela de
+    test a 0,47 km de su entrenamiento -- un "sitio nuevo" que no es nuevo. Medido en
+    `results/tables/sampling_pattern.json`. `block20` también deja 0 de 135 componentes
+    partidos, así que no se pierde el cierre de fuga (`docs/10` §1b).
     """
     tb = time_block(plots["Year"], edges)
     folds = []

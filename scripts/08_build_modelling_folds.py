@@ -125,10 +125,13 @@ def build(plots: pd.DataFrame, block_km: list[float], primary_km: float,
           + ", ".join(f"{int(b)}={int((tb == b).sum())}" for b in sorted(tb.unique())))
     add(cv_groups.time_kfold(plots), "kfold_time")
 
-    # el grupo espacial del LLTO sale de kfold5_window, que ya cierra la fuga de ventana
-    win = pd.concat(schemes)
-    win = win[(win["scheme"] == "kfold5_window") & (win["split"] == "test")]
-    loc_fold = plots[ID_COL].map(win.set_index(ID_COL)["fold"])
+    # El grupo espacial del LLTO sale de `kfold5_block20`, no de `kfold5_window`: retener un
+    # fold de ventana deja el test a 0,47 km de su entrenamiento, y un "sitio nuevo" a medio
+    # kilómetro no es un sitio nuevo. Los bloques de 20 km dan 11,4 km y también dejan 0
+    # componentes de ventana partidos.
+    src = pd.concat(schemes)
+    src = src[(src["scheme"] == f"kfold5_block{int(primary_km)}") & (src["split"] == "test")]
+    loc_fold = plots[ID_COL].map(src.set_index(ID_COL)["fold"])
     # `min_test=1`: lo que se reporta de este esquema es el OOF **agrupado** sobre las 1.082
     # parcelas, no la métrica de cada celda por separado, así que ninguna celda puede
     # quedarse fuera. Con el umbral por defecto se perdían 3 parcelas y el esquema dejaba de
