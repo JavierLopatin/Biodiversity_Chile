@@ -116,8 +116,21 @@ dos.
 Bajo `kfold5_window` la validación cruzada es independiente en el sentido que importa para el
 uso previsto: cada parcela se puntúa desde un modelo que nunca vio ni esa parcela ni ninguno
 de los píxeles de su ventana de extracción. Es el único esquema del proyecto con **cero fuga
-de ventana por construcción**, y el escenario que reproduce —predecir en una parcela nueva
-dentro de un territorio ya muestreado— es exactamente el de un mapa.
+de ventana por construcción**, y el escenario que reproduce es predecir en una parcela nueva
+dentro de un territorio ya muestreado.
+
+> **Corrección (2026-08-12).** Este párrafo decía que ese escenario «es exactamente el de un
+> mapa». **Es falso, y está medido** (`results/tables/sampling_pattern.json`,
+> `scripts/36_sampling_pattern.py`): bajo `kfold5_window` la parcela de test tiene su
+> entrenamiento a **0,47 km**, mientras que un píxel cualquiera de vegetación nativa dista
+> **13,2 km** de la parcela más próxima. La CV evalúa al 3,6 % de la distancia a la que el
+> mapa tendrá que predecir.
+>
+> `kfold5_window` sigue siendo el esquema correcto para la pregunta que el proyecto compara
+> —qué familia de modelo aprovecha mejor la fenología, sin fuga de píxeles— y las tablas de
+> `docs/14` se sostienen. Lo que **no** es es una estimación de exactitud de mapa. Para eso
+> el esquema tiene que evaluar a una distancia parecida: `kfold5_block20` (12,1 km) o
+> `kfold_loc_time` (14,1 km). Ver `docs/16_stemp_protocol.md` §2.5.
 
 La prueba decisiva se corrió dentro del propio esquema, sin comparar contra ningún otro
 (`scripts/24_alpha_decomposition.py`). Descompone las mismas predicciones OOF que producen el
