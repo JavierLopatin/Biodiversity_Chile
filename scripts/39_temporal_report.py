@@ -101,6 +101,50 @@ def main() -> None:
                 print(f"  {fam:5s} tiempo {dt:+.3f}  sitio {ds:+.3f}  ambos {dst:+.3f}"
                       f"   (interaccion {dst - dt - ds:+.3f})")
 
+    # ---------------------------------------------------------------- subconjunto comun
+    # `time_within_owner` puntua 688 parcelas y los demas 1.082. El R2 depende de la varianza
+    # de la muestra que se puntua -- `cv_groups.grouped_kfold` documenta que la riqueza en
+    # Parcelas-CL es ~80 % varianza ENTRE grupos -- asi que comparar 688 contra 1.082 compara
+    # dos denominadores distintos y no dos modelos. La comparacion honesta restringe los
+    # esquemas de referencia a las MISMAS 688 parcelas, lo que se hace desde el OOF guardado.
+    cv = pd.read_parquet(ROOT / "data" / "derived" / "cv_folds_modelling.parquet")
+    w = cv[(cv.scheme == "time_within_owner") & (cv.split == "test")]
+    ids = set(w["PlotObservationID"])
+    if ids:
+        print(f"\ncomparacion sobre las mismas {len(ids)} parcelas de "
+              "`time_within_owner`:\n")
+        rows2 = []
+        for rid, fam in HEADS.items():
+            row = {"familia": fam}
+            for sc in ["kfold5_window", "kfold_time", "time_within_owner"]:
+                f = ROOT / "results" / "models" / rid / sc / "oof_predictions.csv"
+                if not f.exists():
+                    row[sc] = np.nan
+                    continue
+                o = pd.read_csv(f)
+                o = o[o["PlotObservationID"].isin(ids)]
+                if o.empty:
+                    row[sc] = np.nan
+                    continue
+                vals = []
+                for _, g in o.groupby("seed"):
+                    pred = np.column_stack([g[f"{t}_pred"] for ts in tg.FACETS.values()
+                                            for t in ts])
+                    obs = np.column_stack([g[f"{t}_obs"] for ts in tg.FACETS.values()
+                                           for t in ts])
+                    names = [t for ts in tg.FACETS.values() for t in ts]
+                    mm = mx.compute_metrics(pred, obs, names)
+                    vals.append(np.mean([mm[mm.target.isin(ts)].R2.mean()
+                                         for ts in tg.FACETS.values()]))
+                row[sc] = float(np.mean(vals))
+            rows2.append(row)
+        cmp = pd.DataFrame(rows2).set_index("familia")
+        print(cmp.round(3).to_string())
+        if {"kfold5_window", "time_within_owner"} <= set(cmp.columns):
+            print("\nefecto temporal AISLADO (mismo subconjunto, mismo contribuyente en el "
+                  "entrenamiento):")
+            print((cmp["time_within_owner"] - cmp["kfold5_window"]).round(3).to_string())
+
     # por faceta, sólo para el esquema más exigente
     hard = d[d.scheme == "kfold_loc_time"]
     if len(hard):

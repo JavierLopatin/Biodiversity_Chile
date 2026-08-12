@@ -1,0 +1,3 @@
+scheme=time_within_owner  seeds=[0, 1, 2]  targets=all
+
+  RF06_curve_all-topo-area_raw100          time_within_owner [459.1s] hill_q0=+0.024 hill_q1=-0.481 hill_q2=-0.749 lcbd_pa=+0.276 pcoa1_pa=+0.485 pcoa2_pa=+0.186 lcbd_cover=-0.163 pcoa1_cover=-0.045 pcoa2_cover=+0.012 mpd=+0.078 mntd=-0.191 ses_pd=+0.027 ses_mpd=+0.097 ses_mntd=-0.033 dark_n=+0.006
