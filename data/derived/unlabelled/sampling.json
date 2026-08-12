@@ -1,0 +1,68 @@
+{
+  "n": 20000,
+  "years_per_cell": 2,
+  "min_sep_km": 1.0,
+  "cell_km": 10.0,
+  "window": 3,
+  "resolution": 30,
+  "index": "kndvi",
+  "screen_year": 2014,
+  "cells": 0,
+  "workers": 16,
+  "gateway": true,
+  "resume": true,
+  "limit": 0,
+  "pool": "data/derived/unlabelled/pool_planned.parquet",
+  "save_pool": null,
+  "seed": 0,
+  "derived": "data/derived",
+  "out": "data/derived/unlabelled",
+  "dry_run": false,
+  "envelope": {
+    "x": [
+      126731.611171662,
+      407321.302302294
+    ],
+    "y": [
+      5800807.46482239,
+      6651332.26
+    ],
+    "lon": [
+      -73.18166666666667,
+      -70.01
+    ],
+    "lat": [
+      -37.872222222222234,
+      -30.24992920735592
+    ],
+    "years": [
+      2003,
+      2006,
+      2010,
+      2012,
+      2013,
+      2014,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "n_plots": 1082
+  },
+  "native_codes": [
+    3,
+    11,
+    12,
+    59,
+    60,
+    61,
+    63,
+    66
+  ]
+}

@@ -123,6 +123,12 @@ Parcelas-CL no satura (ver `docs/01_state_of_the_art.md` gap G5 y
 | [`docs/08_modelling.md`](docs/08_modelling.md) | **Modelamiento:** las tres preguntas del benchmark, las decisiones no obvias (sesgo de retransformación, DOY circular por eje, alfa contra beta, píxel central contra 5×5), arquitecturas con conteos medidos, fusión topográfica, la matriz de ~170 corridas y los resultados con tests pareados. |
 | [`docs/09_predictors.md`](docs/09_predictors.md) | **Siguiente fase:** eliminar los NaN de LSP (99,2 % vienen de un `return None` cuando la curva no se rota), agregación explícita por píxel, CV por componente de ventana solapada, y el cribado con Random Forest de alternativas no fenológicas — composites anuales, geomedianas y heterogeneidad espectral. |
 | [`docs/07_run_record.md`](docs/07_run_record.md) | **Registro del run final:** comandos, parámetros, versiones, salidas, diagnósticos y advertencias. Con [`docs/run_manifest.json`](docs/run_manifest.json) (inventario con `sha256`). |
+| [`docs/10_findings.md`](docs/10_findings.md) | Hallazgos de la fase de diagnóstico y del cribado de predictores, con la descomposición within/between del R² de alfa. |
+| [`docs/11_next_steps.md`](docs/11_next_steps.md) | **Traspaso:** qué falta, en qué orden y con qué comando. Incluye el apéndice de deudas técnicas conocidas. |
+| [`docs/12_phylo_and_rarefaction.md`](docs/12_phylo_and_rarefaction.md) | Diversidad filogenética con árbol propio, rarefacción iNEXT contra Parcelas-CL y dark diversity con DarkDiv. |
+| [`docs/13_phenology_year_boundary.md`](docs/13_phenology_year_boundary.md) | La curva fenológica no cierra el año: diagnóstico, mecanismo con `file:line` y las tres opciones de arreglo. Defecto de `PhenoPY`, no de este repo. |
+| [`docs/14_cnn_search_results.md`](docs/14_cnn_search_results.md) | **Resultados de la búsqueda de la 2D-CNN:** 195 corridas, la serie cruda de 3 años como único hallazgo real, el piso de ruido de GPU medido (0,010 de desviación) y lo que se probó y no funcionó. |
+| [`docs/15_datacube_extraction_spec.md`](docs/15_datacube_extraction_spec.md) | **Para la máquina del datacube:** muestreo no etiquetado de vegetación nativa enmascarada con MapBiomas, para preentrenar el codificador por enmascarado. Qué sacar, cómo, y cómo verificarlo al llegar. |
 | [`docs/refs.bib`](docs/refs.bib) | 42 referencias; todos los DOI resueltos contra la API de Crossref. |
 
 ---

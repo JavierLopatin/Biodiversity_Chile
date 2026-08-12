@@ -35,6 +35,19 @@ data/*
 !data/derived/phenology/
 !data/derived/phenology/manifest.csv
 
+# El pool no etiquetado para el MAE (13 MB). Se versiona entero, y no por comodidad:
+# no es reproducible desde este repo. El plan sale de los 26 rasters de MapBiomas
+# (3,1 GB, fuera de git) y las series de 2.898 cargas a Data Cube Chile, 5,2 h con
+# 16 workers. Sin esto, nada aguas abajo se puede auditar ni repetir.
+!data/derived/unlabelled/
+!data/derived/unlabelled/series.parquet
+!data/derived/unlabelled/manifest.csv
+!data/derived/unlabelled/pool_planned.parquet
+
+# La leyenda de MapBiomas: los rasters no la traen embebida y el metadata.txt no da los
+# enteros, asi que este CSV es lo unico que hace auditable la mascara de vegetacion nativa.
+!MapBiomas/legend.csv
+
 # Los cubos .nc por parcela (~360 MB) siguen fuera — ver docs/09_predictors.md §1.
 data/derived/phenology/*.nc
 # el archivo de transferencia de los cubos y su descarga parcial: 346 MB que se

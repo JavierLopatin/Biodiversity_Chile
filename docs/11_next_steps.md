@@ -154,9 +154,21 @@ Los dos caminos son incompatibles y hay que tomar uno:
 ## 5. Solo si lo anterior se estanca
 
 Traer fuentes nuevas de Data Cube Chile: **SAR de Sentinel-1** y **red-edge de Sentinel-2**.
-Ninguna de las dos está en los cubos `.nc` guardados, y son lo único para lo que el datacube
-vuelve a hacer falta ahora que el clima ya se extrajo. Es el único punto de esta lista que
-requiere volver a una máquina con credenciales.
+Ninguna de las dos está en los cubos `.nc` guardados.
+
+**Corrección:** este documento decía que SAR y red-edge eran «lo único para lo que el datacube
+vuelve a hacer falta». Ya no lo son. Hay **tres** encargos para esa máquina, y conviene
+resolverlos en una sola visita:
+
+| encargo | dónde | condición |
+|---|---|---|
+| muestreo no etiquetado para el MAE | [`15_datacube_extraction_spec.md`](15_datacube_extraction_spec.md) | listo para correr, no condicional |
+| arreglo de periodicidad de la curva | [`13_phenology_year_boundary.md`](13_phenology_year_boundary.md) | exige los `.nc` |
+| SAR y red-edge | aquí | sólo si lo anterior se estanca |
+
+El primero no es condicional: el preentrenamiento por enmascarado falló sobre las curvas de
+píxel (`docs/14` §4) porque eran redundantes con las parcelas, y la extracción del doc 15 es lo
+que lo arregla.
 
 ---
 

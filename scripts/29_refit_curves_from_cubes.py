@@ -57,6 +57,11 @@ import xarray as xr
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+# `raw_series` moved to `biodiv.curves` when `scripts/32` began building the unlabelled pool's
+# grid: both have to interpolate identically or the transfer result is confounded with a
+# change of substrate. Imported here so there is one definition, not two.
+from biodiv.curves import raw_series          # noqa: E402
+
 #: `phenosensing` is used from its working tree: the fix lives there and is not pip-installed.
 #: Overridable with --phenosensing for a machine that has it on the path already.
 DEFAULT_PHENO = Path("/mnt/rapidita_4T/GitHub/PhenoSensing")
@@ -110,53 +115,6 @@ def year_boundary_step(curves: np.ndarray, doy: np.ndarray) -> tuple[float, floa
 # --------------------------------------------------------------------------------------
 # per-plot work
 # --------------------------------------------------------------------------------------
-
-def raw_series(da, ngs: int, roll: int = 3) -> tuple[np.ndarray, np.ndarray]:
-    """Interpolate the raw observations onto a regular grid over the WHOLE window.
-
-    The alternative to `PhenoShape`, and a different object. PhenoShape collapses three
-    years onto one composite year, which averages the interannual variation away -- and that
-    variation is real signal: the year-boundary step of the composite tracks the interannual
-    trend with a regression slope of -0.945 against a predicted -1
-    (`docs/13_phenology_year_boundary.md`). A series kept in calendar time never destroys it.
-
-    It also gives a bigger image. With three years at weekly spacing the grid is 156 steps,
-    which folds to 13x13 against the 8x8 of a 52-step composite -- and the paper this design
-    comes from flags image size and fold topology as the axis nobody has studied.
-
-    The cost is honest and worth stating: a weekly grid over 1,088 days is ~0.8 real
-    observations per step, against ~2.4 for the composite, so more of the curve is
-    interpolation. Whether the extra interannual signal beats the extra smoothing is exactly
-    what the experiment measures.
-
-    Returns ``(curves, doy)`` shaped ``(ngs, y, x)`` and ``(ngs,)``.
-    """
-    t = da["time"].values.astype("datetime64[D]").astype(float)
-    grid = np.linspace(t.min(), t.max(), ngs)
-    arr = np.asarray(da.values, dtype=float)               # (time, y, x)
-    ny, nx = arr.shape[1], arr.shape[2]
-    out = np.full((ngs, ny, nx), np.nan)
-    for yy in range(ny):
-        for xx in range(nx):
-            v = arr[:, yy, xx]
-            ok = np.isfinite(v)
-            if ok.sum() < 5:
-                continue
-            o = np.argsort(t[ok])
-            g = np.interp(grid, t[ok][o], v[ok][o])
-            if roll and roll > 1:                          # same shrinking-window smoother
-                c = np.cumsum(np.insert(g, 0, 0.0))
-                h = roll // 2
-                lo = np.maximum(np.arange(ngs) - h, 0)
-                hi = np.minimum(np.arange(ngs) + h + 1, ngs)
-                g = (c[hi] - c[lo]) / (hi - lo)
-            out[:, yy, xx] = g
-    # the grid coordinate is calendar day-of-year, so downstream labelling still reads as a
-    # date; the year is not recoverable from it, which is fine because nothing downstream
-    # uses it for anything but axis labels
-    doy = ((grid - grid.min()) % 365.25) + 1
-    return out, doy
-
 
 def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
                roll_mode: str = "shrink", ngs: int = NGS, raw: bool = False) -> dict:
