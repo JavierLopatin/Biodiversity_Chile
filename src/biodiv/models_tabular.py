@@ -16,6 +16,9 @@ within-node variance, and on a target with skew 2.8 that objective is dominated 
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import joblib
 import numpy as np
 import torch
 import torch.nn as nn
@@ -37,8 +40,22 @@ def make_rf(seed: int = 0, **kw) -> RandomForestRegressor:
     return RandomForestRegressor(random_state=seed, **(RF_DEFAULTS | kw))
 
 
+def save_rf(rf: RandomForestRegressor, path: str | Path) -> None:
+    """Persist a fitted forest. No run in this project has ever saved one -- every driver
+    fits, predicts and discards, so re-scoring new data (a map, a sensitivity check) meant
+    refitting from scratch. `joblib` rather than `torch.save`/`pickle` directly: it is
+    scikit-learn's own recommended serialisation for estimators with large numpy arrays."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(rf, path)
+
+
+def load_rf(path: str | Path) -> RandomForestRegressor:
+    return joblib.load(path)
+
+
 def fit_predict_rf(X_tr: np.ndarray, Y_tr: np.ndarray, X_te: np.ndarray,
                    seed: int = 0, importance: bool = False,
+                   save_dir: str | Path | None = None, target_names: list[str] | None = None,
                    **kw) -> tuple[np.ndarray, np.ndarray | None, np.ndarray]:
     """One forest per target column, each fitted on that target's observed rows only.
 
@@ -50,6 +67,10 @@ def fit_predict_rf(X_tr: np.ndarray, Y_tr: np.ndarray, X_te: np.ndarray,
 
     A target with fewer than 20 observed training rows yields NaN predictions rather than a
     forest fitted on noise.
+
+    ``save_dir``, if given (with matching ``target_names``), persists each fitted forest via
+    :func:`save_rf` as it is fitted -- the only place a caller can reach the estimator before
+    it goes out of scope, since this function fits-and-discards by design otherwise.
     """
     n_te, n_t = X_te.shape[0], Y_tr.shape[1]
     pred = np.full((n_te, n_t), np.nan)
@@ -66,6 +87,8 @@ def fit_predict_rf(X_tr: np.ndarray, Y_tr: np.ndarray, X_te: np.ndarray,
             resid[np.flatnonzero(ok), j] = Y_tr[ok, j] - oob
         if importance:
             imps[:, j] = rf.feature_importances_
+        if save_dir is not None and target_names is not None:
+            save_rf(rf, Path(save_dir) / f"rf_{target_names[j]}.joblib")
     return pred, imps, resid
 
 

@@ -94,7 +94,7 @@ def _at_pixel(spec: str, px: str) -> str:
 def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
             derived: str, target_set: str, root: Path,
             multioutput: bool = False, force: bool = False,
-            px: str = "mean5x5") -> pd.DataFrame | None:
+            px: str = "mean5x5", save_state: bool = False) -> pd.DataFrame | None:
     meta = MODELS[model]
     spec = _at_pixel(meta["spec"], px)
     tag = spec.replace("+", "-")
@@ -145,8 +145,11 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
                 resid_s = Ytr - fit_predict_rf_multioutput(Xtr, Ytr, Xtr, seed=seed)
                 imps = None
             else:
-                pred_s, imps, resid_s = fit_predict_rf(Xtr, Ytr, Xte, seed=seed,
-                                                       importance=True)
+                save_dir = (cfg.outdir(root) / "models" / f"fold{fold}"
+                           if save_state and seed == seeds[0] else None)
+                pred_s, imps, resid_s = fit_predict_rf(
+                    Xtr, Ytr, Xte, seed=seed, importance=True,
+                    save_dir=save_dir, target_names=names)
 
             pred = tg.inverse_with_smearing(pred_s, scaler, resid_s,
                                             y_train=Y_full[itr], seed=seed)
@@ -217,6 +220,9 @@ def main() -> None:
     p.add_argument("--px", default="mean5x5", choices=["mean5x5", "center"],
                    help="pixel level of the WHOLE design: 5x5 patch summary, or centre pixel")
     p.add_argument("--force", action="store_true")
+    p.add_argument("--save-state", action="store_true", dest="save_state",
+                   help="persist each fitted forest (all folds, seeds[0]) as "
+                        "results/models/<run_id>/<scheme>/models/fold<k>/rf_<target>.joblib")
     args = p.parse_args()
 
     seeds = list(range(args.seed_start, args.seed_start + args.seeds))
@@ -233,7 +239,7 @@ def main() -> None:
         idxs = ([args.index] if args.index else feat.INDICES) if meta["per_index"] else [None]
         for ix in idxs:
             run_one(model, args.scheme, ix, seeds, args.derived, args.target_set, root,
-                    force=args.force, px=args.px)
+                    force=args.force, px=args.px, save_state=args.save_state)
 
     if args.all or args.model == "RF07":
         ix, spec = _best_block(root, args.scheme)

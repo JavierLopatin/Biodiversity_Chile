@@ -27,6 +27,20 @@ from biodiv import runlog                      # noqa: E402
 from biodiv.dl_runner import run_dl            # noqa: E402
 from biodiv.trainer import TrainCfg            # noqa: E402
 
+#: `lsp`/`topo` are separate catalog entries from `lsp_ctr`/`topo_ctr` in
+#: `features.build_design` -- passing `px="center"` alone does nothing for them, only
+#: `curve` reads `px` directly. Mirrors `scripts/09_run_baselines.py::PX_BLOCKS`/`_at_pixel`
+#: exactly; dl_runner.py already does the equivalent substitution for `ctx_spec` internally,
+#: so only `features_spec` needs it here.
+PX_BLOCKS = {"lsp": "lsp_ctr", "topo": "topo_ctr"}
+
+
+def _at_pixel(spec: str, px: str) -> str:
+    if px != "center":
+        return spec
+    return "+".join(PX_BLOCKS.get(b, b) for b in spec.split("+"))
+
+
 MODELS = {
     "MLP01": dict(spec="lsp", width="B", per_index=True,
                   note="LSP metrics + context, shared trunk"),
@@ -69,6 +83,8 @@ def main() -> None:
     p.add_argument("--context", default=None,
                    help="feature spec for the context vector; overrides the model default "
                         "(default topo+area, see biodiv.features.CONTEXT_SPEC)")
+    p.add_argument("--px", default="mean5x5", choices=["mean5x5", "center"],
+                   help="pixel level of the WHOLE design: 5x5 patch summary, or centre pixel")
     p.add_argument("--force", action="store_true")
     args = p.parse_args()
 
@@ -81,18 +97,22 @@ def main() -> None:
         meta = MODELS[name]
         idxs = ([args.index] if args.index else feat.INDICES) if meta["per_index"] else [None]
         for ix in idxs:
-            spec = meta["spec"]
+            spec = _at_pixel(meta["spec"], args.px)
+            ident = (runlog.make_run_id(name, spec.replace("+", "-"), ix or "")
+                    + (f"_s{seeds[0]}" if seeds[0] else ""))
+            if args.px == "center":
+                ident += "_ctr"
             run_dl(
                 family="MLP",
-                run_id=runlog.make_run_id(name, spec.replace("+", "-"), ix or "")
-                       + (f"_s{seeds[0]}" if seeds[0] else ""),
+                run_id=ident,
                 scheme=args.scheme, substrate="tabular", index=ix, features_spec=spec,
+                px=args.px,
                 width=meta["width"], fusion="late", target_set="all", seeds=seeds,
                 ctx_spec=args.context or meta.get("ctx", feat.CONTEXT_SPEC),
                 derived=args.derived, out_root=Path(args.out),
                 train_cfg=TrainCfg(max_epochs=args.max_epochs, patience=args.patience,
                                    augment=False),      # tabular rows are not curves
-                force=args.force, notes=meta["note"])
+                force=args.force, notes=meta["note"], save_state=True)
 
 
 if __name__ == "__main__":

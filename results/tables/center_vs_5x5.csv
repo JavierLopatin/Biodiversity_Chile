@@ -1,0 +1,106 @@
+model,facet,r2_center,r2_5x5,delta,status
+RF01c_lsp_ctr-topo_ctr-area_kndvi,alpha,0.21048293167395885,0.26478604570793723,-0.05430311403397839,ok
+RF01c_lsp_ctr-topo_ctr-area_kndvi,beta_pa,0.36825091619141825,0.382849996263117,-0.014599080071698745,ok
+RF01c_lsp_ctr-topo_ctr-area_kndvi,beta_cover,0.2161842917417866,0.20625026585906567,0.009934025882720937,ok
+RF01c_lsp_ctr-topo_ctr-area_kndvi,phylo,0.10511465574492447,,,ok
+RF01c_lsp_ctr-topo_ctr-area_kndvi,dark,0.0319248513956836,,,ok
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi,alpha,0.2021659007842442,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi,beta_pa,0.3636631503308911,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi,beta_cover,0.22047964414611412,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi,phylo,0.10726005887671607,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi,dark,0.044199690719015965,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF03c_curve-topo_ctr-area_kndvi,alpha,0.2676443299073884,0.31258374007925027,-0.04493941017186187,ok
+RF03c_curve-topo_ctr-area_kndvi,beta_pa,0.36815788244044084,0.3869248188493015,-0.01876693640886068,ok
+RF03c_curve-topo_ctr-area_kndvi,beta_cover,0.21975006049532206,0.23341686492119315,-0.013666804425871093,ok
+RF03c_curve-topo_ctr-area_kndvi,phylo,0.10581318227023769,,,ok
+RF03c_curve-topo_ctr-area_kndvi,dark,0.10922342466470257,,,ok
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi,alpha,0.2395981771724035,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi,beta_pa,0.35651583895221856,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi,beta_cover,0.2194944640264952,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi,phylo,0.10389952866138161,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi,dark,0.08523416902596753,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF08c_lsp_ctr-curve-topo_ctr_kndvi,alpha,0.17291854155873598,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF08c_lsp_ctr-curve-topo_ctr_kndvi,beta_pa,0.3356910941727769,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF08c_lsp_ctr-curve-topo_ctr_kndvi,beta_cover,0.20721057903292175,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF08c_lsp_ctr-curve-topo_ctr_kndvi,phylo,0.10298550572951747,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+RF08c_lsp_ctr-curve-topo_ctr_kndvi,dark,0.07819374493027907,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP01_lsp_ctr_kndvi_ctr,alpha,0.08203382684004044,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP01_lsp_ctr_kndvi_ctr,beta_pa,0.2549114672589904,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP01_lsp_ctr_kndvi_ctr,beta_cover,0.12235853556276827,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP01_lsp_ctr_kndvi_ctr,phylo,0.04242760976637315,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP01_lsp_ctr_kndvi_ctr,dark,-0.19326447311351494,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP02_curve_kndvi_ctr,alpha,0.21673069196247502,0.21483114384481244,0.001899548117662575,ok
+MLP02_curve_kndvi_ctr,beta_pa,0.3520946059503278,0.3539499577998411,-0.0018553518495132981,ok
+MLP02_curve_kndvi_ctr,beta_cover,0.20237154400888357,0.21067362709096357,-0.008302083082079997,ok
+MLP02_curve_kndvi_ctr,phylo,0.07415461949495258,,,ok
+MLP02_curve_kndvi_ctr,dark,-0.050491528351180974,,,ok
+MLP03_lsp_ctr-curve-qc_kndvi_ctr,alpha,0.17422956857145228,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP03_lsp_ctr-curve-qc_kndvi_ctr,beta_pa,0.2947701079031502,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP03_lsp_ctr-curve-qc_kndvi_ctr,beta_cover,0.18863524450762006,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP03_lsp_ctr-curve-qc_kndvi_ctr,phylo,0.04357783805809702,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP03_lsp_ctr-curve-qc_kndvi_ctr,dark,-0.08254359776254318,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05a_curve_kndvi_ctr,alpha,0.20484710536764286,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05a_curve_kndvi_ctr,beta_pa,0.34562818451741745,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05a_curve_kndvi_ctr,beta_cover,0.1896079320059753,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05a_curve_kndvi_ctr,phylo,0.09678295755262414,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05a_curve_kndvi_ctr,dark,-0.09636660002623136,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05c_curve_kndvi_ctr,alpha,0.22169362569067733,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05c_curve_kndvi_ctr,beta_pa,0.34823136275843186,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05c_curve_kndvi_ctr,beta_cover,0.19129946287813318,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05c_curve_kndvi_ctr,phylo,0.08223479827270742,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP05c_curve_kndvi_ctr,dark,-0.04422806948535929,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP06_curve_kndvi_ctr,alpha,0.3030710897154934,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP06_curve_kndvi_ctr,beta_pa,0.3363020151302256,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP06_curve_kndvi_ctr,beta_cover,0.2458274882989879,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP06_curve_kndvi_ctr,phylo,0.09031829306542492,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+MLP06_curve_kndvi_ctr,dark,-0.09611655582548163,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C1D01_curve1d_kndvi_ctr,alpha,0.11191417500958904,0.15873005074841642,-0.04681587573882738,ok
+C1D01_curve1d_kndvi_ctr,beta_pa,0.20707377388952325,0.22770458725626513,-0.020630813366741885,ok
+C1D01_curve1d_kndvi_ctr,beta_cover,0.06334899982069761,0.10471510038528767,-0.04136610056459006,ok
+C1D01_curve1d_kndvi_ctr,phylo,0.07279013881987763,,,ok
+C1D01_curve1d_kndvi_ctr,dark,-0.14393000078465,,,ok
+C2D02_serpentine_kndvi_ctr,alpha,0.16950655017586902,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D02_serpentine_kndvi_ctr,beta_pa,0.31666489423915717,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D02_serpentine_kndvi_ctr,beta_cover,0.15136226686283175,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D02_serpentine_kndvi_ctr,phylo,0.08809344863855356,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D02_serpentine_kndvi_ctr,dark,-0.04051469676815994,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D01_reshape_kndvi_ctr,alpha,0.11340315326668181,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D01_reshape_kndvi_ctr,beta_pa,0.293225822384398,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D01_reshape_kndvi_ctr,beta_cover,0.11616431547988894,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D01_reshape_kndvi_ctr,phylo,0.09147454742127856,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D01_reshape_kndvi_ctr,dark,-0.09382805478126628,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D03_gaf_kndvi_ctr,alpha,-0.0018042287892555886,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D03_gaf_kndvi_ctr,beta_pa,-0.07852180361237328,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D03_gaf_kndvi_ctr,beta_cover,-0.04481057207432982,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D03_gaf_kndvi_ctr,phylo,-0.02304776251084561,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D03_gaf_kndvi_ctr,dark,-0.28885096567624724,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D04_mtf_kndvi_ctr,alpha,0.000797447310289755,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D04_mtf_kndvi_ctr,beta_pa,-0.1352921995681374,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D04_mtf_kndvi_ctr,beta_cover,-0.06326450633709277,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D04_mtf_kndvi_ctr,phylo,-0.06178496442165127,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D04_mtf_kndvi_ctr,dark,-0.31561886287925117,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D05_ndi_kndvi_ctr,alpha,-0.037125668199115676,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D05_ndi_kndvi_ctr,beta_pa,-0.13834473115199478,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D05_ndi_kndvi_ctr,beta_cover,-0.11473474016211534,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D05_ndi_kndvi_ctr,phylo,-0.05140884970406095,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D05_ndi_kndvi_ctr,dark,-0.31902361429575776,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D06_cwt_kndvi_ctr,alpha,0.1625123930238563,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D06_cwt_kndvi_ctr,beta_pa,0.2159155780797397,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D06_cwt_kndvi_ctr,beta_cover,0.06058747371847579,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D06_cwt_kndvi_ctr,phylo,0.09117956323190508,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D06_cwt_kndvi_ctr,dark,-0.1815244805740728,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D07_hilbert_kndvi_ctr,alpha,0.15248240541323288,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D07_hilbert_kndvi_ctr,beta_pa,0.279608607023593,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D07_hilbert_kndvi_ctr,beta_cover,0.147803554684583,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D07_hilbert_kndvi_ctr,phylo,0.07451145773348096,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D07_hilbert_kndvi_ctr,dark,-0.09413389449020416,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D08_cos2d_kndvi_ctr,alpha,-0.01687348176946999,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D08_cos2d_kndvi_ctr,beta_pa,0.06293661473768064,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D08_cos2d_kndvi_ctr,beta_cover,-0.019344470632098702,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D08_cos2d_kndvi_ctr,phylo,-0.02609726005740424,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D08_cos2d_kndvi_ctr,dark,-0.2130655520798571,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D09_spectrogram_kndvi_ctr,alpha,0.15919287805003124,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D09_spectrogram_kndvi_ctr,beta_pa,0.259872235089935,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D09_spectrogram_kndvi_ctr,beta_cover,0.11193245620221148,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D09_spectrogram_kndvi_ctr,phylo,0.08393270392306551,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)
+C2D09_spectrogram_kndvi_ctr,dark,-0.1269949181341206,,,PENDIENTE (sin baseline mean5x5 en block20+kndvi)

@@ -61,6 +61,7 @@ sys.path.insert(0, str(ROOT / "src"))
 # grid: both have to interpolate identically or the transfer result is confounded with a
 # change of substrate. Imported here so there is one definition, not two.
 from biodiv.curves import raw_series          # noqa: E402
+from biodiv import harmonize                  # noqa: E402
 
 #: `phenosensing` is used from its working tree: the fix lives there and is not pip-installed.
 #: Overridable with --phenosensing for a machine that has it on the path already.
@@ -92,6 +93,22 @@ def observations(ds: xr.Dataset, index: str) -> xr.DataArray:
     return da.assign_coords(doy=("time", doy), year=("time", year))
 
 
+def curve_level_at(stored: xr.DataArray | None, stored_doy: np.ndarray | None,
+                   index: str, doy_obs: np.ndarray) -> np.ndarray | None:
+    """The plot's own (uncorrected) curve value at each observation's real DOY.
+
+    This is the same reference `scripts/40_sensor_harmonization_test.py` measured the
+    tercile offsets against, so the correction is looked up on a matching scale. `None` when
+    the cube has no stored curve for this index -- the caller then skips the correction for
+    that index rather than guessing a level.
+    """
+    if stored is None or stored_doy is None or index not in list(stored["index"].values):
+        return None
+    curve = stored.sel(index=index).mean(dim=["y", "x"], skipna=True).values
+    order = np.argsort(stored_doy)
+    return np.interp(doy_obs, stored_doy[order], curve[order], period=365)
+
+
 def year_boundary_step(curves: np.ndarray, doy: np.ndarray) -> tuple[float, float]:
     """Median |jump| across pixels at the transition where DOY crosses the year end.
 
@@ -117,10 +134,13 @@ def year_boundary_step(curves: np.ndarray, doy: np.ndarray) -> tuple[float, floa
 # --------------------------------------------------------------------------------------
 
 def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
-               roll_mode: str = "shrink", ngs: int = NGS, raw: bool = False) -> dict:
+               roll_mode: str = "shrink", ngs: int = NGS, raw: bool = False,
+               sensor_offsets: dict | None = None, roll: int = ROLL) -> dict:
     """Re-fit every index of one cube. Returns curves, pixels and a diagnostic row.
 
     Runs in a worker process, so it takes plain types and imports `phenosensing` itself.
+    `sensor_offsets`, if given, is applied to the raw observations before fitting -- see
+    `biodiv.harmonize` and `scripts/40_sensor_harmonization_test.py`.
     """
     sys.path.insert(0, pheno_path)
     import phenosensing  # noqa: F401  (registers the .pheno accessor)
@@ -139,11 +159,15 @@ def refit_plot(path: str, recon: str, n_harmonics: int, pheno_path: str,
             if f"obs_{index}" not in ds:
                 continue
             da = observations(ds, index)
+            if sensor_offsets:
+                level = curve_level_at(stored, stored_doy, index, da["doy"].values)
+                if level is not None:
+                    da = harmonize.apply_offset(da, index, sensor_offsets, level)
             if raw:
-                arr, gdoy = raw_series(da, ngs, roll=ROLL)
+                arr, gdoy = raw_series(da, ngs, roll=roll)
                 out["doy"] = gdoy
             else:
-                shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=ROLL, nGS=ngs,
+                shape = da.pheno.PhenoShape(interpolType=recon, rollWindow=roll, nGS=ngs,
                                             recon_params=kw or None, rollMode=roll_mode)
                 arr = shape.values                   # (doy, y, x)
                 out["doy"] = shape["doy"].values.astype(float)
@@ -195,6 +219,11 @@ def main() -> None:
                    help="reconstructor; 'harmonic' also closes the year, 'linear' relies "
                         "only on the moving-average fix")
     p.add_argument("--n-harmonics", type=int, default=3, dest="n_harmonics")
+    p.add_argument("--roll", type=int, default=ROLL,
+                   help="moving-average window, steps. Was a hardcoded module constant "
+                        "(ROLL=5); exposed to test whether heavier temporal smoothing on "
+                        "a single pixel recovers what the 5x5 spatial mean buys "
+                        "(docs/17, docs/10_findings.md section on gm/MADs aggregation)")
     p.add_argument("--roll-mode", default="shrink", dest="roll_mode",
                    choices=["shrink", "reflect", "wrap", "legacy"],
                    help="edge handling of the moving average; 'wrap' deletes the "
@@ -210,8 +239,13 @@ def main() -> None:
     p.add_argument("--workers", type=int, default=8)
     p.add_argument("--limit", type=int, default=None, help="first N cubes, for a trial run")
     p.add_argument("--phenosensing", default=str(DEFAULT_PHENO))
+    p.add_argument("--harmonize", default=None,
+                   help="path to sensor_harmonization.json (scripts/40); when given, "
+                        "corrects the OLI level offset before fitting each curve")
     p.add_argument("--dry-run", action="store_true")
     args = p.parse_args()
+
+    sensor_offsets = harmonize.load_offsets(args.harmonize) if args.harmonize else None
 
     cubes = sorted(Path(args.cubes).glob("*.nc"))
     if args.limit:
@@ -226,7 +260,8 @@ def main() -> None:
     print(f"{len(cubes)} cubes  |  "
           f"{'RAW 3-year series' if args.raw else f'reconstructor={args.recon}'}"
           f"{f' (k={args.n_harmonics})' if (args.recon == 'harmonic' and not args.raw) else ''}"
-          f"  |  nGS={args.ngs} rollWindow={ROLL} rollMode={args.roll_mode}")
+          f"  |  nGS={args.ngs} rollWindow={args.roll} rollMode={args.roll_mode}"
+          f"{f'  |  sensor-harmonized ({args.harmonize})' if sensor_offsets else ''}")
     print(f"phenosensing: {Path(phenosensing.__file__).parent}")
     if args.recon not in list_reconstructors():
         raise SystemExit(
@@ -244,7 +279,7 @@ def main() -> None:
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         futs = {ex.submit(refit_plot, str(c), args.recon, args.n_harmonics,
                           args.phenosensing, args.roll_mode, args.ngs,
-                          args.raw): c for c in cubes}
+                          args.raw, sensor_offsets, args.roll): c for c in cubes}
         for i, fut in enumerate(as_completed(futs), 1):
             cube = futs[fut]
             try:

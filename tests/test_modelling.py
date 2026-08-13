@@ -286,7 +286,10 @@ def test_window_components_are_symmetric_and_transitive(ids):
 
 def test_every_target_has_a_facet_and_every_facet_a_source(ids):
     assert set(tg.FACET_OF) == set(tg.TARGETS_ALL)
-    assert set(tg.TARGET_SOURCE) == set(tg.TARGETS_ALL)
+    # TARGET_SOURCE is a superset, not an exact match: it also carries diagnostic-only
+    # targets (e.g. TARGETS_MAIN_SAR) that are deliberately excluded from TARGETS_ALL so
+    # the 79-run matrix and the row count below stay untouched.
+    assert set(tg.TARGETS_ALL) <= set(tg.TARGET_SOURCE)
     assert sum(len(v) for v in tg.FACETS.values()) == len(tg.TARGETS_ALL)
 
 

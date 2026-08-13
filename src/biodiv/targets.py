@@ -49,11 +49,18 @@ TARGETS_DARK = ["dark_n"]
 
 TARGETS_ALL = TARGETS_MAIN + TARGETS_COVER + TARGETS_PHYLO + TARGETS_DARK
 
+#: Species-area-corrected richness, from `scripts/41_sar_correct_richness.R`. Diagnostic
+#: only -- not part of TARGETS_ALL/TARGETS_MAIN, so the 79-run matrix and
+#: `tests/test_modelling.py`'s `Y.shape == (n, 15)` are untouched. See that script's
+#: docstring for why iNEXT/Chao-Jost rarefaction is not usable on this dataset instead.
+TARGETS_MAIN_SAR = ["hill_q0_sar", "hill_q1_sar", "hill_q2_sar"]
+
 #: Which parquet each target lives in. `load_targets` joins them on PlotObservationID.
 TARGET_SOURCE = (
     {t: "biodiversity_responses.parquet" for t in TARGETS_MAIN + TARGETS_COVER}
     | {t: "phylo_responses.parquet" for t in TARGETS_PHYLO}
     | {t: "dark_diversity.parquet" for t in TARGETS_DARK}
+    | {t: "biodiversity_responses_sar.parquet" for t in TARGETS_MAIN_SAR}
 )
 
 #: Reporting groups. Averaging R2 across facets that behave differently hides both: alpha
@@ -96,6 +103,9 @@ TARGET_SETS = {
     "dark": TARGETS_DARK,
     #: the 9 taxonomic targets, i.e. what the 79 runs of docs/08_modelling.md scored
     "taxonomic": TARGETS_MAIN + TARGETS_COVER,
+    #: raw vs species-area-corrected richness, side by side, for the kfold5_owner/
+    #: kfold_time diagnostic -- does removing the plot-size confound recover any R2?
+    "richness_sar_test": ["hill_q0", "hill_q1", "hill_q2"] + TARGETS_MAIN_SAR,
 }
 
 

@@ -214,12 +214,26 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
             per_fold.append(block)
             hist_rows.append(pd.DataFrame(hist).assign(seed=seed, fold=fold))
 
-            if save_state and seed == seeds[0] and fold == 0:
+            if save_state and seed == seeds[0]:
+                # Every fold now, not just fold 0: a checkpoint that only covers one fold
+                # cannot score the other four folds' plots, which is most of what "reuse
+                # this model" turns out to mean in practice.
+                #
+                # `ctx_preprocessor`/`target_scaler` are the objects fit above (lines
+                # ~149-153), saved whole rather than as raw arrays: both are plain,
+                # picklable Python objects (feat.Preprocessor holds pandas Series;
+                # target_scaler is an sklearn PowerTransformer), and saving them directly
+                # means a caller never has to re-derive `fit_ids` and re-fit them
+                # identically just to get numbers on the right scale. Without this, the
+                # checkpoint was weights only -- inference from it silently produced
+                # wrongly-scaled predictions.
                 out = cfg.outdir(out_root)
                 out.mkdir(parents=True, exist_ok=True)
                 torch.save({"state_dict": model.state_dict(), "n_params": n_params,
                             "input_shape": tuple(imgs.shape[1:]), "rows": rows,
-                            "targets": names},
+                            "targets": names, "ctx_preprocessor": pre_ctx,
+                            "target_scaler": scaler, "fit_ids": list(fit_ids),
+                            "train_ids": list(tr_ids), "test_ids": list(te_ids)},
                            out / f"model_seed{seed}_fold{fold}.pt")
 
     oof = cvmod.collect_oof(per_fold, scheme, names)
