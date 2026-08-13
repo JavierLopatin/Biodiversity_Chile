@@ -51,6 +51,18 @@ message(sprintf("    error relativo maximo = %.2e sobre %d tamanos",
 check("pd_curve reproduce iNEXT.3D a precision de maquina", v$max_rel_error < 1e-8)
 
 # --------------------------------------------------------------------------------------
+message("\n== rarefaccion de PD en q=1,2 contra iNEXT.3D ==")
+
+# Misma compuerta que arriba, pero para q=1 (tipo Shannon) y q=2 (tipo Simpson) -- formulas
+# distintas a q=0 dentro del propio iNEXT.3D (RPD/PhD.q.est/EPD tienen una rama de codigo
+# separada por orden), portadas leyendo su fuente real, no de memoria. Sin esta compuerta
+# no hay que confiar en ninguna curva q=1,2 sobre datos reales.
+vq <- validate_pd_inext_multiq(cm$full, tree, n_units = 100, q = c(1, 2))
+message(sprintf("    error relativo maximo = %.2e sobre %d filas (q=1,2)",
+                vq$max_rel_error, nrow(vq$table)))
+check("pd_curve reproduce iNEXT.3D en q=1,2 a precision de maquina", vq$max_rel_error < 1e-8)
+
+# --------------------------------------------------------------------------------------
 message("\n== coherencia interna de la curva ==")
 
 cur <- pd_curve(cm$full, tree)
@@ -65,6 +77,15 @@ check("meanPD = PD / profundidad del arbol",
 check("PD(t=1) << PD(t=T)", cur$pd[cur$n == 1] < 0.25 * obs$pd)
 check("la extrapolacion supera lo observado",
       max(cur$pd[cur$method == "Extrapolation"]) > obs$pd)
+
+# los numeros de Hill son monotonos decrecientes en q por definicion (mas peso a las ramas
+# raras en q=0, cada vez mas concentrado en las dominantes al subir q) -- si esto falla, la
+# formula de algun orden esta mal, no es un empate posible
+cur3 <- pd_curve(cm$full, tree, sizes = obs$n, q = c(0, 1, 2))
+o3 <- cur3[cur3$method == "Observed", ]
+o3 <- o3[order(o3$q), ]
+check("Hill filogenetico es monotono decreciente en q (q0 >= q1 >= q2)",
+      o3$pd[1] >= o3$pd[2] - 1e-6 && o3$pd[2] >= o3$pd[3] - 1e-6)
 
 # --------------------------------------------------------------------------------------
 message("\n== banda de submuestreo ==")
