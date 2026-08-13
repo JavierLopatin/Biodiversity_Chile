@@ -5,7 +5,7 @@ cribado corrió sus 20 bloques y la comparación de familias de modelo corrió s
 de predictores. Los resultados están en [`10_findings.md`](10_findings.md); esto es solo lo que
 queda por hacer.
 
-**Dos decisiones de proyecto ya tomadas, que no se re-discuten aquí:**
+**Tres decisiones de proyecto ya tomadas, que no se re-discuten aquí:**
 
 1. **`kfold5_window` es el esquema de validación primario y único.** Todo lo que sigue se corre
    bajo él. `kfold5_owner` y `kfold5_random` se calculan como diagnóstico y se reportan, nunca
@@ -14,6 +14,14 @@ queda por hacer.
    existe (`scripts/24_alpha_decomposition.py`, `results/tables/alpha_decomposition.csv`) y
    está resumida en `10_findings.md` §1b por si un revisor la pide, pero no va en las tablas de
    resultados.
+3. **El mapa final es una predicción única del presente, no una serie año-a-año.** Los
+   ajustes multitemporales no sostienen publicación (deriva/ruido demasiado grande entre
+   años, la caída de R² bajo `kfold_time`/`kfold_loc_time` documentada en `10_findings.md`
+   §1b y en `docs/17_center_pixel_kndvi_block20.md`). Los esquemas temporales se mantienen
+   como diagnóstico de por qué la validación temporal colapsa, no como ruta hacia un mapa
+   multitemporal. **Pendiente de propagar**: `docs/16_stemp_protocol.md` §3 ("Prediction
+   resolution") todavía describe predicción "año a año dentro de 2003–2026" — texto
+   generado por `scripts/38_stemp_protocol.py`, no editable a mano en el `.md`.
 
 ---
 

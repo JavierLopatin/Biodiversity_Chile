@@ -199,6 +199,8 @@ Tres lecturas:
 > extremos de las dos curvas, que están a n distinto (1.082 contra 1.485). Los números de
 > arriba son a igual esfuerzo, interpolando sobre rejilla común.
 
+![rarefacción](../results/figures/fig15_rarefaction_parcelas_cl.png)
+
 ## 7. Lo que el paper no documenta
 
 Cerda-Paredes et al. (2026) reportan diversidad filogenética en su Fig. 4c pero **no
@@ -290,6 +292,8 @@ riqueza, poco dependiente del área de parcela, y con la menor dependencia del c
 de todos los targets del proyecto (R² = 0,22 contra 0,70 de la log-riqueza). Ese último punto
 importa más de lo que parece — el confundido con `Owner` es lo que hunde la α bajo
 `kfold5_window`, y `dark_n` lo sufre mucho menos.
+
+![dark diversity](../results/figures/fig16_dark_diversity.png)
 
 La PD del conjunto oscuro (`dark_pd`) cae en la misma trampa que la PD de Faith: ρ = 0,96 con
 el conteo de especies oscuras. El MPD del conjunto oscuro sí es otra cosa conceptualmente
