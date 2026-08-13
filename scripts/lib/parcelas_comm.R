@@ -63,7 +63,11 @@ FAMILY_MANUAL <- c(
   Rumex            = "Polygonaceae",     # ausente del megaarbol pese a ser cosmopolita
   Spinoliva        = "Asteraceae",
   Synammia         = "Polypodiaceae",    # helecho
-  Trevoa           = "Rhamnaceae"
+  Trevoa           = "Rhamnaceae",
+  # Genero de Living Trees Chile, no de Parcelas-CL -- a diferencia de las 30 de arriba,
+  # esta SI esta verificada contra autoridad taxonomica: GBIF, Kew POWO, JSTOR Plants e
+  # IPNI coinciden en Myrtaceae (sinonimos Metrosideros stipularis, Myrtus stipularis).
+  Tepualia         = "Myrtaceae"
 )
 
 
