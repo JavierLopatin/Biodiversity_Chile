@@ -87,6 +87,15 @@ def _variant_tags(args, eff: dict) -> list[str]:
         tags.append("noaug")
     if getattr(args, "context", feat.CONTEXT_SPEC) != feat.CONTEXT_SPEC:
         tags.append("ctx" + args.context.replace("+", "-"))
+    # Same trap `runlog.make_run_id`'s BIODIV_CURVES suffix comment already documents: two
+    # runs that differ only in target_set (e.g. unified_taxonomic vs unified_all) share every
+    # other identity field, so without this `already_done` reports the smaller-target-set run
+    # as covering the bigger one and the extra heads are silently never trained. Measured this
+    # session: exactly this happened before this tag existed.
+    if getattr(args, "target_set", "all") != "all":
+        tags.append(args.target_set.replace("_", "-"))
+    if feat.unified_flag():
+        tags.append("unified")
     if getattr(args, "arch", "sep") != "sep":
         tags.append(args.arch)
     if getattr(args, "row_width", 0):
@@ -156,6 +165,7 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
            width=width, fusion=fusion, rotation=rotation, normalize=normalize,
            ctx_spec=args.context, arch=args.arch, init_from=args.init_from,
            p_conv=args.p_conv, p_head=args.p_head,
+           target_set=args.target_set, folds_path=args.folds,
            seeds=tuple(range(args.seed_start, args.seed_start + args.seeds)),
            derived=args.derived, out_root=Path(args.out),
            train_cfg=cfg, force=args.force, save_state=True,
@@ -197,6 +207,13 @@ def main() -> None:
     p.add_argument("--indices", nargs="+", default=None, help="stage 4b: indices to expand over")
     p.add_argument("--top", nargs="+", default=None, help="stage 4b: substrates to expand")
     p.add_argument("--scheme", default="kfold5_window")
+    p.add_argument("--target-set", default="all", dest="target_set",
+                   help="see biodiv.targets.TARGET_SETS -- 'unified_*' for the Parcelas-CL "
+                        "+ Living Trees pool (needs BIODIV_UNIFIED=1)")
+    p.add_argument("--folds", default=None,
+                   help="override the CV fold table (default data/derived/"
+                        "cv_folds_modelling.parquet); use cv_folds_unified_block20.parquet "
+                        "with --scheme kfold5_block20_unified")
     p.add_argument("--seeds", type=int, default=5)
     p.add_argument("--width", default="B", choices=["A", "B", "C", "X"])
     p.add_argument("--fusion", default="late", choices=["none", "late", "film", "patch", "patchctx"])

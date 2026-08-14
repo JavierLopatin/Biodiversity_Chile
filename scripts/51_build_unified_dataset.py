@@ -34,11 +34,29 @@ from biodiv import io_parcelas  # noqa: E402
 LAEA_CHILE = "+proj=laea +lat_0=-35 +lon_0=-71 +datum=WGS84 +units=m +no_defs"
 
 
+def apply_zamorano_correction(long: pd.DataFrame, corrected_path: Path) -> pd.DataFrame:
+    """Reemplaza el `Value` degenerado (siempre 1.0) de Zamorano-Elgueta, C. por la
+    cobertura real recuperada de `data/Parcelas_CL_RAW/` (scripts/58_recover_zamorano_cover.py).
+    Ver ese script para el hallazgo: la curacion perdio el gradiente de cobertura para las
+    84 parcelas de este dueno, aunque el crudo si lo trae."""
+    if not corrected_path.exists():
+        return long
+    fix = pd.read_parquet(corrected_path)
+    long = long.merge(fix, on=["PlotObservationID", "Accepted_species"], how="left")
+    n_fixed = long["Value_corrected"].notna().sum()
+    long["Value"] = long["Value_corrected"].fillna(long["Value"])
+    long = long.drop(columns="Value_corrected")
+    print(f"  correccion Zamorano aplicada: {n_fixed} pares parcela-especie")
+    return long
+
+
 def build_parcelas(zip_path: str, subset_path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     subset = pd.read_parquet(subset_path)
     keep_ids = set(subset["PlotObservationID"])
 
     long = io_parcelas.load_long(zip_path)
+    long = apply_zamorano_correction(
+        long, Path(subset_path).parent / "zamorano_cover_corrected.parquet")
     long = long[long["PlotObservationID"].isin(keep_ids)].copy()
     # Same aggregation as scripts/07_compute_taxonomic_beta_responses.R: a handful of
     # (plot, species) pairs have 2 records (different strata/growth forms of one taxon).

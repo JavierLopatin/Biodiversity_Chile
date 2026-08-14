@@ -128,7 +128,30 @@ def build(args: argparse.Namespace) -> None:
         "Date": "Year",
     })
     plots = plots.merge(um_merged, on="PlotObservationID").merge(n_records, on="PlotObservationID")
-    plots["PlotSize_m2"] = 500.0
+
+    # PlotSize_m2 is NOT uniformly 500 m2 -- 1,457 plots are exp=20 (500 m2), 564 are
+    # exp=40 (250 m2, a nested subplot design for small trees). `sites.parquet` (built by
+    # the satellite-extraction script on the other machine) already has the correct value
+    # per plot; re-deriving it from `exp` here does not reproduce it exactly (517 plots
+    # have mixed `exp` across trees, and min/max tie-break rules only match ~80-94% of
+    # sites.parquet's own values) -- trust that file, join by exact coordinate instead of
+    # guessing the tie-break.
+    sites_path = Path("data/derived/living_trees/sites.parquet")
+    if not sites_path.exists():
+        raise SystemExit(
+            f"{sites_path} not found -- needed for the real PlotSize_m2 (not all Living "
+            "Trees plots are 500 m2). Run the satellite extraction step first."
+        )
+    sites = pd.read_parquet(sites_path)[["lat", "lon", "plot_size_m2"]]
+    plots = plots.merge(sites, on=["lat", "lon"], how="left")
+    if plots["plot_size_m2"].isna().any():
+        n_missing = plots["plot_size_m2"].isna().sum()
+        raise SystemExit(f"{n_missing} plots did not match sites.parquet on (lat, lon)")
+    plots["PlotSize_m2"] = plots.pop("plot_size_m2")
+    print(f"PlotSize_m2 (real, from sites.parquet): "
+          f"{plots['PlotSize_m2'].value_counts().to_dict()}")
+
+    plots["stratum"] = "basal"
     plots["source"] = "living_trees"
 
     # --- area basal por arbol, escalada por factor de expansion -----------------------------
@@ -157,6 +180,30 @@ def build(args: argparse.Namespace) -> None:
           f"({len(long)} filas, {long['PlotObservationID'].nunique()} parcelas, "
           f"{long['species'].nunique()} especies)")
     print(f"-> {out / 'living_trees_plots.parquet'} ({len(plots)} parcelas)")
+
+    # --- conteo real de arboles por especie x parcela (individuos, no area basal) ----------
+    # A diferencia del area basal, el conteo no depende de D -- un arbol sin DAP registrado
+    # sigue siendo un individuo observado. Se cuenta sobre `tree` (SE/GD ya excluidos), no
+    # sobre `tree_ba` (filtrado por D). Salida aditiva, no reemplaza el area basal de arriba.
+    n_no_d_counted = tree["D"].isna().sum()
+    print(f"\narboles sin D pero SI contados como individuo: {n_no_d_counted} de {len(tree)} "
+          f"({100 * n_no_d_counted / len(tree):.2f}%)")
+    counts = (
+        tree.groupby(["PlotObservationID", "species"], as_index=False)
+        .size()
+        .rename(columns={"size": "Value"})
+    )
+    counts["Abundance_parameter"] = "Abundance"
+    counts.to_parquet(out / "living_trees_long_counts.parquet", index=False)
+
+    richness_counts = counts.groupby("PlotObservationID")["species"].nunique()
+    print(f"-> {out / 'living_trees_long_counts.parquet'} "
+          f"({len(counts)} filas, {counts['PlotObservationID'].nunique()} parcelas, "
+          f"{counts['species'].nunique()} especies)")
+    print(f"riqueza (conteo real) -- media: {richness_counts.mean():.2f}, "
+          f"mediana: {richness_counts.median():.0f}, "
+          f"parcelas con >=5 especies: {(richness_counts >= 5).sum()} de {len(richness_counts)} "
+          f"({100 * (richness_counts >= 5).mean():.1f}%)")
     print(f"riqueza mediana: {plots['richness'].median()}, "
           f"parcelas con riqueza 0 (todos sus arboles sin D): {(plots['richness'] == 0).sum()}")
 
