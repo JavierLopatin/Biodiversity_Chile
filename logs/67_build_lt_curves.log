@@ -1,0 +1,11 @@
+crosswalk: 2020 parcelas Living Trees con site_id
+
+=== ngs=100 ===
+  Parcelas-CL: 10820 filas, 1082 parcelas
+  Living Trees: 20200 filas, 2020 parcelas
+  -> data/derived/phenoshape_by_index_raw100_unified.parquet (31020 filas, 3102 parcelas)
+
+=== ngs=36 ===
+  Parcelas-CL: 10820 filas, 1082 parcelas
+  Living Trees: 20200 filas, 2020 parcelas
+  -> data/derived/phenoshape_by_index_raw36_unified.parquet (31020 filas, 3102 parcelas)

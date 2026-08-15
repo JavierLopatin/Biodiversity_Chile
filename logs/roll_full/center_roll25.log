@@ -1,0 +1,3 @@
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF03c_curve-topo_ctr-area_kndvi_raw100_roll25 kfold5_block20   [205.2s] hill_q0=+0.455 hill_q1=+0.175 hill_q2=+0.161 lcbd_pa=+0.325 pcoa1_pa=+0.501 pcoa2_pa=+0.282 lcbd_cover=+0.230 pcoa1_cover=+0.309 pcoa2_cover=+0.189 mpd=-0.045 mntd=+0.101 ses_pd=+0.066 ses_mpd=+0.074 ses_mntd=+0.069 dark_n=+0.158

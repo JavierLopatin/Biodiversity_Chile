@@ -1,0 +1,3 @@
+[features] 2020 unified plots (Living Trees) have no topography yet -- topo/clim/gm/obscomp/seas/svh/contrast/composite blocks will NaN-impute for them until that extraction exists.
+    C2D02_serpentine_kndvi_raw100_pg-all_unified_ctr: 15,495 parameters, input (1, 10, 10)
+  C2D02_serpentine_kndvi_raw100_pg-all_unified_ctr kfold5_block20_unified [  7.6m] lcbd_count_sorensen=+0.417 pd_inext_q0=+0.598 pd_inext_q1=-0.004 pd_inext_q2=+0.053 td_inext_q0=+0.769 td_inext_q1=-0.126 td_inext_q2=-0.060

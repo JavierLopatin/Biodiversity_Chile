@@ -1,0 +1,58 @@
+{
+  "xlsx": "data/Living_Trees_Chile.xlsx",
+  "sites": "data/derived/living_trees/sites.parquet",
+  "save_sites": null,
+  "out": "data/derived/living_trees",
+  "window": 3,
+  "cell_km": 5.0,
+  "patch": 5,
+  "resolution": 30,
+  "workers": 4,
+  "gateway": false,
+  "resume": true,
+  "limit": 0,
+  "flush_every": 50,
+  "dry_run": false,
+  "n_sites": 2021,
+  "n_loads": 1764,
+  "n_written": 2021,
+  "vars": [
+    "ndvi",
+    "evi",
+    "kndvi",
+    "nbr",
+    "savi",
+    "band_blue",
+    "band_green",
+    "band_red",
+    "band_nir",
+    "band_swir1",
+    "band_swir2"
+  ],
+  "px": [
+    "center",
+    "mean5x5"
+  ],
+  "envelope": {
+    "lon": [
+      -74.719580856434,
+      -67.341603241492
+    ],
+    "lat": [
+      -54.9745967022927,
+      -30.644548882852
+    ],
+    "years": [
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
+    ]
+  }
+}

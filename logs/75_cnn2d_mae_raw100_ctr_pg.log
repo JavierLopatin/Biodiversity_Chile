@@ -1,0 +1,7 @@
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr: 15,175 parameters, input (1, 10, 10)
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+    init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+  C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr kfold5_block20_unified [  8.3m] lcbd_count_sorensen=+0.437 pd_inext_q0=+0.613 pd_inext_q1=-0.010 pd_inext_q2=+0.040 td_inext_q0=+0.786 td_inext_q1=-0.181 td_inext_q2=-0.090

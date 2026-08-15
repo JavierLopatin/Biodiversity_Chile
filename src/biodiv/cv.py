@@ -46,6 +46,19 @@ SCHEME_GROUP = {
     "kfold_time": "time_block",
     "kfold_loc_time": "time_block",
     "time_within_owner": "time_block",
+    # Unified pool (Parcelas-CL + Living Trees, `scripts/53_unified_block20_folds.py`) --
+    # same 20x20 km block key, over the Chile-centred equal-area projection rather than
+    # Parcelas-CL's own UTM19S (which distorts badly once the footprint reaches
+    # Magallanes). A DIFFERENT group_col name than "block20": `plots_unified.parquet`'s
+    # `X`/`Y` are plain NaN for every Living Trees row (only `X_m`/`Y_m`, the equal-area
+    # projection, is populated there) -- reusing "block20" would make `ensure_group_col`
+    # recompute it from the wrong (all-NaN) coordinate pair for the inner split.
+    "kfold5_block20_unified": "block20_unified",
+    # LLTO over the unified pool (`scripts/71_build_unified_llto_folds.py`) -- same
+    # inner-split rationale as the Parcelas-CL-only temporal schemes above: group by
+    # time_block, not by the finer (block x time) test cell, so early stopping respects
+    # the same temporal structure the outer scheme is testing.
+    "kfold_loc_time_unified": "time_block",
 }
 
 #: LODO schemes do not partition the plots — groups below the minimum size are never a test
@@ -102,7 +115,12 @@ def ensure_group_col(plots: pd.DataFrame, group_col: str) -> pd.DataFrame:
     if group_col in plots.columns:
         return plots
     out = plots.copy()
-    if group_col.startswith("block"):
+    if group_col == "block20_unified":
+        # `X`/`Y` (UTM19S) are NaN for every Living Trees row -- use the equal-area
+        # `X_m`/`Y_m` `scripts/53_unified_block20_folds.py` built the outer fold table
+        # from, or the inner split would group on garbage for 2,020 of 3,102 plots.
+        out[group_col] = add_block_key(out, 20.0, xcol="X_m", ycol="Y_m")
+    elif group_col.startswith("block"):
         out[group_col] = add_block_key(out, float(group_col.replace("block", "")))
     elif group_col == "window_component":
         out[group_col] = window_components(out).to_numpy()
@@ -129,13 +147,20 @@ def inner_split(train_ids: pd.Index, plots: pd.DataFrame, group_col: str,
     training data. Returns ``(fit_ids, val_ids)``; scalers are fitted on ``fit_ids`` only.
     """
     sub = plots[plots[ID_COL].isin(train_ids)]
-    k = max(2, int(round(1.0 / val_frac)))
+    k_wanted = max(2, int(round(1.0 / val_frac)))
+    # LLTO's buffered training pool can leave as few as 4 distinct time_block groups (or a
+    # singleton group of size 1) for a given outer cell -- k_wanted=5 grouped folds then
+    # can't avoid leaving one empty. Capping k at the group count keeps every fold non-empty
+    # without changing the split for any case that already worked (n_groups >= k_wanted).
+    n_groups = sub[group_col].nunique()
+    k = max(2, min(k_wanted, n_groups))
     stratify = "richness" if "richness" in sub.columns else None
     cv = cv_groups.grouped_kfold(sub, group_col, k=k, seed=seed, stratify_on=stratify)
     val = pd.Index(cv.loc[(cv["fold"] == seed % k) & (cv["split"] == "test"), ID_COL])
     fit = pd.Index(train_ids).difference(val)
     if len(val) == 0 or len(fit) == 0:
-        raise RuntimeError(f"degenerate inner split for group_col={group_col!r}, seed={seed}")
+        raise RuntimeError(f"degenerate inner split for group_col={group_col!r}, seed={seed}, "
+                           f"n_groups={n_groups}")
     return fit, val
 
 
@@ -174,16 +199,22 @@ def collect_oof(per_fold: list[pd.DataFrame], scheme: str,
     return oof
 
 
-def add_block_key(plots: pd.DataFrame, km: float) -> pd.Series:
-    """Geometric block key from UTM coordinates, for a spatially blocked scheme.
+def add_block_key(plots: pd.DataFrame, km: float, xcol: str = "X", ycol: str = "Y") -> pd.Series:
+    """Geometric block key from projected coordinates, for a spatially blocked scheme.
 
     ``Location`` is a nominal site *label*, not geometry, and the 23 datasets overlap each
     other spatially (103 overlapping bounding-box pairs measured on this subset). Neither
     controls spatial autocorrelation, which is what risk R8 is about — hence a real grid.
+
+    ``xcol``/``ycol`` default to Parcelas-CL's own UTM19S ``X``/``Y``. The unified pool
+    (Parcelas-CL + Living Trees) uses ``X_m``/``Y_m`` instead — see ``ensure_group_col``'s
+    ``"block20_unified"`` branch — because UTM19S distorts badly far from its central
+    meridian, which matters once the footprint reaches Magallanes, and because Living
+    Trees rows carry no ``X``/``Y`` at all (``NaN``).
     """
     size = km * 1000.0
-    return (np.floor(plots["X"] / size).astype(int).astype(str) + "_"
-            + np.floor(plots["Y"] / size).astype(int).astype(str))
+    return (np.floor(plots[xcol] / size).astype(int).astype(str) + "_"
+            + np.floor(plots[ycol] / size).astype(int).astype(str))
 
 
 def window_components(plots: pd.DataFrame, half_m: float = 150.0) -> pd.Series:

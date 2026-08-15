@@ -1,0 +1,9 @@
+C2D02 fold 0: 16,143 parametros, input (1, 10, 10)
+entrenando (max_epochs=300, patience=25)...
+  117 epocas
+
+=== C2D02 (fold 0, kfold5_block20): sensibilidad al area (n=224) ===
+  desvio ENTRE areas de referencia, por parcela: mediana=0.628
+  rango (max-min) entre areas: mediana=1.491
+  desvio natural entre parcelas (area real): 3.657
+  proporcion: 17.2%

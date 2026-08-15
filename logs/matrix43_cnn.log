@@ -1,0 +1,55 @@
+10 jobs (grupo=cnn), scheme=kfold5_block20 index=kndvi px=center
+
+  c1d/curve1d      scripts/11_run_conv.py --substrate curve1d --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/reshape      scripts/11_run_conv.py --substrate reshape --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/serpentine   scripts/11_run_conv.py --substrate serpentine --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/gaf          scripts/11_run_conv.py --substrate gaf --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/mtf          scripts/11_run_conv.py --substrate mtf --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/ndi          scripts/11_run_conv.py --substrate ndi --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/cwt          scripts/11_run_conv.py --substrate cwt --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/hilbert      scripts/11_run_conv.py --substrate hilbert --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/cos2d        scripts/11_run_conv.py --substrate cos2d --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/spectrogram  scripts/11_run_conv.py --substrate spectrogram --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+
+=== c1d/curve1d  17:50:14
+    C1D01_curve1d_kndvi_ctr: 14,927 parameters, input (1, 52)
+  C1D01_curve1d_kndvi_ctr                  kfold5_block20   [  1.6m] hill_q0=+0.219 hill_q1=+0.065 hill_q2=+0.052 lcbd_pa=+0.125 pcoa1_pa=+0.327 pcoa2_pa=+0.170 lcbd_cover=+0.045 pcoa1_cover=+0.120 pcoa2_cover=+0.025 mpd=+0.022 mntd=+0.141 ses_pd=+0.063 ses_mpd=+0.033 ses_mntd=+0.106 dark_n=-0.144
+    ok  [1.7 min]
+=== c2d/reshape  17:51:56
+    C2D01_reshape_kndvi_ctr: 15,567 parameters, input (1, 8, 8)
+  C2D01_reshape_kndvi_ctr                  kfold5_block20   [  1.8m] hill_q0=+0.173 hill_q1=+0.086 hill_q2=+0.082 lcbd_pa=+0.251 pcoa1_pa=+0.346 pcoa2_pa=+0.283 lcbd_cover=+0.161 pcoa1_cover=+0.140 pcoa2_cover=+0.047 mpd=+0.044 mntd=+0.114 ses_pd=+0.104 ses_mpd=+0.076 ses_mntd=+0.120 dark_n=-0.094
+    ok  [1.8 min]
+=== c2d/serpentine  17:53:45
+    C2D02_serpentine_kndvi_ctr: 15,567 parameters, input (1, 8, 8)
+  C2D02_serpentine_kndvi_ctr               kfold5_block20   [  2.1m] hill_q0=+0.251 hill_q1=+0.137 hill_q2=+0.120 lcbd_pa=+0.282 pcoa1_pa=+0.389 pcoa2_pa=+0.279 lcbd_cover=+0.179 pcoa1_cover=+0.203 pcoa2_cover=+0.072 mpd=+0.039 mntd=+0.132 ses_pd=+0.089 ses_mpd=+0.064 ses_mntd=+0.116 dark_n=-0.041
+    ok  [2.1 min]
+=== c2d/gaf  17:55:51
+    C2D03_gaf_kndvi_ctr: 15,711 parameters, input (2, 52, 52)
+  C2D03_gaf_kndvi_ctr                      kfold5_block20   [  5.3m] hill_q0=-0.060 hill_q1=+0.027 hill_q2=+0.027 lcbd_pa=-0.194 pcoa1_pa=-0.144 pcoa2_pa=+0.102 lcbd_cover=-0.007 pcoa1_cover=+0.052 pcoa2_cover=-0.180 mpd=-0.069 mntd=+0.013 ses_pd=-0.027 ses_mpd=-0.047 ses_mntd=+0.014 dark_n=-0.289
+    ok  [5.4 min]
+=== c2d/mtf  18:01:14
+    C2D04_mtf_kndvi_ctr: 15,567 parameters, input (1, 52, 52)
+  C2D04_mtf_kndvi_ctr                      kfold5_block20   [  6.3m] hill_q0=+0.000 hill_q1=+0.008 hill_q2=-0.005 lcbd_pa=-0.214 pcoa1_pa=-0.250 pcoa2_pa=+0.059 lcbd_cover=-0.015 pcoa1_cover=+0.005 pcoa2_cover=-0.179 mpd=-0.090 mntd=-0.017 ses_pd=-0.080 ses_mpd=-0.073 ses_mntd=-0.049 dark_n=-0.316
+    ok  [6.3 min]
+=== c2d/ndi  18:07:32
+    C2D05_ndi_kndvi_ctr: 15,567 parameters, input (1, 52, 52)
+  C2D05_ndi_kndvi_ctr                      kfold5_block20   [  2.8m] hill_q0=-0.050 hill_q1=-0.029 hill_q2=-0.032 lcbd_pa=-0.244 pcoa1_pa=-0.207 pcoa2_pa=+0.036 lcbd_cover=-0.070 pcoa1_cover=-0.056 pcoa2_cover=-0.219 mpd=-0.096 mntd=-0.005 ses_pd=-0.058 ses_mpd=-0.059 ses_mntd=-0.039 dark_n=-0.319
+    ok  [2.9 min]
+=== c2d/cwt  18:10:23
+    C2D06_cwt_kndvi_ctr: 15,567 parameters, input (1, 24, 52)
+  C2D06_cwt_kndvi_ctr                      kfold5_block20   [ 11.9m] hill_q0=+0.298 hill_q1=+0.112 hill_q2=+0.077 lcbd_pa=+0.154 pcoa1_pa=+0.294 pcoa2_pa=+0.200 lcbd_cover=+0.125 pcoa1_cover=+0.107 pcoa2_cover=-0.050 mpd=+0.050 mntd=+0.124 ses_pd=+0.092 ses_mpd=+0.087 ses_mntd=+0.104 dark_n=-0.182
+    ok  [12.0 min]
+=== c2d/hilbert  18:22:21
+    C2D07_hilbert_kndvi_ctr: 15,567 parameters, input (1, 8, 8)
+  C2D07_hilbert_kndvi_ctr                  kfold5_block20   [  1.9m] hill_q0=+0.229 hill_q1=+0.122 hill_q2=+0.107 lcbd_pa=+0.240 pcoa1_pa=+0.367 pcoa2_pa=+0.232 lcbd_cover=+0.163 pcoa1_cover=+0.237 pcoa2_cover=+0.044 mpd=+0.032 mntd=+0.109 ses_pd=+0.078 ses_mpd=+0.051 ses_mntd=+0.102 dark_n=-0.094
+    ok  [1.9 min]
+=== c2d/cos2d  18:24:16
+    C2D08_cos2d_kndvi_ctr: 15,711 parameters, input (2, 5, 5)
+  C2D08_cos2d_kndvi_ctr                    kfold5_block20   [  2.5m] hill_q0=+0.073 hill_q1=-0.063 hill_q2=-0.061 lcbd_pa=+0.083 pcoa1_pa=+0.069 pcoa2_pa=+0.037 lcbd_cover=+0.023 pcoa1_cover=+0.026 pcoa2_cover=-0.107 mpd=-0.057 mntd=+0.060 ses_pd=-0.047 ses_mpd=-0.077 ses_mntd=-0.009 dark_n=-0.213
+    ok  [2.5 min]
+=== c2d/spectrogram  18:26:47
+    C2D09_spectrogram_kndvi_ctr: 15,567 parameters, input (1, 9, 14)
+  C2D09_spectrogram_kndvi_ctr              kfold5_block20   [  3.0m] hill_q0=+0.241 hill_q1=+0.128 hill_q2=+0.108 lcbd_pa=+0.206 pcoa1_pa=+0.362 pcoa2_pa=+0.211 lcbd_cover=+0.127 pcoa1_cover=+0.195 pcoa2_cover=+0.014 mpd=+0.031 mntd=+0.130 ses_pd=+0.090 ses_mpd=+0.062 ses_mntd=+0.106 dark_n=-0.127
+    ok  [3.0 min]
+
+=== fin 2026-08-12 18:29:50

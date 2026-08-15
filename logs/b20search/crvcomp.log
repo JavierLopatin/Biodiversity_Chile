@@ -1,0 +1,2 @@
+    C2D02_serpentine_kndvi_ctxclim-topo-area: 17,039 parameters, input (1, 8, 8)
+  C2D02_serpentine_kndvi_ctxclim-topo-area kfold5_block20   [  1.9m] hill_q0=+0.364 hill_q1=+0.269 hill_q2=+0.248 lcbd_pa=+0.259 pcoa1_pa=+0.314 pcoa2_pa=+0.345 lcbd_cover=+0.270 pcoa1_cover=+0.227 pcoa2_cover=+0.121 mpd=+0.044 mntd=+0.165 ses_pd=+0.076 ses_mpd=+0.076 ses_mntd=+0.089 dark_n=-0.101

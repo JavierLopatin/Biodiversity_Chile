@@ -1,0 +1,2 @@
+    C2D02_serpentine_savi_raw100_pg-all_unified_ctr: 15,175 parameters, input (1, 10, 10)
+  C2D02_serpentine_savi_raw100_pg-all_unified_ctr kfold5_block20_unified [  9.6m] lcbd_count_sorensen=+0.424 pd_inext_q0=+0.615 pd_inext_q1=-0.020 pd_inext_q2=+0.025 td_inext_q0=+0.763 td_inext_q1=-0.198 td_inext_q2=-0.097

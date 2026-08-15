@@ -1,0 +1,9 @@
+=== 1. el factor de la hipotesis: aumentacion  14:31:16
+=== 2. regularizacion  14:31:23
+    FALLO wA
+    FALLO wC
+=== 3. sustrato y curva  14:35:28
+    FALLO sub_reshape
+    FALLO sub_hilbert
+    FALLO sub_spectrogram
+    FALLO crv_raw100

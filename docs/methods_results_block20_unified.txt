@@ -1,0 +1,181 @@
+MÉTODOS Y RESULTADOS
+Predicción de facetas de diversidad estilo Pérez-Giraldo desde curvas satelitales crudas,
+pixel central, validación cruzada espacial por bloques (kfold5_block20_unified)
+
+Referencias citadas como (Autor, Año); entradas BibTeX completas en docs/refs.bib.
+
+
+1. MÉTODOS
+
+1.1 Base de datos unificada y facetas de diversidad
+
+Unificamos dos fuentes de parcelas de vegetación de Chile: Parcelas-CL (Cerda-Paredes et
+al., 2026), una base comunitaria de 1.082 parcelas entre 30°S y 38°S, y Living Trees, un
+inventario forestal de 2.020 parcelas con cobertura geográfica más amplia. El pool
+unificado reúne 3.102 parcelas.
+
+Calculamos tres facetas de diversidad siguiendo la metodología exacta de Pérez-Giraldo et
+al. (2026), aplicada sobre el subconjunto del pool unificado con conteo real de
+individuos (no cobertura ni área basal): 479 parcelas de Parcelas-CL con el estrato
+Abundance, más el conteo de árboles a nivel individuo de Living Trees.
+
+Estimamos la contribución local a la diversidad beta (LCBD) con la partición de Sørensen
+cuantitativa de Podani y Schmera, implementada en el paquete adespatial
+(beta.div.comp(coef="S", quant=TRUE) seguido de LCBD.comp(sqrt.D=TRUE); Legendre y De
+Cáceres, 2013). Esta faceta, lcbd_count_sorensen, cubre 2.499 de las 3.102 parcelas.
+
+Estimamos diversidad filogenética y taxonómica estandarizadas por cobertura con
+iNEXT.3D (Chao et al., 2021), siguiendo la misma receta de Pérez-Giraldo et al. (2026):
+estimate3D(base="coverage", level=NULL, nboot=1), para q = 0, 1 y 2. La diversidad
+filogenética (pd_inext_q0/q1/q2) exige además restringir las especies al árbol
+filogenético de 610 tips construido con V.PhyloMaker2 (Jin y Qian, 2022) y cubre 888
+parcelas; la diversidad taxonómica (td_inext_q0/q1/q2), sin esa restricción, cubre 895.
+El estimador de cobertura exige un mínimo de cinco especies observadas por unidad, lo que
+explica la caída de cobertura frente a lcbd_count_sorensen.
+
+Reindexamos las tres facetas sobre las 3.102 parcelas del pool unificado, dejando NaN
+donde el estimador no alcanzó su piso — nunca omitimos una fila, así se preserva la
+máscara de pérdida ya usada en el resto de facetas del proyecto.
+
+1.2 Predictores satelitales
+
+Extrajimos series temporales Landsat (índices NDVI, EVI, kNDVI, NBR y SAVI) para cada
+parcela en el pixel central de una ventana Landsat de 5×5. Interpolamos cada serie cruda
+a una grilla regular de 100 pasos con una ventana móvil de suavizado de 5 observaciones,
+sin ajustar ninguna curva compuesta paramétrica — descartamos deliberadamente la
+composición PhenoShape tras comparar ambos formatos en una prueba preliminar, donde la
+curva cruda superó consistentemente a la curva compuesta.
+
+1.3 Topografía
+
+Incorporamos, además de la curva satelital, un bloque de contexto con topografía derivada
+de modelo de elevación digital (elevación, pendiente, orientación norte/este, índice de
+carga calórica, índice de posición topográfica, rugosidad y curvatura, cada una como
+media y desviación estándar de la ventana) y área de parcela. Extrajimos la topografía de
+Living Trees de forma independiente y la unificamos con la de Parcelas-CL mediante un
+cruce exacto de coordenadas, eliminando así la imputación por mediana que afectaba a las
+2.020 parcelas de Living Trees en versiones previas del pipeline.
+
+1.4 Validación cruzada espacial
+
+Evaluamos cada modelo con kfold5_block20_unified: cinco pliegues agrupados por bloques
+geográficos de 20×20 km sobre una proyección equiareal centrada en Chile, siguiendo el
+principio de bloqueo espacial para evitar fuga por autocorrelación (Roberts et al., 2017).
+El bloqueo agrupa 610 bloques distintos sobre las 3.102 parcelas.
+
+1.5 Modelos comparados
+
+Comparamos cuatro familias de modelo sobre el mismo diseño (curva cruda de kNDVI, pixel
+central, contexto topografía+área, kfold5_block20_unified):
+
+- Random Forest (Breiman, 2001) sobre la curva y el contexto concatenados.
+- Una red convolucional 1-D sobre la curva de 100 pasos.
+- Una red convolucional 2-D (arquitectura separable, ~15 mil parámetros) sobre la curva
+  reorganizada como imagen mediante el sustrato "serpentine".
+- La misma red 2-D, inicializada desde un autoencoder enmascarado (Masked Autoencoder,
+  He et al., 2022) preentrenado sobre las curvas de kNDVI del pool no unificado.
+
+Entrenamos cada modelo con tres a cinco semillas y reportamos el R² fuera de muestra
+agrupado (pooled) por parcela.
+
+
+2. RESULTADOS
+
+2.1 Selección de índice de vegetación
+
+Barrimos los cinco índices bajo el mismo diseño (curva cruda, pixel central, topografía
+real, kfold5_block20_unified). Promediamos el R² solo sobre las tres facetas con señal
+real (R² > 0,4: lcbd_count_sorensen, pd_inext_q0, td_inext_q0) — las demás no predicen
+en ningún índice y promediarlas junto a las que sí tienen señal habría escondido la única
+que existe.
+
+  índice   lcbd_count_sorensen  pd_inext_q0  td_inext_q0  media (R²>0,4)
+  kndvi    0,434                0,608        0,772        0,6047
+  evi      0,426                0,612        0,775        0,6043
+  ndvi     0,433                0,608        0,767        0,6027
+  savi     0,424                0,615        0,763        0,6007
+  nbr      0,435                0,604        0,725        0,5880
+
+kNDVI gana por un margen mínimo sobre EVI (0,6047 frente a 0,6043); NBR queda último,
+penalizado por su desempeño más débil en td_inext_q0. Adoptamos kNDVI como índice por
+defecto para el resto del análisis.
+
+2.2 Efecto de la topografía real
+
+Sustituir la imputación por mediana de Living Trees por la topografía real medida elevó
+lcbd_count_sorensen entre 0,02 y 0,04 en los cinco índices, sin afectar de forma notable
+a pd_inext_q0 ni a td_inext_q0. Mantuvimos la topografía real como configuración por
+defecto.
+
+2.3 Comparación de familias de modelo
+
+Con kNDVI fijo, comparamos las cuatro familias de modelo bajo kfold5_block20_unified:
+
+  faceta                2D-CNN   RF       1D-CNN   2D-CNN + MAE
+  lcbd_count_sorensen    0,434   0,447    0,420    0,437
+  pd_inext_q0            0,608   0,582    0,612    0,613
+  pd_inext_q1            0,011   0,004    0,049    -0,010
+  pd_inext_q2            0,065   0,054    0,091    0,040
+  td_inext_q0            0,772   0,666    0,780    0,786
+  td_inext_q1           -0,178   0,042   -0,144    -0,181
+  td_inext_q2           -0,079  -0,073   -0,066    -0,090
+
+El autoencoder enmascarado alcanza el mejor R² absoluto en pd_inext_q0 (0,613) y
+td_inext_q0 (0,786), sin trasladar esa ganancia a lcbd_count_sorensen ni a q1/q2. La red
+1-D iguala o supera a la 2-D en riqueza pese a tener menos parámetros (14.535 frente a
+15.175) y es la única familia con señal utilizable en pd_inext_q1/q2 (0,049 y 0,091).
+Random Forest entrena en 114 segundos frente a los 8-10 minutos de cada red neuronal y
+gana lcbd_count_sorensen (0,447), aunque pierde riqueza filogenética y taxonómica frente
+a las tres arquitecturas neuronales.
+
+2.4 Síntesis
+
+La riqueza estandarizada por cobertura (pd_inext_q0, td_inext_q0) es la única familia de
+facetas robustamente predecible bajo este diseño: R² entre 0,58 y 0,79 en las cuatro
+familias de modelo y los cinco índices probados. lcbd_count_sorensen ofrece señal
+moderada y estable (0,39-0,45). Las facetas ponderadas por abundancia o dominancia
+(pd_inext_q1/q2, td_inext_q1/q2) no muestran señal utilizable en ningún modelo, índice o
+arquitectura — una limitación de la señal disponible en esas facetas específicas, no de
+la arquitectura del modelo.
+
+
+REFERENCIAS
+
+Breiman, L. (2001). Random Forests. Machine Learning, 45, 5-32.
+  https://doi.org/10.1023/a:1010933404324
+
+Cerda-Paredes, J. M., Miranda, A., Altamirano, A., Becerra, P. I., Dobbs, C.,
+  Galleguillos, M., Miranda, M. D., Morales, N. S., Ovalle, J. F.,
+  Venegas-González, A., Zamorano-Elgueta, C., Craven, D., y Lopatin, J. (2026).
+  Parcelas-CL: a community-sourced vegetation dataset for multi-scale biodiversity
+  monitoring in Chile. https://doi.org/10.21203/rs.3.rs-9986019/v1
+
+Chao, A., Henderson, P. A., Chiu, C.-H., Moyes, F., Hu, K.-H., Dornelas, M., y
+  Magurran, A. E. (2021). Measuring temporal change in alpha diversity: A framework
+  integrating taxonomic, phylogenetic and functional diversity and the iNEXT.3D
+  standardization. Methods in Ecology and Evolution, 12(10), 1926-1940.
+  https://doi.org/10.1111/2041-210x.13682
+
+He, K., Chen, X., Xie, S., Li, Y., Dollár, P., y Girshick, R. (2022). Masked
+  Autoencoders Are Scalable Vision Learners. 2022 IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition (CVPR), 15979-15988.
+  https://doi.org/10.1109/cvpr52688.2022.01553
+
+Jin, Y., y Qian, H. (2022). V.PhyloMaker2: An updated and enlarged R package that can
+  generate very large phylogenies for vascular plants. Plant Diversity, 44(4),
+  335-339. https://doi.org/10.1016/j.pld.2022.05.005
+
+Legendre, P., y De Cáceres, M. (2013). Beta diversity as the variance of community
+  data: dissimilarity coefficients and partitioning. Ecology Letters, 16(8), 951-963.
+  https://doi.org/10.1111/ele.12141
+
+Pérez-Giraldo, L. C., Cerda-Paredes, J. M., Craven, D., y Lopatin, J. (2026).
+  Environmental heterogeneity and spatial variation mediates plant diversity and
+  ecosystem stability in mountain ecosystems of the Mediterranean Andes. Ecography.
+  https://doi.org/10.1002/ecog.08305
+
+Roberts, D. R., Bahn, V., Ciuti, S., Boyce, M. S., Elith, J., Guillera-Arroita, G.,
+  Hauenstein, S., Lahoz-Monfort, J. J., Schröder, B., Thuiller, W., Warton, D. I.,
+  Wintle, B. A., Hartig, F., y Dormann, C. F. (2017). Cross-validation strategies for
+  data with temporal, spatial, hierarchical, or phylogenetic structure. Ecography,
+  40(8), 913-929. https://doi.org/10.1111/ecog.02881

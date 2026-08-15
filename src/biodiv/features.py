@@ -126,34 +126,90 @@ def curve_suffix() -> str:
     return os.environ.get(CURVE_SUFFIX_ENV, "")
 
 
+#: Set to switch every table `load_tables` reads from the Parcelas-CL-only 1,082-plot
+#: subset to the unified 3,102-plot pool (Parcelas-CL + Living Trees, `scripts/50`/`51`).
+#: Same rationale as `BIODIV_CURVES` (`curve_suffix`, above): without an explicit switch, a
+#: process that flips between the two would keep serving whichever it loaded first, and a
+#: half-unified state (unified plots, Parcelas-CL-only curves) would silently misalign X.
+#:
+#: `topo` now has a real Living Trees extraction (`scripts/70`, from
+#: `data/derived/living_trees/topography.parquet`). `lsp`/`doy_grid` still don't -- see
+#: `_load_tables`'s relaxed check below. Specs built from `curve`/`curve_all`/`area`/
+#: `coords`/`year`/`topo` are safe on the unified pool; `lsp`/`clim`/`gm`/`obscomp`/`seas`/
+#: `svh`/`contrast`/`composite` will still NaN-impute entirely for every Living Trees row
+#: until that extraction exists.
+UNIFIED_ENV = "BIODIV_UNIFIED"
+
+
+def unified_flag() -> bool:
+    return os.environ.get(UNIFIED_ENV, "") not in ("", "0")
+
+
 def load_tables(derived: str = "data/derived") -> Tables:
-    # the suffix is part of the cache key: without it, a process that switches curve version
-    # would keep serving the tables it loaded first
-    return _load_tables(derived, curve_suffix())
+    # the suffix (and the unified flag) are part of the cache key: without them, a process
+    # that switches curve version or pool would keep serving the tables it loaded first
+    return _load_tables(derived, curve_suffix(), unified_flag())
 
 
 @lru_cache(maxsize=4)
-def _load_tables(derived: str, sfx: str) -> Tables:
+def _load_tables(derived: str, sfx: str, unified: bool = False) -> Tables:
     d = Path(derived)
-    plots = pd.read_parquet(d / "plots_subset.parquet")
+    plots_name = "plots_unified.parquet" if unified else "plots_subset.parquet"
+    plots = pd.read_parquet(d / plots_name)
     plots = plots.sort_values(ID_COL, kind="stable").reset_index(drop=True)
     plots["log10_area"] = np.log10(plots["PlotSize_m2"].astype(float))
 
-    lsp = pd.read_parquet(d / "lsp_all_auto.parquet").set_index(["plot_id", "index"])
-    curves = pd.read_parquet(d / f"phenoshape_by_index{sfx}.parquet").set_index(
-        ["plot_id", "index", "px"])
-    topo = pd.read_parquet(d / "topography" / "topography.parquet").set_index("plot_id")
-    doy = pd.read_parquet(d / f"phenoshape_doy_grid{sfx}.parquet").set_index("plot_id")
+    curves_name = f"phenoshape_by_index{sfx}_unified.parquet" if unified \
+        else f"phenoshape_by_index{sfx}.parquet"
+    curves = pd.read_parquet(d / curves_name).set_index(["plot_id", "index", "px"])
 
     ids = pd.Index(plots[ID_COL])
-    for name, tbl in (("lsp", lsp), ("curves", curves)):
-        missing = ids.difference(tbl.index.get_level_values(0).unique())
+    missing_curves = ids.difference(curves.index.get_level_values(0).unique())
+    if len(missing_curves):
+        raise SystemExit(f"curves: {len(missing_curves)} plots absent, "
+                         f"e.g. {list(missing_curves[:5])}")
+
+    # lsp/doy_grid are still Parcelas-CL-only -- unified reindexes onto the wider id set and
+    # warns (not aborts) when the gap is exactly the Living Trees subset (expected, per the
+    # deferral above); a gap on the Parcelas-CL side would still mean something is wrong.
+    # topo now has a real Living Trees extraction (`scripts/70`, DEM-derived) -- use the
+    # unified file when it exists so the topo context block stops NaN-imputing for 2,020
+    # rows; fall back to the Parcelas-CL-only table (and the warning below) if it doesn't.
+    lsp = pd.read_parquet(d / "lsp_all_auto.parquet").set_index(["plot_id", "index"])
+    topo_unified_path = d / "topography_unified.parquet"
+    topo_has_lt = unified and topo_unified_path.exists()
+    topo_path = topo_unified_path if topo_has_lt else d / "topography" / "topography.parquet"
+    topo = pd.read_parquet(topo_path).set_index("plot_id")
+    doy = pd.read_parquet(d / f"phenoshape_doy_grid{sfx}.parquet").set_index("plot_id")
+
+    if unified:
+        # These still use Parcelas-CL's raw numeric id ("32477"), never migrated to the
+        # "PCL_"-prefixed scheme `scripts/51` gives plots_unified.parquet -- without this,
+        # every `.reindex(ids)` below would silently return all-NaN for Parcelas-CL too,
+        # not just the expected Living Trees gap. topo skips this when it already came from
+        # `topography_unified.parquet`, which is PCL_/LT_-prefixed from the start.
+        lsp.index = lsp.index.set_levels("PCL_" + lsp.index.levels[0].astype(str), level=0)
+        if not topo_has_lt:
+            topo.index = "PCL_" + topo.index.astype(str)
+        doy.index = "PCL_" + doy.index.astype(str)
+
+    pcl_ids = ids if not unified else pd.Index(plots.loc[plots["source"] == "parcelas_cl", ID_COL])
+    for name, tbl in (("lsp", lsp),):
+        missing = pcl_ids.difference(tbl.index.get_level_values(0).unique())
         if len(missing):
-            raise SystemExit(f"{name}: {len(missing)} plots absent, e.g. {list(missing[:5])}")
+            raise SystemExit(f"{name}: {len(missing)} Parcelas-CL plots absent, "
+                             f"e.g. {list(missing[:5])}")
     for name, tbl in (("topography", topo), ("doy_grid", doy)):
-        missing = ids.difference(tbl.index)
+        missing = pcl_ids.difference(tbl.index)
         if len(missing):
-            raise SystemExit(f"{name}: {len(missing)} plots absent, e.g. {list(missing[:5])}")
+            raise SystemExit(f"{name}: {len(missing)} Parcelas-CL plots absent, "
+                             f"e.g. {list(missing[:5])}")
+    if unified:
+        n_no_topo = ids.difference(topo.index).size
+        if n_no_topo:
+            print(f"[features] {n_no_topo} unified plots (Living Trees) have no topography "
+                 "yet -- topo/clim/gm/obscomp/seas/svh/contrast/composite blocks will "
+                 "NaN-impute for them until that extraction exists.")
 
     # Optional: only present once scripts/18 and 18b have run. Every block that needs it
     # raises a pointed error rather than a KeyError, because "the cube predictors were never

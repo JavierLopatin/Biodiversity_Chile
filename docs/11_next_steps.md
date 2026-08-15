@@ -22,6 +22,18 @@ queda por hacer.
    multitemporal. **Pendiente de propagar**: `docs/16_stemp_protocol.md` §3 ("Prediction
    resolution") todavía describe predicción "año a año dentro de 2003–2026" — texto
    generado por `scripts/38_stemp_protocol.py`, no editable a mano en el `.md`.
+4. **La partición de Hill alfa/beta/gamma (`hillR::hill_taxa_parti`), las curvas de
+   rarefacción/extrapolación de Hill (taxonómica y filogenética) y la curva de
+   estabilidad de dark diversity son diagnóstico, no variables respuesta.** Las tres
+   son estadísticos de un *pool de n parcelas* (función del tamaño de muestra, o de un
+   remuestreo del pool), no un valor único por `PlotObservationID` — no hay forma de
+   asignarlas a una parcela sin arbitrariedad. Sirven para validar decisiones de
+   pipeline (p. ej. por qué dark diversity usa el pool completo) y quedan documentadas
+   en `docs/19_unified_facets_methodology.md` y el notebook §7f/§7g, pero no entran al
+   modelado. Las Y de biodiversidad para modelado siguen siendo las facetas per-parcela
+   ya existentes: `hill_q0_unified`; `lcbd_pa_unified`/`pcoa1-2_pa_unified` y
+   `lcbd_freq_unified`/`pcoa1-2_freq_unified`; `pd_faith_unified`/`mpd_unified`/
+   `mntd_unified` (+ SES); `dark_n_unified`.
 
 ---
 

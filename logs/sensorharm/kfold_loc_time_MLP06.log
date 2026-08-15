@@ -1,0 +1,2 @@
+    MLP06_curve_kndvi_raw100_sensorharm: 27,279 parameters, input (137,)
+  MLP06_curve_kndvi_raw100_sensorharm      kfold_loc_time   [  1.2m] hill_q0=-0.497 hill_q1=-0.541 hill_q2=-0.385 lcbd_pa=-0.197 pcoa1_pa=-0.004 pcoa2_pa=+0.087 lcbd_cover=+0.005 pcoa1_cover=-0.114 pcoa2_cover=+0.044 mpd=+0.036 mntd=-0.123 ses_pd=-0.041 ses_mpd=+0.011 ses_mntd=-0.034 dark_n=-0.265

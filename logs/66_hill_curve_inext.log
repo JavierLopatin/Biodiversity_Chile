@@ -1,0 +1,24 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+pool taxonomico: 2499 parcelas, 97063 individuos, 261 especies
+pool filogenetico (restringido al arbol): 96221 individuos, 237 especies
+taxonomica (iNEXT) lista en 126.1 s
+filogenetica (iNEXT.3D PD) lista en 24.9 s
+
+-> data/derived/unified_hill_curve_inext_abundance.csv (240 filas)
+
+valor en el punto observado, por q y metrica:
+          metric q n_individuals      value
+20     taxonomic 0         97063 261.000000
+60     taxonomic 1         97063  42.772216
+100    taxonomic 2         97063  22.966017
+140 phylogenetic 0         96221  30.715806
+180 phylogenetic 1         96221   2.533049
+220 phylogenetic 2         96221   1.459791

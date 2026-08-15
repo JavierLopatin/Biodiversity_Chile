@@ -1,0 +1,30 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+pool de conteo real: 2499 parcelas x 261 especies
+especies tambien en el arbol unificado: 237 de 261
+tamanos de pool: 10, 15, 22, 33, 48, 72, 107, 158, 235, 348, 516, 766, 1136, 1685, 2499
+  n=10 listo (100 reps)
+  n=15 listo (100 reps)
+  n=22 listo (100 reps)
+  n=33 listo (100 reps)
+  n=48 listo (100 reps)
+  n=72 listo (100 reps)
+  n=107 listo (100 reps)
+  n=158 listo (100 reps)
+  n=235 listo (100 reps)
+  n=348 listo (100 reps)
+  n=516 listo (100 reps)
+  n=766 listo (100 reps)
+  n=1136 listo (100 reps)
+  n=1685 listo (100 reps)
+  n=2499 listo (1 reps)
+
+-> data/derived/unified_hill_curve_counts.csv
+tiempo total: 0.5 min

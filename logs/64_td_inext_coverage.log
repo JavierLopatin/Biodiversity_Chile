@@ -1,0 +1,21 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+parcelas con conteo real: 2499
+parcelas con >=5 especies (SIN restringir al arbol): 895 de 2499 (35.8%)
+
+corrieron ok: 895 de 895 parcelas con >=5 especies (100.0%)
+-> data/derived/td_inext_coverage.parquet (895 parcelas)
+
+parcelas en comun con hill_q0_unified: 895
+Spearman(td_inext_q0, hill_q0_unified) = 0.917
+Spearman(td_inext_q0, td_inext_q1) = 0.508   Spearman(td_inext_q1, td_inext_q2) = 0.917
+cobertura observada (SC) -- min/mediana/max: 0.528 / 0.994 / 1.000
+
+tiempo total: 0.0 min

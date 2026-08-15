@@ -94,14 +94,23 @@ def _at_pixel(spec: str, px: str) -> str:
 def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
             derived: str, target_set: str, root: Path,
             multioutput: bool = False, force: bool = False,
-            px: str = "mean5x5", save_state: bool = False) -> pd.DataFrame | None:
+            px: str = "mean5x5", save_state: bool = False,
+            folds_path: str | None = None) -> pd.DataFrame | None:
     meta = MODELS[model]
     spec = _at_pixel(meta["spec"], px)
     tag = spec.replace("+", "-")
     idx = index if meta["per_index"] else ""
+    ident = runlog.make_run_id(model + ("c" if px == "center" else ""), tag, idx)
+    # target_set/unified are not in make_run_id's own tags, so two runs that only differ in
+    # which target set or pool they score against would share the same run_id/scheme
+    # outdir -- already_done would then skip the second as a false duplicate. Same trap
+    # `scripts/11_run_conv.py`'s `_variant_tags()` was fixed for.
+    if target_set != "all":
+        ident += f"_{target_set.replace('_', '-')}"
+    if feat.unified_flag():
+        ident += "_unified"
     cfg = runlog.RunConfig(
-        run_id=runlog.make_run_id(model + ("c" if px == "center" else ""), tag, idx)
-                + (f"_s{seeds[0]}" if seeds[0] else ""),
+        run_id=ident + (f"_s{seeds[0]}" if seeds[0] else ""),
         family=meta["family"], scheme=scheme, features=spec, index=idx,
         target_set=target_set, seeds=tuple(seeds),
         model="RF-multioutput" if multioutput else ("mean" if meta.get("mean_only") else "RF"),
@@ -120,7 +129,8 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
         keep = [j for j, n in enumerate(names) if n in tg.TARGETS_MAIN]
         Y_full, names = Y_full[:, keep], [names[j] for j in keep]
 
-    cv = cvmod.load_schemes(Path(derived) / "cv_folds_modelling.parquet")
+    cv = cvmod.load_schemes(Path(folds_path) if folds_path
+                            else Path(derived) / "cv_folds_modelling.parquet")
     pos = pd.Series(np.arange(len(ids)), index=ids)
 
     per_fold, imp_rows = [], []
@@ -216,6 +226,8 @@ def main() -> None:
                         "{0,1,2}; the tag lands in the run id so the two do not collide")
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--target-set", default="all")
+    p.add_argument("--folds", default=None,
+                   help="override cv_folds_modelling.parquet, e.g. for the unified pool")
     p.add_argument("--out", default="results/models")
     p.add_argument("--px", default="mean5x5", choices=["mean5x5", "center"],
                    help="pixel level of the WHOLE design: 5x5 patch summary, or centre pixel")
@@ -239,7 +251,8 @@ def main() -> None:
         idxs = ([args.index] if args.index else feat.INDICES) if meta["per_index"] else [None]
         for ix in idxs:
             run_one(model, args.scheme, ix, seeds, args.derived, args.target_set, root,
-                    force=args.force, px=args.px, save_state=args.save_state)
+                    force=args.force, px=args.px, save_state=args.save_state,
+                    folds_path=args.folds)
 
     if args.all or args.model == "RF07":
         ix, spec = _best_block(root, args.scheme)

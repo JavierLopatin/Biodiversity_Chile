@@ -1,0 +1,62 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+parcelas: 3102, filas de ocurrencia: 15051, especies: 593
+Abundance_parameter en occ:
+
+ Abundance Basal_area      Cover         NA       <NA> 
+      3654       7298       3833        266          0 
+parcelas excluidas de beta_pa por no tener ninguna especie registrada: 8 de 3102
+[07:25:36] [presence-absence] 3094 parcelas x 593 especies
+[07:25:36] [presence-absence] beta.div (method=jaccard, nperm=999) ...
+Registered S3 methods overwritten by 'adegraphics':
+  method         from
+  biplot.dudi    ade4
+  kplot.foucart  ade4
+  kplot.mcoa     ade4
+  kplot.mfa      ade4
+  kplot.pta      ade4
+  kplot.sepan    ade4
+  kplot.statis   ade4
+  scatter.coa    ade4
+  scatter.dudi   ade4
+  scatter.nipals ade4
+  scatter.pco    ade4
+  score.acm      ade4
+  score.mix      ade4
+  score.pca      ade4
+  screeplot.dudi ade4
+Warning: program compiled against libxml 210 using older 209
+Registered S3 method overwritten by 'spdep':
+  method   from
+  plot.mst ape 
+Registered S3 method overwritten by 'adespatial':
+  method          from       
+  plot.multispati adegraphics
+[08:39:12] [presence-absence] beta.div listo
+[08:39:12] [presence-absence] PCoA (distance=jaccard) ...
+[08:40:39] [presence-absence] PCoA listo
+[presence-absence] PCoA varianza explicada por 2 ejes: 12.9%
+Aviso:
+In run_facet(comm_pa, comm_pa, "jaccard", "jaccard", "presence-absence") :
+  [presence-absence] PCoA explica poca varianza (12.9% en 2 ejes)
+parcelas con abundancia real (fuera del estrato 'presencia'): 3040 de 3102
+[08:40:39] [frequency] 3040 parcelas x 584 especies
+[08:40:39] [frequency] beta.div (method=hellinger, nperm=999) ...
+[08:41:31] [frequency] beta.div listo
+[08:41:31] [frequency] PCoA (distance=bray) ...
+[08:42:47] [frequency] PCoA listo
+[frequency] PCoA varianza explicada por 2 ejes: 7.0%
+Aviso:
+In run_facet(comm_freq, comm_freq_rel, "hellinger", "bray", "frequency") :
+  [frequency] PCoA explica poca varianza (7.0% en 2 ejes)
+cor(hill_q0_unified, riqueza reportada) = 1.0000 (chequeo de sanidad, debiera ser ~1)
+filas: 3102, NA en *_freq_unified: 62 (esperado = fuera de abundancia real = 62)
+
+escrito: /mnt/rapidita_4T/GitHub/Biodiversity_Chile/data/derived/unified_diversity_responses.parquet

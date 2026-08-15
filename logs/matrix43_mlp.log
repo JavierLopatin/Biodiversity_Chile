@@ -1,0 +1,35 @@
+6 jobs (grupo=mlp), scheme=kfold5_block20 index=kndvi px=center
+
+  mlp/MLP01        scripts/10_run_tabular_dl.py --model MLP01 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP02        scripts/10_run_tabular_dl.py --model MLP02 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP03        scripts/10_run_tabular_dl.py --model MLP03 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP05a       scripts/10_run_tabular_dl.py --model MLP05a --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP05c       scripts/10_run_tabular_dl.py --model MLP05c --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP06        scripts/10_run_tabular_dl.py --model MLP06 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+
+=== mlp/MLP01  17:47:16
+    MLP01_lsp_ctr_kndvi_ctr: 14,607 parameters, input (38,)
+  MLP01_lsp_ctr_kndvi_ctr                  kfold5_block20   [  0.3m] hill_q0=+0.280 hill_q1=-0.009 hill_q2=-0.025 lcbd_pa=+0.191 pcoa1_pa=+0.324 pcoa2_pa=+0.249 lcbd_cover=+0.108 pcoa1_cover=+0.195 pcoa2_cover=+0.064 mpd=-0.004 mntd=+0.067 ses_pd=+0.053 ses_mpd=+0.028 ses_mntd=+0.068 dark_n=-0.193
+    ok  [0.4 min]
+=== mlp/MLP02  17:47:39
+    MLP02_curve_kndvi_ctr: 18,191 parameters, input (66,)
+  MLP02_curve_kndvi_ctr                    kfold5_block20   [  0.4m] hill_q0=+0.349 hill_q1=+0.156 hill_q2=+0.145 lcbd_pa=+0.343 pcoa1_pa=+0.425 pcoa2_pa=+0.288 lcbd_cover=+0.260 pcoa1_cover=+0.276 pcoa2_cover=+0.071 mpd=+0.016 mntd=+0.111 ses_pd=+0.078 ses_mpd=+0.070 ses_mntd=+0.097 dark_n=-0.050
+    ok  [0.4 min]
+=== mlp/MLP03  17:48:06
+    MLP03_lsp_ctr-curve-qc_kndvi_ctr: 22,031 parameters, input (96,)
+  MLP03_lsp_ctr-curve-qc_kndvi_ctr         kfold5_block20   [  0.4m] hill_q0=+0.305 hill_q1=+0.128 hill_q2=+0.089 lcbd_pa=+0.244 pcoa1_pa=+0.365 pcoa2_pa=+0.276 lcbd_cover=+0.204 pcoa1_cover=+0.252 pcoa2_cover=+0.110 mpd=+0.026 mntd=+0.051 ses_pd=+0.045 ses_mpd=+0.043 ses_mntd=+0.052 dark_n=-0.083
+    ok  [0.4 min]
+=== mlp/MLP05a  17:48:31
+    MLP05a_curve_kndvi_ctr: 7,055 parameters, input (66,)
+  MLP05a_curve_kndvi_ctr                   kfold5_block20   [  0.5m] hill_q0=+0.326 hill_q1=+0.153 hill_q2=+0.135 lcbd_pa=+0.329 pcoa1_pa=+0.415 pcoa2_pa=+0.294 lcbd_cover=+0.274 pcoa1_cover=+0.222 pcoa2_cover=+0.072 mpd=+0.041 mntd=+0.131 ses_pd=+0.104 ses_mpd=+0.091 ses_mntd=+0.117 dark_n=-0.096
+    ok  [0.6 min]
+=== mlp/MLP05c  17:49:05
+    MLP05c_curve_kndvi_ctr: 60,175 parameters, input (66,)
+  MLP05c_curve_kndvi_ctr                   kfold5_block20   [  0.4m] hill_q0=+0.386 hill_q1=+0.154 hill_q2=+0.125 lcbd_pa=+0.316 pcoa1_pa=+0.431 pcoa2_pa=+0.298 lcbd_cover=+0.218 pcoa1_cover=+0.279 pcoa2_cover=+0.077 mpd=+0.038 mntd=+0.105 ses_pd=+0.086 ses_mpd=+0.084 ses_mntd=+0.097 dark_n=-0.044
+    ok  [0.5 min]
+=== mlp/MLP06  17:49:32
+    MLP06_curve_kndvi_ctr: 19,983 parameters, input (80,)
+  MLP06_curve_kndvi_ctr                    kfold5_block20   [  0.4m] hill_q0=+0.407 hill_q1=+0.266 hill_q2=+0.236 lcbd_pa=+0.302 pcoa1_pa=+0.315 pcoa2_pa=+0.391 lcbd_cover=+0.312 pcoa1_cover=+0.286 pcoa2_cover=+0.140 mpd=+0.068 mntd=+0.139 ses_pd=+0.077 ses_mpd=+0.090 ses_mntd=+0.078 dark_n=-0.096
+    ok  [0.4 min]
+
+=== fin 2026-08-12 17:49:59

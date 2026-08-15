@@ -88,7 +88,8 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
            force: bool = False, notes: str = "", verbose: bool = False,
            save_state: bool = False, arch: str = "sep",
            p_conv: float = 0.1, p_head: float = 0.3,
-           init_from: str | None = None) -> pd.DataFrame | None:
+           init_from: str | None = None,
+           folds_path: str | None = None) -> pd.DataFrame | None:
     cfg_t = train_cfg or TrainCfg()
     cfg = runlog.RunConfig(
         run_id=run_id, family=family, scheme=scheme,
@@ -130,7 +131,8 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
     if fusion in ("patch", "patchctx"):
         patches, _ = sub.load_topo_patches(derived, ids)
 
-    cv = cvmod.load_schemes(Path(derived) / "cv_folds_modelling.parquet")
+    cv = cvmod.load_schemes(Path(folds_path) if folds_path
+                            else Path(derived) / "cv_folds_modelling.parquet")
     plots = feat.load_tables(derived).plots
     group_col = cvmod.SCHEME_GROUP[scheme]
     plots = cvmod.ensure_group_col(plots, group_col)

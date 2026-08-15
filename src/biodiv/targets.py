@@ -63,6 +63,73 @@ TARGET_SOURCE = (
     | {t: "biodiversity_responses_sar.parquet" for t in TARGETS_MAIN_SAR}
 )
 
+# --------------------------------------------------------------------------------------
+# Unified facets (Parcelas-CL + Living Trees Chile, scripts 51-55) -- 3,102 plots, wider
+# footprint (full country, not just 30-38°S). `_unified` suffix keeps every name distinct
+# from its Parcelas-CL-only counterpart above, so both dictionaries merge into one
+# `TARGET_SOURCE` with no collision -- no env-var switch needed here, unlike
+# `features.py`'s `BIODIV_UNIFIED` (that one *does* need a switch: `plots`/`curves`
+# there share the same column names across sources, so mixing them silently would be
+# wrong; targets never do).
+#
+# No `hill_q1_unified`/`hill_q2_unified`: `scripts/52_unified_diversity_facets.R` only
+# computed q=0 per-plot (q=1,2 exist only as pool-level diagnostic curves, see
+# `docs/11_next_steps.md` decision #4 -- not a per-plot facet to begin with).
+#
+# Same DROPPED reasoning as the non-unified columns, re-verified on the unified data
+# this session (not just assumed to carry over): `pd_faith_unified` r=+0.894 with
+# richness, `completeness_unified` r=+0.950 -- both the Faith/completeness trap again.
+# `p_lcbd_*_unified`/`p_ses_*_unified` are permutation p-values, rank transforms of
+# their matching LCBD/SES column. `dark_mpd_unified`/`n_obs_unified`/`pool_n_unified`/
+# `n_sp_tree_unified` are protocol descriptors, not diversity.
+
+#: Richness + presence/absence beta, all 3,102 plots (`lcbd_pa_unified` etc. NaN on 8
+#: plots with zero species -- `scripts/52`, not by design the way the cover tier is).
+TARGETS_MAIN_UNIFIED = ["hill_q0_unified", "lcbd_pa_unified", "pcoa1_pa_unified",
+                        "pcoa2_pa_unified"]
+
+#: Frequency-weighted beta (row-relativized cover/counts/basal-area), 3,040 plots --
+#: NaN on the presence-only stratum, same masking contract as `TARGETS_COVER`.
+TARGETS_FREQ_UNIFIED = ["lcbd_freq_unified", "pcoa1_freq_unified", "pcoa2_freq_unified"]
+
+#: Phylogenetic, 2,539 plots (563 NaN, <2 species in the 610-tip tree -- picante's own
+#: handling, not filtered by hand).
+TARGETS_PHYLO_UNIFIED = ["mpd_unified", "mntd_unified", "ses_pd_unified",
+                         "ses_mpd_unified", "ses_mntd_unified"]
+
+#: Dark diversity, all 3,102 plots minus the same 8 zero-species plots.
+TARGETS_DARK_UNIFIED = ["dark_n_unified"]
+
+TARGETS_ALL_UNIFIED = (TARGETS_MAIN_UNIFIED + TARGETS_FREQ_UNIFIED
+                       + TARGETS_PHYLO_UNIFIED + TARGETS_DARK_UNIFIED)
+
+TARGET_SOURCE |= (
+    {t: "unified_diversity_responses.parquet"
+     for t in TARGETS_MAIN_UNIFIED + TARGETS_FREQ_UNIFIED}
+    | {t: "unified_phylo_responses.parquet" for t in TARGETS_PHYLO_UNIFIED}
+    | {t: "unified_dark_diversity.parquet" for t in TARGETS_DARK_UNIFIED}
+)
+
+#: Perez-Giraldo-style facets (real-count Sorensen LCBD, iNEXT.3D coverage-based PD/TD),
+#: padded to the full unified pool by `scripts/69_pad_pg_facets_unified.py` -- NaN where
+#: the estimator's own species/coverage floor was not met, not a missing row. Coverage is
+#: far below the other unified facets by construction: `lcbd_count_sorensen` needs a real
+#: individual count (2,499/3,102 plots -- Living Trees' basal-area/cover strata don't
+#: qualify), `pd_inext`/`td_inext` additionally need >=5 species after subsetting to the
+#: 610-tip phylogeny (888 and 895/3,102). See the plan doc for the Pérez-Giraldo (2025)
+#: methodology this mirrors (adespatial::LCBD.comp(coef="S", quant=TRUE) / iNEXT.3D
+#: estimate3D(base="coverage", nboot=1)).
+TARGETS_PG_LCBD = ["lcbd_count_sorensen"]
+TARGETS_PG_PD = ["pd_inext_q0", "pd_inext_q1", "pd_inext_q2"]
+TARGETS_PG_TD = ["td_inext_q0", "td_inext_q1", "td_inext_q2"]
+TARGETS_ALL_PG = TARGETS_PG_LCBD + TARGETS_PG_PD + TARGETS_PG_TD
+
+TARGET_SOURCE |= (
+    {t: "lcbd_count_sorensen_unified_padded.parquet" for t in TARGETS_PG_LCBD}
+    | {t: "pd_inext_coverage_unified_padded.parquet" for t in TARGETS_PG_PD}
+    | {t: "td_inext_coverage_unified_padded.parquet" for t in TARGETS_PG_TD}
+)
+
 #: Reporting groups. Averaging R2 across facets that behave differently hides both: alpha
 #: is not predictable across contributors while composition is, so one grand mean reports
 #: neither. Every results table is broken down by these.
@@ -77,6 +144,29 @@ FACETS = {
 #: target -> facet
 FACET_OF = {t: f for f, ts in FACETS.items() for t in ts}
 
+#: Same reporting-breakdown role as FACETS, kept separate rather than merged in: several
+#: tests (and the TARGETS_MAIN_SAR docstring) guard `FACET_OF == TARGETS_ALL` and
+#: `target_set="all"` staying exactly the 15 non-unified columns -- merging the unified
+#: facets into FACETS/FACET_OF would silently widen both and break that invariant.
+FACETS_UNIFIED = {
+    "alpha_unified":     ["hill_q0_unified"],
+    "beta_pa_unified":   ["lcbd_pa_unified", "pcoa1_pa_unified", "pcoa2_pa_unified"],
+    "beta_freq_unified": TARGETS_FREQ_UNIFIED,
+    "phylo_unified":     TARGETS_PHYLO_UNIFIED,
+    "dark_unified":      TARGETS_DARK_UNIFIED,
+}
+
+FACET_OF_UNIFIED = {t: f for f, ts in FACETS_UNIFIED.items() for t in ts}
+
+#: Perez-Giraldo-style facets, own reporting group -- coverage is too different from
+#: FACETS_UNIFIED's other entries to average together (see TARGETS_ALL_PG docstring).
+FACETS_PG = {
+    "lcbd_count_pg": TARGETS_PG_LCBD,
+    "pd_inext_pg":   TARGETS_PG_PD,
+    "td_inext_pg":   TARGETS_PG_TD,
+}
+FACET_OF_PG = {t: f for f, ts in FACETS_PG.items() for t in ts}
+
 #: Never fit, never score.
 #:
 #: `p_lcbd_*`  -- Spearman == -1.00 with the matching lcbd_* column: the permutation
@@ -89,7 +179,11 @@ FACET_OF = {t: f for f, ts in FACETS.items() for t in ts}
 #: `n_sp_tree`, `n_obs` -- richness by another name.
 DROPPED = ["p_lcbd_pa", "p_lcbd_cover", "p_ses_pd", "p_ses_mpd", "p_ses_mntd",
            "pd_faith", "completeness", "dark_pd", "dark_lin", "dark_mpd",
-           "dark_prob", "pool_n", "n_sp_tree", "n_obs", "near_frac", "jaccard_fav"]
+           "dark_prob", "pool_n", "n_sp_tree", "n_obs", "near_frac", "jaccard_fav",
+           "p_lcbd_pa_unified", "p_lcbd_freq_unified", "p_ses_pd_unified",
+           "p_ses_mpd_unified", "p_ses_mntd_unified", "pd_faith_unified",
+           "completeness_unified", "dark_mpd_unified", "n_obs_unified",
+           "pool_n_unified", "n_sp_tree_unified"]
 
 #: Reported but not treated as an independent result: r(hill_q1, hill_q2) = 0.95. Kept in
 #: the multi-output head as a cheap multi-task regulariser.
@@ -106,6 +200,21 @@ TARGET_SETS = {
     #: raw vs species-area-corrected richness, side by side, for the kfold5_owner/
     #: kfold_time diagnostic -- does removing the plot-size confound recover any R2?
     "richness_sar_test": ["hill_q0", "hill_q1", "hill_q2"] + TARGETS_MAIN_SAR,
+    #: unified pool (Parcelas-CL + Living Trees, 3,102 plots) -- pairs with
+    #: `BIODIV_UNIFIED=1` on the features side (`src/biodiv/features.py`) and
+    #: `kfold5_block20_unified` on the CV side (`src/biodiv/cv.py`).
+    "unified_all":       TARGETS_ALL_UNIFIED,
+    "unified_main":      TARGETS_MAIN_UNIFIED,
+    "unified_freq":      TARGETS_FREQ_UNIFIED,
+    "unified_phylo":     TARGETS_PHYLO_UNIFIED,
+    "unified_dark":      TARGETS_DARK_UNIFIED,
+    #: richness + both beta tiers, unified pool -- the unified analogue of "taxonomic".
+    "unified_taxonomic": TARGETS_MAIN_UNIFIED + TARGETS_FREQ_UNIFIED,
+    #: Perez-Giraldo-style facets (real-count Sorensen LCBD + iNEXT.3D coverage PD/TD).
+    "pg_all": TARGETS_ALL_PG,
+    "pg_lcbd": TARGETS_PG_LCBD,
+    "pg_pd": TARGETS_PG_PD,
+    "pg_td": TARGETS_PG_TD,
 }
 
 
@@ -144,7 +253,9 @@ def load_targets(derived: Path | str = "data/derived",
         if not f.exists():
             raise FileNotFoundError(
                 f"{f} is missing but {cols} were requested. Run the script that writes it: "
-                f"07 for biodiversity_responses, 25 for phylo_responses, 27 for dark_diversity.")
+                f"07 for biodiversity_responses, 25 for phylo_responses, 27 for dark_diversity, "
+                f"52 for unified_diversity_responses, 54 for unified_phylo_responses, "
+                f"55 for unified_dark_diversity.")
         frames.append(pd.read_parquet(f).set_index(ID_COL)[cols])
     df = pd.concat(frames, axis=1)
     if plot_ids is not None:

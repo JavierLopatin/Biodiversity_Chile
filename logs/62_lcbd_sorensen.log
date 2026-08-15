@@ -1,0 +1,21 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+Warning: program compiled against libxml 210 using older 209
+pool de conteo real: 2499 parcelas x 261 especies
+
+[Sorensen cuantitativo] beta.div.comp(coef='S', quant=TRUE) ...
+  listo en 157.4 s
+  SStotal=1188.3021  BDtotal=0.4757
+
+-> data/derived/lcbd_count_sorensen.parquet (2499 parcelas)
+
+parcelas en comun con facetas existentes: 2499 de 2499
+Spearman(lcbd_count_sorensen, lcbd_pa_unified)   = 0.741  (n=2491 completos)
+Spearman(lcbd_count_sorensen, lcbd_freq_unified) = 0.772  (n=2491 completos)

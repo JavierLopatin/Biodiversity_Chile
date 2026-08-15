@@ -1,0 +1,6 @@
+=== RF06 kfold5_block20 (richness_sar_test)  15:50:27
+=== restaurando oof_predictions.csv completo (15 targets) ===
+--- RF06 kfold5_owner (target-set=all)  15:53:28
+--- RF06 kfold_time (target-set=all)  16:00:51
+--- RF06 kfold5_block20 (target-set=all)  16:08:37
+=== fin 2026-08-12 16:15:58

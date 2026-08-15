@@ -1,0 +1,3 @@
+scheme=kfold_time  seeds=[0, 1, 2]  targets=richness_sar_test
+
+  RF06_curve_all-topo-area_raw100          kfold_time       [185.6s] hill_q0=+0.043 hill_q1=-0.167 hill_q2=-0.238 hill_q0_sar=-0.058 hill_q1_sar=-0.181 hill_q2_sar=-0.229

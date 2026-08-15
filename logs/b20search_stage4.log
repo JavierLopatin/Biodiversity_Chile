@@ -1,0 +1,50 @@
+=== 1. el factor de la hipotesis: aumentacion  14:54:54
+=== 2. regularizacion  14:55:02
+=== 3. sustrato y curva  14:55:13
+=== 4. combinar los positivos  15:02:20
+=== fin  2026-08-14 15:06:24
+=== todas las corridas bajo kfold5_block20 ===
+                                                                     family  alpha  beta_pa  beta_cover  phylo   dark  media
+RF03_curve-topo-area_kndvi_raw100                                        RF  0.280    0.436       0.285  0.087  0.207  0.259
+RF03c_curve-topo_ctr-area_kndvi_raw100                                   RF  0.243    0.391       0.268  0.109  0.161  0.234
+RF03c_curve-topo_ctr-area_kndvi_raw100_roll15                            RF  0.246    0.374       0.252  0.074  0.167  0.223
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi_raw100                           RF  0.222    0.386       0.265  0.102  0.135  0.222
+RF03c_curve-topo_ctr-area_kndvi_raw100_roll25                            RF  0.263    0.370       0.243  0.053  0.158  0.217
+RF03c_curve-topo_ctr-area_kndvi                                          RF  0.268    0.368       0.220  0.106  0.109  0.214
+RF08c_lsp_ctr-curve-topo_ctr_kndvi_raw100                                RF  0.162    0.378       0.259  0.097  0.137  0.207
+RF04c_lsp_ctr-curve-topo_ctr-area_kndvi                                  RF  0.240    0.357       0.219  0.104  0.085  0.201
+C2D02_serpentine_kndvi_raw36_ctxclim-topo-area_slope005_ap05            C2D  0.309    0.350       0.249  0.085  0.010  0.201
+C2D02_serpentine_kndvi_raw36_wC_ctxclim-topo-area                       C2D  0.320    0.364       0.234  0.072  0.003  0.199
+C2D02_serpentine_kndvi_raw36_noaug_ctxclim-topo-area                    C2D  0.321    0.330       0.233  0.096 -0.019  0.192
+C2D02_serpentine_kndvi_raw36_ctxclim-topo-area_weig01                   C2D  0.295    0.352       0.245  0.094 -0.040  0.189
+MLP06_curve_kndvi_raw100_ctr                                            MLP  0.264    0.347       0.262  0.081 -0.013  0.188
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi_raw100                              RF  0.202    0.364       0.220  0.107  0.044  0.188
+RF02c_lsp_ctr-qc-topo_ctr-area_kndvi                                     RF  0.202    0.364       0.220  0.107  0.044  0.188
+C2D02_serpentine_kndvi_raw36_ctxclim-topo-area_slope005_ap05_weig003    C2D  0.341    0.328       0.239  0.076 -0.049  0.187
+RF01c_lsp_ctr-topo_ctr-area_kndvi_raw100                                 RF  0.210    0.368       0.216  0.105  0.032  0.186
+RF01c_lsp_ctr-topo_ctr-area_kndvi                                        RF  0.210    0.368       0.216  0.105  0.032  0.186
+MLP06_curve_kndvi_raw100                                                MLP  0.224    0.373       0.269  0.078 -0.013  0.186
+MLP05c_curve_kndvi_raw100_ctr                                           MLP  0.222    0.387       0.242  0.085 -0.013  0.185
+
+=== mejor de cada familia ===
+                                                             family  alpha  beta_pa  beta_cover  phylo   dark  media
+RF03_curve-topo-area_kndvi_raw100                                RF  0.280    0.436       0.285  0.087  0.207  0.259
+C2D02_serpentine_kndvi_raw36_ctxclim-topo-area_slope005_ap05    C2D  0.309    0.350       0.249  0.085  0.010  0.201
+MLP06_curve_kndvi_raw100_ctr                                    MLP  0.264    0.347       0.262  0.081 -0.013  0.188
+B03_coords                                                     BASE  0.273    0.277       0.106  0.078  0.101  0.167
+C1D01_curve1d_kndvi_raw36_ctxclim-topo-area                     C1D  0.263    0.325       0.182  0.068 -0.152  0.137
+
+=== quien gana CADA faceta ===
+La media entre facetas esconde el resultado que importa: las familias no ganan en las
+mismas respuestas. La convolucion lee la FORMA de la curva, que es lo que se relaciona
+con riqueza y estructura filogenetica; el bosque lee NIVELES absolutos, que es lo que
+gobierna composicion y diversidad oscura.
+
+    faceta ganador  valor                                        corrida mejor_otra_familia  valor2
+     alpha     C2D  0.341 C2D02_serpentine_kndvi_raw36_ctxclim-topo-area                 RF   0.313
+   beta_pa      RF  0.436              RF03_curve-topo-area_kndvi_raw100                MLP   0.387
+beta_cover      RF  0.285              RF03_curve-topo-area_kndvi_raw100                MLP   0.269
+     phylo     C2D  0.117              C2D02_serpentine_kndvi_raw100_ctr                 RF   0.109
+      dark      RF  0.207              RF03_curve-topo-area_kndvi_raw100               BASE   0.101
+
+brecha C2D contra RF: -0.058 (umbral de ruido 2 sd = 0,022)

@@ -1,0 +1,115 @@
+21 jobs (grupo=all), scheme=kfold5_block20 index=kndvi px=center, gpus=2
+
+  rf/RF01          scripts/09_run_baselines.py --model RF01 --scheme kfold5_block20 --index kndvi --px center --seeds 3 --force --save-state
+  rf/RF02          scripts/09_run_baselines.py --model RF02 --scheme kfold5_block20 --index kndvi --px center --seeds 3 --force --save-state
+  rf/RF03          scripts/09_run_baselines.py --model RF03 --scheme kfold5_block20 --index kndvi --px center --seeds 3 --force --save-state
+  rf/RF04          scripts/09_run_baselines.py --model RF04 --scheme kfold5_block20 --index kndvi --px center --seeds 3 --force --save-state
+  rf/RF08          scripts/09_run_baselines.py --model RF08 --scheme kfold5_block20 --index kndvi --px center --seeds 3 --force --save-state
+  mlp/MLP01        scripts/10_run_tabular_dl.py --model MLP01 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP02        scripts/10_run_tabular_dl.py --model MLP02 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP03        scripts/10_run_tabular_dl.py --model MLP03 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP05a       scripts/10_run_tabular_dl.py --model MLP05a --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP05c       scripts/10_run_tabular_dl.py --model MLP05c --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  mlp/MLP06        scripts/10_run_tabular_dl.py --model MLP06 --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c1d/curve1d      scripts/11_run_conv.py --substrate curve1d --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/reshape      scripts/11_run_conv.py --substrate reshape --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/serpentine   scripts/11_run_conv.py --substrate serpentine --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/gaf          scripts/11_run_conv.py --substrate gaf --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/mtf          scripts/11_run_conv.py --substrate mtf --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/ndi          scripts/11_run_conv.py --substrate ndi --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/cwt          scripts/11_run_conv.py --substrate cwt --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/hilbert      scripts/11_run_conv.py --substrate hilbert --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/cos2d        scripts/11_run_conv.py --substrate cos2d --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+  c2d/spectrogram  scripts/11_run_conv.py --substrate spectrogram --index kndvi --scheme kfold5_block20 --px center --seeds 3 --force
+
+=== rf/RF01 [CPU]  22:29:34
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF01c_lsp_ctr-topo_ctr-area_kndvi_raw100 kfold5_block20   [156.9s] hill_q0=+0.482 hill_q1=+0.076 hill_q2=+0.073 lcbd_pa=+0.309 pcoa1_pa=+0.455 pcoa2_pa=+0.340 lcbd_cover=+0.177 pcoa1_cover=+0.326 pcoa2_cover=+0.146 mpd=+0.043 mntd=+0.120 ses_pd=+0.127 ses_mpd=+0.115 ses_mntd=+0.120 dark_n=+0.032
+    rf/RF01 [CPU] ok  [2.6 min]
+=== rf/RF02 [CPU]  22:32:12
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF02c_lsp_ctr-qc-topo_ctr-area_kndvi_raw100 kfold5_block20   [158.6s] hill_q0=+0.475 hill_q1=+0.064 hill_q2=+0.067 lcbd_pa=+0.308 pcoa1_pa=+0.448 pcoa2_pa=+0.335 lcbd_cover=+0.201 pcoa1_cover=+0.317 pcoa2_cover=+0.143 mpd=+0.038 mntd=+0.112 ses_pd=+0.135 ses_mpd=+0.128 ses_mntd=+0.124 dark_n=+0.044
+    rf/RF02 [CPU] ok  [2.7 min]
+=== rf/RF03 [CPU]  22:34:53
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF03c_curve-topo_ctr-area_kndvi_raw100   kfold5_block20   [210.9s] hill_q0=+0.418 hill_q1=+0.154 hill_q2=+0.157 lcbd_pa=+0.356 pcoa1_pa=+0.464 pcoa2_pa=+0.353 lcbd_cover=+0.284 pcoa1_cover=+0.330 pcoa2_cover=+0.190 mpd=+0.001 mntd=+0.133 ses_pd=+0.152 ses_mpd=+0.129 ses_mntd=+0.132 dark_n=+0.161
+    rf/RF03 [CPU] ok  [3.5 min]
+=== rf/RF04 [CPU]  22:38:26
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF04c_lsp_ctr-curve-topo_ctr-area_kndvi_raw100 kfold5_block20   [216.8s] hill_q0=+0.422 hill_q1=+0.118 hill_q2=+0.125 lcbd_pa=+0.354 pcoa1_pa=+0.456 pcoa2_pa=+0.349 lcbd_cover=+0.278 pcoa1_cover=+0.342 pcoa2_cover=+0.176 mpd=-0.015 mntd=+0.124 ses_pd=+0.148 ses_mpd=+0.129 ses_mntd=+0.127 dark_n=+0.135
+    rf/RF04 [CPU] ok  [3.6 min]
+=== rf/RF08 [CPU]  22:42:05
+scheme=kfold5_block20  seeds=[0, 1, 2]  targets=all
+
+  RF08c_lsp_ctr-curve-topo_ctr_kndvi_raw100 kfold5_block20   [218.7s] hill_q0=+0.358 hill_q1=+0.074 hill_q2=+0.054 lcbd_pa=+0.330 pcoa1_pa=+0.449 pcoa2_pa=+0.354 lcbd_cover=+0.272 pcoa1_cover=+0.342 pcoa2_cover=+0.164 mpd=-0.012 mntd=+0.114 ses_pd=+0.140 ses_mpd=+0.117 ses_mntd=+0.125 dark_n=+0.137
+    rf/RF08 [CPU] ok  [3.7 min]
+=== mlp/MLP01 [GPU0]  22:45:45
+=== mlp/MLP02 [GPU1]  22:45:45
+    MLP01_lsp_ctr_kndvi_raw100_ctr: 14,607 parameters, input (38,)
+  MLP01_lsp_ctr_kndvi_raw100_ctr           kfold5_block20   [  0.3m] hill_q0=+0.264 hill_q1=-0.007 hill_q2=-0.017 lcbd_pa=+0.218 pcoa1_pa=+0.335 pcoa2_pa=+0.253 lcbd_cover=+0.112 pcoa1_cover=+0.192 pcoa2_cover=+0.084 mpd=+0.010 mntd=+0.053 ses_pd=+0.030 ses_mpd=+0.018 ses_mntd=+0.069 dark_n=-0.219
+    mlp/MLP01 [GPU0] ok  [0.4 min]
+=== mlp/MLP03 [GPU0]  22:46:07
+    MLP02_curve_kndvi_raw100_ctr: 24,335 parameters, input (114,)
+  MLP02_curve_kndvi_raw100_ctr             kfold5_block20   [  0.5m] hill_q0=+0.189 hill_q1=+0.109 hill_q2=+0.133 lcbd_pa=+0.379 pcoa1_pa=+0.414 pcoa2_pa=+0.358 lcbd_cover=+0.326 pcoa1_cover=+0.281 pcoa2_cover=+0.117 mpd=+0.016 mntd=+0.095 ses_pd=+0.076 ses_mpd=+0.069 ses_mntd=+0.103 dark_n=-0.006
+    mlp/MLP02 [GPU1] ok  [0.5 min]
+=== mlp/MLP05a [GPU1]  22:46:17
+    MLP03_lsp_ctr-curve-qc_kndvi_raw100_ctr: 28,175 parameters, input (144,)
+  MLP03_lsp_ctr-curve-qc_kndvi_raw100_ctr  kfold5_block20   [  0.4m] hill_q0=+0.153 hill_q1=+0.100 hill_q2=+0.091 lcbd_pa=+0.313 pcoa1_pa=+0.371 pcoa2_pa=+0.337 lcbd_cover=+0.284 pcoa1_cover=+0.285 pcoa2_cover=+0.121 mpd=+0.025 mntd=+0.064 ses_pd=+0.062 ses_mpd=+0.064 ses_mntd=+0.086 dark_n=-0.101
+    mlp/MLP03 [GPU0] ok  [0.4 min]
+=== mlp/MLP05c [GPU0]  22:46:33
+    MLP05a_curve_kndvi_raw100_ctr: 10,127 parameters, input (114,)
+  MLP05a_curve_kndvi_raw100_ctr            kfold5_block20   [  0.4m] hill_q0=+0.152 hill_q1=+0.118 hill_q2=+0.094 lcbd_pa=+0.267 pcoa1_pa=+0.365 pcoa2_pa=+0.347 lcbd_cover=+0.322 pcoa1_cover=+0.168 pcoa2_cover=+0.040 mpd=+0.066 mntd=+0.108 ses_pd=+0.115 ses_mpd=+0.099 ses_mntd=+0.133 dark_n=-0.084
+    mlp/MLP05a [GPU1] ok  [0.5 min]
+=== mlp/MLP06 [GPU1]  22:46:46
+    MLP05c_curve_kndvi_raw100_ctr: 72,463 parameters, input (114,)
+  MLP05c_curve_kndvi_raw100_ctr            kfold5_block20   [  0.5m] hill_q0=+0.301 hill_q1=+0.185 hill_q2=+0.181 lcbd_pa=+0.368 pcoa1_pa=+0.438 pcoa2_pa=+0.355 lcbd_cover=+0.310 pcoa1_cover=+0.291 pcoa2_cover=+0.125 mpd=+0.043 mntd=+0.101 ses_pd=+0.096 ses_mpd=+0.080 ses_mntd=+0.108 dark_n=-0.013
+    mlp/MLP05c [GPU0] ok  [0.5 min]
+=== c1d/curve1d [GPU0]  22:47:02
+    MLP06_curve_kndvi_raw100_ctr: 26,127 parameters, input (128,)
+  MLP06_curve_kndvi_raw100_ctr             kfold5_block20   [  0.4m] hill_q0=+0.299 hill_q1=+0.248 hill_q2=+0.244 lcbd_pa=+0.293 pcoa1_pa=+0.355 pcoa2_pa=+0.393 lcbd_cover=+0.348 pcoa1_cover=+0.272 pcoa2_cover=+0.168 mpd=+0.057 mntd=+0.101 ses_pd=+0.075 ses_mpd=+0.087 ses_mntd=+0.086 dark_n=-0.013
+    mlp/MLP06 [GPU1] ok  [0.4 min]
+=== c2d/reshape [GPU1]  22:47:11
+    C1D01_curve1d_kndvi_raw100_ctr: 14,927 parameters, input (1, 100)
+  C1D01_curve1d_kndvi_raw100_ctr           kfold5_block20   [  1.7m] hill_q0=+0.192 hill_q1=+0.002 hill_q2=+0.011 lcbd_pa=+0.105 pcoa1_pa=+0.313 pcoa2_pa=+0.171 lcbd_cover=+0.034 pcoa1_cover=+0.122 pcoa2_cover=+0.020 mpd=+0.019 mntd=+0.112 ses_pd=+0.060 ses_mpd=+0.031 ses_mntd=+0.103 dark_n=-0.186
+    c1d/curve1d [GPU0] ok  [1.7 min]
+=== c2d/serpentine [GPU0]  22:48:45
+    C2D01_reshape_kndvi_raw100_ctr: 15,567 parameters, input (1, 10, 10)
+  C2D01_reshape_kndvi_raw100_ctr           kfold5_block20   [  2.1m] hill_q0=+0.248 hill_q1=+0.168 hill_q2=+0.182 lcbd_pa=+0.291 pcoa1_pa=+0.365 pcoa2_pa=+0.288 lcbd_cover=+0.232 pcoa1_cover=+0.203 pcoa2_cover=-0.003 mpd=+0.058 mntd=+0.113 ses_pd=+0.118 ses_mpd=+0.098 ses_mntd=+0.125 dark_n=-0.104
+    c2d/reshape [GPU1] ok  [2.1 min]
+=== c2d/gaf [GPU1]  22:49:18
+    C2D02_serpentine_kndvi_raw100_ctr: 15,567 parameters, input (1, 10, 10)
+  C2D02_serpentine_kndvi_raw100_ctr        kfold5_block20   [  2.0m] hill_q0=+0.274 hill_q1=+0.171 hill_q2=+0.176 lcbd_pa=+0.274 pcoa1_pa=+0.352 pcoa2_pa=+0.278 lcbd_cover=+0.217 pcoa1_cover=+0.152 pcoa2_cover=-0.010 mpd=+0.071 mntd=+0.122 ses_pd=+0.140 ses_mpd=+0.116 ses_mntd=+0.137 dark_n=-0.062
+    c2d/serpentine [GPU0] ok  [2.1 min]
+=== c2d/mtf [GPU0]  22:50:50
+    C2D03_gaf_kndvi_raw100_ctr: 15,711 parameters, input (2, 100, 100)
+  C2D03_gaf_kndvi_raw100_ctr               kfold5_block20   [ 15.5m] hill_q0=-0.095 hill_q1=-0.020 hill_q2=-0.005 lcbd_pa=-0.281 pcoa1_pa=-0.187 pcoa2_pa=+0.054 lcbd_cover=-0.013 pcoa1_cover=+0.046 pcoa2_cover=-0.180 mpd=-0.044 mntd=-0.006 ses_pd=-0.005 ses_mpd=-0.006 ses_mntd=+0.027 dark_n=-0.288
+    c2d/gaf [GPU1] ok  [15.5 min]
+=== c2d/ndi [GPU1]  23:04:48
+    C2D04_mtf_kndvi_raw100_ctr: 15,567 parameters, input (1, 100, 100)
+  C2D04_mtf_kndvi_raw100_ctr               kfold5_block20   [ 16.5m] hill_q0=-0.023 hill_q1=+0.003 hill_q2=-0.013 lcbd_pa=-0.234 pcoa1_pa=-0.244 pcoa2_pa=+0.012 lcbd_cover=+0.012 pcoa1_cover=-0.031 pcoa2_cover=-0.183 mpd=-0.065 mntd=-0.028 ses_pd=-0.046 ses_mpd=-0.049 ses_mntd=-0.036 dark_n=-0.300
+    c2d/mtf [GPU0] ok  [16.6 min]
+=== c2d/cwt [GPU0]  23:07:24
+    C2D05_ndi_kndvi_raw100_ctr: 15,567 parameters, input (1, 100, 100)
+  C2D05_ndi_kndvi_raw100_ctr               kfold5_block20   [ 10.2m] hill_q0=-0.062 hill_q1=-0.039 hill_q2=-0.025 lcbd_pa=-0.199 pcoa1_pa=-0.164 pcoa2_pa=+0.034 lcbd_cover=-0.050 pcoa1_cover=-0.027 pcoa2_cover=-0.157 mpd=-0.087 mntd=-0.029 ses_pd=-0.050 ses_mpd=-0.058 ses_mntd=-0.042 dark_n=-0.299
+    c2d/ndi [GPU1] ok  [10.3 min]
+=== c2d/hilbert [GPU1]  23:15:04
+    C2D07_hilbert_kndvi_raw100_ctr: 15,567 parameters, input (1, 8, 8)
+  C2D07_hilbert_kndvi_raw100_ctr           kfold5_block20   [  1.5m] hill_q0=+0.276 hill_q1=+0.142 hill_q2=+0.129 lcbd_pa=+0.227 pcoa1_pa=+0.334 pcoa2_pa=+0.260 lcbd_cover=+0.202 pcoa1_cover=+0.119 pcoa2_cover=+0.046 mpd=+0.058 mntd=+0.129 ses_pd=+0.111 ses_mpd=+0.074 ses_mntd=+0.138 dark_n=-0.147
+    c2d/hilbert [GPU1] ok  [1.6 min]
+=== c2d/cos2d [GPU0]  23:16:37
+    C2D08_cos2d_kndvi_raw100_ctr: 15,711 parameters, input (2, 10, 10)
+  C2D08_cos2d_kndvi_raw100_ctr             kfold5_block20   [  3.3m] hill_q0=+0.115 hill_q1=-0.031 hill_q2=-0.057 lcbd_pa=+0.087 pcoa1_pa=+0.078 pcoa2_pa=+0.091 lcbd_cover=+0.019 pcoa1_cover=+0.042 pcoa2_cover=-0.035 mpd=-0.033 mntd=+0.069 ses_pd=-0.001 ses_mpd=-0.023 ses_mntd=+0.017 dark_n=-0.169
+    c2d/cos2d [GPU0] ok  [3.3 min]
+=== c2d/spectrogram [GPU1]  23:19:54
+    C2D06_cwt_kndvi_raw100_ctr: 15,567 parameters, input (1, 24, 100)
+  C2D06_cwt_kndvi_raw100_ctr               kfold5_block20   [ 15.4m] hill_q0=+0.206 hill_q1=+0.105 hill_q2=+0.106 lcbd_pa=+0.266 pcoa1_pa=+0.365 pcoa2_pa=+0.294 lcbd_cover=+0.161 pcoa1_cover=+0.095 pcoa2_cover=+0.023 mpd=+0.026 mntd=+0.129 ses_pd=+0.073 ses_mpd=+0.043 ses_mntd=+0.101 dark_n=-0.162
+    c2d/cwt [GPU0] ok  [15.4 min]
+    C2D09_spectrogram_kndvi_raw100_ctr: 15,567 parameters, input (1, 9, 26)
+  C2D09_spectrogram_kndvi_raw100_ctr       kfold5_block20   [  3.5m] hill_q0=+0.216 hill_q1=+0.123 hill_q2=+0.108 lcbd_pa=+0.195 pcoa1_pa=+0.349 pcoa2_pa=+0.236 lcbd_cover=+0.161 pcoa1_cover=+0.105 pcoa2_cover=+0.034 mpd=+0.046 mntd=+0.130 ses_pd=+0.097 ses_mpd=+0.076 ses_mntd=+0.117 dark_n=-0.148
+    c2d/spectrogram [GPU1] ok  [3.5 min]
+
+=== fin 2026-08-12 23:23:24
