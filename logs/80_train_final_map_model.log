@@ -1,0 +1,10 @@
+pool: 3102 parcelas, 7 facetas objetivo: ['lcbd_count_sorensen', 'pd_inext_q0', 'pd_inext_q1', 'pd_inext_q2', 'td_inext_q0', 'td_inext_q1', 'td_inext_q2']
+C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL: 15,175 parametros, input (1, 10, 10), init from mae_serpentine_kndvi_sep_wB_p2_m0.6.pt: 34 trunk tensors
+  seed 0: 33 epocas, mejor val_loss=0.7684, fit=2467 val=635
+  seed 1: 58 epocas, mejor val_loss=0.7903, fit=2467 val=635
+  seed 2: 44 epocas, mejor val_loss=0.7904, fit=2477 val=625
+  seed 3: 75 epocas, mejor val_loss=0.7411, fit=2467 val=635
+  seed 4: 58 epocas, mejor val_loss=0.6665, fit=2530 val=572
+
+-> results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL/final  (5 checkpoints, 1.7m)
+Para inferencia: cargar cada model_seed*.pt, predecir, promediar (ensemble) sobre las semillas -- mismo patron que mx.ensemble_oof usa entre folds.

@@ -1,0 +1,177 @@
+\documentclass[11pt]{article}
+% Draft methods/results, styled for a Remote Sensing of Environment submission.
+% Ready for reformatting into elsarticle.cls at submission time; body text and
+% citation commands (natbib \citep/\citet) are format-agnostic.
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\bibliographystyle{apalike}
+
+\title{Predicting coverage-standardized plant diversity from raw Landsat phenology
+curves across a unified Chilean vegetation plot network}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Methods}
+
+\subsection{Study data and diversity facets}
+
+We combined two vegetation plot networks spanning central and southern Chile.
+Parcelas-CL \citep{cerdaparedes2026parcelascl} is a community-sourced database of 1082
+plots between 30\textdegree{}S and 38\textdegree{}S. Living Trees is a forest inventory
+of 2020 plots with a substantially wider geographic extent. We merged both networks into
+a unified pool of 3102 plots, matching plot identifiers across networks by exact
+coordinates.
+
+We derived three diversity facets following the methodology of
+\citet{perezgiraldo2026environmental}, applied to the subset of the unified pool with
+genuine individual-level abundance counts (479 Parcelas-CL plots recorded under the
+Abundance stratum, plus individual tree counts from Living Trees). We estimated the
+local contribution to beta diversity (LCBD) using the quantitative Sørensen
+decomposition of Podani and Schmera, implemented in the \emph{adespatial} package
+(\texttt{beta.div.comp(coef="S", quant=TRUE)} followed by
+\texttt{LCBD.comp(sqrt.D=TRUE)}; \citealp{legendre2013beta}). This facet
+(\emph{lcbd\_count\_sorensen}) covers 2499 of the 3102 plots. We estimated
+coverage-standardized phylogenetic and taxonomic diversity with iNEXT.3D
+\citep{chao2021measuring}, following \citet{perezgiraldo2026environmental}:
+\texttt{estimate3D(base="coverage", level=NULL, nboot=1)} for Hill orders $q=0,1,2$.
+Phylogenetic diversity (\emph{pd\_inext\_q0/q1/q2}) additionally requires restricting
+the species pool to a 610-tip phylogeny built with V.PhyloMaker2
+\citep{jinqian2022vphylomaker2} and covers 888 plots; taxonomic diversity
+(\emph{td\_inext\_q0/q1/q2}), without that restriction, covers 895. The
+coverage-based estimator requires a minimum of five observed species per sampling unit,
+which accounts for the lower coverage of both facets relative to
+\emph{lcbd\_count\_sorensen}. We reindexed all three facets onto the full 3102-plot pool,
+leaving missing values where the estimator did not meet its species floor, so that no
+plot row is ever dropped.
+
+\subsection{Remote sensing predictors and topography}
+
+We extracted Landsat surface reflectance time series (NDVI, EVI, kNDVI, NBR and SAVI)
+for the centre pixel of a 5$\times$5 Landsat window at each plot. We interpolated each
+raw series onto a regular grid of 100 steps with a five-observation moving-average
+smoothing window, without fitting any parametric composite curve; a preliminary
+comparison against a composite phenological curve showed the raw interpolated curve
+consistently outperforming the composite, so we used the raw curve throughout.
+
+In addition to the phenological curve, we built a context block from
+digital-elevation-model-derived topography (elevation, slope, northness, eastness,
+heat-load index, topographic position index, ruggedness and curvature, each summarised
+as the window mean and standard deviation) and plot area. We extracted Living Trees
+topography independently and merged it with the Parcelas-CL topography through an exact
+coordinate match, removing a previous median-imputation step that had affected all 2020
+Living Trees plots.
+
+\subsection{Cross-validation}
+
+We evaluated every model with \texttt{kfold5\_block20\_unified}: five folds grouped by
+20$\times$20\,km geographic blocks over a Chile-centred equal-area projection, following
+the spatial-blocking principle for avoiding leakage from spatial autocorrelation
+\citep{roberts2017crossvalidation}. This blocking scheme groups the 3102 plots into 610
+distinct blocks.
+
+\subsection{Predictive models}
+
+We compared four model families under the same design (raw kNDVI curve, centre pixel,
+topography+area context, \texttt{kfold5\_block20\_unified}):
+
+\begin{itemize}
+  \item Random Forest \citep{breiman2001random} on the concatenated curve and context.
+  \item A 1-D convolutional network over the 100-step curve.
+  \item A 2-D convolutional network (separable architecture, $\sim$15k parameters) over
+    the curve reshaped as an image via a serpentine transform.
+  \item The same 2-D network, initialised from a Masked Autoencoder
+    \citep{he2022masked} pretrained on kNDVI curves from the non-unified pool.
+\end{itemize}
+
+We trained each model with three to five random seeds and report the pooled
+out-of-sample $R^2$ across plots.
+
+\section{Results}
+
+\subsection{Vegetation index selection}
+
+We swept all five vegetation indices under the same design (raw curve, centre pixel,
+real topography, \texttt{kfold5\_block20\_unified}). We averaged $R^2$ only over the
+three facets with usable signal ($R^2 > 0.4$: \emph{lcbd\_count\_sorensen},
+\emph{pd\_inext\_q0}, \emph{td\_inext\_q0}); the remaining facets show no signal under
+any index, and averaging them with the informative facets would have masked the only
+signal present.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Index & \emph{lcbd\_count\_sorensen} & \emph{pd\_inext\_q0} & \emph{td\_inext\_q0} & Mean ($R^2>0.4$) \\
+\midrule
+kNDVI & 0.434 & 0.608 & 0.772 & \textbf{0.6047} \\
+EVI   & 0.426 & 0.612 & 0.775 & 0.6043 \\
+NDVI  & 0.433 & 0.608 & 0.767 & 0.6027 \\
+SAVI  & 0.424 & 0.615 & 0.763 & 0.6007 \\
+NBR   & 0.435 & 0.604 & 0.725 & 0.5880 \\
+\bottomrule
+\end{tabular}
+\caption{$R^2$ by vegetation index (raw curve, centre pixel, \texttt{kfold5\_block20\_unified}).}
+\end{table}
+
+kNDVI achieved the highest mean $R^2$, by a narrow margin over EVI (0.6047 versus
+0.6043); NBR ranked lowest, driven by its weaker performance on \emph{td\_inext\_q0}. We
+adopted kNDVI as the default index for all subsequent analyses.
+
+\subsection{Effect of real Living Trees topography}
+
+Replacing the median-imputed topography of Living Trees plots with measured topography
+increased \emph{lcbd\_count\_sorensen} by 0.02--0.04 across all five indices, with no
+notable effect on \emph{pd\_inext\_q0} or \emph{td\_inext\_q0}. We retained real
+topography as the default configuration.
+
+\subsection{Model comparison}
+
+With kNDVI fixed, we compared the four model families under
+\texttt{kfold5\_block20\_unified}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Facet & 2D-CNN & RF & 1D-CNN & 2D-CNN + MAE \\
+\midrule
+\emph{lcbd\_count\_sorensen} & 0.434 & \textbf{0.447} & 0.420 & 0.437 \\
+\emph{pd\_inext\_q0}         & 0.608 & 0.582 & 0.612 & \textbf{0.613} \\
+\emph{pd\_inext\_q1}         & 0.011 & 0.004 & \textbf{0.049} & -0.010 \\
+\emph{pd\_inext\_q2}         & 0.065 & 0.054 & \textbf{0.091} & 0.040 \\
+\emph{td\_inext\_q0}         & 0.772 & 0.666 & 0.780 & \textbf{0.786} \\
+\emph{td\_inext\_q1}         & -0.178 & \textbf{0.042} & -0.144 & -0.181 \\
+\emph{td\_inext\_q2}         & -0.079 & -0.073 & -0.066 & -0.090 \\
+\bottomrule
+\end{tabular}
+\caption{Model family comparison ($R^2$, kNDVI, raw curve, centre pixel,
+\texttt{kfold5\_block20\_unified}).}
+\end{table}
+
+The masked-autoencoder-initialised network achieved the highest absolute $R^2$ on
+\emph{pd\_inext\_q0} (0.613) and \emph{td\_inext\_q0} (0.786), without transferring that
+gain to \emph{lcbd\_count\_sorensen} or to $q1$/$q2$. The 1-D network matched or exceeded
+the 2-D network on richness despite having fewer parameters (14{,}535 versus 15{,}175)
+and was the only family with usable signal on \emph{pd\_inext\_q1/q2} (0.049 and 0.091).
+Random Forest trained in 114\,s against 8--10\,min for each neural network and won on
+\emph{lcbd\_count\_sorensen} (0.447), though it lost phylogenetic and taxonomic richness
+to all three neural architectures.
+
+\subsection{Synthesis}
+
+Coverage-standardized richness (\emph{pd\_inext\_q0}, \emph{td\_inext\_q0}) is the only
+facet family robustly predictable under this design, with $R^2$ between 0.58 and 0.79
+across all four model families and all five indices tested. \emph{lcbd\_count\_sorensen}
+offers moderate, stable signal (0.39--0.45). Abundance- and dominance-weighted facets
+(\emph{pd\_inext\_q1/q2}, \emph{td\_inext\_q1/q2}) show no usable signal under any model,
+index or architecture tested -- a limitation of the signal available in those specific
+facets, not of model architecture.
+
+\bibliography{refs}
+
+\end{document}
