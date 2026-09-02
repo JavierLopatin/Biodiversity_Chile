@@ -190,6 +190,59 @@ def train_one_fold(model, ds_fit: CurveDataset, ds_val: CurveDataset, cfg: Train
     return model, history, resid
 
 
+def train_fixed_epochs(model, ds_fit: CurveDataset, cfg: TrainCfg, seed: int = 0,
+                       use_patch: bool = False, verbose: bool = False):
+    """Fit for exactly ``cfg.max_epochs`` epochs on ``ds_fit``, no validation split, no
+    early stopping. For a deployment model trained on 100% of the data, where there is no
+    held-out slice left to early-stop against — the epoch budget must come from outside
+    (e.g. the early-stopped epoch count from the CV runs), and ``cfg.max_epochs`` must equal
+    that budget so the cosine LR schedule (:func:`_lr_lambda`) actually completes.
+
+    Returns ``(model, history)`` — ``history`` has ``train_loss`` only, no ``val_loss``.
+    """
+    seed_everything(seed)
+    device = torch.device(cfg.device)
+    model = model.to(device)
+    crit = make_loss(cfg.loss, cfg.huber_delta)
+    opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=cfg.weight_decay)
+    sched = torch.optim.lr_scheduler.LambdaLR(opt, _lr_lambda(cfg))
+
+    g = torch.Generator().manual_seed(seed)
+    dl_fit = DataLoader(ds_fit, batch_size=cfg.batch_size, shuffle=True, drop_last=True,
+                        num_workers=cfg.num_workers, generator=g)
+    rng = np.random.default_rng(seed)
+
+    history = []
+    for epoch in range(cfg.max_epochs):
+        model.train()
+        tot = 0.0
+        for batch in dl_fit:
+            opt.zero_grad(set_to_none=True)
+            pred, y, m = _forward(model, batch, device, use_patch)
+            if cfg.mixup:
+                perm = torch.randperm(y.shape[0], device=device)
+                lam = float(rng.beta(cfg.mixup_alpha, cfg.mixup_alpha))
+                img = batch[0].to(device)
+                mixed = lam * img + (1 - lam) * img[perm]
+                ctx = batch[1].to(device)
+                mixed_ctx = lam * ctx + (1 - lam) * ctx[perm]
+                pred = model(mixed, mixed_ctx)
+                loss = lam * crit(pred, y, m) + (1 - lam) * crit(pred, y[perm], m[perm])
+            else:
+                loss = crit(pred, y, m)
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), cfg.grad_clip)
+            opt.step()
+            tot += float(loss) * y.shape[0]
+        sched.step()
+        train_loss = tot / max(len(ds_fit), 1)
+        history.append(dict(epoch=epoch, train_loss=train_loss, lr=opt.param_groups[0]["lr"]))
+        if verbose and epoch % 20 == 0:
+            print(f"    epoch {epoch:3d}  train {train_loss:.4f}")
+
+    return model, history
+
+
 @torch.no_grad()
 def predict(model, ds: CurveDataset, cfg: TrainCfg, use_patch: bool = False) -> np.ndarray:
     model.eval()
