@@ -82,7 +82,40 @@ Hasta que eso termine no se produce ningún mapa. Los valores antiguos quedan en
 (`b921daa`). Hallazgo colateral: `plots_unified.parquet` tiene `X`/`Y` (UTM 19S) en NaN
 para las 2.020 filas `LT_`; se corrige en `scripts/51` con reproyección desde lon/lat.
 
-## 6. Advertencias operativas
+## 6. Piloto medido (2026-09-02, tesela t18_600, Cauquenes)
+
+Tesela de 9.990 m (333 x 333 = 110.889 px), 27 años, 8 workers locales, checkpoints
+anteriores a la corrección de topografía (la corrida equivalente con los checkpoints
+corregidos está en curso):
+
+| magnitud | valor |
+|---|---|
+| carga Landsat 1998-2026 (1.811 fechas), una sola vez por tesela | 346 s |
+| trabajo por año (curvas + inferencia + escritura) | mediana 31,2 s (21,9-37,7) |
+| píxeles predichos por año (nativos con curva completa) | mediana 46.369 (31.901-53.173) |
+| GeoTIFF por tesela-año, 10 bandas | 1,5 MB (41 MB los 27 años) |
+| RAM | 6-8 GB de 123 disponibles |
+
+Dos lecturas operativas. **La carga se amortiza**: es el 29 % de una corrida de 27 años y
+se paga una vez por tesela. **El cuello de botella es el trabajo por año**, que corre en un
+solo proceso mientras los ocho workers quedan ociosos: 0,673 ms por píxel-año. Extrapolado
+a los 3,1·10⁸ píxeles nativos por año, la corrida completa 2000-2026 a 30 m son ~1.830 h en
+serie (1.560 de inferencia + 270 de carga), es decir 57 h con 32 procesos o ~14 h en un
+cluster de 128 núcleos. Alternativas medidas sobre la misma base: grilla de salida de 90 m
+(441 h en serie), un año de cada tres (787 h), o restringir a 30-38°S (505 h).
+
+**Subdispersión, declararla antes de que alguien lea un máximo como valor real.** En la
+tesela piloto TD₀ llega a 42,8 contra un máximo observado de 84,0 en las parcelas, y la
+mediana del mapa (6,8) queda bajo la mediana observada (9,3). El modelo comprime la cola
+alta incluso con smearing; los mapas se interpretan como superficie relativa, no como
+conteos absolutos de especies.
+
+**La comparación con parcelas dentro de una tesela no es validación.** En el piloto caen
+7-11 parcelas; la correlación de Spearman con ese n tiene error estándar cercano a 0,4. La
+validación del modelo es la de la Sección 4 (bloques espaciales y LLTO); el contraste por
+píxel es solo una lectura de coherencia.
+
+## 7. Advertencias operativas
 
 - `dask_gateway.Gateway().cluster_options()` imprime credenciales AWS STS y una
   contraseña de base de datos en su `repr`. No imprimirlo en notebooks, logs ni archivos
