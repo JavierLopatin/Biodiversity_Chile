@@ -298,22 +298,48 @@ class FacetEnsemble:
             out[k, idx] = np.concatenate(preds, axis=0)
         return out
 
+    def scaled_bounds(self, y_train: np.ndarray, member: int = 0) -> tuple[np.ndarray, np.ndarray]:
+        """Training range of each target in the member's transformed space.
+
+        Predictions are clipped to it before the inverse transform. This matters most for
+        LCBD, whose Yeo-Johnson lambda is about -4200 (the facet spans 3.4e-4..4.4e-4 on
+        2,499 plots): a transformed value a little outside the fitted range explodes on
+        the way back, so the clip is what keeps a pixel finite.
+        """
+        sc = self.members[member].scaler
+        y = np.asarray(y_train, float)
+        filled = np.where(np.isfinite(y), y, np.nanmedian(y, axis=0))
+        z = np.where(np.isfinite(y), sc.transform(filled), np.nan)
+        return np.nanmin(z, axis=0), np.nanmax(z, axis=0)
+
     def predict(self, images: np.ndarray, ctx: pd.DataFrame,
                 resid_scaled: np.ndarray | None = None,
                 y_train: np.ndarray | None = None, batch: int = 8192) -> np.ndarray:
-        """(N, n_targets) in original units: per-seed back-transform, then seed mean."""
+        """(N, n_targets) in original units: per-seed back-transform, then seed mean.
+
+        With ``y_train`` the transformed predictions are clipped to the training range
+        before inversion and the results to the observed range after it (the same guard
+        `targets.inverse_with_smearing` applies); without it nothing is clipped.
+        """
         scaled = self.predict_scaled(images, ctx, batch=batch)
         outs = []
         for k, m in enumerate(self.members):
-            s = scaled[k]
+            s = scaled[k].astype(np.float64)
             ok = np.isfinite(s).all(axis=1)
             o = np.full_like(s, np.nan, dtype=np.float64)
             if ok.any():
+                if y_train is not None:
+                    zlo, zhi = self.scaled_bounds(y_train, k)
+                    s = np.clip(s, zlo, zhi)
                 if resid_scaled is not None:
                     o[ok] = tg.inverse_with_smearing(s[ok], m.scaler, resid_scaled,
                                                      y_train=y_train, seed=k)
                 else:
                     o[ok] = tg.inverse_target_scaler(s[ok], m.scaler)
+                    if y_train is not None:
+                        lo = np.nanmin(y_train, axis=0)
+                        hi = np.nanmax(y_train, axis=0)
+                        o[ok] = np.clip(o[ok], lo, hi)
             outs.append(o)
         stack = np.stack(outs, axis=0)
         with np.errstate(all="ignore"):

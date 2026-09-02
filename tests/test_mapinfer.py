@@ -148,6 +148,15 @@ def test_ensemble_roundtrip(tmp_path):
     # seed mean of per-member inverses, not inverse of the mean
     scaled = ens.predict_scaled(images, X)
     assert scaled.shape == (2, n, n_t)
+    # clipping to the training range, in transformed and in original space
+    y_train = np.abs(rng.standard_normal((n, n_t))) + 1
+    y_train[::7, 1] = np.nan
+    zlo, zhi = ens.scaled_bounds(y_train)
+    assert zlo.shape == (n_t,) and (zlo < zhi).all()
+    clipped = ens.predict(images, X, y_train=y_train)
+    keep = np.delete(np.arange(n), 3)
+    assert (clipped[keep] >= np.nanmin(y_train, axis=0) - 1e-6).all()
+    assert (clipped[keep] <= np.nanmax(y_train, axis=0) + 1e-6).all()
 
 
 def test_tile_grid_snaps_and_covers():
