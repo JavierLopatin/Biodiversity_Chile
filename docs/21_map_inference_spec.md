@@ -62,7 +62,20 @@ Reportar: segundos de carga por tesela, segundos por año, píxeles predichos po
 rango de cada faceta, y la comparación píxel-de-parcela vs valor observado para las
 parcelas de la tesela en su año de censo.
 
-## 5. Advertencias operativas
+## 5. Corrección previa obligatoria: convención de aspecto (2026-09-02)
+
+Verificado en el pod recalculando `terrain()` corregido sobre 30 parcelas Parcelas-CL y 10
+Living Trees: en las filas `PCL_` de `topography_unified.parquet` `northness` y `eastness`
+tienen correlación −1,000 con el recálculo (giro de 180°, las 1.082 filas) y `heat_load`
+está espejado; en las filas `LT_` el acuerdo es 100 % (heat_load a 2e-4). El modelo final y
+todos los runs de `docs/20` se entrenaron con esa mezcla. Decisión del autor: regenerar la
+topografía de Parcelas-CL con el `scripts/03` corregido, reconstruir `topography_unified`,
+re-correr block20, LLTO y barridos, refit `--all-data`, y actualizar `docs/20` y el paper.
+Hasta que eso termine no se produce ningún mapa. Los valores antiguos quedan en git
+(`b921daa`). Hallazgo colateral: `plots_unified.parquet` tiene `X`/`Y` (UTM 19S) en NaN
+para las 2.020 filas `LT_`; se corrige en `scripts/51` con reproyección desde lon/lat.
+
+## 6. Advertencias operativas
 
 - `dask_gateway.Gateway().cluster_options()` imprime credenciales AWS STS y una
   contraseña de base de datos en su `repr`. No imprimirlo en notebooks, logs ni archivos
