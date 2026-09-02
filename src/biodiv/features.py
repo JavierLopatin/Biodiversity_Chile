@@ -76,6 +76,9 @@ DOY_METRICS = ["sos", "pos", "eos", "msp", "mau", "trough"]
 
 TOPO_VARS = ["elevation", "slope", "northness", "eastness", "heat_load",
              "tpi", "tri", "curvature"]          # 'aspect' deliberately excluded
+#: `northness`, `eastness` and `heat_load` carry a sign whose meaning depends on the aspect
+#: convention of the table being read, and the two tables in the repo do NOT agree: see the
+#: warning in `docs/07_run_record.md` section 3 before interpreting their direction.
 
 #: Patch mean and patch sd, never the centre pixel. Measured on this dataset the centre value
 #: and the 5x5 mean correlate at r = 0.73-1.00 (exactly 1.000 for elevation), so carrying both

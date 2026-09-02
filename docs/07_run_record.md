@@ -100,6 +100,25 @@ de crecimiento.
 Variables: `elevation, slope, aspect, northness, eastness, heat_load, tpi, tri`,
 cada una con `_mean` y `_std` sobre el parche.
 
+> **Aviso de convención en `aspect` (2026-08-14).** La tabla versionada
+> `topography/topography.parquet` se generó con una versión de `terrain()` cuyo `aspect`
+> apuntaba **cuesta arriba**, 180° girado respecto de la convención cartográfica (la
+> dirección hacia la que mira la ladera). Verificado contra `gdaldem aspect`. En esa tabla,
+> por lo tanto: `northness` y `eastness` tienen el **signo invertido** —las laderas que
+> miran al sur figuran como norte— y el término de aspecto de `heat_load` está espejado: su
+> máximo cae en laderas SE, las más frías, en vez de NW. `elevation`, `slope`, `tpi`, `tri`
+> y `curvature` no se ven afectados, y tampoco la magnitud de los efectos, sólo su signo e
+> interpretación.
+>
+> `scripts/03_extract_topography.py` **ya está corregido** y la convención queda fijada por
+> `tests/test_topography.py`; la topografía de Living_Trees_Chile
+> (`data/derived/living_trees/topography/`) se extrajo con el código corregido. La tabla de
+> Parcelas-CL **no se ha vuelto a extraer**, porque los modelos y figuras de este run se
+> ajustaron con los valores antiguos: regenerarla (`python scripts/03_extract_topography.py`,
+> ~3 min, 240 celdas) obliga a refitear todo lo que use el bloque `topo` (`09`, `10`, `11`,
+> `13`, `fig07`). **Hasta que eso ocurra, los dos conjuntos usan convenciones distintas y no
+> deben compararse ni juntarse en el mismo modelo.**
+
 ---
 
 ## 4. Salidas

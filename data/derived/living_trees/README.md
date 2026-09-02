@@ -1,8 +1,9 @@
-# Living_Trees_Chile — series Landsat de 3 años por parcela
+# Living_Trees_Chile — series Landsat de 3 años y topografía por parcela
 
 Series temporales Landsat Collection 2 Level-2 de la **ventana causal de 3 años anterior al
 censo** de cada una de las **2.021 parcelas** de `data/Living_Trees_Chile.xlsx`, a nivel de
-observación.
+observación, más las **derivadas topográficas del DEM Copernicus GLO-30** para esas mismas
+parcelas (`topography/`, §4).
 
 | | |
 |---|---:|
@@ -11,8 +12,9 @@ observación.
 | filas totales | 2.709.402 |
 | rango temporal | 2009-01-03 a 2020-12-31 |
 | sensores | Landsat 5, 7, 8 |
-| tamaño en disco | 21 MB |
-| generado | 2026-08-13, `scripts/35_extract_living_trees.py` |
+| variables topográficas | 9 × (centro, media 5×5, sd 5×5) |
+| tamaño en disco | 21 MB + 2,3 MB de topografía |
+| generado | 2026-08-13 `scripts/35_extract_living_trees.py`; 2026-08-14 `scripts/03_extract_topography.py` |
 
 Generado con `scripts/35_extract_living_trees.py` sobre Data Cube Chile: 1.764 cargas, 6 h 10
 min con 16 workers de dask-gateway. La guía completa está en `docs/16_living_trees_extraction.md`.
@@ -144,9 +146,65 @@ lista de variables y conteos. Es lo que hace la corrida reproducible.
 
 ---
 
-## 4. Tres advertencias de uso
+## 4. `topography/` — las derivadas del DEM
 
-### 4.1 Las observaciones caen a un tercio hacia el sur
+Las mismas 9 variables topográficas que usa Parcelas-CL, con las mismas definiciones y el
+mismo código (`scripts/03_extract_topography.py`), para los 2.021 sitios. Fuente:
+`copernicus_dem_30` (Copernicus GLO-30) vía Data Cube Chile, a 30 m, EPSG:32719.
+
+| archivo | contenido |
+|---|---|
+| `topography/topography.parquet` | 2.021 × 28: `site_id` + 9 variables × (píxel central, `_mean`, `_std` del 5×5) |
+| `topography/topography_patches.nc` | parches crudos, dims `(site_id: 2021, py: 5, px: 5)` × 9 variables |
+
+| variable | unidad | qué es |
+|---|---|---|
+| `elevation` | m | altura sobre el nivel del mar |
+| `slope` | grados | pendiente |
+| `aspect` | grados | orientación, 0 = norte, horario, **hacia donde mira la ladera** |
+| `northness`, `eastness` | −1…1 | `cos`/`sin` del aspecto; continuas, sin la discontinuidad 0/360 |
+| `heat_load` | índice | McCune & Keon (2002), plegado en 315° para el hemisferio sur (máximo en laderas NW) |
+| `tpi` | m | posición topográfica: cota menos la media de la vecindad (7×7 px) |
+| `tri` | m | rugosidad de Riley sobre los 8 vecinos |
+| `curvature` | m⁻¹ | curvatura total (laplaciano); positiva = divergente |
+
+**Las derivadas se calculan sobre una ventana ancha y *después* se recorta el 5×5.** Pendiente,
+aspecto y curvatura son operadores de vecindad: calcularlos sobre un recorte de 5×5 dejaría la
+mitad de los píxeles con efecto de borde. El halo es de 20 px por lado (750 m con el parche).
+
+**`aspect` apunta cuesta abajo**, verificado contra `gdaldem aspect` (correlación circular
+0,9993 sobre 38.435 píxeles de terreno andino real; `tests/test_topography.py` fija la
+convención con planos sintéticos). Esto importa: `data/derived/topography/` (Parcelas-CL) se
+generó con la convención **antigua**, girada 180°, y por lo tanto con `northness`, `eastness`
+y el término de aspecto de `heat_load` de signo invertido. **Las dos tablas no son comparables
+hasta que Parcelas-CL se vuelva a extraer** — ver el aviso en `docs/07_run_record.md` §3.
+
+**14 sitios con `NaN` en `aspect`, `northness`, `eastness` y `heat_load`**: pendiente menor a
+0,5°, donde la orientación no está definida y sería el ruido de redondeo del DEM. Las cuatro
+columnas fallan juntas, en los mismos 14 sitios; `elevation`, `slope`, `tpi`, `tri` y
+`curvature` están completas en los 2.021.
+
+**Contraste con el terreno** (el Excel trae `Elevation` y `Slope` medidos en campo, que quedan
+en `sites.parquet`; no se sobrescriben, se pueden cruzar):
+
+| | r | mediana de la diferencia |
+|---|---:|---:|
+| `elevation` DEM vs campo | 0,958 | +2,1 m (MAE 40 m; 98 sitios con \|dif\| > 200 m) |
+| `slope` DEM vs campo | 0,620 | +6,3 puntos porcentuales |
+
+**Las dos pendientes no están en la misma unidad**: la del Excel es un **porcentaje**
+(0–140 %, según su propia hoja `metadata`), la del DEM son **grados**. La comparación de
+arriba convierte la del DEM con `tan(slope)·100`; la `r` no depende de la unidad. Que
+concuerden menos que las elevaciones es esperable: la del Excel es la pendiente de la parcela
+de 250–500 m², la del DEM es la de un píxel de 900 m² derivada de su vecindad de 30 m.
+
+La elevación es la que valida las coordenadas y el CRS, y con r = 0,958 los valida.
+
+---
+
+## 5. Tres advertencias de uso
+
+### 5.1 Las observaciones caen a un tercio hacia el sur
 
 Mediana de observaciones por sitio en la ventana de 3 años:
 
@@ -170,7 +228,7 @@ El sesgo es peor de lo que sugiere el conteo: en Chile la nubosidad se concentra
 la estación de crecimiento, así que la falta de datos **no es aleatoria respecto de la métrica
 que se quiere estimar** (SOS en particular).
 
-### 4.2 Las bandas no están recortadas; los índices sí
+### 5.2 Las bandas no están recortadas; los índices sí
 
 `band_*` llega a 1,602, que es exactamente el techo del entero C2 (65.455 × 0,0000275 − 0,2):
 son píxeles saturados de nieve que pasaron la máscara, porque sólo se descarta
@@ -181,7 +239,7 @@ el sur austral conviene filtrar `band_* <= 1` antes de usar bandas crudas. Los n
 Si aparecen valores en decenas o miles, nunca se aplicó la escala `DN·0,0000275 − 0,2` y todo
 lo derivado es inválido.
 
-### 4.3 No hay curva ajustada, y es a propósito
+### 5.3 No hay curva ajustada, y es a propósito
 
 Acá hay observaciones con su fecha real, no una grilla ni un ajuste. Es la regla de
 `docs/05` §1: adquirir a nivel de observación, decidir el pooling aguas abajo. Guardar una
@@ -192,7 +250,7 @@ Para construir la grilla o la curva, en local y sin volver al cubo:
 
 ---
 
-## 5. Cómo se leen
+## 6. Cómo se leen
 
 ```python
 import pandas as pd
@@ -206,9 +264,13 @@ buenos = man.query("n_obs_mean5x5 >= 40 and max_doy_gap <= 90").site_id
 
 serie = (kndvi[kndvi.site_id.isin(buenos) & kndvi.n_px.ge(20)]
          .merge(sites[["site_id", "year", "forest_type", "lat"]], on="site_id"))
+
+# topografía: sufijo explícito, porque `sites` ya trae `elevation`/`slope` de terreno
+topo = pd.read_parquet("data/derived/living_trees/topography/topography.parquet")
+tabla = sites.merge(topo, on="site_id", suffixes=("_campo", "_dem"))
 ```
 
-## 6. Procedencia
+## 7. Procedencia
 
 - **Origen de las parcelas:** `data/Living_Trees_Chile.xlsx`, pestaña `tree-level`.
 - **Imágenes:** Landsat 5/7/8 Collection 2 Level-2 Surface Reflectance vía Data Cube Chile
@@ -217,5 +279,9 @@ serie = (kndvi[kndvi.site_id.isin(buenos) & kndvi.n_px.ge(20)]
 - **Máscara de nubes:** flags de `qa_pixel`, aplicados **por producto antes del concat** —
   descarta nodata, nube, sombra, cirrus y nieve de alta confianza, y dilatación de nube.
 - **Grilla:** EPSG:32719, 30 m, `group_by="solar_day"`, remuestreo `nearest`.
-- **Código:** `scripts/35_extract_living_trees.py`, `src/biodiv/cube.py`,
-  `src/biodiv/io_living_trees.py`. Tests en `tests/test_living_trees.py`.
+- **DEM:** Copernicus GLO-30 (`copernicus_dem_30`) vía Data Cube Chile, remuestreo `bilinear`,
+  derivadas sobre una ventana con halo de 20 px y recorte posterior al 5×5. 1.519 cargas,
+  ~4,5 min sin dask.
+- **Código:** `scripts/35_extract_living_trees.py`, `scripts/03_extract_topography.py`,
+  `src/biodiv/cube.py`, `src/biodiv/io_living_trees.py`. Tests en
+  `tests/test_living_trees.py` y `tests/test_topography.py`.

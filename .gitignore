@@ -44,6 +44,17 @@ data/*
 !data/derived/unlabelled/manifest.csv
 !data/derived/unlabelled/pool_planned.parquet
 
+# Las series de Living_Trees_Chile: 22 tablas (5 indices + 6 bandas) x (centro, media 5x5)
+# para 2.021 parcelas, mas el manifiesto y la tabla de sitios. Mismo argumento que el pool
+# de arriba: 1.764 cargas a Data Cube Chile no se rehacen desde este repo. El .xlsx de
+# origen no se versiona (4 MB, es el dato crudo del proveedor).
+!data/derived/living_trees/
+!data/derived/living_trees/*.parquet
+!data/derived/living_trees/manifest.csv
+!data/derived/living_trees/topography/
+!data/derived/living_trees/topography/topography.parquet
+!data/derived/living_trees/topography/topography_patches.nc
+
 # La leyenda de MapBiomas: los rasters no la traen embebida y el metadata.txt no da los
 # enteros, asi que este CSV es lo unico que hace auditable la mascara de vegetacion nativa.
 !MapBiomas/legend.csv
