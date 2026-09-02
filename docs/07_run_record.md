@@ -118,6 +118,27 @@ cada una con `_mean` y `_std` sobre el parche.
 > ~3 min, 240 celdas) obliga a refitear todo lo que use el bloque `topo` (`09`, `10`, `11`,
 > `13`, `fig07`). **Hasta que eso ocurra, los dos conjuntos usan convenciones distintas y no
 > deben compararse ni juntarse en el mismo modelo.**
+>
+> **Resuelto (2026-09-02).** La tabla de Parcelas-CL se regeneró con el código corregido
+> (`python scripts/03_extract_topography.py`, 1.082 parcelas, 240 celdas, mismos defaults que
+> el run del 7 de agosto: parche 5×5, halo 20, 30 m) y `data/derived/topography_unified.parquet`
+> se reconstruyó con `scripts/70`. Los dos conjuntos vuelven a compartir convención y **ya
+> pueden juntarse en el mismo modelo**. Verificación sobre las 1.082 filas: `northness` y
+> `eastness` son la negación exacta de las antiguas (`max |nuevo + viejo| = 0`), `aspect` gira
+> exactamente 180°, y `elevation`, `slope`, `tpi`, `tri` y `curvature` quedan bit a bit
+> idénticos. Las filas `LT_` del unificado no cambiaron en ninguna de sus 27 columnas.
+>
+> Dos consecuencias que no son sólo de signo. (1) El enmascarado de `aspect` en terreno plano
+> ahora ocurre **antes** del seno y el coseno, así que 3 parcelas con `slope < 0.5°` pasan de
+> tener `northness`/`eastness` con la orientación del ruido de redondeo a tener `NaN`, que es
+> lo honesto; en el unificado son 17 filas (3 `PCL_` + 14 `LT_`). El `Preprocessor` ya lleva
+> indicadores de ausencia para esas tres variables, así que las imputa sin perder la señal de
+> que faltaban. (2) Los valores antiguos **no se pierden**: `topography/topography.parquet`
+> está versionado, y la versión con la convención invertida es recuperable en git en
+> `b921daa`, por si hay que reproducir alguna figura del run anterior.
+>
+> Todo modelo que use el bloque `topo` (`09`, `10`, `11`, `13`, `fig07`) queda pendiente de
+> refit sobre esta tabla; ese refit corre en rapidita.
 
 ---
 

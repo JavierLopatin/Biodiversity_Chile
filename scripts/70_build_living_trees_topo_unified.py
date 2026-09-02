@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Unify topography for the 3,102-plot pool now that Living Trees' DEM extraction exists
-(`data/derived/living_trees/topography.parquet`, 28 columns, same schema as Parcelas-CL's
+(`data/derived/living_trees/topography/topography.parquet`, 28 columns, same schema as Parcelas-CL's
 `data/derived/topography/topography.parquet` -- same variable names, same `_mean`/`_std`
 patch-statistic suffixes).
 
@@ -23,6 +23,20 @@ import pandas as pd
 DERIVED = Path("data/derived")
 LT_DIR = DERIVED / "living_trees"
 
+#: `scripts/03 --out-dir data/derived/living_trees/topography` writes into a subdirectory, the
+#: layout `docs/16` documents. An earlier hand-copy of the same table (same md5) sits flattened
+#: beside `sites.parquet` on another machine, so both are accepted and the canonical one wins.
+LT_TOPO_PATHS = (LT_DIR / "topography" / "topography.parquet",
+                 LT_DIR / "topography.parquet")
+
+
+def lt_topo_path() -> Path:
+    for p in LT_TOPO_PATHS:
+        if p.exists():
+            return p
+    raise SystemExit("no se encontro la topografia de Living Trees en "
+                     + " ni ".join(str(p) for p in LT_TOPO_PATHS))
+
 
 def build_crosswalk() -> pd.DataFrame:
     lt_plots = pd.read_parquet(DERIVED / "living_trees_plots.parquet")
@@ -37,7 +51,7 @@ def build_crosswalk() -> pd.DataFrame:
 def main() -> None:
     cw = build_crosswalk()
 
-    lt_topo = pd.read_parquet(LT_DIR / "topography.parquet")
+    lt_topo = pd.read_parquet(lt_topo_path())
     lt_topo = cw.merge(lt_topo, on="site_id", how="inner")  # drops the 1 species-less site
     lt_topo = lt_topo.drop(columns=["site_id"]).rename(columns={"PlotObservationID": "plot_id"})
 

@@ -33,6 +33,11 @@ from biodiv import io_parcelas  # noqa: E402
 
 LAEA_CHILE = "+proj=laea +lat_0=-35 +lon_0=-71 +datum=WGS84 +units=m +no_defs"
 
+#: Parcelas-CL's own projected pair, and the CRS every raster extraction in this project
+#: queries in (`scripts/03`, `scripts/35`). Distinct from `X_m`/`Y_m` above, which are the
+#: equal-area coordinates used for distances across the full Magallanes-to-Atacama footprint.
+UTM19S = "EPSG:32719"
+
 
 def apply_zamorano_correction(long: pd.DataFrame, corrected_path: Path) -> pd.DataFrame:
     """Reemplaza el `Value` degenerado (siempre 1.0) de Zamorano-Elgueta, C. por la
@@ -91,6 +96,23 @@ def build(args: argparse.Namespace) -> None:
     tf = Transformer.from_crs("EPSG:4326", LAEA_CHILE, always_xy=True)
     x_m, y_m = tf.transform(plots["lon"].to_numpy(), plots["lat"].to_numpy())
     plots["X_m"], plots["Y_m"] = x_m, y_m
+
+    # `X`/`Y` are Parcelas-CL's UTM 19S columns and Living Trees' plot table does not carry
+    # them, so all 2,020 LT rows arrived NaN. Nothing complained: a consumer reaching for
+    # them got NaN and, in the case of a `dc.load` bounding box, a degenerate geometry
+    # ("Points of LinearRing do not form a closed linestring") rather than a missing-data
+    # error. Fill them from lon/lat in the same CRS the extractions query, leaving
+    # Parcelas-CL's stored values untouched -- `tests/test_unified_plots.py` pins both halves.
+    utm = Transformer.from_crs("EPSG:4326", UTM19S, always_xy=True)
+    missing_xy = plots["X"].isna() | plots["Y"].isna()
+    if missing_xy.any():
+        ux, uy = utm.transform(plots.loc[missing_xy, "lon"].to_numpy(),
+                               plots.loc[missing_xy, "lat"].to_numpy())
+        plots.loc[missing_xy, "X"] = ux
+        plots.loc[missing_xy, "Y"] = uy
+        print(f"X/Y (UTM 19S) derivados de lon/lat para {int(missing_xy.sum())} parcelas "
+              f"sin coordenada proyectada")
+    assert plots["X"].notna().all() and plots["Y"].notna().all(), "X/Y NaN tras el relleno"
 
     pcl_species = set(pcl_long["species"].unique())
     lt_species = set(lt_long["species"].unique())
