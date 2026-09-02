@@ -260,7 +260,7 @@ def main() -> None:
         cluster.scale(args.workers)
         client = cluster.get_client()
         print(f"dask-gateway cluster {cluster.name}, scaling to {args.workers}; "
-              f"dashboard {cluster.dashboard_link}")
+              f"dashboard {dashboard_url(cluster)}", flush=True)
         client.wait_for_workers(1, timeout=600)
     elif args.workers > 0:
         from dask.distributed import Client, LocalCluster
@@ -270,7 +270,7 @@ def main() -> None:
         # the service proxy, so it is the only form of the URL that is reachable from outside
         # the pod. Without it a local run gives no way to watch the workers.
         print(f"dask: local cluster, {args.workers} workers; "
-              f"dashboard {cluster.dashboard_link}", flush=True)
+              f"dashboard {dashboard_url(cluster)}", flush=True)
     # Boot order is not negotiable, same as `scripts/35`: cluster, then
     # configure_s3_access(client=...), then the Datacube. `usgs-landsat` is requester-pays, and
     # without this every worker read comes back RasterioIOError('AccessDenied: Access Denied').
@@ -358,6 +358,33 @@ def main() -> None:
         elif client is not None:
             client.close()
     print(f"\n-> {out}/ (manifest.csv, run.json, tiles.csv, <tile>_<year>.tif)")
+
+
+def dashboard_url(cluster) -> str:
+    """Absolute, clickable dashboard URL.
+
+    ``cluster.dashboard_link`` honours ``distributed.dashboard.link``, which EASI sets to
+    ``{JUPYTERHUB_SERVICE_PREFIX}proxy/{port}/status`` -- a *relative* path, because the pod
+    has no idea what its external hostname is (``JUPYTERHUB_PUBLIC_URL`` and
+    ``JUPYTERHUB_HOST`` are both empty here). A relative path is useless to anyone reading
+    the log outside the browser session, so take the scheme+host from the one place that
+    does know it, ``gateway.public-address`` in /etc/dask/dask.yaml, and prepend it.
+
+    Falls back to whatever dask gave us if that key is absent on some other deployment.
+    """
+    link = str(getattr(cluster, "dashboard_link", "") or "")
+    if not link or link.startswith("http"):
+        return link
+    try:
+        import dask.config
+        from urllib.parse import urlsplit
+        pub = dask.config.get("gateway.public-address", "") or ""
+        u = urlsplit(pub)
+        if u.scheme and u.netloc:
+            return f"{u.scheme}://{u.netloc}{link}"
+    except Exception:                                # noqa: BLE001
+        pass
+    return link
 
 
 def _append(path: Path, rows: list[dict]) -> None:
