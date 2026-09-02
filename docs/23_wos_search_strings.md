@@ -151,3 +151,38 @@ América Latina ya citada.
 - Exportar en formato BibTeX desde WoS produce claves distintas a las de `paper/refs.bib`;
   conviene exportar a RIS o texto plano y resolver los DOI contra Crossref, que es el
   procedimiento usado en este repositorio.
+
+---
+
+## Acceso programático
+
+Tres vías, en orden de fidelidad a Web of Science:
+
+| vía | cobertura | clave | paquete |
+|---|---|---|---|
+| **WoS Starter API** | Core Collection, metadatos y citas, sin resúmenes | sí, gratuita con registro en developer.clarivate.com | Python: `clarivate/wosstarter_python_client` (o REST directo). R: `rwosstarter` (github.com/FRBCesab/rwosstarter) |
+| **WoS Expanded API** | registros completos, afiliaciones, financiamiento, referencias citadas | sí, requiere suscripción institucional | R: `wosr` (CRAN 0.3.0); Python: cliente REST propio |
+| **OpenAlex** | ~250 M de trabajos, sin etiquetas de campo ni operadores de proximidad | no | Python: `pyalex` o REST. R: `openalexR` |
+
+La Starter API acepta las mismas etiquetas de campo que la interfaz web (`TS=`, `TI=`,
+`PY=`, `AND`/`OR`/`NOT`), así que las cadenas de arriba corren sin cambios; la Expanded
+añade el registro completo. OpenAlex no tiene `TS=` ni `NEAR/n`, de modo que cada búsqueda
+se traduce a términos en título y resumen más filtros de año y tipo, y sus conteos no son
+comparables uno a uno con los de WoS.
+
+`scripts/75_literature_search.py` implementa las once búsquedas de este documento contra
+los tres backends y escribe un CSV por bloque más un `summary.csv` con el conteo, la
+consulta, el índice y la fecha, que es lo que hace verificable una afirmación de ausencia:
+
+```bash
+python scripts/75_literature_search.py --list
+python scripts/75_literature_search.py --backend openalex --out results/literature
+WOS_API_KEY=xxxx python scripts/75_literature_search.py --backend wos --queries B7a,B7b,B7c
+```
+
+Prueba con OpenAlex (2026-09-02): B7a diversidad filogenética desde teledetección 3.928
+resultados, B7b LCBD y recambio composicional 295, B7c dark diversity desde teledetección
+129, B2 fenología como predictor 14.978. Los conteos de OpenAlex son mucho más altos que
+los de WoS porque la traducción sin etiquetas de campo busca también en el texto completo;
+sirven para ordenar magnitudes y para no perder trabajos que WoS no indexa, no para
+sustituir la búsqueda estructurada.
