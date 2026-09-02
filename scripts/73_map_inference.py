@@ -250,6 +250,8 @@ def main() -> None:
 
     # ---- datacube + dask ----------------------------------------------------------------
     import datacube
+    from datacube.utils.aws import configure_s3_access
+
     client = cluster = None
     if args.workers > 0 and args.gateway:
         from dask_gateway import Gateway
@@ -264,7 +266,18 @@ def main() -> None:
         from dask.distributed import Client, LocalCluster
         cluster = LocalCluster(n_workers=args.workers, processes=True, threads_per_worker=1)
         client = Client(cluster)
-        print(f"dask: local cluster, {args.workers} workers")
+        # Same line the gateway branch prints: on JupyterHub `dashboard_link` resolves through
+        # the service proxy, so it is the only form of the URL that is reachable from outside
+        # the pod. Without it a local run gives no way to watch the workers.
+        print(f"dask: local cluster, {args.workers} workers; "
+              f"dashboard {cluster.dashboard_link}", flush=True)
+    # Boot order is not negotiable, same as `scripts/35`: cluster, then
+    # configure_s3_access(client=...), then the Datacube. `usgs-landsat` is requester-pays, and
+    # without this every worker read comes back RasterioIOError('AccessDenied: Access Denied').
+    # Passing `client` is what propagates the setting to the workers; setting it only in the
+    # driver process leaves the dask path broken. See `src/biodiv/cube.py`.
+    configure_s3_access(aws_unsigned=False, requester_pays=True, client=client)
+
     chunks = {"time": 1} if args.workers > 0 else None
     dc = datacube.Datacube(app="biodiv-map-inference")
 
