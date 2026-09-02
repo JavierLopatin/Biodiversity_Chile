@@ -34,7 +34,8 @@ debe cerrar el viaje de ida y vuelta. No se produce ningún mapa si esa compuert
 | D6 | grilla de la curva | 100 pasos entre la **primera y la última fecha con algún píxel despejado en la tesela** dentro de la ventana; interpolación lineal por píxel con extrapolación constante a los bordes; NaN con < 5 observaciones | réplica del cubo por parcela (`raw_series`: primera..última fecha del cubo); probada contra `interp_grid` píxel a píxel |
 | D7 | teselas | 10 km ajustados a píxeles enteros (333 × 30 m = 9.990 m), origen en múltiplos, EPSG:32719 | mismo retículo que `dc.load`; los mosaicos no remuestrean |
 | D8 | lectura Landsat | una sola carga por tesela para 1998–2026 (`red`, `nir`, `qa_pixel`; misma máscara QA por producto que `cube.load_window`), y cada año se corta en memoria | 27 años objetivo comparten 29 años de archivo; cargar por año leería 3× |
-| D9 | retransformación | por semilla: clip al rango de entrenamiento en el espacio Yeo-Johnson, inversa, clip al rango observado, y promedio de las 5 semillas | LCBD tiene λ ≈ −4.205 y escala 3,5e-6: sin clip un z fuera de rango explota. Duan smearing **solo** si se dispone de los residuos OOF del run `kfold5_block20_unified` de la misma configuración (pendiente: ese csv está en rapidita) |
+| D9 | retransformación | por semilla: clip al rango de entrenamiento en el espacio Yeo-Johnson, **Duan smearing con los residuos OOF del run block20 de la misma configuración** (`--oof-csv`, por defecto), clip al rango observado, y promedio de las 5 semillas | LCBD tiene λ ≈ −4.205 y escala 3,5e-6: sin clip un z fuera de rango explota. Medido en la compuerta (pod, 2026-09-02): la inversa simple pierde 0,25 de R² in-sample en TD₀ (0,50 → 0,74; λ = −2,2) y 0,04 en PD₀; sin smearing no se publica |
+| D13 | facetas que se publican | **LCBD, PD₀ y TD₀**; las cuatro facetas ponderadas (PD₁, PD₂, TD₁, TD₂) se escriben en los GeoTIFF por tesela para diagnóstico pero no se mosaican ni se publican | su R² de block-CV es ≤ 0,04 o negativo (referencia recalculada del OOF: PD₁ −0,010, PD₂ +0,040, TD₁ −0,181, TD₂ −0,090): sin habilidad validada. Por defecto salvo indicación del autor |
 | D10 | salida | un GeoTIFF por (tesela, año), 10 bandas float32: 7 facetas + `n_obs` + `span_days` + `native`; deflate, tiled; tags con todas las decisiones; `manifest.csv` reanudable | mosaico anual por `gdalbuildvrt` después |
 | D11 | cómputo | CPU (el pod no tiene GPU: 32 cores, 123 GB); dask local para el piloto, dask-gateway (workers de 8 cores / 28 GB) para la corrida completa | recon del pod |
 | D12 | despliegue | **piloto primero**: una tesela con 52 parcelas (Cauquenes, −36,0/−72,4), todos los años, medida en segundos/tesela y comparada con los valores de parcela; con eso se decide extensión final y resolución | elección del autor (Q3) |
@@ -57,6 +58,12 @@ BIODIV_UNIFIED=1 BIODIV_CURVES=_raw100 python scripts/74_check_map_consistency.p
 python scripts/73_map_inference.py --bbox -72.50 -36.10 -72.35 -35.95 --years 2000-2026 \
     --area-m2 900 --stratum basal --mask mapbiomas --workers 8 --out results/maps --tag pilot_cauquenes
 ```
+
+Antes de la corrida, la compuerta `scripts/74 --oof-csv ...` debe dar ALL PASS con los
+checkpoints refit sobre la topografía corregida, y además el R² in-sample con smearing de
+TD₀ debe alcanzar al menos el nivel que los checkpoints viejos daban sobre su propia
+topografía (0,78): la compuerta por sí sola no distingue topografías (ALL PASS también con
+la vieja), así que ese nivel es el criterio de que el refit recuperó lo perdido.
 
 Reportar: segundos de carga por tesela, segundos por año, píxeles predichos por año,
 rango de cada faceta, y la comparación píxel-de-parcela vs valor observado para las

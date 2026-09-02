@@ -49,6 +49,8 @@ from biodiv import mapinfer as mi           # noqa: E402
 UTM = "EPSG:32719"
 DEFAULT_CKPT = ("results/models_unified/"
                 "C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final")
+DEFAULT_OOF = ("results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/"
+               "kfold5_block20_unified/oof_predictions.csv")
 
 
 # --------------------------------------------------------------------------------------
@@ -170,9 +172,11 @@ def main() -> None:
     p.add_argument("--stratum", default="basal", choices=["cover", "counts", "presence", "basal"],
                    help="recording-protocol indicator held constant (Living Trees = basal)")
     p.add_argument("--mask", default="mapbiomas", choices=["mapbiomas", "none"])
-    p.add_argument("--oof-csv", default=None, dest="oof_csv",
+    p.add_argument("--oof-csv", default=DEFAULT_OOF, dest="oof_csv",
                    help="oof_predictions.csv of the same config under kfold5_block20_unified, "
-                        "for Duan smearing; omitted = plain inverse transform")
+                        "for Duan smearing (default: the block20 run of the deployed config). "
+                        "Pass an empty string to disable; the plain inverse under-predicts the "
+                        "upper tail of TD0 by about 0.25 R2, so disabling is for diagnostics only")
     p.add_argument("--no-clip", action="store_true", dest="no_clip",
                    help="do not clip predictions to the observed training range")
     p.add_argument("--workers", type=int, default=4, help="dask workers (0 = no dask)")
@@ -216,9 +220,15 @@ def main() -> None:
 
     resid = y_train = None
     if args.oof_csv:
+        if not Path(args.oof_csv).exists():
+            raise SystemExit(f"--oof-csv not found: {args.oof_csv}. The maps must be produced "
+                             "with Duan smearing (the plain inverse loses ~0.25 R2 on TD0); "
+                             "fetch the csv or pass --oof-csv '' deliberately.")
         resid = mi.oof_residuals_scaled(args.oof_csv, ens.members[0].scaler, targets)
         print(f"smearing: residuals from {args.oof_csv} "
               f"({np.isfinite(resid).sum(axis=0).tolist()} usable per target)")
+    else:
+        print("WARNING: smearing disabled -- diagnostic run only, not for publication")
     if not args.no_clip:
         try:
             y_train = mi.training_targets(derived, targets)
