@@ -770,10 +770,6 @@ might try typing `S' now just to see what is salvageable.
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `BiodiversityChile_Lopatin.out' has not chang
 ed.
 (rerunfilecheck)             Checksum: 1B2C62A84E45A8B8229E102D728C8153;2730.
@@ -781,7 +777,7 @@ ed.
 Here is how much of TeX's memory you used:
  14227 strings out of 473190
  227591 string characters out of 5715801
- 659475 words of memory out of 5000000
+ 659610 words of memory out of 5000000
  37147 multiletter control sequences out of 15000+600000
  576114 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
