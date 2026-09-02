@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  2 SEP 2026 17:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  2 SEP 2026 17:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,41 +602,41 @@ Package gensymb Info: Using \textmu for \micro on input line 68.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\<def>-command' on input line 121.
+(hyperref)                removing `\<def>-command' on input line 127.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\cnotenum' on input line 121.
+(hyperref)                removing `\cnotenum' on input line 127.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\<def>-command' on input line 121.
+(hyperref)                removing `\<def>-command' on input line 127.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\@corref' on input line 121.
+(hyperref)                removing `\@corref' on input line 127.
 
 [1
 
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/local
-/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
-<../results/figures/fig19_unified_coverage_map.pdf, id=102, 433.62pt x 794.97pt
+al/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
+
+[2]
+<../results/figures/fig19_unified_coverage_map.pdf, id=213, 433.62pt x 794.97pt
 >
 File: ../results/figures/fig19_unified_coverage_map.pdf Graphic file (type pdf)
 
 <use ../results/figures/fig19_unified_coverage_map.pdf>
 Package pdftex.def Info: ../results/figures/fig19_unified_coverage_map.pdf  use
-d on input line 124.
+d on input line 224.
 (pdftex.def)             Requested size: 236.90378pt x 434.31082pt.
 
 
-[2 <../results/figures/fig19_unified_coverage_map.pdf>]
+[3{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}]
 
-[3]
-
-[4]
+[4 <../results/figures/fig19_unified_coverage_map.pdf>]
 
 [5]
 
@@ -646,37 +646,140 @@ d on input line 124.
 
 [8]
 
-[9] (./BiodiversityChile_Lopatin.bbl
+[9]
 
 [10]
 
-[11]
-Underfull \hbox (badness 1275) in paragraph at lines 255--263
+[11] (./BiodiversityChile_Lopatin.bbl
+! Misplaced alignment tab character &.
+<argument> Nature Ecology &
+                            Evolution
+l.83 ...binfo{journal}{Nature Ecology & Evolution}
+                                                   \bibinfo{volume}{6},
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+
+[12]
+
+[13]
+
+! LaTeX Error: Unicode character Œ± (U+03B1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.297 ...‚Äêdiversity using hyperspectral imaging}
+                                                  .
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character Œ≤ (U+03B2)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.297 ...‚Äêdiversity using hyperspectral imaging}
+                                                  .
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+
+[14]
+
+! LaTeX Error: Unicode character Œ± (U+03B1)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.406 ...Äêdiversity over biogeographic gradients}
+                                                  .
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character Œ≤ (U+03B2)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.406 ...Äêdiversity over biogeographic gradients}
+                                                  .
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Underfull \hbox (badness 1275) in paragraph at lines 412--420
 \T1/cmtt/m/n/12 egusphere-[]egu26-[]7115$[]\T1/cmr/m/n/12 . pro-to-col and soft
 -ware: []$\T1/cmtt/m/n/12 https : / / github . com / LOEK-[]RS /
  []
 
 
 
-[12])
+[15]
+! Misplaced alignment tab character &.
+<argument> Communications Earth &
+                                  Environment
+l.538 ...rnal}{Communications Earth & Environment}
+                                                  
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
 
-[13] (./BiodiversityChile_Lopatin.aux)
+
+
+[16]
+! Misplaced alignment tab character &.
+<argument> Nature Ecology &
+                            Evolution
+l.745 ...info{journal}{Nature Ecology & Evolution}
+                                                   \bibinfo{volume}{5},
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+
+[17])
+
+[18] (./BiodiversityChile_Lopatin.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `BiodiversityChile_Lopatin.out' has not chang
 ed.
-(rerunfilecheck)             Checksum: 287ECA86D4AFC8986683188A010AF150;2626.
+(rerunfilecheck)             Checksum: 1B2C62A84E45A8B8229E102D728C8153;2730.
  ) 
 Here is how much of TeX's memory you used:
- 14103 strings out of 473190
- 224516 string characters out of 5715801
- 655977 words of memory out of 5000000
- 37058 multiletter control sequences out of 15000+600000
- 576890 words of font info for 80 fonts, out of 8000000 for 9000
+ 14226 strings out of 473190
+ 227584 string characters out of 5715801
+ 659475 words of memory out of 5000000
+ 37147 multiletter control sequences out of 15000+600000
+ 576114 words of font info for 79 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,11n,79p,512b,646s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,646b,710s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -689,21 +792,20 @@ cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local
 xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
 live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive
-/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2025/
-texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/texm
-f-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-
-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2025/texmf-di
-st/fonts/type1/public/cm-super/sfti0700.pfb></usr/local/texlive/2025/texmf-dist
-/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2025/texmf-dist/f
-onts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fon
-ts/type1/public/cm-super/sftt1200.pfb>
-Output written on BiodiversityChile_Lopatin.pdf (13 pages, 4592070 bytes).
+/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2
+025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/
+texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texm
+f-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2025/texmf-
+dist/fonts/type1/public/cm-super/sfti0700.pfb></usr/local/texlive/2025/texmf-di
+st/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2025/texmf-dist
+/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/f
+onts/type1/public/cm-super/sftt1200.pfb>
+Output written on BiodiversityChile_Lopatin.pdf (18 pages, 4600660 bytes).
 PDF statistics:
- 591 PDF objects out of 1000 (max. 8388607)
- 479 compressed objects within 5 object streams
- 94 named destinations out of 1000 (max. 500000)
- 126 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 763 PDF objects out of 1000 (max. 8388607)
+ 646 compressed objects within 7 object streams
+ 129 named destinations out of 1000 (max. 500000)
+ 134 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex BiodiversityChile_Lopatin_supplement"] 1788383325.73509 "BiodiversityChile_Lopatin_supplement.aux" "BiodiversityChile_Lopatin_supplement.bbl" "BiodiversityChile_Lopatin_supplement" 1788383383.94487 0
-  "./refs.bib" 1788382472.68585 55737 65308a4d4b399f957b72d7ea258fe9e2 ""
+["bibtex BiodiversityChile_Lopatin_supplement"] 1788384114.34537 "BiodiversityChile_Lopatin_supplement.aux" "BiodiversityChile_Lopatin_supplement.bbl" "BiodiversityChile_Lopatin_supplement" 1788384114.94806 0
+  "./refs.bib" 1788384078.33531 56826 64718705db98a849356f3a0282906ad4 ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/elsarticle/elsarticle-harv.bst" 1736456871 30002 e0380d61aa45e0af6c9b40308561c934 ""
-  "BiodiversityChile_Lopatin_supplement.aux" 1788383383.76163 2188 0eef8ca635b395e7dab5beb025cdf8ee "pdflatex"
+  "BiodiversityChile_Lopatin_supplement.aux" 1788384114.76118 2188 0eef8ca635b395e7dab5beb025cdf8ee "pdflatex"
   (generated)
   "BiodiversityChile_Lopatin_supplement.bbl"
   "BiodiversityChile_Lopatin_supplement.blg"
   (rewritten before read)
-["pdflatex"] 1788383383.41959 "BiodiversityChile_Lopatin_supplement.tex" "BiodiversityChile_Lopatin_supplement.pdf" "BiodiversityChile_Lopatin_supplement" 1788383383.94496 0
+["pdflatex"] 1788384114.41023 "BiodiversityChile_Lopatin_supplement.tex" "BiodiversityChile_Lopatin_supplement.pdf" "BiodiversityChile_Lopatin_supplement" 1788384114.94818 0
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm" 1136768653 3584 402da0b29eafbad07963b1224b222f18 ""
@@ -137,11 +137,11 @@
   "/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1762196683 5467155 19efa205003f9ecad95fbbaa6ff24da1 ""
   "/usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1741450574 3345740 46b66fdb0378f7bf5921b5eabf1762b8 ""
   "/usr/local/texlive/2025/texmf.cnf" 1741450484 577 418a7058ec8e006d8704f60ecd22c938 ""
-  "BiodiversityChile_Lopatin_supplement.aux" 1788383383.76163 2188 0eef8ca635b395e7dab5beb025cdf8ee "pdflatex"
-  "BiodiversityChile_Lopatin_supplement.bbl" 1788383325.79965 3478 13c61ea6e9ea541668a1b0158e311ca9 "bibtex BiodiversityChile_Lopatin_supplement"
-  "BiodiversityChile_Lopatin_supplement.out" 1788383383.76215 205 b07b2438af0c95b91598c362834fe1d3 "pdflatex"
-  "BiodiversityChile_Lopatin_supplement.spl" 1788383383.76229 56 1315915b0ab06cf022025a523d0c1c25 "pdflatex"
-  "BiodiversityChile_Lopatin_supplement.tex" 1788383383.35634 6373 89b7d341b2a49ae24abe6fcb41e4e756 ""
+  "BiodiversityChile_Lopatin_supplement.aux" 1788384114.76118 2188 0eef8ca635b395e7dab5beb025cdf8ee "pdflatex"
+  "BiodiversityChile_Lopatin_supplement.bbl" 1788384114.4087 3478 13c61ea6e9ea541668a1b0158e311ca9 "bibtex BiodiversityChile_Lopatin_supplement"
+  "BiodiversityChile_Lopatin_supplement.out" 1788384114.76169 205 b07b2438af0c95b91598c362834fe1d3 "pdflatex"
+  "BiodiversityChile_Lopatin_supplement.spl" 1788384114.76184 56 1315915b0ab06cf022025a523d0c1c25 "pdflatex"
+  "BiodiversityChile_Lopatin_supplement.tex" 1788384114.28261 6610 823329edb65313a200909e5088aae946 ""
   (generated)
   "BiodiversityChile_Lopatin_supplement.aux"
   "BiodiversityChile_Lopatin_supplement.log"

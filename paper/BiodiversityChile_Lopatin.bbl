@@ -1,4 +1,4 @@
-\begin{thebibliography}{45}
+\begin{thebibliography}{74}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\href}[2]{#2}
@@ -12,12 +12,43 @@
 \providecommand{\bibinfo}[2]{#2}
 \ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
 %Type = Article
+\bibitem[{Arruda~Bruno et~al.(2026)}]{arrudabruno2026deep}
+\bibinfo{author}{Arruda~Bruno, M.}, et~al., \bibinfo{year}{2026}.
+\newblock \bibinfo{title}{Deep learning architectures for invasive species
+  detection from satellite image time series, and the effect of spatial
+  cross-validation}.
+\newblock \bibinfo{journal}{Transactions in GIS} \bibinfo{volume}{30}.
+\newblock \DOIprefix\doi{10.1111/tgis.70250}.
+%Type = Article
 \bibitem[{Breiman(2001)}]{breiman2001random}
 \bibinfo{author}{Breiman, L.}, \bibinfo{year}{2001}.
 \newblock \bibinfo{title}{Random forests}.
 \newblock \bibinfo{journal}{Machine Learning} \bibinfo{volume}{45},
   \bibinfo{pages}{5--32}.
 \newblock \DOIprefix\doi{10.1023/a:1010933404324}.
+%Type = Article
+\bibitem[{Cai et~al.(2022)Cai, Kreft, Taylor, Denelle, Schrader, Essl, van
+  Kleunen, Pergl, Pyšek, Stein, Winter, Barcelona, Fuentes, {Inderjit},
+  Karger, Kartesz, Kuprijanov, Nishino, Nickrent, Nowak, Patzelt, Pelser,
+  Singh, Wieringa and Weigelt}]{cai2023global}
+\bibinfo{author}{Cai, L.}, \bibinfo{author}{Kreft, H.},
+  \bibinfo{author}{Taylor, A.}, \bibinfo{author}{Denelle, P.},
+  \bibinfo{author}{Schrader, J.}, \bibinfo{author}{Essl, F.},
+  \bibinfo{author}{van Kleunen, M.}, \bibinfo{author}{Pergl, J.},
+  \bibinfo{author}{Pyšek, P.}, \bibinfo{author}{Stein, A.},
+  \bibinfo{author}{Winter, M.}, \bibinfo{author}{Barcelona, J.F.},
+  \bibinfo{author}{Fuentes, N.}, \bibinfo{author}{{Inderjit}},
+  \bibinfo{author}{Karger, D.N.}, \bibinfo{author}{Kartesz, J.},
+  \bibinfo{author}{Kuprijanov, A.}, \bibinfo{author}{Nishino, M.},
+  \bibinfo{author}{Nickrent, D.}, \bibinfo{author}{Nowak, A.},
+  \bibinfo{author}{Patzelt, A.}, \bibinfo{author}{Pelser, P.B.},
+  \bibinfo{author}{Singh, P.}, \bibinfo{author}{Wieringa, J.J.},
+  \bibinfo{author}{Weigelt, P.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Global models and predictions of plant diversity
+  based on advanced machine learning techniques}.
+\newblock \bibinfo{journal}{New Phytologist} \bibinfo{volume}{237},
+  \bibinfo{pages}{1432--1445}.
+\newblock \DOIprefix\doi{10.1111/nph.18533}.
 %Type = Article
 \bibitem[{Camps-Valls et~al.(2021)Camps-Valls, Campos-Taberner,
   Moreno-Mart{\'i}nez, Walther, Duveiller, Cescatti, Mahecha,
@@ -36,6 +67,34 @@
 \newblock \bibinfo{journal}{Science Advances} \bibinfo{volume}{7},
   \bibinfo{pages}{eabc7447}.
 \newblock \DOIprefix\doi{10.1126/sciadv.abc7447}.
+%Type = Article
+\bibitem[{Cavender-Bares et~al.(2022)Cavender-Bares, Schneider, Santos,
+  Armstrong, Carnaval, Dahlin, Fatoyinbo, Hurtt, Schimel, Townsend, Ustin, Wang
+  and Wilson}]{cavenderbares2022integrating}
+\bibinfo{author}{Cavender-Bares, J.}, \bibinfo{author}{Schneider, F.D.},
+  \bibinfo{author}{Santos, M.J.}, \bibinfo{author}{Armstrong, A.},
+  \bibinfo{author}{Carnaval, A.}, \bibinfo{author}{Dahlin, K.M.},
+  \bibinfo{author}{Fatoyinbo, L.}, \bibinfo{author}{Hurtt, G.C.},
+  \bibinfo{author}{Schimel, D.}, \bibinfo{author}{Townsend, P.A.},
+  \bibinfo{author}{Ustin, S.L.}, \bibinfo{author}{Wang, Z.},
+  \bibinfo{author}{Wilson, A.M.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Integrating remote sensing with ecology and evolution
+  to advance biodiversity conservation}.
+\newblock \bibinfo{journal}{Nature Ecology & Evolution} \bibinfo{volume}{6},
+  \bibinfo{pages}{506--519}.
+\newblock \DOIprefix\doi{10.1038/s41559-022-01702-5}.
+%Type = Article
+\bibitem[{Ceballos et~al.(2015)Ceballos, Hernández, Corvalán and
+  Galleguillos}]{ceballos2015comparison}
+\bibinfo{author}{Ceballos, A.}, \bibinfo{author}{Hernández, J.},
+  \bibinfo{author}{Corvalán, P.}, \bibinfo{author}{Galleguillos, M.},
+  \bibinfo{year}{2015}.
+\newblock \bibinfo{title}{Comparison of airborne lidar and satellite
+  hyperspectral remote sensing to estimate vascular plant richness in deciduous
+  mediterranean forests of central chile}.
+\newblock \bibinfo{journal}{Remote Sensing} \bibinfo{volume}{7},
+  \bibinfo{pages}{2692--2714}.
+\newblock \DOIprefix\doi{10.3390/rs70302692}.
 %Type = Article
 \bibitem[{Cerda-Paredes et~al.(2026a)Cerda-Paredes, Miranda, Altamirano,
   Becerra, Dobbs, Galleguillos, Miranda, Morales, Ovalle, Venegas-González,
@@ -148,6 +207,15 @@
   {Chile}}.
 \newblock \bibinfo{howpublished}{\url{https://datacubechile.cl}}.
 \newblock \bibinfo{note}{Accessed 2026-08}.
+%Type = Article
+\bibitem[{Donnini et~al.(2024)Donnini, Kross and Alejo}]{donnini2024spectral}
+\bibinfo{author}{Donnini, J.}, \bibinfo{author}{Kross, A.},
+  \bibinfo{author}{Alejo, C.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Spectral diversity as a predictor of tree diversity:
+  Exploring challenges and opportunities across forest ecosystems}.
+\newblock \bibinfo{journal}{Canadian Journal of Remote Sensing}
+  \bibinfo{volume}{50}, \bibinfo{pages}{2403495}.
+\newblock \DOIprefix\doi{10.1080/07038992.2024.2403495}.
 %Type = Manual
 \bibitem[{Dray et~al.(2023)Dray, Bauman, Blanchet, Borcard, Clappe,
   Gu{\'e}nard, Jombart, Larocque, Legendre, Madi and
@@ -163,6 +231,25 @@
 \newblock \DOIprefix\doi{10.32614/CRAN.package.adespatial}. \bibinfo{note}{r
   package version 0.3-29}.
 %Type = Article
+\bibitem[{Dronova and Taddeo(2022)}]{dronova2022remote}
+\bibinfo{author}{Dronova, I.}, \bibinfo{author}{Taddeo, S.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Remote sensing of phenology: Towards the
+  comprehensive indicators of plant community dynamics from species to regional
+  scales}.
+\newblock \bibinfo{journal}{Journal of Ecology} \bibinfo{volume}{110},
+  \bibinfo{pages}{1460--1484}.
+\newblock \DOIprefix\doi{10.1111/1365-2745.13897}.
+%Type = Article
+\bibitem[{Dronova et~al.(2022)Dronova, Taddeo and Harris}]{dronova2022plant}
+\bibinfo{author}{Dronova, I.}, \bibinfo{author}{Taddeo, S.},
+  \bibinfo{author}{Harris, K.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Plant diversity reduces satellite-observed
+  phenological variability in wetlands at a national scale}.
+\newblock \bibinfo{journal}{Science Advances} \bibinfo{volume}{8},
+  \bibinfo{pages}{eabl8214}.
+\newblock \DOIprefix\doi{10.1126/sciadv.abl8214}.
+%Type = Article
 \bibitem[{Duan(1983)}]{duan1983smearing}
 \bibinfo{author}{Duan, N.}, \bibinfo{year}{1983}.
 \newblock \bibinfo{title}{Smearing estimate: a nonparametric retransformation
@@ -177,6 +264,51 @@
 \newblock \bibinfo{title}{Copernicus {DEM} {GLO-30}: global 30 m digital
   surface model}.
 \newblock \DOIprefix\doi{10.5270/ESA-c5d3d65}.
+%Type = Article
+\bibitem[{Fassnacht et~al.(2022)Fassnacht, Müllerová, Conti, Malavasi and
+  Schmidtlein}]{fassnacht2022about}
+\bibinfo{author}{Fassnacht, F.E.}, \bibinfo{author}{Müllerová, J.},
+  \bibinfo{author}{Conti, L.}, \bibinfo{author}{Malavasi, M.},
+  \bibinfo{author}{Schmidtlein, S.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{About the link between biodiversity and spectral
+  variation}.
+\newblock \bibinfo{journal}{Applied Vegetation Science} \bibinfo{volume}{25},
+  \bibinfo{pages}{e12643}.
+\newblock \DOIprefix\doi{10.1111/avsc.12643}.
+%Type = Article
+\bibitem[{Garzon‐Lopez et~al.(2024)Garzon‐Lopez, Miranda, Moya and
+  Andreo}]{garzonlopez2024remote}
+\bibinfo{author}{Garzon‐Lopez, C.X.}, \bibinfo{author}{Miranda, A.},
+  \bibinfo{author}{Moya, D.}, \bibinfo{author}{Andreo, V.},
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Remote sensing biodiversity monitoring in latin
+  america: Emerging need for sustained local research and regional
+  collaboration to achieve global goals}.
+\newblock \bibinfo{journal}{Global Ecology and Biogeography}
+  \bibinfo{volume}{33}.
+\newblock \DOIprefix\doi{10.1111/geb.13804}.
+%Type = Article
+\bibitem[{Gholizadeh et~al.(2020)Gholizadeh, Gamon, Helzer and
+  Cavender‐Bares}]{gholizadeh2020multitemporal}
+\bibinfo{author}{Gholizadeh, H.}, \bibinfo{author}{Gamon, J.A.},
+  \bibinfo{author}{Helzer, C.J.}, \bibinfo{author}{Cavender‐Bares, J.},
+  \bibinfo{year}{2020}.
+\newblock \bibinfo{title}{Multi‐temporal assessment of grassland α‐ and
+  β‐diversity using hyperspectral imaging}.
+\newblock \bibinfo{journal}{Ecological Applications} \bibinfo{volume}{30}.
+\newblock \DOIprefix\doi{10.1002/eap.2145}.
+%Type = Article
+\bibitem[{Hayden et~al.(2024)Hayden, Van Cleemput, Suding, Lezberg, Anacker
+  and Dee}]{hayden2024highresolution}
+\bibinfo{author}{Hayden, M.T.}, \bibinfo{author}{Van Cleemput, E.},
+  \bibinfo{author}{Suding, K.N.}, \bibinfo{author}{Lezberg, A.},
+  \bibinfo{author}{Anacker, B.}, \bibinfo{author}{Dee, L.E.},
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{High‐resolution spectral data predict taxonomic
+  diversity in low diversity grasslands}.
+\newblock \bibinfo{journal}{Ecological Solutions and Evidence}
+  \bibinfo{volume}{5}, \bibinfo{pages}{e12365}.
+\newblock \DOIprefix\doi{10.1002/2688-8319.12365}.
 %Type = Inproceedings
 \bibitem[{He et~al.(2022)He, Chen, Xie, Li, Dollár and
   Girshick}]{he2022masked}
@@ -218,6 +350,21 @@
   \bibinfo{booktitle}{Proceedings of the 32nd International Conference on
   Machine Learning (ICML)}, pp. \bibinfo{pages}{448--456}.
 %Type = Article
+\bibitem[{Ji et~al.(2024)Ji, Li, Hao, Shiklomanov, Yang, Townsend, Dashti,
+  Nakaji, Kovach, Liu, Luo and Chen}]{ji2024leaf}
+\bibinfo{author}{Ji, F.}, \bibinfo{author}{Li, F.}, \bibinfo{author}{Hao, D.},
+  \bibinfo{author}{Shiklomanov, A.N.}, \bibinfo{author}{Yang, X.},
+  \bibinfo{author}{Townsend, P.A.}, \bibinfo{author}{Dashti, H.},
+  \bibinfo{author}{Nakaji, T.}, \bibinfo{author}{Kovach, K.R.},
+  \bibinfo{author}{Liu, H.}, \bibinfo{author}{Luo, M.}, \bibinfo{author}{Chen,
+  M.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Unveiling the transferability of plsr models for leaf
+  trait estimation: lessons from a comprehensive analysis with a novel global
+  dataset}.
+\newblock \bibinfo{journal}{New Phytologist} \bibinfo{volume}{243},
+  \bibinfo{pages}{111--131}.
+\newblock \DOIprefix\doi{10.1111/nph.19807}.
+%Type = Article
 \bibitem[{Jin and Qian(2022)}]{jinqian2022vphylomaker2}
 \bibinfo{author}{Jin, Y.}, \bibinfo{author}{Qian, H.}, \bibinfo{year}{2022}.
 \newblock \bibinfo{title}{{V.PhyloMaker2}: An updated and enlarged {R} package
@@ -249,6 +396,16 @@
 \newblock \bibinfo{journal}{Ecology Letters} \bibinfo{volume}{16},
   \bibinfo{pages}{951--963}.
 \newblock \DOIprefix\doi{10.1111/ele.12141}.
+%Type = Article
+\bibitem[{Lenormand et~al.(2025)Lenormand, Féret, Papuga, Alleaume and
+  Luque}]{lenormand2025spectral}
+\bibinfo{author}{Lenormand, M.}, \bibinfo{author}{Féret, J.B.},
+  \bibinfo{author}{Papuga, G.}, \bibinfo{author}{Alleaume, S.},
+  \bibinfo{author}{Luque, S.}, \bibinfo{year}{2025}.
+\newblock \bibinfo{title}{Coupling in situ and remote sensing data to assess
+  α‐ and β‐diversity over biogeographic gradients}.
+\newblock \bibinfo{journal}{Ecography} \bibinfo{volume}{2025}.
+\newblock \DOIprefix\doi{10.1111/ecog.07479}.
 %Type = Misc
 \bibitem[{Linnenbrink et~al.(2026)Linnenbrink, Nowosad, Ludwig and
   Meyer}]{linnenbrink2026stemp}
@@ -259,6 +416,24 @@
 \newblock \bibinfo{howpublished}{EGU General Assembly 2026, EGU26-7115}.
 \newblock \DOIprefix\doi{10.5194/egusphere-egu26-7115}. \bibinfo{note}{protocol
   and software: \url{https://github.com/LOEK-RS/STeMP}}.
+%Type = Article
+\bibitem[{Liu et~al.(2024)Liu, Frey, Munteanu, Denter and Koch}]{liu2024tree}
+\bibinfo{author}{Liu, X.}, \bibinfo{author}{Frey, J.},
+  \bibinfo{author}{Munteanu, C.}, \bibinfo{author}{Denter, M.},
+  \bibinfo{author}{Koch, B.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Tree species diversity mapping from spaceborne
+  optical images: The effects of spectral and spatial resolution}.
+\newblock \bibinfo{journal}{Remote Sensing in Ecology and Conservation}
+  \bibinfo{volume}{10}, \bibinfo{pages}{463--479}.
+\newblock \DOIprefix\doi{10.1002/rse2.383}.
+%Type = Article
+\bibitem[{Lopatin(2023)}]{lopatin2023interannual}
+\bibinfo{author}{Lopatin, J.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Interannual variability of remotely sensed phenology
+  relates to plant communities}.
+\newblock \bibinfo{journal}{IEEE Geoscience and Remote Sensing Letters}
+  \bibinfo{volume}{20}, \bibinfo{pages}{1--5}.
+\newblock \DOIprefix\doi{10.1109/lgrs.2023.3277364}.
 %Type = Misc
 \bibitem[{Lopatin(n.d.)}]{lopatin_phenosensing}
 \bibinfo{author}{Lopatin, J.}, \bibinfo{year}{n.d.}
@@ -267,6 +442,28 @@
 \newblock
   \bibinfo{howpublished}{\url{https://github.com/javierlopatin/PhenoSensing}}.
 \newblock \bibinfo{note}{V0.1.0, MIT licence}.
+%Type = Article
+\bibitem[{Lopatin et~al.(2026)Lopatin, Araya-López and
+  Dronova}]{lopatin2026remotely}
+\bibinfo{author}{Lopatin, J.}, \bibinfo{author}{Araya-López, R.},
+  \bibinfo{author}{Dronova, I.}, \bibinfo{year}{2026}.
+\newblock \bibinfo{title}{Remotely sensed phenology reveals environmental and
+  management controls on coastal wetland plant communities}.
+\newblock \bibinfo{journal}{Ecological Informatics} \bibinfo{volume}{94},
+  \bibinfo{pages}{103610}.
+\newblock \DOIprefix\doi{10.1016/j.ecoinf.2026.103610}.
+%Type = Article
+\bibitem[{Lopatin et~al.(2016)Lopatin, Dolos, Hernández, Galleguillos and
+  Fassnacht}]{lopatin2016comparing}
+\bibinfo{author}{Lopatin, J.}, \bibinfo{author}{Dolos, K.},
+  \bibinfo{author}{Hernández, H.}, \bibinfo{author}{Galleguillos, M.},
+  \bibinfo{author}{Fassnacht, F.}, \bibinfo{year}{2016}.
+\newblock \bibinfo{title}{Comparing generalized linear models and random forest
+  to model vascular plant species richness using lidar data in a natural forest
+  in central chile}.
+\newblock \bibinfo{journal}{Remote Sensing of Environment}
+  \bibinfo{volume}{173}, \bibinfo{pages}{200--210}.
+\newblock \DOIprefix\doi{10.1016/j.rse.2015.11.029}.
 %Type = Misc
 \bibitem[{Lopatin et~al.(n.d.)Lopatin, Kattenborn, Cherif and
   Moreno}]{lopatin_trait2dcnn}
@@ -287,6 +484,41 @@
   (ICLR)}.
 \newblock \bibinfo{note}{ArXiv:1711.05101}.
 %Type = Article
+\bibitem[{Ludwig et~al.(2023)Ludwig, Moreno‐Martinez, Hölzel, Pebesma and
+  Meyer}]{ludwig2023assessing}
+\bibinfo{author}{Ludwig, M.}, \bibinfo{author}{Moreno‐Martinez, A.},
+  \bibinfo{author}{Hölzel, N.}, \bibinfo{author}{Pebesma, E.},
+  \bibinfo{author}{Meyer, H.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Assessing and improving the transferability of
+  current global spatial prediction models}.
+\newblock \bibinfo{journal}{Global Ecology and Biogeography}
+  \bibinfo{volume}{32}, \bibinfo{pages}{356--368}.
+\newblock \DOIprefix\doi{10.1111/geb.13635}.
+%Type = Article
+\bibitem[{Maynard et~al.(2019)Maynard, Nauman, Salley, Bestelmeyer, Duniway,
+  Talbot and Brown}]{maynard2019ecological}
+\bibinfo{author}{Maynard, J.J.}, \bibinfo{author}{Nauman, T.W.},
+  \bibinfo{author}{Salley, S.W.}, \bibinfo{author}{Bestelmeyer, B.T.},
+  \bibinfo{author}{Duniway, M.C.}, \bibinfo{author}{Talbot, C.J.},
+  \bibinfo{author}{Brown, J.R.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Digital mapping of ecological land units using a
+  nationally scalable modeling framework}.
+\newblock \bibinfo{journal}{Soil Science Society of America Journal}
+  \bibinfo{volume}{83}, \bibinfo{pages}{666--686}.
+\newblock \DOIprefix\doi{10.2136/sssaj2018.09.0346}.
+%Type = Article
+\bibitem[{Mazzochini et~al.(2024)Mazzochini, Rowland, Lira‐Martins, Barros,
+  Flores, Hirota, Pennington and Oliveira}]{mazzochini2024spectral}
+\bibinfo{author}{Mazzochini, G.G.}, \bibinfo{author}{Rowland, L.},
+  \bibinfo{author}{Lira‐Martins, D.}, \bibinfo{author}{Barros, F.d.V.},
+  \bibinfo{author}{Flores, B.M.}, \bibinfo{author}{Hirota, M.},
+  \bibinfo{author}{Pennington, R.T.}, \bibinfo{author}{Oliveira, R.S.},
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Spectral asynchrony as a measure of ecosystem
+  response diversity}.
+\newblock \bibinfo{journal}{Global Change Biology} \bibinfo{volume}{30}.
+\newblock \DOIprefix\doi{10.1111/gcb.17174}.
+%Type = Article
 \bibitem[{McCune and Keon(2002)}]{mccune2002heatload}
 \bibinfo{author}{McCune, B.}, \bibinfo{author}{Keon, D.}, \bibinfo{year}{2002}.
 \newblock \bibinfo{title}{Equations for potential annual direct incident
@@ -294,6 +526,18 @@
 \newblock \bibinfo{journal}{Journal of Vegetation Science}
   \bibinfo{volume}{13}, \bibinfo{pages}{603--606}.
 \newblock \DOIprefix\doi{10.1111/j.1654-1103.2002.tb02087.x}.
+%Type = Article
+\bibitem[{Mederer et~al.(2025)Mederer, Kattenborn, Cherif, Guimaraes-Steinicke,
+  Joswig, Schneider and Feilhauer}]{mederer2025unraveling}
+\bibinfo{author}{Mederer, D.}, \bibinfo{author}{Kattenborn, T.},
+  \bibinfo{author}{Cherif, E.}, \bibinfo{author}{Guimaraes-Steinicke, C.},
+  \bibinfo{author}{Joswig, J.S.}, \bibinfo{author}{Schneider, F.D.},
+  \bibinfo{author}{Feilhauer, H.}, \bibinfo{year}{2025}.
+\newblock \bibinfo{title}{Unraveling the seasonality of functional diversity
+  through remote sensing}.
+\newblock \bibinfo{journal}{Communications Earth & Environment}
+  \bibinfo{volume}{6}, \bibinfo{pages}{790}.
+\newblock \DOIprefix\doi{10.1038/s43247-025-02646-x}.
 %Type = Article
 \bibitem[{Meyer and Pebesma(2021)}]{meyer2021predicting}
 \bibinfo{author}{Meyer, H.}, \bibinfo{author}{Pebesma, E.},
@@ -303,6 +547,15 @@
 \newblock \bibinfo{journal}{Methods in Ecology and Evolution}
   \bibinfo{volume}{12}, \bibinfo{pages}{1620--1633}.
 \newblock \DOIprefix\doi{10.1111/2041-210X.13650}.
+%Type = Article
+\bibitem[{Meyer and Pebesma(2022)}]{meyer2022machine}
+\bibinfo{author}{Meyer, H.}, \bibinfo{author}{Pebesma, E.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Machine learning-based global maps of ecological
+  variables and the challenge of assessing them}.
+\newblock \bibinfo{journal}{Nature Communications} \bibinfo{volume}{13}.
+\newblock \DOIprefix\doi{10.1038/s41467-022-29838-9}. \bibinfo{note}{article
+  2208}.
 %Type = Inproceedings
 \bibitem[{Paszke et~al.(2019)Paszke, Gross, Massa, Lerer, Bradbury, Chanan,
   Killeen, Lin, Gimelshein, Antiga, Desmaison, K{\"o}pf, Yang, DeVito, Raison,
@@ -416,6 +669,83 @@
   \bibinfo{pages}{913--929}.
 \newblock \DOIprefix\doi{10.1111/ecog.02881}.
 %Type = Article
+\bibitem[{Sabatini et~al.(2022)Sabatini, Jiménez-Alfaro, Jandt, Chytrý,
+  Field, Kessler, Lenoir, Schrodt, Wiser, Arfin~Khan, Attorre, Cayuela,
+  De~Sanctis, Dengler, Haider, Hatim, Indreica, Jansen, Pauchard, Peet,
+  Petřík, Pillar, Sandel, Schmidt, Tang, van Bodegom, Vassilev, Violle,
+  Alvarez-Davila, Davidar, Dolezal, Hérault, Galán-de Mera, Jiménez,
+  Kambach, Kepfer-Rojas, Kreft, Lezama, Linares-Palomino, Monteagudo~Mendoza,
+  N’Dja, Phillips, Rivas-Torres, Sklenář, Speziale, Strohbach,
+  Vásquez~Martínez, Wang, Wesche and Bruelheide}]{sabatini2022global}
+\bibinfo{author}{Sabatini, F.M.}, \bibinfo{author}{Jiménez-Alfaro, B.},
+  \bibinfo{author}{Jandt, U.}, \bibinfo{author}{Chytrý, M.},
+  \bibinfo{author}{Field, R.}, \bibinfo{author}{Kessler, M.},
+  \bibinfo{author}{Lenoir, J.}, \bibinfo{author}{Schrodt, F.},
+  \bibinfo{author}{Wiser, S.K.}, \bibinfo{author}{Arfin~Khan, M.A.S.},
+  \bibinfo{author}{Attorre, F.}, \bibinfo{author}{Cayuela, L.},
+  \bibinfo{author}{De~Sanctis, M.}, \bibinfo{author}{Dengler, J.},
+  \bibinfo{author}{Haider, S.}, \bibinfo{author}{Hatim, M.Z.},
+  \bibinfo{author}{Indreica, A.}, \bibinfo{author}{Jansen, F.},
+  \bibinfo{author}{Pauchard, A.}, \bibinfo{author}{Peet, R.K.},
+  \bibinfo{author}{Petřík, P.}, \bibinfo{author}{Pillar, V.D.},
+  \bibinfo{author}{Sandel, B.}, \bibinfo{author}{Schmidt, M.},
+  \bibinfo{author}{Tang, Z.}, \bibinfo{author}{van Bodegom, P.},
+  \bibinfo{author}{Vassilev, K.}, \bibinfo{author}{Violle, C.},
+  \bibinfo{author}{Alvarez-Davila, E.}, \bibinfo{author}{Davidar, P.},
+  \bibinfo{author}{Dolezal, J.}, \bibinfo{author}{Hérault, B.},
+  \bibinfo{author}{Galán-de Mera, A.}, \bibinfo{author}{Jiménez, J.},
+  \bibinfo{author}{Kambach, S.}, \bibinfo{author}{Kepfer-Rojas, S.},
+  \bibinfo{author}{Kreft, H.}, \bibinfo{author}{Lezama, F.},
+  \bibinfo{author}{Linares-Palomino, R.}, \bibinfo{author}{Monteagudo~Mendoza,
+  A.}, \bibinfo{author}{N’Dja, J.K.}, \bibinfo{author}{Phillips, O.L.},
+  \bibinfo{author}{Rivas-Torres, G.}, \bibinfo{author}{Sklenář, P.},
+  \bibinfo{author}{Speziale, K.}, \bibinfo{author}{Strohbach, B.J.},
+  \bibinfo{author}{Vásquez~Martínez, R.}, \bibinfo{author}{Wang, H.F.},
+  \bibinfo{author}{Wesche, K.}, \bibinfo{author}{Bruelheide, H.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Global patterns of vascular plant alpha diversity}.
+\newblock \bibinfo{journal}{Nature Communications} \bibinfo{volume}{13}.
+\newblock \DOIprefix\doi{10.1038/s41467-022-32063-z}. \bibinfo{note}{article
+  4683}.
+%Type = Article
+\bibitem[{Schmidtlein and Fassnacht(2017)}]{schmidtlein2017the}
+\bibinfo{author}{Schmidtlein, S.}, \bibinfo{author}{Fassnacht, F.E.},
+  \bibinfo{year}{2017}.
+\newblock \bibinfo{title}{The spectral variability hypothesis does not hold
+  across landscapes}.
+\newblock \bibinfo{journal}{Remote Sensing of Environment}
+  \bibinfo{volume}{192}, \bibinfo{pages}{114--125}.
+\newblock \DOIprefix\doi{10.1016/j.rse.2017.01.036}.
+%Type = Article
+\bibitem[{Skidmore et~al.(2021)Skidmore, Coops, Neinavaz, Ali, Schaepman,
+  Paganini, Kissling, Vihervaara, Darvishzadeh, Feilhauer, Fernandez,
+  Fernández, Gorelick, Geijzendorffer, Heiden, Heurich, Hobern, Holzwarth,
+  Muller-Karger, Van De~Kerchove, Lausch, Leitão, Lock, Mücher, O’Connor,
+  Rocchini, Roeoesli, Turner, Vis, Wang, Wegmann and
+  Wingate}]{skidmore2021priority}
+\bibinfo{author}{Skidmore, A.K.}, \bibinfo{author}{Coops, N.C.},
+  \bibinfo{author}{Neinavaz, E.}, \bibinfo{author}{Ali, A.},
+  \bibinfo{author}{Schaepman, M.E.}, \bibinfo{author}{Paganini, M.},
+  \bibinfo{author}{Kissling, W.D.}, \bibinfo{author}{Vihervaara, P.},
+  \bibinfo{author}{Darvishzadeh, R.}, \bibinfo{author}{Feilhauer, H.},
+  \bibinfo{author}{Fernandez, M.}, \bibinfo{author}{Fernández, N.},
+  \bibinfo{author}{Gorelick, N.}, \bibinfo{author}{Geijzendorffer, I.},
+  \bibinfo{author}{Heiden, U.}, \bibinfo{author}{Heurich, M.},
+  \bibinfo{author}{Hobern, D.}, \bibinfo{author}{Holzwarth, S.},
+  \bibinfo{author}{Muller-Karger, F.E.}, \bibinfo{author}{Van De~Kerchove, R.},
+  \bibinfo{author}{Lausch, A.}, \bibinfo{author}{Leitão, P.J.},
+  \bibinfo{author}{Lock, M.C.}, \bibinfo{author}{Mücher, C.A.},
+  \bibinfo{author}{O’Connor, B.}, \bibinfo{author}{Rocchini, D.},
+  \bibinfo{author}{Roeoesli, C.}, \bibinfo{author}{Turner, W.},
+  \bibinfo{author}{Vis, J.K.}, \bibinfo{author}{Wang, T.},
+  \bibinfo{author}{Wegmann, M.}, \bibinfo{author}{Wingate, V.},
+  \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{Priority list of biodiversity metrics to observe from
+  space}.
+\newblock \bibinfo{journal}{Nature Ecology & Evolution} \bibinfo{volume}{5},
+  \bibinfo{pages}{896--906}.
+\newblock \DOIprefix\doi{10.1038/s41559-021-01451-x}.
+%Type = Article
 \bibitem[{Smith and Brown(2018)}]{smithbrown2018constructing}
 \bibinfo{author}{Smith, S.A.}, \bibinfo{author}{Brown, J.W.},
   \bibinfo{year}{2018}.
@@ -424,6 +754,23 @@
 \newblock \bibinfo{journal}{American Journal of Botany} \bibinfo{volume}{105},
   \bibinfo{pages}{302--314}.
 \newblock \DOIprefix\doi{10.1002/ajb2.1019}.
+%Type = Article
+\bibitem[{Torresani et~al.(2024)Torresani, Rossi, Perrone, Hauser, Féret,
+  Moudrý, Simova, Ricotta, Foody, Kacic, Feilhauer, Malavasi, Tognetti and
+  Rocchini}]{torresani2024reviewing}
+\bibinfo{author}{Torresani, M.}, \bibinfo{author}{Rossi, C.},
+  \bibinfo{author}{Perrone, M.}, \bibinfo{author}{Hauser, L.T.},
+  \bibinfo{author}{Féret, J.B.}, \bibinfo{author}{Moudrý, V.},
+  \bibinfo{author}{Simova, P.}, \bibinfo{author}{Ricotta, C.},
+  \bibinfo{author}{Foody, G.M.}, \bibinfo{author}{Kacic, P.},
+  \bibinfo{author}{Feilhauer, H.}, \bibinfo{author}{Malavasi, M.},
+  \bibinfo{author}{Tognetti, R.}, \bibinfo{author}{Rocchini, D.},
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Reviewing the spectral variation hypothesis: Twenty
+  years in the tumultuous sea of biodiversity estimation by remote sensing}.
+\newblock \bibinfo{journal}{Ecological Informatics} \bibinfo{volume}{82},
+  \bibinfo{pages}{102702}.
+\newblock \DOIprefix\doi{10.1016/j.ecoinf.2024.102702}.
 %Type = Article
 \bibitem[{Tucker(1979)}]{tucker1979red}
 \bibinfo{author}{Tucker, C.J.}, \bibinfo{year}{1979}.
@@ -444,6 +791,49 @@
 \newblock \bibinfo{journal}{Methods in Ecology and Evolution}
   \bibinfo{volume}{10}, \bibinfo{pages}{225--232}.
 \newblock \DOIprefix\doi{10.1111/2041-210X.13107}.
+%Type = Article
+\bibitem[{Večeřa et~al.(2019)Večeřa, Divíšek, Lenoir, Jiménez‐Alfaro,
+  Biurrun, Knollová, Agrillo, Campos, Čarni, Crespo~Jiménez, Ćuk,
+  Dimopoulos, Ewald, Fernández‐González, Gégout, Indreica, Jandt, Jansen,
+  Kącki, Rašomavičius, Řezníčková, Rodwell, Schaminée, Šilc, Svenning,
+  Swacha, Vassilev, Venanzoni, Willner, Wohlgemuth and
+  Chytrý}]{vecera2019alpha}
+\bibinfo{author}{Večeřa, M.}, \bibinfo{author}{Divíšek, J.},
+  \bibinfo{author}{Lenoir, J.}, \bibinfo{author}{Jiménez‐Alfaro, B.},
+  \bibinfo{author}{Biurrun, I.}, \bibinfo{author}{Knollová, I.},
+  \bibinfo{author}{Agrillo, E.}, \bibinfo{author}{Campos, J.A.},
+  \bibinfo{author}{Čarni, A.}, \bibinfo{author}{Crespo~Jiménez, G.},
+  \bibinfo{author}{Ćuk, M.}, \bibinfo{author}{Dimopoulos, P.},
+  \bibinfo{author}{Ewald, J.}, \bibinfo{author}{Fernández‐González, F.},
+  \bibinfo{author}{Gégout, J.}, \bibinfo{author}{Indreica, A.},
+  \bibinfo{author}{Jandt, U.}, \bibinfo{author}{Jansen, F.},
+  \bibinfo{author}{Kącki, Z.}, \bibinfo{author}{Rašomavičius, V.},
+  \bibinfo{author}{Řezníčková, M.}, \bibinfo{author}{Rodwell, J.S.},
+  \bibinfo{author}{Schaminée, J.H.}, \bibinfo{author}{Šilc, U.},
+  \bibinfo{author}{Svenning, J.}, \bibinfo{author}{Swacha, G.},
+  \bibinfo{author}{Vassilev, K.}, \bibinfo{author}{Venanzoni, R.},
+  \bibinfo{author}{Willner, W.}, \bibinfo{author}{Wohlgemuth, T.},
+  \bibinfo{author}{Chytrý, M.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Alpha diversity of vascular plants in european
+  forests}.
+\newblock \bibinfo{journal}{Journal of Biogeography} \bibinfo{volume}{46},
+  \bibinfo{pages}{1919--1935}.
+\newblock \DOIprefix\doi{10.1111/jbi.13624}.
+%Type = Article
+\bibitem[{Wang and Gamon(2019)}]{wang2019remote}
+\bibinfo{author}{Wang, R.}, \bibinfo{author}{Gamon, J.A.},
+  \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Remote sensing of terrestrial plant biodiversity}.
+\newblock \bibinfo{journal}{Remote Sensing of Environment}
+  \bibinfo{volume}{231}, \bibinfo{pages}{111218}.
+\newblock \DOIprefix\doi{10.1016/j.rse.2019.111218}.
+%Type = Article
+\bibitem[{Wang et~al.(2026)}]{wang2026plant}
+\bibinfo{author}{Wang, Y.}, et~al., \bibinfo{year}{2026}.
+\newblock \bibinfo{title}{Estimating plant species richness with {Sentinel} and
+  {Landsat} data across ecosystems}.
+\newblock \bibinfo{journal}{Ecology and Evolution} \bibinfo{volume}{16}.
+\newblock \DOIprefix\doi{10.1002/ece3.72899}.
 %Type = Misc
 \bibitem[{Weiss(2001)}]{weiss2001topographic}
 \bibinfo{author}{Weiss, A.D.}, \bibinfo{year}{2001}.

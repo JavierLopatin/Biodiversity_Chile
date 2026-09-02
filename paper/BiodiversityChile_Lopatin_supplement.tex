@@ -105,8 +105,11 @@ with five seeds the standard deviations themselves are uncertain by roughly a th
 We retained kNDVI for two reasons that do not depend on that ranking. It is the index of
 the masked-autoencoder checkpoint used to initialise the deployed network, so keeping it
 avoids a mismatch between pretraining and fine-tuning; and on TD$_0$, the facet with the
-strongest signal, kNDVI has the highest mean (0.783) and the narrowest seed spread (0.014,
-against 0.029 to 0.066 for the other four), although that lead is itself within dispersion.
+strongest signal, kNDVI has the highest mean (0.783) and the narrowest between-seed spread
+(0.014, against 0.029 to 0.066 for the other four), although that lead is itself within
+dispersion. The between-fold spread does not separate the indices: computed per fold, every
+index scores about 0.4 on TD$_0$ with a standard deviation of the same order as the mean,
+because the 20-km blocks differ strongly among themselves.
 No index produced consistent positive scores on the abundance-weighted facets.
 
 \begin{table}[t]

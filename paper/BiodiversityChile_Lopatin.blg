@@ -6,45 +6,45 @@ Database file #1: refs.bib
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--empty journal in cerdaparedes2026parcelascl
 Warning--empty pages in loshchilov2019decoupled
-You've used 45 entries,
+You've used 74 entries,
             2990 wiz_defined-function locations,
-            926 strings with 17229 characters,
-and the built_in function-call counts, 36634 in all, are:
-= -- 2557
-> -- 2066
-< -- 31
-+ -- 800
-- -- 741
-* -- 4381
-:= -- 5381
-add.period$ -- 162
-call.type$ -- 45
-change.case$ -- 477
-chr.to.int$ -- 43
-cite$ -- 47
-duplicate$ -- 2470
-empty$ -- 2281
-format.name$ -- 875
-if$ -- 6686
+            1100 strings with 27309 characters,
+and the built_in function-call counts, 66287 in all, are:
+= -- 4409
+> -- 4236
+< -- 38
++ -- 1623
+- -- 1533
+* -- 8338
+:= -- 9812
+add.period$ -- 278
+call.type$ -- 74
+change.case$ -- 886
+chr.to.int$ -- 72
+cite$ -- 76
+duplicate$ -- 4283
+empty$ -- 3855
+format.name$ -- 1762
+if$ -- 11884
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 534
-newline$ -- 267
-num.names$ -- 180
-pop$ -- 867
+missing$ -- 995
+newline$ -- 441
+num.names$ -- 296
+pop$ -- 1506
 preamble$ -- 1
-purify$ -- 426
+purify$ -- 804
 quote$ -- 0
-skip$ -- 717
+skip$ -- 1126
 stack$ -- 0
-substring$ -- 1240
-swap$ -- 2076
+substring$ -- 1994
+swap$ -- 3847
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 405
+type$ -- 666
 warning$ -- 2
-while$ -- 171
+while$ -- 279
 width$ -- 0
-write$ -- 696
+write$ -- 1162
 (There were 2 warnings)
