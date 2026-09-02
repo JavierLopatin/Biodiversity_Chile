@@ -181,6 +181,12 @@ coverage-based. Mismo patrón cualitativo que el pool no-unificado documentado e
 y `docs/17`: la extrapolación temporal sigue siendo el límite real del proyecto, con más
 datos no se resuelve solo.
 
+**Nota sobre estabilidad entre seeds**: los -0.67/-0.80 de `td_inext_q0` arriba son media
+sobre 5 seeds (CNN) / 3 seeds (RF), no un número estable — R2_sd por seed es 0.61-0.93 en
+las 3 familias neuronales bajo LLTO (vs 0.02-0.06 bajo block20), y el R² por ensemble de
+seeds da -0.20 a -0.23, no -0.67/-0.80. El colapso es real pero la cifra puntual no lo es;
+usar rango o R²-ensemble al citar esta tabla, no la media de -0.7/-0.8 sola.
+
 ## 8. Lectura general
 
 `q0` (riqueza taxonómica y filogenética, coverage-standardized) es la única familia
@@ -193,3 +199,145 @@ patrón ya visto para `hill_q1`/`hill_q2` no-unified, ver `docs/12_phylo_and_rar
 
 Config ganadora para seguir iterando: **kndvi, curva cruda (`raw100`), pixel centro,
 `topo+area` (con topo real de Living Trees), `kfold5_block20_unified`**.
+
+## 9. Addendum (2026-09-02): la convención de `aspect` estaba mezclada
+
+Todas las tablas de las secciones 4–7 se produjeron sobre `data/derived/topography_unified.parquet`
+en su versión del 14 de agosto, que mezclaba **dos convenciones de `aspect` opuestas**. Este
+addendum deja el registro completo: qué pasó, qué cambia y qué no.
+
+### 9.1 El defecto
+
+`scripts/03_extract_topography.py` calculaba `aspect` con `atan2(-dzdy, dzdx)`, que devuelve el
+rumbo **cuesta arriba** — 180° girado respecto de la convención cartográfica (la dirección hacia
+la que mira la ladera). En consecuencia `northness` y `eastness` salían con el signo invertido y
+el término de aspecto de `heat_load` espejado. La extracción de Parcelas-CL
+(`data/derived/topography/topography.parquet`, 7 de agosto) quedó con esa convención antigua; la
+de Living_Trees_Chile (14 de agosto) ya se hizo con el código corregido.
+
+`scripts/70_build_living_trees_topo_unified.py` concatenó las dos tablas sin ningún tratamiento
+de signo — un `pd.concat` con un `assert` que sólo compara **nombres** de columna, no valores. El
+resultado es que desde el 14 de agosto 15:40 la tabla unificada tenía las 1.082 filas `PCL_` con
+una convención y las 2.020 filas `LT_` con la contraria. `src/biodiv/features.py` usa esa tabla
+automáticamente cuando existe y `BIODIV_UNIFIED=1`, de modo que **todas** las corridas de las
+secciones 4–7 con `config.json` posterior a las 15:40 la consumieron. De las ocho variables de
+`TOPO_VARS`, tres están afectadas: `northness`, `eastness` y `heat_load`.
+
+La verificación no se apoya en la documentación sino en el dato: recalculando el píxel central
+desde `data/derived/topography/topography_patches.nc` con ambas fórmulas, las 1.079 parcelas no
+planas coincidían con la fórmula antigua (mediana 0.0°, 1079/1079 dentro de 1°) y ninguna con la
+corregida (mediana 180°, 0/1079). Tras la regeneración (commit `de882e5`) la misma prueba se
+invierte exactamente: mediana 3.8e-06° contra la fórmula corregida, 0/1079 contra la antigua.
+
+### 9.2 Qué cambió en la tabla regenerada
+
+Comparando `data/derived/topography/topography.parquet` antes y después, sobre las 1.079 filas no
+NaN en ambas versiones:
+
+- `northness` y `eastness`: negadas exactamente, `max|nuevo + viejo| = 0`.
+- `aspect`: rotado 180°, desviación máxima 1.5e-05°.
+- `heat_load`: espejado, correlación vieja/nueva −0.633.
+- `elevation`, `slope`, `tpi`, `tri`, `curvature` y sus `_mean`/`_std`: idénticas bit a bit (15/15
+  columnas). El DEM no cambió; sólo las derivadas de orientación.
+- Tres parcelas nuevas con NaN (`PCL0388`, `PCL0630`, `PCL0768`, pendientes 0.24°, 0.00° y 0.38°):
+  el enmascarado de terreno plano ahora ocurre **antes** del seno y el coseno, no después.
+- `northness_mean`/`eastness_mean` no se niegan exactamente en 28 de las 1.079 filas: son
+  exactamente las 28 cuyo parche 5×5 contiene al menos un píxel plano ahora enmascarado. Los `_std`
+  son invariantes al signo y quedan idénticos en esas mismas 1.051 filas.
+
+Las 2.020 filas `LT_` de la tabla unificada son idénticas antes y después (mismo hash de bloque):
+esa mitad siempre estuvo bien.
+
+### 9.3 Efecto sobre los resultados
+
+Las corridas rehechas sobre la topografía corregida viven en `results/models_unified_topofix/`
+(mismo esquema de `run_id`, mismos `--folds`, mismas semillas). Deltas contra las tablas de las
+secciones 4–7, en R²_mean sobre `pg_all`:
+
+| corrida (block20) | LCBD | PD q0 | TD q0 | Δ máx (7 facetas) |
+|---|---:|---:|---:|---:|
+| C2D02 serpentine kndvi raw100 ctr | 0.4328 ± 0.0036 | 0.5861 ± 0.0234 | 0.7828 ± 0.0143 | +0.102 (`td_q1`, sd 0.073) |
+| C2D02 + init MAE | 0.4300 ± 0.0119 | 0.5937 ± 0.0403 | 0.7825 ± 0.0306 | +0.061 (`td_q1`) |
+| C1D01 curve1d | 0.4200 ± 0.0089 | 0.6019 ± 0.0399 | 0.7813 ± 0.0472 | −0.022 (`pd_q1`, sd 0.026) |
+| RF03pc | 0.4470 ± 0.0010 | 0.5834 ± 0.0035 | 0.6642 ± 0.0171 | **−0.006** (`pd_q1`, sd 0.013) |
+
+Bajo LLTO los deltas son del mismo orden y el cuadro cualitativo no cambia: sólo LCBD sobrevive,
+todo lo demás sigue negativo. RF03pc vuelve a ser la familia estable (|Δ| máximo 0.009 sobre siete
+facetas, sd entre semillas 0.003–0.014) y mantiene LCBD en 0.4186 ± 0.0034.
+
+**Lectura.** En las dos facetas que el trabajo reporta como señal real (`lcbd_count_sorensen` y
+`td_inext_q0`) todos los deltas son ≤ 0.011, es decir menores que una sd entre semillas. El
+movimiento más grande, +0.102 en `td_inext_q1`, cae sobre una faceta cuya propia sd es 0.073 y
+cuyo valor era negativo antes y después. La conclusión honesta es que **la convención mezclada no
+degradó de forma medible la capacidad predictiva**: el defecto era real y la corrección es
+necesaria, pero no estaba sosteniendo ningún resultado. Reemplazar las tablas por las cifras
+corregidas es un cambio de procedencia, no una corrección de resultados.
+
+Donde sí importa es en la interpretación: cualquier afirmación sobre **qué** orientación de ladera
+explica una faceta, y cualquier ranking de importancia que nombre `northness`, `eastness` o
+`heat_load`, se hizo sobre una variable medio invertida y no se puede trasladar. Esas lecturas hay
+que rederivarlas de las importancias de la corrida nueva de RF03pc. No se ha rehecho
+`scripts/13_interpretability.py`: el manuscrito no reporta importancias hoy.
+
+### 9.4 Cuidado al reconstruir la línea base de agosto
+
+Los números de las secciones 4–7 salen de `results/models_unified/`, con `config.json` de las
+15:50–15:52 del 14 de agosto. Existe además una familia de logs **anterior**,
+`logs/71_cnn_raw100_ctr_<index>_pg.log` (15:25–15:27), que corresponde a las mismas corridas hechas
+**antes** de que existiera la topografía unificada, es decir con la tabla sólo-Parcelas-CL y la
+topografía de Living Trees imputada a la mediana del fold. Esas corridas fueron sobrescritas in
+situ a las 15:50. Citar el `71_*` como línea base de agosto da cifras sistemáticamente más bajas
+(p. ej. `ndvi` LCBD 0.416 en vez de 0.433) y mezcla dos cambios distintos. La línea base correcta
+es `logs/72_cnn_raw100_ctr_<index>_pg_topo.log` y los `pooled_metrics.csv` del directorio de
+resultados.
+
+Por el mismo motivo, la fila de la sección 4 con curva compuesta (`C2D02_serpentine_kndvi_pg-all_unified_ctr`,
+`config.json` de las 15:03) es **anterior** a la topografía unificada. Su delta contra la corrida
+topofix (+0.026 en LCBD) arrastra dos cambios a la vez —topografía real para Living Trees y signos
+corregidos— y no es evidencia sobre la corrección de signo por separado.
+
+### 9.5 El barrido de índices no ordena
+
+Recalculando la media de la sección 5 sobre las tres facetas con señal (`lcbd_count_sorensen`,
+`pd_inext_q0`, `td_inext_q0`) **dentro de cada semilla** y tomando después media ± sd entre las 5
+semillas —no promediando las sd por faceta, que subestima la dispersión de la media—:
+
+| index | topofix | agosto (secciones 4–7) |
+|---|---:|---:|
+| savi | 0.6048 ± 0.0094 | 0.6006 ± 0.0079 |
+| ndvi | 0.6006 ± 0.0203 | 0.6027 ± 0.0127 |
+| kndvi | 0.6005 ± 0.0072 | 0.6048 ± 0.0164 |
+| evi | 0.5941 ± 0.0214 | 0.6041 ± 0.0092 |
+| nbr | 0.5851 ± 0.0158 | 0.5879 ± 0.0129 |
+
+Sobre la topografía corregida kNDVI queda **tercero**, 0.0043 debajo de savi y 0.00003 debajo de
+ndvi. Contra su propia sd entre semillas (0.0072), o contra la sd en cuadratura con savi (0.0119),
+esas distancias no son nada: savi − kndvi son 0.36 sd. Incluso el peor índice, nbr, está a una sd
+en cuadratura.
+
+Esto ya era cierto en agosto y no lo causó la topografía: allí kNDVI "ganaba" por 0.6048 contra
+0.6041 de evi, un margen de 0.0007 frente a una sd de 0.0164 — 23 veces menor que el ruido de la
+cantidad comparada. La frase de la sección 5, «kndvi gana por margen mínimo», no es sostenible en
+ninguna de las dos versiones de la tabla. **Los cinco índices son indistinguibles.**
+
+Se conserva kNDVI, por dos razones que sí se pueden escribir: es el índice del checkpoint de
+preentrenamiento (`results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6.pt`), y en `td_inext_q0` —la
+faceta más fuerte— es nominalmente el mejor (0.7828) y el de menor dispersión entre semillas
+(0.0143, contra 0.0289–0.0662 del resto). Lo que **no** se debe afirmar es que tenga menor
+variación entre *folds*: calculando R² por fold (semillas promediadas dentro del fold), ndvi es
+marginalmente más estrecho que kndvi tanto en TD0 (0.5635 vs 0.5900) como en la media compuesta
+(0.3441 vs 0.3473). Entre folds la sd es del orden de la media, porque los bloques de 20 km son
+muy heterogéneos; esa comparación no separa a ningún índice.
+
+### 9.6 Trazabilidad
+
+- Corrección del código y regeneración: `c67fc37` (`scripts/03`), `de882e5` (tablas regeneradas,
+  `topography_patches.nc` incluido, `scripts/51` y `scripts/70`).
+- Corridas corregidas: `results/models_unified_topofix/`, logs `logs/9{1,2,3,4,5}_topofix_*.log`.
+  Catorce corridas, ninguna con `[skip]`, `n_params` 15.175 (C2D02) y 14.535 (C1D01) idénticos a
+  agosto.
+- Refit de despliegue sobre las 3.102 parcelas:
+  `results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final/`,
+  5 semillas × 33 épocas fijas. No produce `pooled_metrics.csv` por construcción; su registro es
+  `logs/95_topofix_*.log`.
+- Aviso original de la convención: `docs/07_run_record.md` §3 y `docs/16_living_trees_extraction.md` §5 bis.
