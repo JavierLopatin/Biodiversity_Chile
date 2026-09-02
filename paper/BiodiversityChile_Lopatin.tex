@@ -622,36 +622,39 @@ TD$_2$ & $-0.063\pm0.052$ & $-0.077\pm0.019$ & $-0.081\pm0.030$ & $-0.077\pm0.04
 \label{sec:results_llto}
 
 When the test plots were held out by spatial fold and census period together, richness
-signal collapsed in every family (Table~\ref{tab:llto}). PD$_0$ fell below zero in every
-family, and the seed mean of TD$_0$ fell from 0.67--0.79 under spatial blocking to $-0.67$
-to $-0.80$ for the three networks. These network means came with seed standard deviations
-of 0.61 to 0.93, so the collapse was driven by individual seeds that extrapolated far in the
-wrong direction rather than by a uniform loss of signal; the seed-ensemble prediction
-scored $-0.20$ to $-0.23$ on TD$_0$ for the networks, against $-0.10$ for Random Forest,
-whose seeds agreed to within 0.005. LCBD was the only facet that retained positive skill
-under this scheme, from 0.32 for the two-dimensional network to 0.42 for Random Forest
-(seed ensemble 0.37 to 0.42), a loss of 0.03 to 0.12 relative to spatial blocking. Random
-Forest was the family least affected by the change of scheme, with every facet above
-$-0.11$ and seed standard deviations below 0.015.
+signal collapsed in every family (Table~\ref{tab:llto}). PD$_0$ fell below zero everywhere,
+and TD$_0$ fell from 0.66--0.78 under spatial blocking to seed means between $-0.63$ and
+$-0.82$ for the three networks. Those network means are not point estimates in any useful
+sense: their seed standard deviations reach 0.57 to 0.93, so individual seeds disagree about
+whether the model is catastrophically wrong or merely wrong, and we report them only to show
+the direction and the instability. Random Forest is the exception on both counts. It stayed
+near zero on TD$_0$ ($-0.097$) with seeds agreeing to within 0.007, and it was the only
+family whose seven facets all lie above $-0.10$. LCBD was the one facet that retained
+positive skill under this scheme, from 0.344 for the two-dimensional network to 0.419 for
+Random Forest, a loss of 0.03 to 0.09 relative to spatial blocking; the differences among
+families here (0.344 to 0.380 for the networks) are of the order of their own seed
+dispersion (0.041 to 0.054) and we do not rank them.
 
 \begin{table}[t]
 \centering
 \small
 \caption{Out-of-fold $R^2$ under leave-location-and-time-out cross-validation (same design
 as Table~\ref{tab:families}; 29 cells, every plot tested once). Mean $\pm$ standard
-deviation over seeds; bold marks the highest mean per facet.}
+deviation over seeds; bold marks the highest mean per facet. The networks' TD$_0$ standard
+deviations exceed half a unit of $R^2$, so those means describe an unstable failure rather
+than a level.}
 \label{tab:llto}
 \begin{tabular}{lcccc}
 \toprule
 Facet & Random Forest & 1D-CNN & 2D-CNN & 2D-CNN + MAE \\
 \midrule
-LCBD   & $\mathbf{0.419 \pm 0.002}$ & $0.344 \pm 0.045$ & $0.319 \pm 0.084$ & $0.322 \pm 0.046$ \\
-PD$_0$ & $\mathbf{-0.068 \pm 0.013}$ & $-0.170 \pm 0.135$ & $-0.134 \pm 0.127$ & $-0.155 \pm 0.128$ \\
-PD$_1$ & $\mathbf{0.031 \pm 0.005}$ & $-0.128 \pm 0.072$ & $-0.168 \pm 0.139$ & $-0.158 \pm 0.089$ \\
-PD$_2$ & $\mathbf{0.017 \pm 0.008}$ & $-0.210 \pm 0.117$ & $-0.218 \pm 0.112$ & $-0.178 \pm 0.067$ \\
-TD$_0$ & $\mathbf{-0.103 \pm 0.005}$ & $-0.736 \pm 0.934$ & $-0.798 \pm 0.757$ & $-0.674 \pm 0.614$ \\
-TD$_1$ & $\mathbf{-0.097 \pm 0.014}$ & $-0.130 \pm 0.134$ & $-0.166 \pm 0.135$ & $-0.181 \pm 0.116$ \\
-TD$_2$ & $\mathbf{-0.007 \pm 0.013}$ & $-0.094 \pm 0.061$ & $-0.069 \pm 0.043$ & $-0.080 \pm 0.048$ \\
+LCBD   & $\mathbf{0.419\pm0.003}$ & $0.376\pm0.041$ & $0.344\pm0.054$ & $0.380\pm0.047$ \\
+PD$_0$ & $\mathbf{-0.061\pm0.014}$ & $-0.168\pm0.153$ & $-0.154\pm0.114$ & $-0.166\pm0.088$ \\
+PD$_1$ & $\mathbf{0.032\pm0.005}$ & $-0.170\pm0.115$ & $-0.146\pm0.106$ & $-0.167\pm0.086$ \\
+PD$_2$ & $\mathbf{0.017\pm0.009}$ & $-0.305\pm0.142$ & $-0.219\pm0.111$ & $-0.233\pm0.091$ \\
+TD$_0$ & $\mathbf{-0.097\pm0.007}$ & $-0.820\pm0.928$ & $-0.789\pm0.861$ & $-0.627\pm0.570$ \\
+TD$_1$ & $\mathbf{-0.088\pm0.014}$ & $-0.101\pm0.156$ & $-0.156\pm0.117$ & $-0.136\pm0.101$ \\
+TD$_2$ & $\mathbf{-0.001\pm0.012}$ & $-0.078\pm0.021$ & $-0.097\pm0.040$ & $-0.087\pm0.029$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -663,7 +666,7 @@ richness was the only facet family that every model predicted well, with $R^2$ b
 0.58 and 0.79 across the four model families and across the five vegetation indices
 tested. LCBD carried
 moderate signal (0.42 to 0.45 under spatial blocking) and was the only facet whose skill
-survived the joint spatial and temporal hold-out (0.32 to 0.42). The abundance- and
+survived the joint spatial and temporal hold-out (0.34 to 0.42). The abundance- and
 dominance-weighted facets ($q = 1$, 2) stayed at or near zero under every model, index and
 curve format; the few positive scores were small and did not replicate across families.
 The choice of vegetation index and of network architecture moved the scores by amounts
