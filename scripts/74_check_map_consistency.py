@@ -14,12 +14,18 @@ datacube needed). Three checks, each printed with a pass/fail line:
    equals the one `substrates.make_substrate` produced.
 3. **Same outputs.** `FacetEnsemble.predict_scaled` on those inputs equals a direct call
    of the reloaded model on the training tensors, and the seed-mean back-transformed
-   prediction correlates with the observed facets at the level the block-CV run reported
-   (an in-sample number, so it should be at least as high; a collapse means the pipeline,
-   not the model, is broken).
+   prediction agrees with the observed facets at least as well as the block-CV run of the
+   same configuration did (an in-sample number, so it should be at least as high; a
+   collapse means the pipeline, not the model, is broken). The back-transformation is
+   done both plainly and with Duan smearing from the block-CV out-of-fold residuals
+   (``--oof-csv``), because the cross-validation scores were produced with smearing and
+   the plain inverse of a strongly skewed target (TD$_0$, Yeo-Johnson lambda about -2)
+   under-predicts the upper tail. The block-CV reference R2 is computed from the same
+   csv, per target, so the comparison uses one definition.
 
 Usage (on the pod / rapidita):
-    BIODIV_UNIFIED=1 BIODIV_CURVES=_raw100 python scripts/74_check_map_consistency.py
+    BIODIV_UNIFIED=1 BIODIV_CURVES=_raw100 python scripts/74_check_map_consistency.py \
+        --oof-csv results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv
 """
 
 from __future__ import annotations
@@ -55,6 +61,12 @@ def main() -> None:
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--ckpt-dir", default=DEFAULT_CKPT, dest="ckpt_dir")
+    p.add_argument("--oof-csv", default=None, dest="oof_csv",
+                   help="oof_predictions.csv of the same configuration under "
+                        "kfold5_block20_unified: smearing residuals + block-CV reference")
+    p.add_argument("--tolerance", type=float, default=0.05,
+                   help="in-sample R2 may not fall more than this below the block-CV "
+                        "reference on PD0/TD0")
     args = p.parse_args()
     derived = Path(args.derived)
     if not feat.unified_flag() or feat.curve_suffix() != "_raw100":
@@ -128,20 +140,48 @@ def main() -> None:
     d_out = np.nanmax(np.abs(scaled_map[0][finite] - direct))
     all_ok &= ok(bool(d_out < 1e-4), f"seed-0 forward pass identical (max abs diff {d_out:.2e})")
 
-    # 3b. in-sample agreement with observed facets
-    pred = ens.predict(images_map, ctx_map, y_train=Y)
+    # 3b. in-sample agreement with observed facets, plain and smeared back-transform
+    def r2_of(pred_, obs_):
+        okm = np.isfinite(pred_) & np.isfinite(obs_)
+        return float(1 - np.sum((pred_[okm] - obs_[okm]) ** 2)
+                     / np.sum((obs_[okm] - obs_[okm].mean()) ** 2)), int(okm.sum())
+
+    resid = ref = None
+    if args.oof_csv:
+        resid = mi.oof_residuals_scaled(args.oof_csv, ens.members[0].scaler, names)
+        oof = pd.read_csv(args.oof_csv)
+        # block-CV reference: per-seed pooled R2, then the seed mean (docs/20 convention)
+        ref = {}
+        for t in names:
+            per_seed = [r2_of(g[f"{t}_pred"].to_numpy(float), g[f"{t}_obs"].to_numpy(float))[0]
+                        for _, g in oof.groupby("seed")]
+            ref[t] = float(np.mean(per_seed))
+        print(f"smearing residuals from {args.oof_csv}; block-CV reference R2 recomputed from it")
+    pred_plain = ens.predict(images_map, ctx_map, y_train=Y)
+    pred_sm = (ens.predict(images_map, ctx_map, resid_scaled=resid, y_train=Y)
+               if resid is not None else None)
     rows = []
     for j, t in enumerate(names):
-        okm = np.isfinite(pred[:, j]) & np.isfinite(Y[:, j])
-        r2 = 1 - np.sum((pred[okm, j] - Y[okm, j]) ** 2) / np.sum((Y[okm, j] - Y[okm, j].mean()) ** 2)
-        rows.append(dict(target=t, n=int(okm.sum()), r2_insample=round(float(r2), 3),
-                         pred_min=float(np.nanmin(pred[:, j])), pred_max=float(np.nanmax(pred[:, j])),
-                         obs_min=float(np.nanmin(Y[:, j])), obs_max=float(np.nanmax(Y[:, j]))))
+        r2p, n = r2_of(pred_plain[:, j], Y[:, j])
+        row = dict(target=t, n=n, r2_plain=round(r2p, 3))
+        if pred_sm is not None:
+            row["r2_smeared"] = round(r2_of(pred_sm[:, j], Y[:, j])[0], 3)
+            row["r2_blockcv"] = round(ref[t], 3)
+        row.update(pred_max=float(np.nanmax((pred_sm if pred_sm is not None else pred_plain)[:, j])),
+                   obs_max=float(np.nanmax(Y[:, j])))
+        rows.append(row)
     df = pd.DataFrame(rows)
     print(df.to_string(index=False))
-    q0 = df[df.target.isin(["pd_inext_q0", "td_inext_q0"])]["r2_insample"]
-    all_ok &= ok(bool((q0 > 0.5).all()),
-                 "in-sample R2 on PD0/TD0 above 0.5 (block-CV was 0.61/0.79; in-sample must not be lower)")
+    q0 = df[df.target.isin(["pd_inext_q0", "td_inext_q0"])]
+    if pred_sm is not None:
+        gap = (q0["r2_smeared"] - q0["r2_blockcv"]).to_numpy()
+        all_ok &= ok(bool((gap >= -args.tolerance).all()),
+                     f"in-sample (smeared) R2 on PD0/TD0 not more than {args.tolerance} below "
+                     f"the block-CV reference (gaps {np.round(gap, 3).tolist()})")
+    else:
+        all_ok &= ok(bool((q0["r2_plain"] > 0.5).all()),
+                     "in-sample R2 on PD0/TD0 above 0.5 (no --oof-csv given: plain inverse, "
+                     "expect the skewed targets to sit below their block-CV scores)")
     print("\nALL PASS" if all_ok else "\nSOME CHECKS FAILED -- do not produce maps")
     sys.exit(0 if all_ok else 1)
 
