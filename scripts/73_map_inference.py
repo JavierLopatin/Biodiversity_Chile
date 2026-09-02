@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -184,11 +185,25 @@ def main() -> None:
     p.add_argument("--device", default="cpu")
     p.add_argument("--batch", type=int, default=8192)
     p.add_argument("--limit", type=int, default=0, help="run only the first N tiles")
+    p.add_argument("--jobs", type=int, default=1,
+                   help="tile-level parallelism: N worker processes, each taking whole tiles "
+                        "end to end. The CNN is 95%% of a tile-year and scales badly on "
+                        "threads (16 threads buy only 2.9x), so N single-threaded processes "
+                        "beat one many-threaded one by ~5.6x per core.")
+    p.add_argument("--manifest", default="manifest.csv",
+                   help="manifest filename inside --out/--tag; --jobs gives each worker its "
+                        "own and merges them, which avoids locking a shared append")
+    p.add_argument("--torch-threads", type=int, default=0, dest="torch_threads",
+                   help="0 = leave torch alone; workers under --jobs are given 1")
     p.add_argument("--resume", action="store_true")
     p.add_argument("--dry-run", action="store_true", dest="dry_run")
     p.add_argument("--out", default="results/maps")
     p.add_argument("--tag", default="run")
     args = p.parse_args()
+
+    if args.torch_threads:
+        import torch
+        torch.set_num_threads(args.torch_threads)
 
     derived = Path(args.derived)
     years = parse_years(args.years)
@@ -241,11 +256,21 @@ def main() -> None:
                 resolution=args.resolution, area_m2=args.area_m2, stratum=args.stratum,
                 mask=args.mask, ckpt_dir=str(args.ckpt_dir), n_seeds=len(ckpts),
                 smearing="oof" if resid is not None else "none",
-                clip=y_train is not None, targets=targets)
+                clip=y_train is not None, targets=targets,
+                # Declared, not corrected (docs/21 section 6): the ensemble predicts a
+                # conditional mean, so the map's upper tail is compressed relative to the
+                # plot observations. Carried on every tile so the caveat cannot be separated
+                # from the raster.
+                caveat="predicted values are conditional means and under-disperse the upper "
+                       "tail; use as a relative surface")
     (out / "run.json").write_text(json.dumps(meta, indent=1))
     if args.dry_run:
         print(json.dumps(meta, indent=1))
         print(tiles.head(10).to_string(index=False))
+        return
+
+    if args.jobs > 1:
+        fan_out(args, tiles, out)
         return
 
     # ---- datacube + dask ----------------------------------------------------------------
@@ -281,7 +306,7 @@ def main() -> None:
     chunks = {"time": 1} if args.workers > 0 else None
     dc = datacube.Datacube(app="biodiv-map-inference")
 
-    man_path = out / "manifest.csv"
+    man_path = out / args.manifest
     done: set[tuple[str, int]] = set()
     if args.resume and man_path.exists():
         m = pd.read_csv(man_path)
@@ -385,6 +410,82 @@ def dashboard_url(cluster) -> str:
     except Exception:                                # noqa: BLE001
         pass
     return link
+
+
+def fan_out(args, tiles: pd.DataFrame, out: Path) -> None:
+    """Run whole tiles across ``args.jobs`` worker processes, then merge their manifests.
+
+    Each worker is this same script re-invoked with ``--jobs 1``, its own slice of the tile
+    grid and its own manifest file. Three reasons for separate processes rather than threads
+    or a shared dask cluster:
+
+    * the CNN is ~95 % of a tile-year and scales badly on threads (16 torch threads buy 2.9x
+      on 16 cores, 18 % efficiency), so one single-threaded process per core is ~5.6x more
+      core-efficient than one many-threaded process;
+    * with N tile-processes the S3 concurrency already comes from the processes, so each
+      worker uses plain synchronous reads (``--workers 0``) and no dask client is created --
+      a client per worker would multiply connections for no gain;
+    * a per-worker manifest merged at the end is safe by construction, where concurrent
+      appends to one csv would need locking.
+
+    ``--resume`` is honoured: each worker skips the (tile, year) pairs already in the merged
+    manifest, which is read in before the split.
+    """
+    import subprocess
+
+    parts_dir = out / "_parts"
+    parts_dir.mkdir(exist_ok=True)
+    merged = out / args.manifest
+
+    # Round-robin rather than contiguous blocks: tiles differ in native cover and therefore
+    # in cost, and interleaving keeps the workers from finishing at wildly different times.
+    assignments = [tiles.iloc[i::args.jobs] for i in range(args.jobs)]
+    assignments = [a for a in assignments if len(a)]
+    print(f"--jobs {args.jobs}: {len(tiles)} tiles -> "
+          f"{[len(a) for a in assignments]} per worker", flush=True)
+
+    procs, part_files = [], []
+    for i, part in enumerate(assignments):
+        tf = parts_dir / f"tiles_{i}.csv"
+        part.to_csv(tf, index=False)
+        man_i = f"_parts/manifest_{i}.csv"
+        part_files.append(out / man_i)
+        cmd = [sys.executable, str(Path(__file__).resolve()),
+               "--tiles-file", str(tf), "--out", str(args.out), "--tag", args.tag,
+               "--years", args.years, "--resolution", str(args.resolution),
+               "--tile-km", str(args.tile_km), "--derived", str(args.derived),
+               "--ckpt-dir", str(args.ckpt_dir), "--area-m2", str(args.area_m2),
+               "--stratum", args.stratum, "--mask", args.mask, "--device", args.device,
+               "--batch", str(args.batch), "--manifest", man_i,
+               "--jobs", "1", "--workers", "0", "--torch-threads", "1"]
+        if args.oof_csv:
+            cmd += ["--oof-csv", args.oof_csv]
+        if args.no_clip:
+            cmd.append("--no-clip")
+        if args.resume:
+            cmd.append("--resume")
+        env = dict(os.environ, OMP_NUM_THREADS="1", MKL_NUM_THREADS="1",
+                   OPENBLAS_NUM_THREADS="1")
+        log = (parts_dir / f"worker_{i}.log").open("w")
+        procs.append((i, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env),
+                      log))
+
+    t0 = time.time()
+    failed = []
+    for i, p, log in procs:
+        rc = p.wait()
+        log.close()
+        if rc != 0:
+            failed.append((i, rc))
+        print(f"  worker {i} exited {rc} after {time.time() - t0:.0f}s", flush=True)
+
+    frames = [pd.read_csv(f) for f in part_files if f.exists()]
+    if frames:
+        man = pd.concat(frames, ignore_index=True).sort_values(["tile_id", "year"])
+        man.to_csv(merged, index=False)
+        print(f"merged {len(frames)} worker manifests -> {merged} ({len(man)} rows)")
+    if failed:
+        raise SystemExit(f"workers failed: {failed}; logs in {parts_dir}")
 
 
 def _append(path: Path, rows: list[dict]) -> None:
