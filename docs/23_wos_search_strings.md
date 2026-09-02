@@ -186,3 +186,55 @@ resultados, B7b LCBD y recambio composicional 295, B7c dark diversity desde tele
 los de WoS porque la traducción sin etiquetas de campo busca también en el texto completo;
 sirven para ordenar magnitudes y para no perder trabajos que WoS no indexa, no para
 sustituir la búsqueda estructurada.
+
+## Sesgo de cada índice, medido
+
+Los dos índices tienen sesgos opuestos, y conviene saber cuál se está pagando.
+
+**Web of Science selecciona.** Un comité decide qué revistas entran, y esa curaduría deja
+fuera la mayor parte de la literatura de acceso abierto: de unas 62.700 revistas OA activas,
+WoS indexa 6.157 y Scopus 7.351, contra 34.217 en OpenAlex. El efecto conocido es un sesgo
+hacia revistas en inglés y del norte global, que es justamente donde la teledetección de
+biodiversidad en América Latina queda subrepresentada.
+
+**OpenAlex no selecciona, pero su metadato es heterogéneo.** Ingiere Crossref completo, así
+que no hay sesgo editorial en qué entra; el sesgo aparece en qué se puede *recuperar*.
+Elsevier no deposita resúmenes en Crossref, de modo que OpenAlex no los tiene, y una
+búsqueda por resumen los pierde. Medido sobre 600 trabajos de este dominio
+(`"remote sensing" OR satellite` × `"plant diversity" OR "species richness"`, 2015-2026,
+2026-09-02):
+
+| editorial | trabajos | con resumen |
+|---|---:|---:|
+| Wiley | 158 | 100 % |
+| **Elsevier** | 134 | **54 %** |
+| MDPI | 106 | 100 % |
+| Nature Portfolio | 49 | 80 % |
+| Springer | 32 | 59 % |
+| resto (PLOS, OUP, IOP, Frontiers, PNAS, Royal Society, AAAS) | 121 | 100 % |
+| **total** | **600** | **86 %** |
+
+Esto importa aquí más que en otros dominios: *Remote Sensing of Environment*, *ISPRS
+Journal of Photogrammetry*, *Ecological Informatics* y *Science of Remote Sensing* son todas
+de Elsevier. Verificado por DOI: los dos artículos de Elsevier de la lista de referencias no
+tienen `abstract_inverted_index` en OpenAlex, mientras que los de Wiley, Springer y Nature
+sí.
+
+**Cómo trabajar con eso.** La búsqueda por resumen en OpenAlex se complementa, no se
+sustituye:
+1. Buscar también por título (`title.search:`), que sí está completo para todas las
+   editoriales.
+2. Encadenar citas: el grafo de referencias de OpenAlex sí cubre Elsevier (239 referencias
+   enlazadas para el artículo de RSE probado), así que partir de dos o tres trabajos ancla y
+   recorrer `referenced_works` y `cited_by_api_url` recupera lo que la búsqueda por resumen
+   pierde.
+3. Declarar en el paper qué índice se usó para cada afirmación de ausencia. Una frase de
+   vacío basada solo en OpenAlex con búsqueda por resumen sobreestima el vacío en revistas
+   de Elsevier, que es donde más literatura de teledetección hay.
+
+Dos advertencias adicionales sobre OpenAlex: no filtra por calidad, de modo que incluye
+revistas depredadoras que WoS excluye por diseño; y su clasificación temática es automática,
+no las categorías curadas de WoS (`WC=`), así que un filtro por disciplina no es equivalente
+entre ambos. En sentido contrario, el número de resultados en inglés frente a otros idiomas
+no es evidencia de sesgo del índice cuando la consulta está en inglés: la consulta misma
+selecciona el idioma.
