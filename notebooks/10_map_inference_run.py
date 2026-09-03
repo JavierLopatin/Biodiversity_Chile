@@ -124,7 +124,178 @@ print("=> identical image, so the checkpoints unpickle identically on both sides
 # that proof is void if the code it checked is not the code the workers ran.
 
 # %% [markdown]
-# ## 3. The budget, and why all 27 years
+# ## 3. The code that actually runs
+#
+# Shown from the modules rather than copied into cells: a notebook that pastes the
+# orchestration is a second copy that drifts, and the whole argument for
+# `src/biodiv/maptask.py` is that there is exactly one tile loop. `inspect.getsource` keeps
+# this section honest — if it disagrees with the code, it is because the code changed.
+
+# %%
+import inspect                                         # noqa: E402
+
+from biodiv import maptask as mt                       # noqa: E402
+
+import importlib.util                                # noqa: E402
+
+_spec = importlib.util.spec_from_file_location("s73", ROOT / "scripts" / "73_map_inference.py")
+s73 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(s73)
+
+
+def show(obj, drop_doc=False):
+    src = inspect.getsource(obj)
+    if drop_doc:                    # the docstrings are the reasoning; keep them by default
+        src = re.sub(r'"""(?:.|\n)*?"""\n\s*', "", src, count=1)
+    print(src.rstrip())
+    print("-" * 100)
+
+
+print("### the load: one tile, whole archive span, on a THREAD pool")
+show(mt.load_tile)
+
+# %% [markdown]
+# `load_tile` is where the run died the first time at scale. `cfg.load_client` came from
+# `--workers`, whose default is 4, so `da.compute()` ran with no explicit scheduler — and
+# inside a dask worker that hands the graph back to the distributed scheduler already running
+# the task. Every tile returned
+# `FutureCancelledError ... scheduler-connection-lost`. The gateway path now forces
+# `load_client=False` so no command line can reintroduce it.
+
+# %%
+print("### the tile loop: curves, mask, ensemble, GeoTIFF, one row per year")
+show(mt.run_tile)
+
+# %%
+print("### the worker entry point, and the per-process state it caches")
+show(mt.run_tile_remote)
+show(mt.worker_state)
+
+# %% [markdown]
+# Two things in `worker_state` are the difference between a working worker and 5,769 failed
+# tiles: the ensemble is built once per process and keyed on the checkpoint bytes (rebuilding
+# five torch models per tile would be pure waste over hundreds of tiles), and
+# `configure_s3_access` is called again on the worker — not redundantly, because a worker that
+# joined after the client configured the cluster would otherwise read `usgs-landsat` unsigned
+# and get `AccessDenied` on every scene.
+
+# %%
+print("### raising the cluster, shipping the code, submitting the tiles")
+show(s73.fan_out_gateway)
+
+# %%
+print("### what gets shipped, and how the manifest stays resumable")
+show(s73.package_biodiv)
+show(s73.resume_done)
+
+# %% [markdown]
+# ## 4. One tile, end to end, right here
+#
+# The same `mt.run_tile` the workers call, on the Cauquenes pilot tile, for a single year so
+# the archive span is 2018–2020 and this finishes in a couple of minutes. No cluster is raised:
+# a second gateway cluster is what cost the production run its scheduler (§7), and the point
+# here is the tile path, not the fan-out.
+
+# %%
+import os                                              # noqa: E402
+import tempfile                                        # noqa: E402
+
+# `training_targets` reads the unified target tables; both are needed for the range clipping
+os.environ["BIODIV_UNIFIED"] = "1"
+os.environ["BIODIV_CURVES"] = "_raw100"
+
+import datacube                                        # noqa: E402
+from datacube.utils.aws import configure_s3_access     # noqa: E402
+
+from biodiv import mapinfer as mi                      # noqa: E402
+
+# Not optional and not idempotent-by-luck: `usgs-landsat` is requester-pays, and without this
+# every scene read comes back RasterioIOError('AccessDenied'). It has to happen before the
+# Datacube is built -- the same boot order `scripts/73` and `scripts/35` follow.
+configure_s3_access(aws_unsigned=False, requester_pays=True)
+
+CKPT = ROOT / ("results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_"
+               "maekndvi_m06_ctr_FINAL_alldata/final")
+OOF = ROOT / ("results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_"
+              "maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv")
+
+ens = mi.FacetEnsemble(sorted(CKPT.glob("model_seed*.pt")))
+resid = mi.oof_residuals_scaled(OOF, ens.members[0].scaler, ens.targets)
+y_train = mi.training_targets(ROOT / "data" / "derived", ens.targets)
+perm = mi.serpentine_perm(mi.NGS)
+print(f"{len(ens.members)} seeds | targets {ens.targets}")
+print(f"context ({len(ens.context_columns)}): {ens.context_columns}")
+print(f"smearing residuals usable per target: {np.isfinite(resid).sum(axis=0).tolist()}")
+
+# %%
+dc = datacube.Datacube(app="nb10-one-tile")
+out = Path(tempfile.mkdtemp(prefix="nb10_"))
+
+TILE_M = 9990
+tile = dict(tile_id="t18_600", xmin=18 * TILE_M, ymin=600 * TILE_M,
+            xmax=19 * TILE_M, ymax=601 * TILE_M)
+cfg = mt.TileConfig(
+    years=(2020,), dest=str(out), resolution=30, area_m2=900.0, stratum="basal",
+    mask="mapbiomas", batch=8192, load_threads=4, load_client=False, torch_threads=0,
+    tags=dict(tag="notebook_10_demo", years="2020-2020", area_m2=900.0, stratum="basal",
+              smearing="oof", clip=True,
+              caveat=("predicted values are conditional means and under-disperse the upper "
+                      "tail; use as a relative surface")))
+
+rows = mt.run_tile(dc, tile, cfg, ens, resid, y_train, perm)
+if rows and rows[0].get("status") == "ok":
+    display(pd.DataFrame(rows)[["tile_id", "year", "status", "n_px", "n_native", "n_pred",
+                                "n_dates_window", "seconds", "load_seconds"]])
+else:
+    # Say which tile and why, instead of failing three cells later on a missing variable
+    raise RuntimeError(f"the demo tile did not produce a raster: {rows}")
+
+# %% [markdown]
+# `n_pred` below `n_native` would mean pixels that are native but have no complete 100-step
+# curve; here they coincide. `load_seconds` is small only because the span is three years —
+# the production tiles carry 1998–2026 and pay ~1,100 s.
+
+# %%
+import matplotlib.pyplot as plt                        # noqa: E402
+import rasterio                                        # noqa: E402
+
+tif = Path(rows[0]["file"])
+with rasterio.open(tif) as src:
+    bands = {n: src.read(i) for i, n in enumerate(src.descriptions, 1)}
+    tags = src.tags()
+
+fig, axes = plt.subplots(1, 4, figsize=(17, 4.6))
+for ax, name, cmap in zip(axes, ["td_inext_q0", "pd_inext_q0", "lcbd_count_sorensen", "n_obs"],
+                          ["viridis", "viridis", "magma", "cividis"]):
+    a = bands[name]
+    finite = a[np.isfinite(a)]
+    im = ax.imshow(a, cmap=cmap,
+                   vmin=np.percentile(finite, 2) if finite.size else None,
+                   vmax=np.percentile(finite, 98) if finite.size else None)
+    ax.set_title(name, fontsize=10)
+    ax.set_xticks([]); ax.set_yticks([])
+    fig.colorbar(im, ax=ax, fraction=0.046)
+fig.suptitle(f"t18_600, {tags['year']} -- three published facets and the observation count\n"
+             f"white = not native vegetation (MapBiomas {tags['map_year']}) or no complete curve",
+             fontsize=10)
+fig.tight_layout()
+plt.show()
+
+# %%
+# The three publishable facets against the plot range they were trained on: the maps
+# under-disperse the upper tail by construction (docs/21 section 6), and this is where that
+# shows rather than a caveat to take on trust.
+tr = pd.DataFrame(y_train, columns=ens.targets)
+summary = []
+for t in ("td_inext_q0", "pd_inext_q0", "lcbd_count_sorensen"):
+    a = bands[t][np.isfinite(bands[t])]
+    summary.append(dict(facet=t, map_median=np.median(a), map_max=a.max(),
+                        train_median=tr[t].median(), train_max=tr[t].max()))
+display(pd.DataFrame(summary).set_index("facet").round(3))
+print("The map maximum sitting well below the training maximum is the compression, not a bug.")
+
+# %% [markdown]
+# ## 5. The budget, and why all 27 years
 #
 # Eight tiles spread from 30° to 55° S, ten years, measured on gateway workers
 # (`logs/calib_gateway.log`).
@@ -174,7 +345,7 @@ print("applied: < 20 -- 123 tiles, ~38 h, 0.01 % of the native area. Beyond that
 print("coverage traded for time, so it was left alone.")
 
 # %% [markdown]
-# ## 4. Equivalence, checked rather than assumed
+# ## 6. Equivalence, checked rather than assumed
 #
 # Two comparisons had to pass before any of this counted. The refactor that moved the tile loop
 # into the package must not change a value, and a tile computed on a gateway worker must equal
@@ -221,7 +392,7 @@ except Exception as e:                                  # noqa: BLE001
 # comparison run on four load threads. The gateway worker's output is **bitwise identical** to
 # the pod's, all ten bands.
 #
-# ## 5. What the allocation actually grants
+# ## 7. What the allocation actually grants
 #
 # Four requests, four answers (`logs/capacity_probe*.log`). The ceiling counts **pods**, not
 # cores, and a pod larger than a node never schedules.
@@ -246,7 +417,7 @@ print("allocations on offer (CSIRO, DO) belong to other institutions.")
 # about that many appears to have cost the first cluster its scheduler. The run was restarted
 # from the manifest; the second cluster was not attempted again.
 #
-# ## 6. The four failures, and what each cost
+# ## 8. The four failures, and what each cost
 #
 # | failure | cause | fix |
 # |---|---|---|
@@ -266,7 +437,7 @@ print("allocations on offer (CSIRO, DO) belong to other institutions.")
 # asked for, so torch is pinned explicitly or it opens 16 threads against a 2-core quota.
 
 # %% [markdown]
-# ## 7. Where the run is now
+# ## 9. Where the run is now
 #
 # Two halves of a disjoint split, sized to the concurrency each side has: the gateway takes
 # 3,462 tiles on 5 workers of 8 cores (4 tiles each), the pod takes 2,307 on 14 processes.
@@ -305,7 +476,7 @@ except Exception as e:                                  # noqa: BLE001
 # nearly balanced: the two halves finish within hours of each other. When one finishes it can be
 # relaunched with `--resume` over the full list and will pick up whatever the other has not done.
 #
-# ## 8. What is still owed, and by when
+# ## 10. What is still owed, and by when
 #
 # The scratch bucket is deleted after 30 days. The tile-year GeoTIFFs are intermediates and are
 # meant to expire; what has to survive is the annual mosaics of the three publishable facets
