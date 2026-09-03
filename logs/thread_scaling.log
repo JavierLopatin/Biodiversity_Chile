@@ -1,0 +1,7 @@
+ tile km  threads         px   dates   load s  peak GB  vs 1 thr
+/env/lib/python3.12/site-packages/rasterio/warp.py:385: NotGeoreferencedWarning: Dataset has no geotransform, gcps, or rpcs. The identity matrix will be returned.
+  dest = _reproject(
+      10        4    110,889    1812    643.3      2.4      2.9x
+      10        8    110,889    1812    561.6      3.1      3.4x
+      10       16    110,889    1812    555.9      3.7      3.4x
+      10       24    110,889    1812    559.4      4.3      3.4x

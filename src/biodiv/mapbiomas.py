@@ -35,6 +35,7 @@ windows it gives 84,301 / 83,747 / 83,153 km2.
 
 from __future__ import annotations
 
+import os
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -47,6 +48,15 @@ from rasterio.windows import from_bounds
 ROOT = Path(__file__).resolve().parents[2]
 MB_DIR = ROOT / "MapBiomas"
 LEGEND_CSV = MB_DIR / "legend.csv"
+
+#: Environment override for where the annual rasters live. It exists because tile inference
+#: runs on dask-gateway workers and those cannot see the home directory (measured,
+#: ``logs/gw_probe.log``): the 3.6 GB of rasters are copied once to the scratch bucket and the
+#: workers are pointed at that prefix. Accepts a local directory or an ``s3://`` prefix -- GDAL
+#: reads a window straight out of S3, and the rasters are tiled 512x512 with overviews, so a
+#: tile-sized window fetches only its own blocks (measured: 0.68 s for a 557 x 557 window).
+#: ``legend.csv`` is deliberately not moved: it names classes, it never builds the mask.
+RASTERS_DIR_ENV = "BIODIV_MAPBIOMAS_DIR"
 
 #: Native vegetation. Forest (3 and its three subclasses), wetland, grassland, steppe,
 #: shrubland. Rocky outcrop (29) is a natural non-forest formation but is **not vegetation**
@@ -70,22 +80,48 @@ def class_name(code: int) -> str:
     return str(lg.loc[code, "name"]) if code in lg.index else f"UNKNOWN_{code}"
 
 
-@lru_cache(maxsize=1)
-def available_years() -> dict[int, Path]:
-    """Year -> raster path, for the annual maps actually present on disk.
+def rasters_dir() -> str:
+    """Local directory or ``s3://`` prefix holding the annual rasters."""
+    return os.environ.get(RASTERS_DIR_ENV) or str(MB_DIR)
+
+
+@lru_cache(maxsize=4)
+def _scan(directory: str) -> tuple[tuple[int, str], ...]:
+    """``(year, path)`` for every annual raster under ``directory``.
+
+    Cached on the directory rather than on nothing, so that pointing the process at the
+    scratch prefix mid-run re-scans instead of serving the local listing.
+    """
+    if directory.startswith("s3://"):
+        import boto3
+        bucket, _, prefix = directory[len("s3://"):].partition("/")
+        prefix = prefix.rstrip("/") + "/"
+        pages = boto3.client("s3").get_paginator("list_objects_v2")
+        names = [o["Key"][len(prefix):]
+                 for page in pages.paginate(Bucket=bucket, Prefix=prefix)
+                 for o in page.get("Contents", [])]
+        base = directory.rstrip("/")
+        found = {n: f"{base}/{n}" for n in names if n.endswith(".tif") and "/" not in n}
+    else:
+        found = {f.name: str(f) for f in sorted(Path(directory).glob("*.tif"))}
+    out = {}
+    for name, path in sorted(found.items()):
+        m = re.match(r"(\d{4})_", name)
+        if m:
+            out[int(m.group(1))] = path
+    return tuple(out.items())
+
+
+def available_years() -> dict[int, str]:
+    """Year -> raster path, for the annual maps actually present.
 
     Files are named ``<year>_coverage_lclu_<version>_<uuid>.tif``; the uuid differs per year,
     so the year has to be parsed rather than formatted into a template.
     """
-    out = {}
-    for f in sorted(MB_DIR.glob("*.tif")):
-        m = re.match(r"(\d{4})_", f.name)
-        if m:
-            out[int(m.group(1))] = f
-    return out
+    return dict(_scan(rasters_dir()))
 
 
-def year_map(year: int) -> tuple[Path, int, int]:
+def year_map(year: int) -> tuple[str, int, int]:
     """``(path, year_used, delta)`` for ``year``, falling back to the nearest available map.
 
     ``delta`` is signed years of displacement and is recorded per sample, so that how far a
@@ -94,14 +130,14 @@ def year_map(year: int) -> tuple[Path, int, int]:
     """
     have = available_years()
     if not have:
-        raise FileNotFoundError(f"no MapBiomas rasters in {MB_DIR}")
+        raise FileNotFoundError(f"no MapBiomas rasters in {rasters_dir()}")
     if year in have:
         return have[year], year, 0
     nearest = min(have, key=lambda y: (abs(y - year), y))
     return have[nearest], nearest, nearest - year
 
 
-def _read(path: Path, bounds_ll: tuple[float, float, float, float]) -> np.ndarray:
+def _read(path: str | Path, bounds_ll: tuple[float, float, float, float]) -> np.ndarray:
     """Windowed read of one annual map.
 
     Always windowed: the rasters are 144,896 x 34,599 px, so a full read is ~5e9 pixels and

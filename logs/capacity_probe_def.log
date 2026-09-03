@@ -1,0 +1,6 @@
+asked for 8 workers x 8 core / 28 GB
+      0s  workers: 0
+     90s  workers: 5
+
+peak 5 of 8 asked (40 cores)
+probe cluster shut down

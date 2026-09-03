@@ -37,7 +37,7 @@ debe cerrar el viaje de ida y vuelta. No se produce ningún mapa si esa compuert
 | D9 | retransformación | por semilla: clip al rango de entrenamiento en el espacio Yeo-Johnson, **Duan smearing con los residuos OOF del run block20 de la misma configuración** (`--oof-csv`, por defecto), clip al rango observado, y promedio de las 5 semillas | LCBD tiene λ ≈ −4.205 y escala 3,5e-6: sin clip un z fuera de rango explota. Medido en la compuerta (pod, 2026-09-02): la inversa simple pierde 0,25 de R² in-sample en TD₀ (0,50 → 0,74; λ = −2,2) y 0,04 en PD₀; sin smearing no se publica |
 | D13 | facetas que se publican | **LCBD, PD₀ y TD₀**; las cuatro facetas ponderadas (PD₁, PD₂, TD₁, TD₂) se escriben en los GeoTIFF por tesela para diagnóstico pero no se mosaican ni se publican | su R² de block-CV es ≤ 0,04 o negativo (referencia recalculada del OOF: PD₁ −0,010, PD₂ +0,040, TD₁ −0,181, TD₂ −0,090): sin habilidad validada. Por defecto salvo indicación del autor |
 | D10 | salida | un GeoTIFF por (tesela, año), 10 bandas float32: 7 facetas + `n_obs` + `span_days` + `native`; deflate, tiled; tags con todas las decisiones; `manifest.csv` reanudable | mosaico anual por `gdalbuildvrt` después |
-| D11 | cómputo | CPU (el pod no tiene GPU: 32 cores, 123 GB); dask local para el piloto, dask-gateway (workers de 8 cores / 28 GB) para la corrida completa | recon del pod |
+| D11 | cómputo | CPU (no hay GPU). El piloto en el pod; la corrida completa en **dask-gateway, una tesela entera por tarea**. El pod hoy da 36 núcleos y **64 GiB** (no los 123 GB de la primera recon: encogió), y ese es el techo que el gateway rompe | §8 |
 | D12 | despliegue | **piloto primero**: una tesela con 52 parcelas (Cauquenes, −36,0/−72,4), todos los años, medida en segundos/tesela y comparada con los valores de parcela; con eso se decide extensión final y resolución | elección del autor (Q3) |
 
 ## 3. Tamaño del problema (medido en el pod, MapBiomas 2024, decimado 10×)
@@ -125,3 +125,116 @@ píxel es solo una lectura de coherencia.
   escalador) es la que dice si eso importa.
 - `ck["rows"]` son las etiquetas de fila de la imagen serpentine, no las columnas de
   contexto; las columnas de contexto salen de `ck["ctx_preprocessor"].columns_`.
+
+---
+
+## 8. Dónde corre la inferencia, y por qué ahí (medido 2026-09-03)
+
+La primera versión de `scripts/73 --jobs N` repartía teselas entre procesos hijos del pod y
+cada hijo cargaba su tesela. Las tres mediciones de abajo desarmaron dos supuestos de ese
+diseño y llevaron la corrida completa al gateway. Ninguna es una estimación.
+
+### 8.1 La carga no escala con hilos: el GIL, no la red
+
+Una tesela de 10 km, 1.812 fechas, span 1998-2026 (`logs/thread_scaling.log`,
+`logs/load_scaling.log`):
+
+| hilos | carga | vs 1 hilo | RSS pico |
+|---|---|---|---|
+| 1 (síncrono) | 1.892 s | 1,0x | — |
+| 4 | 643 s | 2,9x | 2,4 GB |
+| 8 | 562 s | 3,4x | 3,1 GB |
+| 16 | 556 s | 3,4x | 3,7 GB |
+| 24 | 559 s | 3,4x | 4,3 GB |
+| 8 **procesos** | 304 s | 6,2x | — |
+
+La carga es 96 % costo fijo (1.847 s + 765 s/Mpx): es abrir ~1.800 cabeceras COG, no mover
+bytes. Pero **los hilos se aplanan en 4 y no pasan de 3,4x**, mientras ocho *procesos* dan
+6,2x sobre la misma tesela: GDAL parsea esas cabeceras sosteniendo el GIL. La consecuencia de
+diseño es directa —el paralelismo que paga es **un proceso por tesela**, con apenas 4 hilos
+adentro— y corrige lo que este documento y el docstring de `scripts/73` afirmaban antes, que
+los hilos escalaban casi linealmente.
+
+### 8.2 Un cluster por tesela acelera la parte chica
+
+Con 10 años objetivo, una tesela son ~300 s de carga contra ~1.100 s de CNN
+(`--torch-threads 1`); con 27 años, ~300 s contra ~3.000 s. Un cluster dedicado a la carga
+ataca entre el 9 % y el 21 % del trabajo y deja sus workers ociosos el resto —la misma
+patología que el piloto ya mostró (§6)—. Por eso el gateway recibe la **tesela entera**
+(carga + curvas + CNN + escritura), no la carga.
+
+### 8.3 Qué ve un worker del gateway (`logs/gw_probe.log`)
+
+| | worker |
+|---|---|
+| recursos por defecto | 16 núcleos, 28 GB |
+| home / repo / MapBiomas | **no visibles** |
+| `torch` | 2.12.0+cpu |
+| índice ODC | accesible (43 productos; el gateway inyecta `DB_*`) |
+| versiones | numpy 2.3.5, pandas 3.0.3, rasterio 1.5.0, sklearn 1.8.0, datacube 1.9.18 |
+
+La imagen del worker es **idéntica a la del pod**, versión por versión. Eso cierra la
+advertencia de §7 sobre los pickles de `PowerTransformer` escritos con scikit-learn 1.3.1:
+se leen en el worker exactamente como en el pod, y no hay una segunda combinación de
+versiones que auditar.
+
+Lo que el worker no tiene se le manda: el paquete `biodiv` como zip (`Client.upload_file`)
+—con `scripts/03_extract_topography.py` adentro como `biodiv/_terrain_src.py`, porque
+`load_terrain` lee `terrain()` de ese script por ruta para que siga siendo la única fuente de
+las derivadas topográficas, y una carga por ruta no alcanza el interior de un zip; la copia se
+reconstruye del script vivo en cada corrida, así que no pueden divergir dentro de una—,
+los cinco checkpoints como bytes en un `Payload` difundido una vez —no viajando con cada una
+de las ~5.900 tareas—, MapBiomas leído del bucket de scratch (`BIODIV_MAPBIOMAS_DIR`, ventana
+de 557×557 en 0,68 s porque los rasters son tiled 512×512 con overviews) y los GeoTIFF
+escritos de vuelta al scratch. El worker devuelve solo la fila del manifest.
+
+**El bucle por tesela vive en `src/biodiv/maptask.py`, no en el script.** La compuerta de
+`scripts/74` produce mapas solo si el camino de mapa reproduce exactamente el de
+entrenamiento, y esa prueba no vale nada si el código que la compuerta revisó no es el que
+corrieron los workers. Driver local y worker importan la misma función.
+
+**El scratch se borra a los 30 días.** Los mosaicos anuales de las tres facetas publicables
+(D13: LCBD, PD₀, TD₀) hay que generarlos y bajarlos dentro de esa ventana; los GeoTIFF por
+tesela-año con las siete facetas son intermedios y no sobreviven a propósito.
+
+### 8.4 Presupuesto medido, y la corrida que se lanzó (2026-09-03)
+
+Ocho teselas repartidas de 30° a 55°S, 10 años, 8 workers de 2 núcleos
+(`logs/calib_gateway.log`), medianas por tesela:
+
+| pieza | mediana | rango |
+|---|---|---|
+| carga Landsat 1998-2026, una vez por tesela | **1.102 s** | 553-1.777 |
+| trabajo por año | **28 s** | 1,6-56 |
+| inferencia por píxel-año | 0,52 ms | — |
+
+**La carga es el ~80 % de la tesela, no la CNN.** Eso invierte el supuesto de §6, que salía
+de un piloto con torch sobre los 36 núcleos del pod; un worker recibe 2. La consecuencia es
+la que decidió el alcance: la carga se paga una vez cubra la tesela 10 años o 27, así que
+**27 años cuestan 35 % más que 10, no 2,7x** (3.059 contra 2.268 horas-tesela). Recortar años
+ahorra poco y cuesta casi toda la serie temporal.
+
+Cobertura nativa por tesela, sobre la misma grilla decimada de `scripts/76`
+(`results/figures/tiles_native_10km_cover.csv`): mediana 1.532 píxeles de ~3.000 posibles.
+La sospecha de que muchas teselas retenidas estaban casi vacías **era falsa** —la
+distribución está cargada hacia teselas llenas—; t16_455, que pagó 1.102 s de carga para 271
+píxeles, es la excepción. Descartar las de menos de 20 píxeles nativos saca 123 teselas
+(2,1 %), ahorra ~38 h y pierde 0,01 % del área: se aplicó, y el resto no, porque a partir de
+ahí ya se cambia cobertura por tiempo.
+
+Lo que corre (decisiones del autor, 2026-09-03):
+
+```bash
+python scripts/73_map_inference.py \
+    --tiles-file results/figures/tiles_native_10km_run.csv --years 2000-2026 \
+    --area-m2 900 --stratum basal --mask mapbiomas \
+    --gw-workers 128 --worker-cores 2 --worker-memory 8 --worker-threads 1 \
+    --load-threads 4 --dest s3://<scratch>/biodiv/maps/chile_30m_2000_2026 \
+    --mapbiomas-dir s3://<scratch>/biodiv/MapBiomas \
+    --out results/maps --tag chile_full_30m --resume
+```
+
+5.769 teselas, 27 años, ~191 GB de salida en el scratch. Con los 128 workers concedidos en
+pleno es ~1 día; con menos, proporcionalmente más. **Pendiente y con plazo:** los mosaicos
+anuales de LCBD, PD₀ y TD₀ hay que construirlos y bajarlos antes de que el scratch expire a
+los 30 días.
