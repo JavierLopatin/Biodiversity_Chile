@@ -152,6 +152,11 @@ def main() -> None:
                    help="tiles a gateway worker runs at once. Keep at 1: concurrent tiles in "
                         "one process share a GIL, and the load is GIL-bound (8 threads buy "
                         "3.4x, 8 processes buy 6.2x)")
+    p.add_argument("--gw-batch", type=int, default=250, dest="gw_batch",
+                   help="tiles submitted to the gateway at a time. Submitting all of them at "
+                        "once means losing the scheduler cancels every pending tile: that "
+                        "happened twice, costing 3,434 and then 3,320 tiles. A wave bounds "
+                        "the loss to itself, and --resume picks the rest up. 0 = all at once")
     p.add_argument("--dest", default="",
                    help="where the GeoTIFFs go: a local directory or an s3:// prefix. "
                         "Defaults to --out/--tag. Gateway workers cannot see the home "
@@ -427,34 +432,46 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
                              resid=resid, y_train=y_train)
         pay = client.scatter(payload, broadcast=True)
 
-        futures = {}
-        for t in tiles.itertuples(index=False):
-            skip = tuple(y for y in cfg.years if (t.tile_id, y) in done)
-            if len(skip) == len(cfg.years):
-                continue
-            futures[client.submit(mt.run_tile_remote, t._asdict(), pay, cfg, skip,
-                                  key=f"tile-{t.tile_id}", pure=False)] = t.tile_id
-        print(f"submitted {len(futures)} tiles", flush=True)
+        todo = [t._asdict() for t in tiles.itertuples(index=False)
+                if any((t.tile_id, y) not in done for y in cfg.years)]
+        batch = args.gw_batch or len(todo)
+        print(f"{len(todo)} tiles to run, in waves of {batch}", flush=True)
 
         t0 = time.time()
-        n_ok = n_err = 0
-        for i, fut in enumerate(as_completed(list(futures)), 1):
-            tile_id = futures[fut]
+        n_ok = n_err = i = 0
+        for start in range(0, len(todo), batch):
+            wave = todo[start:start + batch]
+            futures = {client.submit(mt.run_tile_remote, tl, pay, cfg,
+                                     tuple(y for y in cfg.years if (tl["tile_id"], y) in done),
+                                     key=f"tile-{tl['tile_id']}", pure=False): tl["tile_id"]
+                       for tl in wave}
             try:
-                rows = fut.result()
+                for fut in as_completed(list(futures)):
+                    tile_id = futures[fut]
+                    try:
+                        rows = fut.result()
+                    except Exception as e:                           # noqa: BLE001
+                        rows = [dict(tile_id=tile_id, year=y, status="error",
+                                     error=f"{type(e).__name__}: {str(e)[:200]}")
+                                for y in cfg.years]
+                    _append(man_path, rows)
+                    bad = [r for r in rows if r.get("status") != "ok"]
+                    n_err += bool(bad)
+                    n_ok += not bad
+                    i += 1
+                    el = time.time() - t0
+                    print(f"[{i}/{len(todo)}] {tile_id}: "
+                          f"{'ok' if not bad else bad[0].get('error', bad[0]['status'])}"
+                          f"  |  {n_ok} ok / {n_err} failed, {el / 60:.0f} min elapsed, "
+                          f"eta {el / i * (len(todo) - i) / 3600:.1f} h", flush=True)
             except Exception as e:                                   # noqa: BLE001
-                rows = [dict(tile_id=tile_id, year=y, status="error",
-                             error=f"{type(e).__name__}: {str(e)[:200]}") for y in cfg.years]
-            _append(man_path, rows)
-            bad = [r for r in rows if r.get("status") != "ok"]
-            n_err += bool(bad)
-            n_ok += not bad
-            el = time.time() - t0
-            print(f"[{i}/{len(futures)}] {tile_id}: "
-                  f"{'ok' if not bad else bad[0].get('error', bad[0]['status'])}"
-                  f"  |  {n_ok} ok / {n_err} failed, {el / 60:.0f} min elapsed, "
-                  f"eta {el / i * (len(futures) - i) / 3600:.1f} h", flush=True)
-            del fut
+                # The cluster went away mid-wave -- twice now, once with the hub rejecting the
+                # JupyterHub API token. Everything already written is in the manifest, so stop
+                # here and let --resume continue rather than grinding through thousands of
+                # cancellations, which is what the unbatched version did.
+                print(f"wave failed after {i} tiles ({type(e).__name__}: {str(e)[:160]}); "
+                      f"stopping so --resume can continue", flush=True)
+                raise
     finally:
         # Only tear down a cluster this run raised. A reused one may belong to another run --
         # the whole point of connecting instead of creating -- and shutting it down would do
