@@ -369,7 +369,19 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
         cfg.torch_threads = max(1, args.worker_cores)
         print(f"torch threads pinned to {cfg.torch_threads} (= --worker-cores)", flush=True)
 
-    cluster = gw.new_cluster(opts)
+    # Reuse an existing cluster rather than adding one. This is not tidiness: raising a second
+    # cluster on this hub is what cost this very run its scheduler and 3,434 in-flight tiles
+    # -- five more 8-core pods on an allocation with room for about that many. Creating
+    # unconditionally made that possible; connecting makes it impossible. (Pattern taken from
+    # `~/Mangles/1_Mangles_S2_upscale_clean_CSIRO_Bpanama-JH.ipynb`, which had it right.)
+    existing = [c for c in gw.list_clusters() if str(c.status) in ("2", "ClusterStatus.RUNNING")]
+    if existing:
+        cluster = gw.connect(existing[0].name)
+        ours = False
+        print(f"reusing running cluster {cluster.name}; not raising a second one", flush=True)
+    else:
+        cluster = gw.new_cluster(opts)
+        ours = True
     try:
         cluster.scale(args.gw_workers)
         client = cluster.get_client()
@@ -382,11 +394,15 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
         # Not all of it either, because one pod stuck pending would hold up the whole run.
         # (Tiles submitted before a worker joins are safe: `upload_file` registers a
         # scheduler-side plugin, so a late worker still gets the package.)
-        # Polled by hand rather than with `client.wait_for_workers`, which is a no-op on a
-        # gateway cluster: asked for 102 workers against a cluster holding 5, it returned in
-        # 1.9 s. Waiting matters because the hub grants pods gradually and may not grant them
-        # all -- 128 were asked for and 5 arrived -- so the run should start on the cluster it
-        # is actually going to have, and say what that is.
+        # Polled by hand against the live worker list rather than with
+        # `client.wait_for_workers`, which on a gateway cluster is satisfied by the count that
+        # was *requested* and not by the workers actually up: asked for 102 against a cluster
+        # scaled to 128 but holding 5, it returned in 1.9 s, and the run started on 5 workers.
+        # (It does block when the request exceeds the cluster's own target -- 25 against a
+        # cluster scaled to 5 raises WorkerStartTimeoutError -- so the trap is specifically a
+        # scale request the hub has not filled.) Waiting matters because the hub grants pods
+        # gradually and may not grant them all, so the run should start on the cluster it is
+        # actually going to have, and say what that is.
         want = max(1, int(0.8 * args.gw_workers))
         deadline = time.time() + 1800
         got = 0
@@ -440,8 +456,14 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
                   f"eta {el / i * (len(futures) - i) / 3600:.1f} h", flush=True)
             del fut
     finally:
-        cluster.shutdown()
-        print("gateway cluster shut down")
+        # Only tear down a cluster this run raised. A reused one may belong to another run --
+        # the whole point of connecting instead of creating -- and shutting it down would do
+        # to that run exactly what a stray second cluster did to this one.
+        if ours:
+            cluster.shutdown()
+            print("gateway cluster shut down")
+        else:
+            print(f"leaving reused cluster {cluster.name} running: this run did not raise it")
     print(f"\n-> {cfg.dest}/ (<tile>_<year>.tif), manifest {man_path}")
 
 
