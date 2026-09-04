@@ -170,3 +170,6 @@ data/derived/phenoshape_doy_grid_*.parquet
 data/derived/phenoshape_doy_grid_*.csv
 data/derived/phenoshape_pixels_*.parquet
 data/derived/refit_report_*.csv
+
+# pidfile del publicador de estado: local, no versionable
+logs/.status_loop.pid

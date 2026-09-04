@@ -3476,6 +3476,6 @@ submitted 3462 tiles
 [3462/3462] t2_462: FutureCancelledError: tile-t2_462 cancelled for reason: already forgotten.  |  28 ok / 3434 failed, 56 min elapsed, eta 0.0 h
 gateway cluster shut down
 
--> s3://easido-prod-user-scratch/AROAT2ES654NDYC5GLXAR:jlopatin/biodiv/maps/chile_30m_2000_2026/ (<tile>_<year>.tif), manifest results/maps/chile_gw/manifest.csv
+-> s3://easido-prod-user-scratch/<user-scratch-prefix>/biodiv/maps/chile_30m_2000_2026/ (<tile>_<year>.tif), manifest results/maps/chile_gw/manifest.csv
 Unclosed client session
 client_session: <aiohttp.client.ClientSession object at 0x7f817bd6e4b0>
