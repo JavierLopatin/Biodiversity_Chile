@@ -430,7 +430,6 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
 
         payload = mt.Payload(ckpts=[(Path(c).name, Path(c).read_bytes()) for c in ckpts],
                              resid=resid, y_train=y_train)
-        pay = client.scatter(payload, broadcast=True)
 
         todo = [t._asdict() for t in tiles.itertuples(index=False)
                 if any((t.tile_id, y) not in done for y in cfg.years)]
@@ -441,6 +440,13 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
         n_ok = n_err = i = 0
         for start in range(0, len(todo), batch):
             wave = todo[start:start + batch]
+            # Re-broadcast per wave, not once for the whole run. Scattered once, the payload
+            # is a single dependency under ~3,300 tasks: when the worker holding it goes, every
+            # remaining tile fails instantly with `lost dependencies` -- which is exactly what
+            # happened, 3,255 tiles cancelled in 28 minutes. It is 800 kB; a broadcast per 250
+            # tiles costs nothing and confines that loss to one wave.
+            pay = client.scatter(payload, broadcast=True)
+            n_ok_before = n_ok
             futures = {client.submit(mt.run_tile_remote, tl, pay, cfg,
                                      tuple(y for y in cfg.years if (tl["tile_id"], y) in done),
                                      key=f"tile-{tl['tile_id']}", pure=False): tl["tile_id"]
@@ -472,6 +478,19 @@ def fan_out_gateway(args, tiles: pd.DataFrame, cfg, ckpts, resid, y_train,
                 print(f"wave failed after {i} tiles ({type(e).__name__}: {str(e)[:160]}); "
                       f"stopping so --resume can continue", flush=True)
                 raise
+
+            # A wave where nothing at all succeeded is a broken cluster, not 250 unlucky tiles,
+            # and it does not raise: the failures arrive as task *results*, one per future, so
+            # the loop above consumes them happily. Left alone the run grinds through every
+            # remaining wave in minutes, writes thousands of error rows and exits 0 -- and the
+            # supervisor, seeing tiles still to do, starts it again. That thrash produced
+            # 176,000 junk manifest rows before it was caught. Stop and let the supervisor
+            # rebuild the cluster instead.
+            if n_ok == n_ok_before and len(wave) > 1:
+                raise SystemExit(
+                    f"wave of {len(wave)} tiles produced no output at all "
+                    f"(last error: {bad[0].get('error') if bad else 'unknown'}); "
+                    f"stopping rather than burning through the remaining waves")
     finally:
         # Only tear down a cluster this run raised. A reused one may belong to another run --
         # the whole point of connecting instead of creating -- and shutting it down would do
