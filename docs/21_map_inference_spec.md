@@ -238,3 +238,37 @@ python scripts/73_map_inference.py \
 pleno es ~1 día; con menos, proporcionalmente más. **Pendiente y con plazo:** los mosaicos
 anuales de LCBD, PD₀ y TD₀ hay que construirlos y bajarlos antes de que el scratch expire a
 los 30 días.
+
+### 8.5 La corrida se detiene sola, y por qué (2026-09-04)
+
+El contenedor se reinició durante la noche y mató las dos mitades: los 14 procesos del pod
+—sus logs terminan a mitad de tesela, sin errores— y el driver del gateway. `setsid` protege
+de que termine la sesión que lanzó el trabajo, que es de lo que protegió dos veces; **no
+protege de que se reinicie el contenedor**, y nada que corra dentro de él puede hacerlo.
+
+La causa encaja con un **culler por inactividad**: última actividad interactiva a las 20:07,
+contenedor levantado de nuevo a las 01:51 cuando algo volvió a abrirlo. No está confirmado
+directamente —el hub responde 403 en `/hub/api/services` y `/info` con el token del pod— pero
+sí lo está el desajuste de fondo:
+
+> El servidor reporta actividad al hub (`JUPYTERHUB_ACTIVITY_URL`), y JupyterHub la mide por
+> **kernels y peticiones HTTP, no por CPU**. Quince procesos saturando 36 núcleos son
+> invisibles para esa métrica: a ojos del hub este servidor estaba ocioso mientras corría a
+> plena carga.
+
+Decisión del autor (2026-09-04): **aceptarlo y relanzar**, en vez de registrar actividad
+artificial contra `JUPYTERHUB_ACTIVITY_URL` —que sería derrotar a propósito un mecanismo de
+reparto en infraestructura compartida— o de pedir una exención a los admins. La consecuencia
+para el calendario hay que declararla: 4,2 días de cómputo se convierten en 7-10 días de
+calendario si se pierden ~6 h por noche.
+
+Lo que se relanza, una sola línea, idempotente (una mitad ya viva se deja en paz, porque
+lanzarla dos veces correría las mismas teselas en dos sitios y competiría por el manifiesto):
+
+```bash
+cd ~/temp/Biodiversity_Chile && scripts/start_maps.sh
+```
+
+`scripts/run_maps_supervised.sh <gateway|pod>` es el supervisor por mitad: cuenta lo que falta
+como las teselas sin sus 27 años escritos y relanza con `--resume` hasta que no queda ninguna.
+Un relanzamiento solo cuesta las teselas que estaban en vuelo.
