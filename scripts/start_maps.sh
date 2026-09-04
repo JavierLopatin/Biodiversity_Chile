@@ -28,6 +28,23 @@ echo "starting the map run ($(date -u +%F' '%H:%M:%S) UTC)"
 start_half gateway logs/chile_gw.log  "tiles_run_gateway"
 start_half pod     logs/chile_pod.log "tiles_run_pod.csv"
 
+# A status file the outside world can read. The machine that wakes this server hourly cannot
+# see into the pod, and nothing inside the pod outlives the pod, so progress is published to
+# results/maps/STATUS.json and read from there through the Jupyter contents API -- a read-only
+# GET, no kernel, no terminal. See scripts/write_status.py.
+# Guarded by a pidfile, not by pgrep: `pgrep -f` also matches whatever shell is running this
+# script when the pattern appears in its own command line, which reported the loop as already
+# running when nothing was.
+STATUS_PID=logs/.status_loop.pid
+if [ -r "$STATUS_PID" ] && kill -0 "$(cat "$STATUS_PID")" 2>/dev/null; then
+    echo "  status: already publishing (pid $(cat "$STATUS_PID"))"
+else
+    setsid nohup bash -c 'while :; do python scripts/write_status.py >/dev/null 2>&1; sleep 300; done' \
+        > /dev/null 2>&1 < /dev/null &
+    echo $! > "$STATUS_PID"
+    echo "  status: publishing results/maps/STATUS.json every 5 min (pid $(cat "$STATUS_PID"))"
+fi
+
 sleep 2
 python - <<'PY'
 import glob
