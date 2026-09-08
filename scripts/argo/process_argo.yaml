@@ -1,0 +1,502 @@
+# biodiv-map-inference -- fan out scripts/73_map_inference.py over the tiles
+# still missing from S3.
+#
+#   argo submit -n easi-workflows-argo scripts/argo/process_argo.yaml \
+#     -p limit-tiles=50 -p num-chunks=10
+#
+# DAG: check-access (S3 credential smoke test) -> list-missing (S3 vs. the
+# tile list) -> split-tiles (into per-pod chunks) -> process-chunk (fan-out,
+# one pod per chunk). Steps hand off through Argo artifacts (S3-backed), not
+# a shared volume, so any pod can retry alone.
+#
+# MUST run inside the EASI Kubernetes cluster: the pipeline calls
+# datacube.Datacube() against the Data Cube Chile ODC index, which only
+# answers from inside EASI.
+#
+# ---------------------------------------------------------------------
+# Where the code comes from
+# ---------------------------------------------------------------------
+# git-sync pulls THIS repo (JavierLopatin/Biodiversity_Chile), which is now
+# public, so no git credential Secret is needed. It used to pull the slim
+# public mirror JavierLopatin/Biodiversity_argo-process; that mirror carried
+# scripts/73, src/biodiv/{mapbiomas,mapinfer,maptask} and the argo helpers
+# only because this repo was private, and it is redundant now -- the four
+# files were merged back here, so the mirror must not be the one that gets
+# edited any more.
+#
+# Two consequences of the switch, both deliberate:
+#   - the helper paths are scripts/argo/*.py here, not argo/*.py;
+#   - a --depth=1 clone of this repo is ~102 MB (data/derived is versioned)
+#     against ~0.5 MB for the mirror. That is per pod, so raising num-chunks
+#     raises it linearly. If it starts to matter, restrict git-sync with
+#     --sparse-checkout-file rather than reviving the mirror.
+#
+# The private inputs the run needs (model checkpoints, OOF predictions,
+# derived parquet, the tile list, the MapBiomas rasters) are NOT in git --
+# they are staged into the pod from S3 by an initContainer. One-time upload:
+# scripts/argo/upload_assets.sh.
+#
+# ---------------------------------------------------------------------
+# Credentials and data -- taken from the verified scripts/argo/test-s3-access.yaml
+# ---------------------------------------------------------------------
+# That workflow ran successfully with namespace easi-workflows-argo,
+# serviceAccountName easi-workflows-team-sa-argo, writing to
+# s3://easido-prod-dc-data-projects/easi-workflows-team/ and with NO aws
+# credential Secret mounted, so the service account carries the IAM role
+# (IRSA) for that bucket prefix. Every S3 path below lives under that same
+# prefix. Point s3-dest or s3-assets elsewhere and the IRSA grant is no
+# longer proven -- rerun test-s3-access.yaml against the new prefix first.
+#
+# ---------------------------------------------------------------------
+# Sizing a run
+# ---------------------------------------------------------------------
+#   limit-tiles  how many still-missing tiles list-missing picks up (0 = all)
+#   num-chunks   how many chunk files they are split into = pods launched
+#                (empty chunks are skipped, so really min(num-chunks, tiles))
+#   parallelism  how many of those pods run at once -- spec field below, not
+#                a -p parameter
+#
+# chunk-deadline-seconds is per POD, so it has to cover (tiles per pod) x
+# (minutes per tile), not one tile. Measured: ~15-17 min per tile x 27
+# years. 50 tiles / 10 chunks = 5 tiles per pod ~= 80 min, inside the 7200 s
+# below. 50/5 (10 tiles per pod, ~150 min) does NOT fit and the pods get
+# killed at the deadline -- that was the sizing of the 2026-09-08 run.
+#
+# Dedup: no separate progress tracker. list-missing runs
+# scripts/argo/tile_progress.py, which lists what is actually in S3 and only
+# treats a tile as done once every requested year exists there. The same
+# script gives a live progress check by hand:
+#
+#   python scripts/argo/tile_progress.py --tiles-csv results/figures/tiles_native_10km.csv \
+#     --s3-dest s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/maps/chile_30m_2000_2026 \
+#     --years 2000-2026
+#
+# ---------------------------------------------------------------------
+# Run history this file already accounts for
+# ---------------------------------------------------------------------
+# 2026-09-07 (biodiv-map-inference-4qb5h): wrong tiles-csv name, an undeclared
+# 'work' volume, and output artifacts with no archiveLocation (Argo fell back
+# to easido-prod-argo-artifacts-repo, which this service account cannot
+# write to). All three fixed below.
+#
+# 2026-09-08: all five chunks died at the 63-minute mark with
+#   rasterio.errors.RasterioIOError: The provided token has expired.
+# configure_s3_access pins literal credentials into GDAL's config and GDAL
+# cannot renew them from the projected service-account token, so pod lifetime
+# was capped at the role session. Fixed in the CODE, not here: scripts/73 and
+# maptask.run_tile_remote now re-resolve the credentials per tile. 21 of 50
+# tiles survived and list-missing skips them.
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: biodiv-map-inference-
+  namespace: easi-workflows-argo
+  labels:
+    name: biodiv-map-inference
+    owner: jlopatin
+    team: easi-workflows-team
+spec:
+  arguments:
+    parameters:
+    - name: base-image
+      value: 444488357543.dkr.ecr.us-west-2.amazonaws.com/easi-workflows-base-torch-cpu:develop.latest
+    - name: aws-image
+      value: amazon/aws-cli:2.17.62
+    - name: repo-url
+      value: https://github.com/JavierLopatin/Biodiversity_Chile.git
+    - name: repo-branch
+      value: main
+    - name: git-image
+      value: registry.k8s.io/git-sync/git-sync:v4.5.0
+    - name: db-config-secret
+      value: easi-odc-v2-user-db
+    - name: s3-dest
+      value: s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/maps/chile_30m_2000_2026
+    - name: s3-assets
+      value: s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/assets
+    - name: s3-mapbiomas
+      value: s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/MapBiomas
+    - name: tiles-csv-name
+      value: tiles_native_10km.csv
+    # docs/21 D3: the map is read as "expected diversity in a 900 m2 unit",
+    # one Landsat pixel. scripts/73 defaults --area-m2 to 500 (the pool's
+    # own p90), so leaving it unset silently produces a different map from
+    # the one the spec describes -- it must be passed explicitly.
+    - name: area-m2
+      value: '900'
+    - name: years
+      value: 2000-2026
+    - name: tag
+      value: argo-test1
+    - name: limit-tiles
+      value: '50'
+    - name: num-chunks
+      value: '10'
+    - name: chunk-deadline-seconds
+      value: '7200'
+  artifactGC:
+    serviceAccountName: easi-workflows-team-sa-argo
+    strategy: OnWorkflowDeletion
+  entrypoint: main
+  parallelism: 5
+  podGC:
+    strategy: OnWorkflowSuccess
+  serviceAccountName: easi-workflows-team-sa-argo
+  templates:
+  - dag:
+      tasks:
+      - arguments: {}
+        name: check-access
+        template: check-access
+      - arguments: {}
+        depends: check-access
+        name: list-missing
+        template: list-missing
+      - arguments:
+          artifacts:
+          - from: '{{tasks.list-missing.outputs.artifacts.missing-csv}}'
+            name: missing-csv
+        depends: list-missing
+        name: split-tiles
+        template: split-tiles
+      - arguments:
+          artifacts:
+          - from: '{{tasks.split-tiles.outputs.artifacts.chunks}}'
+            name: chunks
+          parameters:
+          - name: chunk-id
+            value: '{{item}}'
+        depends: split-tiles
+        name: process-chunk
+        template: process-chunk
+        withParam: '{{tasks.split-tiles.outputs.parameters.chunk-ids}}'
+    inputs: {}
+    metadata: {}
+    name: main
+    outputs: {}
+  - inputs: {}
+    metadata: {}
+    name: check-access
+    outputs: {}
+    script:
+      command:
+      - sh
+      image: '{{workflow.parameters.aws-image}}'
+      name: ''
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 200m
+          memory: 256Mi
+      source: |
+        set -eux
+        echo "biodiv-map-inference {{workflow.name}}" > /tmp/preflight.txt
+        aws s3 cp /tmp/preflight.txt "{{workflow.parameters.s3-dest}}/_preflight/{{workflow.name}}.txt"
+        aws s3 ls "{{workflow.parameters.s3-assets}}/tiles/{{workflow.parameters.tiles-csv-name}}"
+  - container:
+      args:
+      - |
+        python /git/repo/scripts/argo/tile_progress.py \
+          --tiles-csv "/work/assets/tiles/{{workflow.parameters.tiles-csv-name}}" \
+          --s3-dest "{{workflow.parameters.s3-dest}}" \
+          --years "{{workflow.parameters.years}}" \
+          --limit "{{workflow.parameters.limit-tiles}}" \
+          --out /work/missing_tiles.csv
+      command:
+      - bash
+      - -c
+      env:
+      # src layout: `import biodiv` resolves from /git/repo/src, not the repo
+      # root. scripts/73 inserts it itself, this covers anything else that
+      # imports the package (scripts/argo/check_scaler.py).
+      - name: PYTHONPATH
+        value: /git/repo/src
+      image: '{{workflow.parameters.base-image}}'
+      name: ''
+      resources:
+        limits:
+          cpu: 1750m
+          memory: 3584Mi
+        requests:
+          cpu: 1750m
+          memory: 3584Mi
+      volumeMounts:
+      - mountPath: /work
+        name: work
+      - mountPath: /git
+        name: git-data
+    initContainers:
+    - args:
+      - |
+        exec /git-sync \
+          --repo="{{workflow.parameters.repo-url}}" \
+          --ref="{{workflow.parameters.repo-branch}}" \
+          --root=/git --link=repo --one-time --depth=1
+      command:
+      - /bin/sh
+      - -c
+      image: '{{workflow.parameters.git-image}}'
+      imagePullPolicy: IfNotPresent
+      name: git-sync
+      resources: {}
+      volumeMounts:
+      - mountPath: /git
+        name: git-data
+    - args:
+      - |
+        set -eux
+        mkdir -p /work/assets/tiles
+        aws s3 cp \
+          "{{workflow.parameters.s3-assets}}/tiles/{{workflow.parameters.tiles-csv-name}}" \
+          /work/assets/tiles/
+      command:
+      - sh
+      - -c
+      image: '{{workflow.parameters.aws-image}}'
+      name: stage-tiles
+      resources: {}
+      volumeMounts:
+      - mountPath: /work
+        name: work
+    inputs: {}
+    metadata: {}
+    name: list-missing
+    outputs:
+      artifacts:
+      - name: missing-csv
+        path: /work/missing_tiles.csv
+    retryStrategy:
+      limit: 2
+      retryPolicy: OnError
+    volumes:
+    - emptyDir: {}
+      name: git-data
+    - name: work
+      emptyDir: {}
+    archiveLocation:
+      archiveLogs: true
+      s3:
+        bucket: easido-prod-dc-data-projects
+        endpoint: s3.amazonaws.com
+        key: easi-workflows-team/biodiv/argo-artifacts/{{workflow.name}}/{{pod.name}}
+  - container:
+      args:
+      - |
+        import csv, json, math, os
+
+        rows = list(csv.reader(open("/work/missing_tiles.csv")))
+        header, rows = rows[0], rows[1:]
+        n = int(os.environ["NUM_CHUNKS"])
+        os.makedirs("/work/chunks", exist_ok=True)
+        size = math.ceil(len(rows) / n) if rows else 0
+        ids = []
+        for i in range(n):
+            part = rows[i * size:(i + 1) * size] if size else []
+            if not part:
+                continue
+            ids.append(str(i))
+            with open(f"/work/chunks/chunk_{i}.csv", "w", newline="") as f:
+                w = csv.writer(f)
+                w.writerow(header)
+                w.writerows(part)
+        json.dump(ids, open("/work/chunk_ids.json", "w"))
+      command:
+      - python
+      - -c
+      env:
+      - name: NUM_CHUNKS
+        value: '{{workflow.parameters.num-chunks}}'
+      image: '{{workflow.parameters.base-image}}'
+      name: ''
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      volumeMounts:
+      - mountPath: /work
+        name: work
+    inputs:
+      artifacts:
+      - name: missing-csv
+        path: /work/missing_tiles.csv
+    metadata: {}
+    name: split-tiles
+    outputs:
+      artifacts:
+      - name: chunks
+        path: /work/chunks
+      parameters:
+      - name: chunk-ids
+        valueFrom:
+          path: /work/chunk_ids.json
+    volumes:
+    - name: work
+      emptyDir: {}
+    archiveLocation:
+      archiveLogs: true
+      s3:
+        bucket: easido-prod-dc-data-projects
+        endpoint: s3.amazonaws.com
+        key: easi-workflows-team/biodiv/argo-artifacts/{{workflow.name}}/{{pod.name}}
+  - activeDeadlineSeconds: '{{workflow.parameters.chunk-deadline-seconds}}'
+    container:
+      args:
+      - |
+        set -uo pipefail
+        rc=0
+        python scripts/73_map_inference.py \
+          --tiles-file "/work/chunks/chunk_{{inputs.parameters.chunk-id}}.csv" \
+          --dest "{{workflow.parameters.s3-dest}}" \
+          --mapbiomas-dir "{{workflow.parameters.s3-mapbiomas}}" \
+          --ckpt-dir /work/assets/models/final \
+          --oof-csv /work/assets/models/oof_predictions.csv \
+          --derived /work/assets/derived \
+          --area-m2 "{{workflow.parameters.area-m2}}" \
+          --years "{{workflow.parameters.years}}" \
+          --out /work/out \
+          --resume \
+          --workers 0 \
+          --jobs 1 \
+          --device cpu \
+          --tag "{{workflow.parameters.tag}}-{{inputs.parameters.chunk-id}}" || rc=$?
+        # Post-mortem evidence. manifest.csv is the only per-(tile, year)
+        # record of status / n_pred / seconds / error, and run.json the only
+        # record of which checkpoints and settings produced the rasters.
+        # Both are written locally by the script, so without this copy they
+        # die with the pod and the GeoTIFFs in S3 have no provenance beside
+        # their own tags.
+        # Uploaded whether or not the run above succeeded: a failed chunk is
+        # exactly when the manifest's error rows are worth having.
+        python scripts/argo/upload_run_evidence.py /work/out \
+          "{{workflow.parameters.s3-dest}}/_runs/{{workflow.name}}/chunk-{{inputs.parameters.chunk-id}}" \
+          || echo "WARNING: run evidence was not uploaded" >&2
+        exit $rc
+      command:
+      - bash
+      - -c
+      env:
+      # src layout: `import biodiv` resolves from /git/repo/src, not the repo
+      # root. scripts/73 inserts it itself, this covers anything else that
+      # imports the package (scripts/argo/check_scaler.py).
+      - name: PYTHONPATH
+        value: /git/repo/src
+      - name: ODC_CONFIG_PATH
+        value: /secret/dc/.datacube.conf
+      - name: DATACUBE_CONFIG_PATH
+        value: /secret/dc/.datacube.conf
+      - name: BIODIV_UNIFIED
+        value: '1'
+      - name: BIODIV_CURVES
+        value: _raw100
+      # usgs-landsat is requester-pays. scripts/73 already calls
+      # configure_s3_access(aws_unsigned=False, requester_pays=True) before
+      # building the Datacube, and with --jobs 1 --workers 0 that runs in this
+      # very process -- but it only registers a DEFAULT rio config, which
+      # datacube activates per thread and which does not override a
+      # rasterio.Env already active on that thread. GDAL reads these from the
+      # environment directly, so setting them here holds on every thread.
+      - name: AWS_REQUEST_PAYER
+        value: requester
+      - name: AWS_DEFAULT_REGION
+        value: us-west-2
+      # Scene paths come out of the ODC index already resolved, so GDAL never
+      # needs to list a directory to find them. Turning the probe off drops a
+      # round trip per band AND means the role needs only s3:GetObject on
+      # usgs-landsat, not s3:ListBucket.
+      - name: GDAL_DISABLE_READDIR_ON_OPEN
+        value: EMPTY_DIR
+      image: '{{workflow.parameters.base-image}}'
+      name: ''
+      resources:
+        limits:
+          cpu: '7'
+          memory: 30Gi
+        requests:
+          cpu: '7'
+          memory: 30Gi
+      volumeMounts:
+      - mountPath: /work
+        name: work
+      - mountPath: /git
+        name: git-data
+      - mountPath: /secret/dc
+        name: db-config
+      workingDir: /git/repo
+    initContainers:
+    - args:
+      - |
+        exec /git-sync \
+          --repo="{{workflow.parameters.repo-url}}" \
+          --ref="{{workflow.parameters.repo-branch}}" \
+          --root=/git --link=repo --one-time --depth=1
+      command:
+      - /bin/sh
+      - -c
+      image: '{{workflow.parameters.git-image}}'
+      imagePullPolicy: IfNotPresent
+      name: git-sync
+      resources: {}
+      volumeMounts:
+      - mountPath: /git
+        name: git-data
+    - args:
+      - |
+        set -eux
+        mkdir -p /work/assets
+        aws s3 sync "{{workflow.parameters.s3-assets}}/models"  /work/assets/models
+        aws s3 sync "{{workflow.parameters.s3-assets}}/derived" /work/assets/derived
+      command:
+      - sh
+      - -c
+      image: '{{workflow.parameters.aws-image}}'
+      name: stage-assets
+      resources: {}
+      volumeMounts:
+      - mountPath: /work
+        name: work
+    inputs:
+      artifacts:
+      - name: chunks
+        path: /work/chunks
+      parameters:
+      - name: chunk-id
+    metadata:
+      annotations:
+        karpenter.sh/do-not-disrupt: 'true'
+    name: process-chunk
+    outputs:
+      artifacts:
+      - name: run-evidence
+        optional: true
+        path: /work/out
+    retryStrategy:
+      limit: 2
+      retryPolicy: OnError
+    volumes:
+    - emptyDir: {}
+      name: git-data
+    - name: db-config
+      secret:
+        items:
+        - key: .datacube.conf
+          path: .datacube.conf
+        secretName: '{{workflow.parameters.db-config-secret}}'
+    - name: work
+      emptyDir: {}
+    archiveLocation:
+      archiveLogs: true
+      s3:
+        bucket: easido-prod-dc-data-projects
+        endpoint: s3.amazonaws.com
+        key: easi-workflows-team/biodiv/argo-artifacts/{{workflow.name}}/{{pod.name}}
+  # artifactGC is OnWorkflowDeletion, so this is also the window in which
+  # `argo cp ... --artifact-name run-evidence` still works. 240 s was not
+  # enough to open a finished run; the S3 copy under _runs/ survives either
+  # way, this only governs the Argo-side copy.
+  ttlStrategy:
+    secondsAfterSuccess: 86400
