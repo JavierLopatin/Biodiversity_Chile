@@ -1,0 +1,43 @@
+{
+  "run_id": "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr",
+  "family": "C1D",
+  "scheme": "kfold_loc_time_unified",
+  "features": "topo+area",
+  "substrate": "curve1d",
+  "index": "kndvi",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "fusion": "late",
+  "model": "C1D-B",
+  "params": {
+    "rotation": "trough",
+    "normalize": "none",
+    "ctx": "topo+area",
+    "px": "center",
+    "loss": "huber",
+    "lr": 0.003,
+    "batch_size": 64,
+    "max_epochs": 300,
+    "patience": 25,
+    "augment": true,
+    "mixup": false,
+    "n_params": 14535
+  },
+  "notes": "C1D on curve1d",
+  "git": "de882e5e3980c223921df7b31e6e5d6df6c1ef41-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  }
+}
