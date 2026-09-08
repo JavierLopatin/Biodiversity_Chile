@@ -173,3 +173,11 @@ data/derived/refit_report_*.csv
 
 # pidfile del publicador de estado: local, no versionable
 logs/.status_loop.pid
+
+# --- Manuscrito ---
+# El repo es publico desde 2026-09-08 y el manuscrito no se publica con el.
+# Los .tex, refs.bib y los artefactos de LaTeX viven solo en el disco local;
+# `git rm -r --cached paper` los saco del indice sin tocarlos. El historial
+# anterior a este commit todavia los contiene: sacarlos de ahi seria una
+# reescritura con filter-repo, que no se ha hecho.
+paper/
