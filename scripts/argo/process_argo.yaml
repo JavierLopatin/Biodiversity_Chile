@@ -119,9 +119,10 @@ spec:
     - name: tiles-csv-name
       value: tiles_native_10km.csv
     # docs/21 D3: the map is read as "expected diversity in a 900 m2 unit",
-    # one Landsat pixel. scripts/73 defaults --area-m2 to 500 (the pool's
-    # own p90), so leaving it unset silently produces a different map from
-    # the one the spec describes -- it must be passed explicitly.
+    # one Landsat pixel. scripts/73 now defaults --area-m2 to 900 as well, so
+    # this parameter no longer guards against a silent mismatch with the spec;
+    # it is kept as a parameter so a diagnostic run can be submitted with a
+    # different area (e.g. 500, the pool's own p90) without editing the file.
     - name: area-m2
       value: '900'
     - name: years

@@ -106,8 +106,11 @@ def main() -> None:
     p.add_argument("--years", default="2000-2026")
     p.add_argument("--derived", default="data/derived")
     p.add_argument("--ckpt-dir", default=DEFAULT_CKPT, dest="ckpt_dir")
-    p.add_argument("--area-m2", type=float, default=500.0, dest="area_m2",
-                   help="plot area held constant for every pixel (median of the count pool)")
+    p.add_argument("--area-m2", type=float, default=900.0, dest="area_m2",
+                   help="plot area held constant for every pixel. Default 900 = one Landsat "
+                        "pixel, decision D3 of docs/21: the map reads as 'expected diversity "
+                        "in a 900 m2 unit'. That is above the pool's p90 (500 m2), so it is "
+                        "mild, declared extrapolation -- pass 500 to sit inside the pool")
     p.add_argument("--stratum", default="basal", choices=["cover", "counts", "presence", "basal"],
                    help="recording-protocol indicator held constant (Living Trees = basal)")
     p.add_argument("--mask", default="mapbiomas", choices=["mapbiomas", "none"])
