@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # ---
-# Source for `notebooks/03_explore_modelling_results.ipynb`.
+# Source for `notebooks/archive/03_explore_modelling_results.ipynb`.
 #
 # Cells are separated by `# %%` (jupytext "percent" format). This .py file is the version
 # that gets reviewed and diffed — a .ipynb does not review. Regenerate the notebook with:
 #
-#     python notebooks/build_notebook.py notebooks/03_explore_modelling_results.py
+#     python notebooks/build_notebook.py notebooks/archive/03_explore_modelling_results.py
 #
 # Edit the .py, never the .ipynb.
 # ---

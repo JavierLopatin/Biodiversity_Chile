@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # ---
-# Source for `notebooks/05_results_all_facets.ipynb`.
+# Source for `notebooks/archive/05_results_all_facets.ipynb`.
 #
-#     python notebooks/build_notebook.py notebooks/05_results_all_facets.py
+#     python notebooks/build_notebook.py notebooks/archive/05_results_all_facets.py
 #
 # Edit the .py, never the .ipynb.
 # ---
