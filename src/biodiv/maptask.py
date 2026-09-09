@@ -148,6 +148,7 @@ class TileConfig:
     torch_threads: int = 1
     mapbiomas_dir: str = ""
     device: str = "cpu"
+    smearing_exact: bool = False                # evaluate the 128 draws instead of tabulating
 
 
 def load_tile(dc, tile: dict, cfg: TileConfig):
@@ -214,7 +215,8 @@ def run_tile(dc, tile: dict, cfg: TileConfig, ens, resid, y_train,
         if run.any():
             images = ens.model_inputs(curves[run])
             pred[run] = ens.predict(images, ctx.iloc[np.flatnonzero(run)],
-                                    resid_scaled=resid, y_train=y_train, batch=cfg.batch)
+                                    resid_scaled=resid, y_train=y_train, batch=cfg.batch,
+                                    exact=cfg.smearing_exact)
         layers = {t: pred[:, j].reshape(ny, nx) for j, t in enumerate(targets)}
         layers["n_obs"] = n_obs.reshape(ny, nx).astype(np.float32)
         layers["span_days"] = np.where(np.isfinite(curves).all(axis=1), hi - lo,

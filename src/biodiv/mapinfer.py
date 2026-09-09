@@ -315,6 +315,11 @@ class FacetEnsemble:
         else:
             ngs = ishape[1] * ishape[2] if len(ishape) == 3 else NGS
             self._perm = serpentine_perm(ngs)
+        # Both are constant for a whole run but were recomputed per member per year; the
+        # smearing table is the expensive one (see `targets.build_smearing_table`).
+        self._bounds: dict[int, tuple[np.ndarray, np.ndarray]] = {}
+        self._smear: dict[int, tg.SmearingTable] = {}
+        self._smear_for: tuple[int, int] | None = None
 
     @property
     def targets(self) -> list[str]:
@@ -364,20 +369,45 @@ class FacetEnsemble:
         2,499 plots): a transformed value a little outside the fitted range explodes on
         the way back, so the clip is what keeps a pixel finite.
         """
+        if member in self._bounds:
+            return self._bounds[member]
         sc = self.members[member].scaler
         y = np.asarray(y_train, float)
         filled = np.where(np.isfinite(y), y, np.nanmedian(y, axis=0))
         z = np.where(np.isfinite(y), sc.transform(filled), np.nan)
-        return np.nanmin(z, axis=0), np.nanmax(z, axis=0)
+        self._bounds[member] = (np.nanmin(z, axis=0), np.nanmax(z, axis=0))
+        return self._bounds[member]
+
+    def smearing_table(self, resid_scaled: np.ndarray, y_train: np.ndarray,
+                       member: int) -> "tg.SmearingTable":
+        """The member's tabulated smearing estimator, built once and reused.
+
+        Keyed on the identity of the residuals and the training targets: both are built once
+        per process by `scripts/73` and handed to every tile, so this builds five tables for
+        a whole run rather than five per tile-year.
+        """
+        key = (id(resid_scaled), id(y_train))
+        if self._smear_for != key:
+            self._smear, self._smear_for = {}, key
+        if member not in self._smear:
+            self._smear[member] = tg.build_smearing_table(
+                self.members[member].scaler, resid_scaled, y_train, seed=member)
+        return self._smear[member]
 
     def predict(self, images: np.ndarray, ctx: pd.DataFrame,
                 resid_scaled: np.ndarray | None = None,
-                y_train: np.ndarray | None = None, batch: int = 8192) -> np.ndarray:
+                y_train: np.ndarray | None = None, batch: int = 8192,
+                exact: bool = False) -> np.ndarray:
         """(N, n_targets) in original units: per-seed back-transform, then seed mean.
 
         With ``y_train`` the transformed predictions are clipped to the training range
         before inversion and the results to the observed range after it (the same guard
         `targets.inverse_with_smearing` applies); without it nothing is clipped.
+
+        The smearing is read off a `targets.SmearingTable` unless ``exact`` is set. The
+        table costs one build per member per run and reproduces the exact path to ~7e-6
+        relative; evaluating it directly costs 128 inverse transforms per member per call,
+        which over a tile-year is a third of the whole cost.
         """
         scaled = self.predict_scaled(images, ctx, batch=batch)
         outs = []
@@ -389,7 +419,10 @@ class FacetEnsemble:
                 if y_train is not None:
                     zlo, zhi = self.scaled_bounds(y_train, k)
                     s = np.clip(s, zlo, zhi)
-                if resid_scaled is not None:
+                if resid_scaled is not None and y_train is not None and not exact:
+                    o[ok] = tg.inverse_with_smearing_table(
+                        s[ok], self.smearing_table(resid_scaled, y_train, k))
+                elif resid_scaled is not None:
                     o[ok] = tg.inverse_with_smearing(s[ok], m.scaler, resid_scaled,
                                                      y_train=y_train, seed=k)
                 else:

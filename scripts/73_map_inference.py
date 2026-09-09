@@ -51,6 +51,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from biodiv import mapbiomas as mbm         # noqa: E402
 from biodiv import mapinfer as mi           # noqa: E402
 from biodiv import maptask as mt            # noqa: E402
+from biodiv import targets as tg            # noqa: E402
 from biodiv.maptask import to_utm, to_lonlat  # noqa: E402,F401
 
 UTM = "EPSG:32719"
@@ -123,6 +124,10 @@ def main() -> None:
                         "upper tail of TD0 by about 0.25 R2, so disabling is for diagnostics only")
     p.add_argument("--no-clip", action="store_true", dest="no_clip",
                    help="do not clip predictions to the observed training range")
+    p.add_argument("--smearing-exact", action="store_true", dest="smearing_exact",
+                   help="evaluate all 128 smearing draws per pixel instead of reading them "
+                        "off a precomputed table. The table agrees to ~7e-6 relative and is "
+                        "a third of the cost of a tile-year; this is the escape hatch")
     p.add_argument("--workers", type=int, default=4, help="dask workers (0 = no dask)")
     p.add_argument("--device", default="cpu")
     p.add_argument("--batch", type=int, default=8192)
@@ -228,6 +233,9 @@ def main() -> None:
                 resolution=args.resolution, area_m2=args.area_m2, stratum=args.stratum,
                 mask=args.mask, ckpt_dir=str(args.ckpt_dir), n_seeds=len(ckpts),
                 smearing="oof" if resid is not None else "none",
+                # `smearing` stays the residual source, which scripts/argo/verify_run.py
+                # asserts on; how it is evaluated is a separate tag.
+                smearing_eval="exact" if args.smearing_exact else f"table{tg.SMEARING_GRID}",
                 clip=y_train is not None, targets=targets,
                 # Declared, not corrected (docs/21 section 6): the ensemble predicts a
                 # conditional mean, so the map's upper tail is compressed relative to the
@@ -253,7 +261,8 @@ def main() -> None:
                         area_m2=args.area_m2, stratum=args.stratum, mask=args.mask,
                         batch=args.batch, load_threads=args.load_threads,
                         load_client=args.workers > 0, torch_threads=args.torch_threads,
-                        mapbiomas_dir=args.mapbiomas_dir, device=args.device)
+                        mapbiomas_dir=args.mapbiomas_dir, device=args.device,
+                        smearing_exact=args.smearing_exact)
 
     man_path = out / args.manifest
     done: set[tuple[str, int]] = set()
@@ -626,6 +635,8 @@ def fan_out(args, tiles: pd.DataFrame, out: Path) -> None:
             cmd += ["--oof-csv", args.oof_csv]
         if args.no_clip:
             cmd.append("--no-clip")
+        if args.smearing_exact:
+            cmd.append("--smearing-exact")
         if args.resume:
             cmd.append("--resume")
         env = dict(os.environ, OMP_NUM_THREADS="1", MKL_NUM_THREADS="1",

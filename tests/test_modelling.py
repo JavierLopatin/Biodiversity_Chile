@@ -152,6 +152,86 @@ def test_smearing_stays_inside_the_training_range(ids):
     assert (out >= lo - 1e-9).all() and (out <= hi + 1e-9).all()
 
 
+#: Column sums of `inverse_with_smearing` on the real target table, frozen from the
+#: implementation that produced every published R2. Regenerate ONLY when the estimator is
+#: deliberately changed and the metrics in docs/20 are regenerated with it.
+_SMEARING_COLSUM = [
+    8866.16997486212, 4986.319965826697, 4119.632031874911, 0.9984697404633459,
+    -11.409154447689009, 16.96664112830853, 1.9473174938930822, 82.13340493221826,
+    -45.15936563098572, 276939.6136739014, 223648.11555233222, -180.54948205683408,
+    -139.87303862614237, -133.3321375279994, 76199.56552668483,
+]
+
+#: First row of the same call, so a change that cancels out in the sums still trips.
+_SMEARING_ROW0 = [
+    6.91434347545928, 1.4080187672180304, 1.4013394831175805, 0.001057344227354028,
+    0.04776225792764514, -0.10280481184819219, 0.0019409892853785894, 0.2535598284187128,
+    -0.18070101052676596, 223.18807545799842, 219.63150447869404, -0.030493392989832106,
+    -0.7831005381207994, 0.36094782509861345, 43.9834147709471,
+]
+
+
+def test_smearing_values_are_frozen(ids):
+    """Every published R2 is computed after this call, so its values are an interface.
+
+    `test_smearing_stays_inside_the_training_range` only checks finiteness and bounds: a
+    change that altered the size of the bias correction would pass it silently and move
+    every number in docs/20 without anything failing. This pins the values themselves.
+    """
+    _, Y, _ = tg.load_targets(DERIVED, "all", plot_ids=ids)
+    rng = np.random.default_rng(0)
+    scaler = tg.fit_target_scaler(Y)
+    Z = tg.apply_target_scaler(Y, scaler)
+    pred = np.nan_to_num(Z, nan=0.0) + rng.normal(0, 0.5, Z.shape)
+    resid = rng.normal(0, 0.4, Z.shape)
+    out = tg.inverse_with_smearing(pred, scaler, resid, y_train=Y, seed=0)
+    np.testing.assert_allclose(np.nansum(out, axis=0), _SMEARING_COLSUM, rtol=1e-12)
+    np.testing.assert_allclose(out[0], _SMEARING_ROW0, rtol=1e-12)
+
+
+def test_smearing_table_matches_the_exact_path(ids):
+    """The map path reads the estimator off a grid; this bounds what that costs.
+
+    1e-4 is deliberately loose against the ~7e-6 measured on a real tile-year, so the test
+    fails on a broken table rather than on the last digits of an interpolation.
+    """
+    _, Y, _ = tg.load_targets(DERIVED, "all", plot_ids=ids)
+    rng = np.random.default_rng(0)
+    scaler = tg.fit_target_scaler(Y)
+    Z = tg.apply_target_scaler(Y, scaler)
+    pred = np.nan_to_num(Z, nan=0.0) + rng.normal(0, 0.5, Z.shape)
+    resid = rng.normal(0, 0.4, Z.shape)
+
+    exact = tg.inverse_with_smearing(pred, scaler, resid, y_train=Y, seed=0)
+    table = tg.build_smearing_table(scaler, resid, Y, seed=0)
+    got = tg.inverse_with_smearing_table(pred, table)
+
+    assert np.array_equal(np.isnan(got), np.isnan(exact))
+    rel = np.abs(got - exact) / np.maximum(np.abs(exact), 1e-300)
+    assert np.nanmax(rel) < 1e-4, f"worst relative error {np.nanmax(rel):.2e}"
+    # the guards the exact path applies must survive tabulation
+    lo, hi = np.nanmin(Y, axis=0), np.nanmax(Y, axis=0)
+    assert np.isfinite(got).all()
+    assert (got >= lo - 1e-9).all() and (got <= hi + 1e-9).all()
+
+
+def test_smearing_table_preserves_the_nan_pattern(ids):
+    """NaN in, NaN out -- the map writes those pixels as no-data."""
+    _, Y, _ = tg.load_targets(DERIVED, "all", plot_ids=ids)
+    rng = np.random.default_rng(1)
+    scaler = tg.fit_target_scaler(Y)
+    Z = tg.apply_target_scaler(Y, scaler)
+    resid = rng.normal(0, 0.4, Z.shape)
+    table = tg.build_smearing_table(scaler, resid, Y, seed=0)
+
+    pred = np.nan_to_num(Z, nan=0.0)
+    pred[3, 2] = np.nan
+    pred[7, :] = np.nan
+    got = tg.inverse_with_smearing_table(pred, table)
+    assert np.isnan(got[3, 2]) and np.isnan(got[7]).all()
+    assert np.isfinite(got[0]).all()
+
+
 # --------------------------------------------------------------------------------------
 # losses and models
 # --------------------------------------------------------------------------------------

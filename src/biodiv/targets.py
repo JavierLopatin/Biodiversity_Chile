@@ -21,6 +21,7 @@ on the training fold only, and every reported metric is computed after inverting
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -337,6 +338,27 @@ SMEARING_DRAWS = 128
 SMEARING_TRIM = (2.5, 97.5)
 
 
+def _smearing_draws(resid_scaled: np.ndarray, n_t: int, n_draws: int,
+                    seed: int) -> tuple[np.ndarray, np.ndarray]:
+    """The winsorised residual draws, and which targets have usable residuals.
+
+    Shared by the exact path and the tabulated one so both consume the generator in the
+    same order: the draws are part of the published numbers, and a different consumption
+    order would silently move every reported R2.
+    """
+    rng = np.random.default_rng(seed)
+    draws = np.zeros((n_draws, n_t))
+    usable = np.zeros(n_t, dtype=bool)
+    for j in range(n_t):
+        r = resid_scaled[:, j]
+        r = r[np.isfinite(r)]
+        if r.size >= 20:
+            lo, hi = np.percentile(r, SMEARING_TRIM)
+            draws[:, j] = rng.choice(np.clip(r, lo, hi), size=n_draws, replace=True)
+            usable[j] = True
+    return draws, usable
+
+
 def inverse_with_smearing(pred_scaled: np.ndarray, scaler: PowerTransformer,
                           resid_scaled: np.ndarray,
                           y_train: np.ndarray | None = None,
@@ -358,18 +380,8 @@ def inverse_with_smearing(pred_scaled: np.ndarray, scaler: PowerTransformer,
     """
     pred_scaled = np.asarray(pred_scaled, dtype=np.float64)
     resid_scaled = np.asarray(resid_scaled, dtype=np.float64)
-    rng = np.random.default_rng(seed)
     n_t = pred_scaled.shape[1]
-
-    draws = np.zeros((n_draws, n_t))
-    usable = np.zeros(n_t, dtype=bool)
-    for j in range(n_t):
-        r = resid_scaled[:, j]
-        r = r[np.isfinite(r)]
-        if r.size >= 20:
-            lo, hi = np.percentile(r, SMEARING_TRIM)
-            draws[:, j] = rng.choice(np.clip(r, lo, hi), size=n_draws, replace=True)
-            usable[j] = True
+    draws, usable = _smearing_draws(resid_scaled, n_t, n_draws, seed)
 
     nan = np.isnan(pred_scaled)
     base = np.nan_to_num(pred_scaled, nan=0.0)
@@ -406,5 +418,95 @@ def inverse_with_smearing(pred_scaled: np.ndarray, scaler: PowerTransformer,
         y_train = np.asarray(y_train, dtype=np.float64)
         out = np.clip(out, np.nanmin(y_train, axis=0), np.nanmax(y_train, axis=0))
 
+    out[nan] = np.nan
+    return out
+
+
+#: Abscissae per target in `build_smearing_table`. Worst relative error against the exact
+#: path, measured on a real tile-year (38,934 pixels, 7 targets, always on TD0): 16,384 gives
+#: 6.8e-5, this gives ~1.7e-5, 65,536 gives 3.8e-6. Error falls as M^-2, as linear
+#: interpolation of a smooth function should.
+#:
+#: Sized against the *build*, not the error, which is ample throughout. Building costs one
+#: pass of the 128 draws over M rows, so an M near the pixel count of a tile makes the table
+#: cost about as much as the year it replaces: at 65,536 a one-year tile measured 0.87x --
+#: slower than the exact path it was meant to replace. This sits far enough below that to
+#: amortise inside the first year, while keeping a comfortable margin under the 1e-4 the
+#: regression test allows.
+SMEARING_GRID = 32768
+
+
+@dataclass(frozen=True)
+class SmearingTable:
+    """`inverse_with_smearing` tabulated, for the map path.
+
+    The smearing draws are one scalar per (draw, target) broadcast over every row, and the
+    clip is per column, so for a fixed target the whole estimator is a monotone function of
+    one variable -- the prediction's own fitted-space value -- on the bounded domain
+    ``[lo_s, hi_s]``. Tabulating it once and interpolating turns 128 inverse transforms per
+    call into one `np.interp`, which is what makes it affordable over millions of pixels
+    rather than 3,102 plots.
+
+    Interpolation error is not zero, so this is for map inference only. Cross-validation
+    keeps the exact path: it is where the published R2 come from, it runs on the plot table
+    where the cost is irrelevant, and its numbers must not move.
+    """
+
+    grid: np.ndarray      #: (M, n_targets) fitted-space abscissae, per target
+    values: np.ndarray    #: (M, n_targets) the smeared inverse there, before the range clip
+    lo_s: np.ndarray      #: (n_targets,) fitted-space clip, as in the exact path
+    hi_s: np.ndarray
+    y_lo: np.ndarray      #: (n_targets,) observed range, clipped after interpolation
+    y_hi: np.ndarray
+
+
+def build_smearing_table(scaler: PowerTransformer, resid_scaled: np.ndarray,
+                         y_train: np.ndarray, n_draws: int = SMEARING_DRAWS,
+                         seed: int = 0, grid: int = SMEARING_GRID) -> SmearingTable:
+    """Evaluate the smearing estimator on a grid instead of on the data.
+
+    Same draws, same double clip and same accumulation as `inverse_with_smearing`; only the
+    abscissae differ. ``y_train`` is required here, because the table needs the bounded
+    domain the exact path derives from it.
+    """
+    resid_scaled = np.asarray(resid_scaled, dtype=np.float64)
+    y_train = np.asarray(y_train, dtype=np.float64)
+    n_t = resid_scaled.shape[1]
+    draws, usable = _smearing_draws(resid_scaled, n_t, n_draws, seed)
+
+    ys = apply_target_scaler(y_train, scaler)
+    lo_s = np.nanmin(ys, axis=0)
+    hi_s = np.nanmax(ys, axis=0)
+
+    g = np.stack([np.linspace(lo_s[j], hi_s[j], grid) for j in range(n_t)], axis=1)
+    plain = scaler.inverse_transform(g)
+    if usable.any():
+        acc = np.zeros_like(g)
+        for k in range(n_draws):
+            acc += scaler.inverse_transform(np.clip(g + draws[k], lo_s, hi_s))
+        values = np.where(usable[None, :], acc / n_draws, plain)
+    else:
+        values = plain
+
+    return SmearingTable(grid=g, values=values, lo_s=lo_s, hi_s=hi_s,
+                         y_lo=np.nanmin(y_train, axis=0), y_hi=np.nanmax(y_train, axis=0))
+
+
+def inverse_with_smearing_table(pred_scaled: np.ndarray, table: SmearingTable) -> np.ndarray:
+    """`inverse_with_smearing` read off a `SmearingTable`.
+
+    The clip order is the exact path's: bound the fitted-space value first, interpolate,
+    then bound the result to the observed range -- clipping the table itself instead would
+    differ on the one interval that straddles a bound.
+    """
+    pred_scaled = np.asarray(pred_scaled, dtype=np.float64)
+    nan = np.isnan(pred_scaled)
+    base = np.clip(np.nan_to_num(pred_scaled, nan=0.0), table.lo_s, table.hi_s)
+
+    out = np.empty_like(base)
+    for j in range(base.shape[1]):
+        out[:, j] = np.interp(base[:, j], table.grid[:, j], table.values[:, j])
+
+    out = np.clip(out, table.y_lo, table.y_hi)
     out[nan] = np.nan
     return out
