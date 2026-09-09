@@ -45,9 +45,24 @@ sys.path.insert(0, str(ROOT / "src"))
 LOGS, MAPS = ROOT / "logs", ROOT / "results" / "maps"
 pd.set_option("display.width", 120)
 
+from biodiv import assets                                # noqa: E402
+
+# Where this notebook reads from. `MAPS` below is the local output tree of the runs that were
+# measured here; everything current resolves through `assets`, which points at the same
+# prefixes the Argo workflow stages from, so a reader with bucket access needs no local copy.
+# Override with BIODIV_ASSETS / BIODIV_MAPS_DEST to work against your own.
+print(assets.describe())
+
 
 def scratch_prefix() -> str:
-    """The user's scratch prefix. Not hardcoded: it embeds the AWS user id."""
+    """The pod-era scratch prefix, kept only for the historical comparisons below.
+
+    The runs measured in this notebook wrote here, to a prefix that embeds the AWS user id
+    and is therefore private to whoever ran them. Anything current is under
+    `assets.maps_dest()` instead -- the team prefix the Argo workflow writes to, readable by
+    anyone the bucket policy allows. That move is the whole point: a collaborator cannot read
+    someone else's scratch, and the scratch is deleted after 30 days (docs/21 section 8).
+    """
     import boto3
     uid = boto3.client("sts").get_caller_identity()["UserId"]
     return f"s3://easido-prod-user-scratch/{uid}/biodiv"
@@ -317,7 +332,7 @@ st = pd.DataFrame([half_status("chile_gw", 3462), half_status("chile_pod", 2307,
 display(st.set_index("half"))
 try:
     print("GeoTIFFs in the scratch bucket:",
-          f"{s3_count(scratch_prefix() + '/maps/chile_30m_2000_2026'):,}")
+          f"{s3_count(assets.maps_dest()):,}")
 except Exception as e:                                  # noqa: BLE001
     print("S3 listing unavailable:", type(e).__name__)
 
