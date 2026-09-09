@@ -1,180 +1,174 @@
 # Biodiversity_Chile
 
-Estimación multitemporal de facetas múltiples de biodiversidad vegetal en Chile central a partir de
-fenología satelital.
+Multitemporal maps of several plant-diversity facets for native vegetation in Chile, predicted
+from the three-year Landsat phenological trajectory of each pixel and its topography.
 
-Se predicen simultáneamente diversidad alfa taxonómica, contribución local a la diversidad beta
-(LCBD), diversidad filogenética, diversidad funcional y composición florística (ejes de ordenación),
-usando la curva fenológica reconstruida desde series temporales Landsat y Sentinel-2 más variables
-topográficas derivadas de un DEM.
+The premise is that a single-date vegetation index is the wrong predictor. What a pixel does
+across three growing seasons — when it greens up, how much, how consistently — carries more
+about the vegetation standing there than how green it happened to be on one clear day. The
+model reads that whole trajectory, and predicts several facets at once from one shared trunk,
+because species richness, phylogenetic depth and compositional uniqueness are different
+questions that a single map cannot answer.
 
-**Estado:** modelamiento completo; siguiente fase en diseño. El pipeline de adquisición está completo para 1.082
-parcelas de Chile central (curvas fenológicas de 52 pasos semanales, 18 métricas LSP y 9
-variables topográficas, todo × 5 índices de vegetación) y las variables respuesta de fase 1
-(diversidad taxonómica, LCBD, PCoA) están calculadas. La etapa de modelamiento —Random
-Forest, MLP tabular, CNN 1D y CNN 2D sobre once sustratos, 79 modelos sobre 7 esquemas de
-validación cruzada— está corrida. **Resultado principal: la fenología predice composición
-florística y unicidad composicional (`pcoa1_pa` R² = +0,41, `lcbd_pa` +0,21 bajo CV dejando
-fuera al contribuyente completo) y no predice diversidad alfa.** Diseño, decisiones y
-resultados en [`docs/08_modelling.md`](docs/08_modelling.md); registro de ejecución en
-[`docs/08_modelling_progress.md`](docs/08_modelling_progress.md). Registro reproducible de la adquisición en
-[`docs/07_run_record.md`](docs/07_run_record.md).
+**Status.** Modelling is complete on the unified plot pool and the deployment model is fitted;
+map production over the native-vegetation extent is in progress. A manuscript describing the
+method and results is in preparation — this section will carry the reference once it is
+available.
 
 ---
 
-## Pipeline
+## What is predicted, and how well
+
+Seven facets over 3,102 vegetation plots (1,082 from Parcelas-CL, 2,020 from Living Trees
+Chile), spanning 30.2°–55.0°S:
+
+| Facet | What it is |
+|---|---|
+| `TD₀`, `TD₁`, `TD₂` | Taxonomic Hill numbers, coverage-standardised (iNEXT) |
+| `PD₀`, `PD₁`, `PD₂` | Phylogenetic Hill numbers, coverage-standardised |
+| `LCBD` | Local contribution to beta diversity, quantitative Sørensen |
+
+Under spatial block cross-validation (20 km blocks), out-of-fold R² separates them into three
+groups that no model family crosses:
+
+- **Richness is predictable.** TD₀ reaches 0.78 and PD₀ 0.60.
+- **Compositional uniqueness is moderately predictable.** LCBD 0.42–0.45.
+- **Abundance-weighted facets are not.** `q = 1` and `q = 2` sit at or near zero under every
+  model, vegetation index and curve format tested. This is a limit of the signal, not of the
+  architecture.
+
+**The binding constraint is time, not model capacity.** Under leave-location-and-time-out
+validation — holding out whole spatial blocks *and* whole census periods — richness collapses
+in every neural family, while LCBD retains 0.34–0.42. The maps are therefore published as
+spatial interpolation within the sampled domain and period, and carry no accuracy claim for
+census years the plot network never observed. See [`docs/20`](docs/20_pg_facets_unified.md) §7.
+
+## The deployed model
+
+A one-dimensional convolutional network (`Pheno1D`, 14,535 parameters) over the 100-step raw
+kNDVI series of the plot pixel, with topography and plot context fused late, refit on all
+3,102 plots with no held-out fold and ensembled over five seeds.
+
+It began as the *control* for a two-dimensional network that folds the series into an image
+with a serpentine layout. The second dimension brought no measurable gain — the three networks
+separate by less than their own seed dispersion — so the smaller and simpler model is the one
+deployed. Masked-autoencoder pretraining was also tested and is reported as exploratory: its
+pretraining pool overlaps the test folds on the input side, and it showed no measurable
+benefit at this sample size.
+
+Map settings that are recorded choices rather than defaults — plot area held at 900 m² (one
+Landsat pixel), `basal` recording protocol, native-vegetation mask from the nearest annual
+MapBiomas map, 10 km tiles at 30 m for 2000–2026 — are documented with their reasoning in
+[`docs/21`](docs/21_map_inference_spec.md).
+
+---
+
+## Running it
+
+### Analysis, from a clone
+
+`data/derived/` is versioned deliberately. Those tables are the output of scripts 01–05, which
+need the Data Observatory datacube and cannot be regenerated on an arbitrary machine, so a
+fresh clone runs the analysis notebooks and the modelling scripts with no further setup:
 
 ```bash
-python scripts/01_build_subset.py --zip data/20602096.zip --out-dir data/derived
-python scripts/03_extract_topography.py
-python scripts/02_extract_phenology.py --hemisphere auto --resume
-python scripts/04_recompute_lsp.py --hemisphere auto --write-back
-python scripts/05_flatten_phenoshape.py --csv
-Rscript scripts/07_compute_taxonomic_beta_responses.R \
-    --zip data/20602096.zip --plots data/derived/plots_subset.parquet \
-    --out data/derived/biodiversity_responses.parquet
-python scripts/06_paper_figures.py --out-dir results/figures
-
-# --- modelamiento ---
-python scripts/08_build_modelling_folds.py
-python scripts/14_run_matrix.py --all --deadline-hours 8   # corre la matriz completa
+pip install -r requirements.txt
+python scripts/53_unified_block20_folds.py     # spatial-block folds on the unified pool
+python scripts/11_run_conv.py --substrate curve1d --index kndvi --scheme kfold5_block20_unified
 ```
 
-| Script | Rol |
-|---|---|
-| `01_build_subset.py` | Subset espacio-temporal de Parcelas-CL y folds de CV agrupados |
-| `02_extract_phenology.py` | Cubo 5×5 px por parcela desde el datacube; `PhenoShape` + LSP |
-| `03_extract_topography.py` | DEM y derivadas topográficas sobre el mismo parche |
-| `04_recompute_lsp.py` | Re-ancla las LSP sobre las curvas ya guardadas, sin volver al cubo |
-| `05_flatten_phenoshape.py` | Aplana las curvas de los cubos a tablas de modelado |
-| `07_compute_taxonomic_beta_responses.R` | Variables respuesta fase 1: Hill numbers, LCBD y PCoA (dos niveles PA/cover) |
-| `06_paper_figures.py` | Figuras del manuscrito |
-| `08_build_modelling_folds.py` | Añade `kfold5_owner` (primario), bloques UTM geométricos, `lodo_owner` y `kfold5_random` |
-| `09_run_baselines.py` | Controles sin fenología y grilla de Random Forest |
-| `10_run_tabular_dl.py` | MLP tabular multioutput |
-| `11_run_conv.py` | CNN 1D sobre la curva y CNN 2D sobre once sustratos |
-| `12_model_report.py` | Tablas comparativas, brecha de optimismo y tests pareados |
-| `13_interpretability.py` | Integrated Gradients replegado al eje DOY; importancia por bloque del RF |
-| `14_run_matrix.py` | Orquestador: corre la matriz entera, reanudable, reparte entre GPUs |
-| `15_pixel_ablation.py` | Píxel central contra media 5×5, con emparejamiento exacto |
+The source databases themselves are **not** versioned here; they are public and retrieved by
+DOI (see *Data* below).
 
-### Modelamiento
+### Map inference
 
-Cinco familias sobre las mismas parcelas, los mismos folds y la misma pérdida enmascarada,
-de modo que la única diferencia sea **cómo se lee la curva**:
+Inference needs four staged inputs — checkpoints, the out-of-fold predictions the
+retransformation depends on, the derived target tables and the tile list — plus the MapBiomas
+rasters and read access to Data Cube Chile.
 
-| Familia | Entrada | Parámetros | Qué prueba |
-|---|---|---|---|
-| Random Forest | 18 métricas LSP + topografía + área | — | la baseline del campo |
-| Random Forest | curva de 52 semanas + topografía + área | — | ¿aporta la curva sobre sus resúmenes? (gap G1) |
-| MLP multioutput | LSP o curva + topografía | 6,7 k – 59 k | ¿aporta un tronco compartido entre facetas? |
-| `Pheno1D` | curva (1 o 5 canales) × 52 | 7,0 k – 43,8 k | ¿aporta la convolución? |
-| `PhenoNetS` | once sustratos 2D | 5,1 k – 55,7 k | ¿aporta una segunda dimensión, y tiene que ser real? |
+`biodiv.assets` resolves those the same way the production workflow does, so the same notebook
+runs from a local tree or from S3:
 
-Los sustratos 2D son las nueve transformaciones señal→imagen de
-[Trait_2DCNN](https://github.com/JavierLopatin/Trait_2DCNN) retuneadas para n=52, más dos
-cuyo eje vertical **no** es manufacturado: `stack5` (5 índices × 52 semanas) y `pxcube`
-(25 píxeles × 52 semanas, heterogeneidad intra-parcela). Detalle completo, incluidas las
-cuatro opciones de fusión topográfica y las decisiones no obvias (sesgo de retransformación,
-padding circular por eje, jitter sub-paso), en [`docs/08_modelling.md`](docs/08_modelling.md).
+```python
+from biodiv import assets
+print(assets.describe())          # says where each input is coming from
+ckpts = sorted(assets.ckpt_dir().glob("model_seed*.pt"))
+```
 
-Exploración de resultados de esta fase:
-[`notebooks/archive/03_explore_modelling_results.ipynb`](notebooks/archive/03_explore_modelling_results.ipynb)
-(archivado: lee `results/models/`, que son artefactos por corrida y no están versionados).
-Compuertas de validación: `python -m pytest tests/test_modelling.py -q`.
+```bash
+# defaults point at the workflow's own prefix; credentials are all a reader needs
+export BIODIV_ASSETS=s3://<bucket>/<prefix>/assets
+export BIODIV_MAPBIOMAS_DIR=s3://<bucket>/<prefix>/MapBiomas
 
-### Variables respuesta
+python scripts/73_map_inference.py --tiles-file <tiles.csv> --years 2000-2026 \
+    --area-m2 900 --dest s3://<bucket>/<prefix>/maps --resume
+```
 
-**Fase 1 (implementada):** diversidad taxonómica (Hill numbers q=0,1,2 vía `hillR`), LCBD
-(`adespatial::beta.div`, Legendre & De Cáceres 2013) y 2 ejes PCoA (`ape::pcoa`, corrección
-de Cailliez), en dos niveles por abundancia (presencia/ausencia sobre las 1.082 parcelas;
-ponderado por cobertura solo sobre el estrato `cover`, ~546 parcelas — columnas `*_cover` en
-`NA` fuera de ese estrato, nunca se descarta ni se imputa una parcela). Salida:
-`data/derived/biodiversity_responses.parquet`. Exploración de resultados en
-[`notebooks/02_explore_biodiversity_responses.ipynb`](notebooks/02_explore_biodiversity_responses.ipynb).
+Point both variables at local directories instead and nothing else changes. `scripts/74`
+is the gate that must pass first: it checks that the map path reproduces the training path
+exactly — same context block, same model input, same output — and no map is produced if it
+fails.
 
-**Nota sobre el método de composición:** se usa PCoA en vez de NMDS. Con mediana de riqueza
-= 5 especies/parcela, NMDS (`vegan::metaMDS`) producía soluciones inestables — parcelas con
-muy poca información compositional quedaban mal restringidas y el optimizador iterativo las
-disparaba a valores absurdos en un eje (se detectó `PCL0468`, monoespecífica, con un valor
-~380 desviaciones estándar por sobre la mediana). PCoA es una descomposición espectral
-determinística sin esa patología. El script sigue avisando si alguna parcela domina un eje
-(criterio MAD) y si los ejes retenidos explican poca varianza — con ~570 especies en un
-espacio muy disperso, los primeros 2 ejes explican ~13% de la varianza, bajo pero esperable
-a este nivel de dimensionalidad y dispersión.
+**Landsat itself is not staged.** It is read from the Data Cube Chile ODC index, which only
+answers from inside the EASI cluster. There is no public STAC fallback in this code path.
 
-**Fase 2 (pendiente):** diversidad filogenética, diversidad funcional y dark diversity —
-cada una depende de un insumo aún no resuelto: ninguna filogenia referenciada en este repo
-(requiere construir un mega-árbol desde la lista de especies), Rasgos-CL solo aporta 2
-rasgos continuos (el resto son categóricos), y la curva de acumulación de especies de
-Parcelas-CL no satura (ver `docs/01_state_of_the_art.md` gap G5 y
-`docs/02_innovation_and_impact.md` riesgos R2/R7).
+### At scale
+
+[`scripts/argo/process_argo.yaml`](scripts/argo/process_argo.yaml) fans the same script out
+over tiles on Kubernetes: it lists what is already written to S3, splits the remainder into
+per-pod chunks, and runs them in parallel. Tiles are deduplicated against S3 rather than a
+separate tracker, so a rerun never repeats finished work.
 
 ---
 
-## Documentación
+## Data
 
-| Documento | Contenido |
-|---|---|
-| [`docs/01_state_of_the_art.md`](docs/01_state_of_the_art.md) | Revisión crítica en 7 ejes: Spectral Variation Hypothesis, fenología como predictor de biodiversidad, diversidad funcional y filogenética desde teledetección, regresión sobre ejes de ordenación, deep learning multi-tarea, dark diversity, contexto chileno. Cierra con tabla de 5 gaps. |
-| [`docs/02_innovation_and_impact.md`](docs/02_innovation_and_impact.md) | Evaluación graduada de innovación, tabla de 9 riesgos cuantificados, impacto esperado, y sección explícita de lo que el proyecto **no** va a demostrar. |
-| [`docs/03_cnn_architecture.md`](docs/03_cnn_architecture.md) | Diseño de `PhenoNet-S`, CNN de ~15 k parámetros para n ≈ 1.000 parcelas. Sustrato *phenocube* (año × DOY), catálogo de transformaciones señal→imagen, régimen de entrenamiento y matriz experimental. |
-| [`docs/05_data_acquisition.md`](docs/05_data_acquisition.md) | Estrategia de adquisición satelital: ventana temporal, pooling y no estacionariedad, geometría de extracción, plan de ejecución. |
-| [`docs/06_phase_and_2d_transform.md`](docs/06_phase_and_2d_transform.md) | Anclaje de fase de las LSP (`hemisphere="auto"`) y la rotación global para la transformación 2D. |
-| [`docs/08_modelling.md`](docs/08_modelling.md) | **Modelamiento:** las tres preguntas del benchmark, las decisiones no obvias (sesgo de retransformación, DOY circular por eje, alfa contra beta, píxel central contra 5×5), arquitecturas con conteos medidos, fusión topográfica, la matriz de ~170 corridas y los resultados con tests pareados. |
-| [`docs/09_predictors.md`](docs/09_predictors.md) | **Siguiente fase:** eliminar los NaN de LSP (99,2 % vienen de un `return None` cuando la curva no se rota), agregación explícita por píxel, CV por componente de ventana solapada, y el cribado con Random Forest de alternativas no fenológicas — composites anuales, geomedianas y heterogeneidad espectral. |
-| [`docs/07_run_record.md`](docs/07_run_record.md) | **Registro del run final:** comandos, parámetros, versiones, salidas, diagnósticos y advertencias. Con [`docs/run_manifest.json`](docs/run_manifest.json) (inventario con `sha256`). |
-| [`docs/10_findings.md`](docs/10_findings.md) | Hallazgos de la fase de diagnóstico y del cribado de predictores, con la descomposición within/between del R² de alfa. |
-| [`docs/11_next_steps.md`](docs/11_next_steps.md) | **Traspaso:** qué falta, en qué orden y con qué comando. Incluye el apéndice de deudas técnicas conocidas. |
-| [`docs/12_phylo_and_rarefaction.md`](docs/12_phylo_and_rarefaction.md) | Diversidad filogenética con árbol propio, rarefacción iNEXT contra Parcelas-CL y dark diversity con DarkDiv. |
-| [`docs/13_phenology_year_boundary.md`](docs/13_phenology_year_boundary.md) | La curva fenológica no cierra el año: diagnóstico, mecanismo con `file:line` y las tres opciones de arreglo. Defecto de `PhenoPY`, no de este repo. |
-| [`docs/14_cnn_search_results.md`](docs/14_cnn_search_results.md) | **Resultados de la búsqueda de la 2D-CNN:** 195 corridas, la serie cruda de 3 años como único hallazgo real, el piso de ruido de GPU medido (0,010 de desviación) y lo que se probó y no funcionó. |
-| [`docs/15_datacube_extraction_spec.md`](docs/15_datacube_extraction_spec.md) | **Para la máquina del datacube:** muestreo no etiquetado de vegetación nativa enmascarada con MapBiomas, para preentrenar el codificador por enmascarado. Qué sacar, cómo, y cómo verificarlo al llegar. |
-| [`docs/refs.bib`](docs/refs.bib) | 42 referencias; todos los DOI resueltos contra la API de Crossref. |
-
----
-
-## Datos
-
-Ninguna base de datos se versiona en este repositorio. Todas son públicas:
-
-| Base | Contenido | Acceso |
+| Source | Contents | Access |
 |---|---|---|
-| **Parcelas-CL** | 1.485 parcelas de vegetación georreferenciadas, 675 especies leñosas, 1976–2026, 30,25°S–54,82°S | [10.5281/zenodo.20602096](https://doi.org/10.5281/zenodo.20602096) — preprint: [10.21203/rs.3.rs-9986019/v1](https://doi.org/10.21203/rs.3.rs-9986019/v1) |
-| **Rasgos-CL** | 662 especies leñosas chilenas, 25.174 registros, 23 rasgos funcionales | [github.com/dylancraven/Rasgos-CL](https://github.com/dylancraven/Rasgos-CL) — paper: [10.1111/geb.13755](https://doi.org/10.1111/geb.13755) |
-
-Descarga esperada en `data/` (ignorada por git).
+| **Parcelas-CL** | 1,485 georeferenced vegetation plots, 675 woody species, 1976–2026, 30.25°–54.82°S | [10.5281/zenodo.20602096](https://doi.org/10.5281/zenodo.20602096) · preprint [10.21203/rs.3.rs-9986019/v1](https://doi.org/10.21203/rs.3.rs-9986019/v1) |
+| **Living Trees Chile** | 2,021 forest inventory sites, 59,408 stem records | Used by collaboration; citation pending publication |
+| **Rasgos-CL** | 662 Chilean woody species, 25,174 records, 23 functional traits | [github.com/dylancraven/Rasgos-CL](https://github.com/dylancraven/Rasgos-CL) · [10.1111/geb.13755](https://doi.org/10.1111/geb.13755) |
+| **MapBiomas Chile** | Annual land cover, collection 2, 1999–2024 | [mapbiomas.org](https://chile.mapbiomas.org/) |
+| **Landsat** | Collection 2 surface reflectance, via Data Cube Chile | Requester-pays; ODC index inside EASI |
 
 ---
 
-## Métodos y dependencias propias
+## Documentation
 
-| Repositorio | Rol |
+Written in Spanish, and written to be read: each document records the decisions that were not
+obvious and what was measured to settle them, not just what was done.
+
+| Document | Contents |
 |---|---|
-| [PhenoSensing](https://github.com/JavierLopatin/PhenoSensing) | Reconstrucción de curvas fenológicas (`PhenoShape`) y 18 métricas LSP (`PhenoLSP`) sobre cubos xarray. Aporta el predictor. |
-| [Trait_2DCNN](https://github.com/JavierLopatin/Trait_2DCNN) | Transformaciones señal→imagen, pérdida enmascarada multi-target y pretraining MAE. Aporta el marco de modelado. |
+| [`01_state_of_the_art.md`](docs/01_state_of_the_art.md) | Critical review across seven axes, closing with a table of five gaps |
+| [`02_innovation_and_impact.md`](docs/02_innovation_and_impact.md) | Graded claim of contribution, quantified risks, and an explicit section on what the project will *not* demonstrate |
+| [`03_cnn_architecture.md`](docs/03_cnn_architecture.md) | `PhenoNet-S` design for n ≈ 1,000 plots; signal-to-image transforms; experimental matrix |
+| [`06_phase_and_2d_transform.md`](docs/06_phase_and_2d_transform.md) | Phase anchoring of the seasonal curve and the global rotation |
+| [`08_modelling.md`](docs/08_modelling.md) | The benchmark on the Parcelas-CL-only pool: retransformation bias, circular DOY, centre pixel vs 5×5, paired tests |
+| [`14_cnn_search_results.md`](docs/14_cnn_search_results.md) | 195 runs of architecture search; the raw three-year series as the only real finding; measured GPU noise floor |
+| [`16_stemp_protocol.md`](docs/16_stemp_protocol.md) | Spatio-temporal modelling protocol and the cross-validation schemes |
+| [`19_unified_facets_methodology.md`](docs/19_unified_facets_methodology.md) | Building the unified pool and its coverage-standardised facets |
+| [`20_pg_facets_unified.md`](docs/20_pg_facets_unified.md) | **Main results:** curve format, vegetation index, model families, spatio-temporal transfer, and the topography-correction addendum |
+| [`21_map_inference_spec.md`](docs/21_map_inference_spec.md) | **Map specification:** every mapping decision with its justification, the consistency gate, the cost budget and the run record |
+| [`07_run_record.md`](docs/07_run_record.md) | Reproducible acquisition record with [`run_manifest.json`](docs/run_manifest.json) (`sha256` inventory) |
+
+The remaining documents (`05`, `09`–`13`, `15`–`18`, `22`–`23`) cover acquisition, predictor
+screening, phylogeny and rarefaction, sampling design and bibliographic search.
+
+## Related repositories
+
+| Repository | Role |
+|---|---|
+| [PhenoSensing](https://github.com/JavierLopatin/PhenoSensing) | Phenological curve reconstruction (`PhenoShape`) and 18 LSP metrics. Provides the predictor. |
+| [Trait_2DCNN](https://github.com/JavierLopatin/Trait_2DCNN) | Signal-to-image transforms, masked multi-target loss, MAE pretraining. Provides the modelling framework. |
 
 ---
 
-## Diseño acordado
-
-- **Alcance:** Chile central. Landsat 1999–2026 como serie base; Sentinel-2 / HLS desde ~2017 para mayor
-  resolución temporal en el período reciente. El sensor se trata como estrato, no se mezclan las series.
-- **Abundancia (dos niveles):** métricas de presencia/ausencia sobre todas las parcelas; métricas
-  ponderadas solo sobre el subset con abundancia comparable. Los targets faltantes se manejan con
-  pérdida enmascarada, sin descartar parcelas ni imputar.
-- **Beta y composición:** LCBD (Legendre & De Cáceres 2013) más ejes de PCoA (originalmente
-  planeado como NMDS; cambiado por inestabilidad con la dispersión real de los datos, ver
-  "Variables respuesta" más abajo) como respuestas continuas por parcela.
-- **Validación:** validación cruzada por bloques espaciales desde el primer experimento. El CV aleatorio
-  se reporta solo como referencia optimista.
-
----
-
-## Financiamiento
+## Funding
 
 ANID FONDECYT Iniciación 11241088 · FSEQ210022 · Fundación Data Observatory.
 
-## Licencia
+## License
 
-Por definir.
+To be defined. Until a licence is added, no permission is granted beyond viewing the code;
+if you want to use or build on it, please open an issue.
