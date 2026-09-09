@@ -1,17 +1,28 @@
 # Mapas multitemporales de facetas: especificación de inferencia
 
-Cómo se producen los mapas anuales 2000–2026 de las siete facetas con el modelo final
-(`scripts/72_train_final_map_model.py --all-data`), dónde corre cada parte, y qué
-decisiones se tomaron. Las decisiones son de J. Lopatin (2026-09-02, sesión coordinada
-desde el Mac); la ejecución corre en el pod de Data Cube Chile (`jupyter-jlopatin`).
+Cómo se producen los mapas anuales 2000–2026 de las siete facetas con el modelo final,
+dónde corre cada parte, y qué decisiones se tomaron. Las decisiones son de J. Lopatin
+(2026-09-02, sesión coordinada desde el Mac); la ejecución corre en el pod de Data Cube
+Chile (`jupyter-jlopatin`).
+
+**Addendum (2026-09-08): el modelo desplegado cambió.** Todo lo que sigue describe el
+2D-CNN + MAE (`scripts/72_train_final_map_model.py --all-data`), que era el modelo final
+cuando se escribió este documento. `docs/20` §9.7 muestra que sobre la topografía corregida
+el MAE no gana ninguna faceta; el modelo desplegado pasó al 1D-CNN
+(`scripts/77_train_final_map_model_c1d.py --all-data`, `C1D01_curve1d_kndvi`,
+`results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/`,
+5 semillas × 28 épocas fijas). `src/biodiv/mapinfer.py` (`FacetEnsemble`) detecta la
+arquitectura del checkpoint por su propio `input_shape`, así que el resto de este documento
+-- decisiones D1-D13, tamaño del problema, dónde corre la inferencia -- sigue aplicando sin
+cambios; sólo la fila "modelo" y "checkpoints" de §1 abajo describen el despliegue anterior.
 
 ## 1. Qué modelo y qué entrada
 
 | pieza | valor | fuente |
 |---|---|---|
-| modelo | 2D-CNN `PhenoNetS` (width B, separable, late fusion) inicializada desde MAE, 15.175 parámetros | `docs/20` §6, `scripts/72` |
-| checkpoints | 5 semillas, `results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final/model_seed{0..4}.pt`, refit sobre las 3.102 parcelas, 33 épocas fijas | `logs/81` |
-| entrada fenológica | serie **cruda** kNDVI del **píxel central**, ventana causal `y−2..y`, 100 pasos, media móvil de 5, imagen `serpentine` 10×10 | `biodiv.curves.interp_grid`, `biodiv.transforms1d` |
+| modelo | 1D-CNN `Pheno1D` (width B, sin trunk preentrenado), 14.535 parámetros. Superseded: 2D-CNN `PhenoNetS` inicializada desde MAE, 15.175 parámetros, ver addendum arriba | `docs/20` §9.7, `scripts/77` |
+| checkpoints | 5 semillas, `results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final/model_seed{0..4}.pt`, refit sobre las 3.102 parcelas, 28 épocas fijas | `logs/96` |
+| entrada fenológica | serie **cruda** kNDVI del **píxel central**, ventana causal `y−2..y`, 100 pasos, media móvil de 5, curva 1D sin reshape (`FacetEnsemble.model_inputs`; era imagen `serpentine` 10×10 con el modelo superseded) | `biodiv.curves.interp_grid`, `biodiv.transforms1d` |
 | contexto | 8 variables topográficas del píxel (`features.TOPO_VARS`) + bandera de terreno plano + `log10(área)` + 3 indicadores de estrato; 3 indicadores de faltante ⇒ 16 columnas | `ck["ctx_preprocessor"].columns_` |
 | salidas | `lcbd_count_sorensen`, `pd_inext_q0/q1/q2`, `td_inext_q0/q1/q2` | `ck["targets"]` |
 

@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
-"""Fit the deployable map model: the winning 2D-CNN+MAE config, trained on 100% of the
-unified pool -- no held-out test fold, because a model meant for map inference has no
-"held-out pixel", every plot is training signal for it.
+"""Fit the deployable map model: the 2D-CNN+MAE config, trained on 100% of the unified
+pool -- no held-out test fold, because a model meant for map inference has no "held-out
+pixel", every plot is training signal for it.
 
-Winner, per `docs/20_pg_facets_unified.md` section 6: kNDVI, raw curves (`raw100`),
-centre pixel, `topo+area` context (real Living Trees topography, `scripts/70`),
-`serpentine` substrate 2D-CNN initialised from the masked-autoencoder checkpoint
-(`results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6.pt`), `pg_all` target set. It topped
-`pd_inext_q0` (0.613) and `td_inext_q0` (0.786) under `kfold5_block20_unified` -- the two
-facets with real signal -- and was competitive (not worst) everywhere else.
+SUPERSEDED as the deployed map model (2026-09-08): under the corrected topography this
+config does not top any facet any more (`docs/20_pg_facets_unified.md` section 9.7) -- its
+apparent wins on `pd_inext_q0`/`td_inext_q0` below were an artefact of the mixed aspect
+convention section 9 documents, not real signal. The deployed model is now the 1D-CNN,
+`scripts/77_train_final_map_model_c1d.py`. This script is kept to reproduce the 2D-CNN+MAE
+path, not as instructions for what to deploy.
+
+Winner, per `docs/20_pg_facets_unified.md` section 6 (pre-topofix, see above): kNDVI, raw
+curves (`raw100`), centre pixel, `topo+area` context (real Living Trees topography,
+`scripts/70`), `serpentine` substrate 2D-CNN initialised from the masked-autoencoder
+checkpoint (`results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6.pt`), `pg_all` target set. It
+topped `pd_inext_q0` (0.613) and `td_inext_q0` (0.786) under `kfold5_block20_unified` --
+the two facets with real signal -- and was competitive (not worst) everywhere else.
 
 Reuses the exact training call the CV runs use (`cv.inner_split`, `trainer.train_one_fold`,
 the checkpoint dict shape from `dl_runner.run_dl`) so a checkpoint this script writes loads

@@ -105,6 +105,12 @@ Consistente con `unified_all` (13 facetas), donde kndvi también ganó — se fi
 
 ## 6. Comparación de familias de modelo
 
+**Superseded por §9.7** (topografía corregida, 2026-09-08): la tabla de abajo es la
+comparación de agosto, sobre la topografía mezclada de §9. Con los signos corregidos el
+2D-CNN + MAE deja de ganar cualquier faceta y el modelo desplegado pasó de él (`scripts/72`)
+al 1D-CNN (`scripts/77`, `C1D01_curve1d_kndvi`). Se conserva esta tabla por trazabilidad,
+no como referencia vigente.
+
 Mismo diseño ganador (kndvi, curvas crudas `raw100`, pixel centro, `topo+area`,
 `kfold5_block20_unified`, `pg_all`):
 
@@ -336,8 +342,52 @@ muy heterogéneos; esa comparación no separa a ningún índice.
 - Corridas corregidas: `results/models_unified_topofix/`, logs `logs/9{1,2,3,4,5}_topofix_*.log`.
   Catorce corridas, ninguna con `[skip]`, `n_params` 15.175 (C2D02) y 14.535 (C1D01) idénticos a
   agosto.
-- Refit de despliegue sobre las 3.102 parcelas:
+- Refit de despliegue sobre las 3.102 parcelas (2D-CNN + MAE, superseded, §9.7):
   `results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final/`,
   5 semillas × 33 épocas fijas. No produce `pooled_metrics.csv` por construcción; su registro es
   `logs/95_topofix_*.log`.
+- Refit de despliegue actual (1D-CNN, `scripts/77_train_final_map_model_c1d.py --all-data`):
+  `results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final/`,
+  5 semillas × 28 épocas fijas. El presupuesto de épocas no viene de un fit preliminar aparte
+  (como el 33 de arriba, derivado de `logs/80_train_final_map_model.log`): es la mediana de
+  argmin(val_loss) sobre las 25 corridas (seed × fold) ya existentes en
+  `results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/kfold5_block20_unified/history.csv`
+  -- 25 observaciones en vez de 5, sin gastar una corrida extra. Registro: `logs/96_topofix_*.log`.
+
+### 9.7 Comparación de familias sobre topografía corregida (reemplaza §6, 2026-09-08)
+
+Mismo diseño de §6 (kndvi, `raw100`, pixel centro, `topo+area`, `kfold5_block20_unified`,
+`pg_all`), recalculado de los `pooled_metrics.csv` bajo `results/models_unified_topofix/`,
+R²_mean sobre 5 semillas:
+
+| faceta | 2D-CNN | RF (`RF03pc`) | 1D-CNN | 2D-CNN + MAE |
+|---|---:|---:|---:|---:|
+| lcbd_count_sorensen | 0.433 | **0.447** | 0.420 | 0.430 |
+| pd_inext_q0 | 0.586 | 0.583 | **0.602** | 0.594 |
+| pd_inext_q1 | 0.010 | -0.002 | **0.027** | 0.003 |
+| pd_inext_q2 | 0.047 | 0.053 | **0.076** | 0.057 |
+| td_inext_q0 | **0.783** | 0.664 | 0.781 | 0.782 |
+| td_inext_q1 | -0.076 | **0.042** | -0.136 | -0.120 |
+| td_inext_q2 | **-0.063** | -0.077 | -0.080 | -0.077 |
+
+El cambio frente a §6 no es de dirección (los cuatro deltas de §9.3 ya adelantaban que la
+corrección de signo no mueve la capacidad predictiva) sino de **quién queda arriba**: el
+2D-CNN + MAE ganaba `pd_inext_q0` (0.613) y `td_inext_q0` (0.786) en la tabla de agosto: con
+los signos corregidos queda segundo en las dos (0.594 y 0.782, detrás de 1D-CNN y 2D-CNN
+respectivamente) y no gana ninguna faceta. Por R²_ensemble (5 semillas, la métrica que
+`scripts/74` usa como referencia de compuerta) el 1D-CNN también gana `td_inext_q0` (0.815
+vs 0.814 del MAE, 0.810 del 2D-CNN plano) además de las tres facetas de riqueza donde ya
+ganaba en R²_mean.
+
+Dado que el MAE no traía ninguna ganancia real (su "victoria" de agosto era ruido de la
+convención de signo mezclada, no señal) y sí traía una dependencia extra -- un checkpoint de
+preentrenamiento (`results/mae/mae_serpentine_kndvi_sep_wB_p2_m0.6.pt`) cuyo trunk hay que
+cargar y validar en cada refit --, el modelo desplegado para los mapas pasó del 2D-CNN + MAE
+(`scripts/72`) al 1D-CNN (`scripts/77_train_final_map_model_c1d.py`, `C1D01_curve1d_kndvi`):
+mismo nivel de señal con 4% menos de parámetros (14.535 vs 15.175 -- igualados por diseño,
+para que la comparación fuera sobre la segunda dimensión de la imagen y no sobre capacidad),
+sin la transformada serpentina y sin trunk MAE que cargar. `src/biodiv/mapinfer.py` detecta
+la arquitectura del checkpoint por su propio
+`input_shape` (`FacetEnsemble.family`), así que el mismo pipeline de inferencia sirve para
+cualquiera de las dos familias sin tocar código.
 - Aviso original de la convención: `docs/07_run_record.md` §3 y `docs/16_living_trees_extraction.md` §5 bis.
