@@ -70,15 +70,25 @@ fail=0
 for f in "$OOF" "$TILES"; do
   [ -f "$f" ] || { echo "MISSING: $f" >&2; fail=1; }
 done
-for d in "$CKPT" "$MAPB" "$DERIVED"; do
+check_dirs=("$CKPT" "$DERIVED")
+# Only require MapBiomas when it is actually going to be uploaded. Without this the
+# `--skip-mapbiomas` path -- the documented first move, the 4.4 MB that unblock a run --
+# aborts on any machine that does not keep the 3.1 GB of rasters locally, which is every
+# machine except the one holding the external drive.
+[ "$SKIP_MB" = "1" ] || check_dirs+=("$MAPB")
+for d in "${check_dirs[@]}"; do
   [ -d "$d" ] || { echo "MISSING: $d" >&2; fail=1; }
 done
 n_ckpt=$(ls "$CKPT"/model_seed*.pt 2>/dev/null | wc -l | tr -d ' ')
 [ "$n_ckpt" = "5" ] || { echo "expected 5 model_seed*.pt in $CKPT, found $n_ckpt" >&2; fail=1; }
 # _scan() only sees flat *.tif whose name starts with <4 digits>_ , so count
 # exactly what the pipeline will actually be able to use.
-n_tif=$(find "$MAPB" -maxdepth 1 -name '[0-9][0-9][0-9][0-9]_*.tif' | wc -l | tr -d ' ')
-[ "$n_tif" -gt 0 ] || { echo "no <year>_*.tif directly under $MAPB" >&2; fail=1; }
+if [ "$SKIP_MB" = "1" ]; then
+  n_tif="skipped"
+else
+  n_tif=$(find "$MAPB" -maxdepth 1 -name '[0-9][0-9][0-9][0-9]_*.tif' | wc -l | tr -d ' ')
+  [ "$n_tif" -gt 0 ] || { echo "no <year>_*.tif directly under $MAPB" >&2; fail=1; }
+fi
 [ "$fail" = "0" ] || exit 1
 echo "5 checkpoints, $n_tif MapBiomas rasters, oof + tiles csv + derived present"
 
