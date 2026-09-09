@@ -1,10 +1,12 @@
 """Multitemporal map inference for the unified-pool facet model.
 
 Turns Landsat observations of a tile into one prediction per pixel and per census year
-with the deployed model (`scripts/72_train_final_map_model.py --all-data`: 2D-CNN + MAE,
-kNDVI raw series, centre pixel, `topo_ctr+area` context, five seeds). The design rule is
-that every step here is the *same function* the training data went through, or a
-vectorised re-implementation tested against it (`tests/test_mapinfer.py`):
+with the deployed model (`scripts/77_train_final_map_model_c1d.py --all-data`: 1D-CNN,
+kNDVI raw series, centre pixel, `topo_ctr+area` context, five seeds; `FacetEnsemble` also
+loads a 2D-CNN checkpoint such as the earlier `scripts/72` deployment, detecting which
+architecture a checkpoint needs from its own `input_shape`). The design rule is that every
+step here is the *same function* the training data went through, or a vectorised
+re-implementation tested against it (`tests/test_mapinfer.py`):
 
 - **Window.** Causal three-year window ``y-2 .. y`` per target year, as in
   `scripts/01_build_subset.py` / `scripts/35_extract_living_trees.py`.
@@ -13,8 +15,10 @@ vectorised re-implementation tested against it (`tests/test_mapinfer.py`):
   `biodiv.curves.raw_series`), linear interpolation of the clear observations of each
   pixel, then the 5-step shrinking moving mean of `biodiv.curves.interp_grid`. Pixels
   with fewer than five clear observations get NaN, the same floor as training.
-- **Image.** The same `serpentine` transform, applied as a fixed index permutation
-  (`serpentine_perm`) so it is exactly the training transform and vectorises.
+- **Image.** For a 2D-CNN checkpoint, the same `serpentine` transform, applied as a fixed
+  index permutation (`serpentine_perm`) so it is exactly the training transform and
+  vectorises; for a 1D-CNN checkpoint the raw curve is fed in directly (`curve1d_inputs`).
+  `FacetEnsemble.model_inputs` picks the right one.
 - **Context.** Eight centre-pixel topographic variables (`features.TOPO_VARS`, computed
   with `scripts/03_extract_topography.py:terrain`) plus the flat-terrain flag, and the
   two non-mappable covariates held constant: plot area (``area_m2``) and the
@@ -195,8 +199,13 @@ def serpentine_perm(ngs: int = NGS) -> np.ndarray:
 
 
 def images_from_curves(curves: np.ndarray, perm: np.ndarray) -> np.ndarray:
-    """(N, ngs) -> (N, 1, side, side) float32."""
+    """(N, ngs) -> (N, 1, side, side) float32, the 2D-CNN input."""
     return np.ascontiguousarray(curves[:, perm][:, None, :, :], dtype=np.float32)
+
+
+def curve1d_inputs(curves: np.ndarray) -> np.ndarray:
+    """(N, ngs) -> (N, 1, ngs) float32, the 1D-CNN input (raw curve, no reshape)."""
+    return np.ascontiguousarray(curves[:, None, :], dtype=np.float32)
 
 
 # --------------------------------------------------------------------------------------
@@ -241,10 +250,24 @@ class Member:
     scaler: object
     targets: list[str]
     input_shape: tuple
+    family: str
+
+
+def _family_of(input_shape: tuple) -> str:
+    """``(c_in, ngs)`` (2 dims) is a curve, the 1D-CNN; ``(c_in, side, side)`` (3 dims) is
+    an image, the 2D-CNN. A checkpoint without ``input_shape`` predates this field and was
+    always a 2D-CNN, so that is the default."""
+    return "C1D" if len(input_shape) == 2 else "C2D"
 
 
 class FacetEnsemble:
-    """The five all-data seed checkpoints of the deployed 2D-CNN, as one predictor."""
+    """The five all-data seed checkpoints of the deployed model, as one predictor.
+
+    Each checkpoint says which architecture it needs through its own ``input_shape``
+    (``_family_of``), so the ensemble loads a 1D-CNN (`scripts/77`) or a 2D-CNN
+    (`scripts/72`) checkpoint alike -- but not a mix of the two, since they would disagree
+    on what ``model_inputs`` should hand them.
+    """
 
     def __init__(self, ckpt_paths: list, device: str = "cpu", width: str = "B"):
         """``ckpt_paths`` are paths, or open binary files.
@@ -261,20 +284,37 @@ class FacetEnsemble:
             pre: Preprocessor = ck["ctx_preprocessor"]
             targets = list(ck["targets"])
             n_ctx = len(pre.feature_names)
-            model = build_model("C2D", c_in=1, n_out=len(targets), n_ctx=n_ctx, width=width,
-                                pad_mode="zeros", fusion="late")
+            input_shape = tuple(ck.get("input_shape", ()))
+            family = _family_of(input_shape)
+            c_in = input_shape[0] if input_shape else 1
+            if family == "C1D":
+                model = build_model("C1D", c_in=c_in, n_out=len(targets), n_ctx=n_ctx,
+                                    width=width)
+            else:
+                model = build_model("C2D", c_in=c_in, n_out=len(targets), n_ctx=n_ctx,
+                                    width=width, pad_mode="zeros", fusion="late")
             model.load_state_dict(ck["state_dict"])
             model.to(self.device).eval()
             name = Path(p) if isinstance(p, (str, Path)) else Path(f"<seed{i}:in-memory>")
             self.members.append(Member(name, model, pre, ck["target_scaler"], targets,
-                                       tuple(ck.get("input_shape", ()))))
+                                       input_shape, family))
         if not self.members:
             raise ValueError("no checkpoints")
         t0 = self.members[0].targets
         c0 = list(self.members[0].pre.columns_)
+        f0 = self.members[0].family
         for m in self.members[1:]:
             if m.targets != t0 or list(m.pre.columns_) != c0:
                 raise ValueError(f"checkpoint {m.path} disagrees on targets/context columns")
+            if m.family != f0:
+                raise ValueError(f"checkpoint {m.path} is {m.family}, ensemble is {f0}")
+        self.family = f0
+        ishape = self.members[0].input_shape
+        if f0 == "C1D":
+            self._perm = None
+        else:
+            ngs = ishape[1] * ishape[2] if len(ishape) == 3 else NGS
+            self._perm = serpentine_perm(ngs)
 
     @property
     def targets(self) -> list[str]:
@@ -284,13 +324,24 @@ class FacetEnsemble:
     def context_columns(self) -> list[str]:
         return list(self.members[0].pre.columns_)
 
+    def model_inputs(self, curves: np.ndarray) -> np.ndarray:
+        """(N, ngs) raw curves -> whatever shape this ensemble's architecture expects."""
+        if self.family == "C1D":
+            return curve1d_inputs(curves)
+        return images_from_curves(curves, self._perm)
+
     @torch.no_grad()
     def predict_scaled(self, images: np.ndarray, ctx: pd.DataFrame,
                        batch: int = 8192) -> np.ndarray:
-        """(n_members, N, n_targets) in the transformed target space."""
+        """(n_members, N, n_targets) in the transformed target space.
+
+        ``images`` is whatever ``model_inputs`` produced -- ``(N, 1, ngs)`` for a 1D-CNN
+        ensemble, ``(N, 1, side, side)`` for a 2D-CNN one -- so the finite-check collapses
+        every axis but the first rather than assuming a fixed number of dimensions.
+        """
         out = np.full((len(self.members), images.shape[0], len(self.targets)), np.nan,
                       np.float32)
-        ok = np.isfinite(images).all(axis=(1, 2, 3))
+        ok = np.isfinite(images).reshape(images.shape[0], -1).all(axis=1)
         idx = np.flatnonzero(ok)
         if idx.size == 0:
             return out

@@ -10,8 +10,9 @@ datacube needed). Three checks, each printed with a pass/fail line:
    -4200, is the sensitive channel).
 2. **Same inputs.** For every training plot, the context row built by
    `mapinfer.context_frame` from the topography table equals the row `features.build_design`
-   produced for training, and the serpentine image built by `mapinfer.images_from_curves`
-   equals the one `substrates.make_substrate` produced.
+   produced for training, and the model input built by `FacetEnsemble.model_inputs` (the
+   serpentine image for a 2D-CNN checkpoint, the raw curve for a 1D-CNN one -- whichever
+   `ens.family` says) equals the one `substrates.make_substrate` produced.
 3. **Same outputs.** `FacetEnsemble.predict_scaled` on those inputs equals a direct call
    of the reloaded model on the training tensors, and the seed-mean back-transformed
    prediction agrees with the observed facets at least as well as the block-CV run of the
@@ -25,7 +26,7 @@ datacube needed). Three checks, each printed with a pass/fail line:
 
 Usage (on the pod / rapidita):
     BIODIV_UNIFIED=1 BIODIV_CURVES=_raw100 python scripts/74_check_map_consistency.py \
-        --oof-csv results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv
+        --oof-csv results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/kfold5_block20_unified/oof_predictions.csv
 """
 
 from __future__ import annotations
@@ -47,8 +48,9 @@ from biodiv import mapinfer as mi          # noqa: E402
 from biodiv import substrates as sub       # noqa: E402
 from biodiv import targets as tg           # noqa: E402
 
-DEFAULT_CKPT = ("results/models_unified/"
-                "C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final")
+DEFAULT_CKPT = ("results/models_unified_topofix/"
+                "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final")
+SUBSTRATE_FOR_FAMILY = {"C1D": "curve1d", "C2D": "serpentine"}
 
 
 def ok(flag: bool, msg: str) -> bool:
@@ -86,11 +88,12 @@ def main() -> None:
     _, Y, names = tg.load_targets(derived, list(ens.targets), plot_ids=ids)
     Xctx, _ = feat.build_design("topo_ctr+area", index="kndvi", derived=derived, ids=ids,
                                 px="center")
-    s = sub.make_substrate("serpentine", index="kndvi", derived=derived, px="center",
+    substrate_name = SUBSTRATE_FOR_FAMILY[ens.family]
+    s = sub.make_substrate(substrate_name, index="kndvi", derived=derived, px="center",
                            normalize="none", rotation="trough", ids=ids)
     images_train = np.ascontiguousarray(s.X, dtype=np.float32)
     curves_train = s.curves[:, 0, :]
-    print(f"{len(ids)} plots, images {images_train.shape}, ctx {Xctx.shape}")
+    print(f"{len(ids)} plots, {ens.family} inputs {images_train.shape}, ctx {Xctx.shape}")
 
     all_ok = True
 
@@ -122,12 +125,11 @@ def main() -> None:
                  f"context rows identical (max abs diff {np.nanmax(np.abs(diff)):.2e}, "
                  f"NaN pattern equal {same_nan.all()})")
 
-    # 2b. images
-    perm = mi.serpentine_perm(mi.NGS)
-    images_map = mi.images_from_curves(curves_train.astype(np.float32), perm)
-    finite = np.isfinite(images_train).all(axis=(1, 2, 3))
+    # 2b. model inputs
+    images_map = ens.model_inputs(curves_train.astype(np.float32))
+    finite = np.isfinite(images_train).reshape(images_train.shape[0], -1).all(axis=1)
     d_img = np.nanmax(np.abs(images_map[finite] - images_train[finite]))
-    all_ok &= ok(bool(d_img < 1e-6), f"serpentine images identical (max abs diff {d_img:.2e}, "
+    all_ok &= ok(bool(d_img < 1e-6), f"{substrate_name} inputs identical (max abs diff {d_img:.2e}, "
                                      f"{int(finite.sum())} plots with a curve)")
 
     # 3a. model outputs

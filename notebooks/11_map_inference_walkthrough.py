@@ -132,16 +132,15 @@ from biodiv import mapinfer as mi                      # noqa: E402
 # Datacube is built -- the same boot order `scripts/73` and `scripts/35` follow.
 configure_s3_access(aws_unsigned=False, requester_pays=True)
 
-CKPT = ROOT / ("results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_"
-               "maekndvi_m06_ctr_FINAL_alldata/final")
-OOF = ROOT / ("results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_"
-              "maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv")
+CKPT = ROOT / ("results/models_unified_topofix/"
+               "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final")
+OOF = ROOT / ("results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/"
+              "kfold5_block20_unified/oof_predictions.csv")
 
 ens = mi.FacetEnsemble(sorted(CKPT.glob("model_seed*.pt")))
 resid = mi.oof_residuals_scaled(OOF, ens.members[0].scaler, ens.targets)
 y_train = mi.training_targets(ROOT / "data" / "derived", ens.targets)
-perm = mi.serpentine_perm(mi.NGS)
-print(f"{len(ens.members)} seeds | targets {ens.targets}")
+print(f"{len(ens.members)} seeds ({ens.family}) | targets {ens.targets}")
 print(f"context ({len(ens.context_columns)}): {ens.context_columns}")
 print(f"smearing residuals usable per target: {np.isfinite(resid).sum(axis=0).tolist()}")
 
@@ -160,7 +159,7 @@ cfg = mt.TileConfig(
               caveat=("predicted values are conditional means and under-disperse the upper "
                       "tail; use as a relative surface")))
 
-rows = mt.run_tile(dc, tile, cfg, ens, resid, y_train, perm)
+rows = mt.run_tile(dc, tile, cfg, ens, resid, y_train)
 if rows and rows[0].get("status") == "ok":
     display(pd.DataFrame(rows)[["tile_id", "year", "status", "n_px", "n_native", "n_pred",
                                 "n_dates_window", "seconds", "load_seconds"]])

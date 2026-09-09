@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Multitemporal facet maps from the deployed 2D-CNN+MAE ensemble, tile by tile.
+"""Multitemporal facet maps from the deployed model ensemble, tile by tile.
 
 For every tile and every target year ``y`` in ``--years``: load the clear-sky kNDVI
 observations of the tile for ``y-2 .. y`` from Data Cube Chile, build the 100-step raw
-series per pixel exactly as for the training plots (`biodiv.mapinfer`), fold it into the
-serpentine image, attach the centre-pixel topography (Copernicus GLO-30, same derivatives
-as `scripts/03`) and the two constant covariates (plot area, recording protocol), run the
-five all-data seed checkpoints, back-transform and average, and write one GeoTIFF per
-(tile, year) with the seven facets plus quality layers.
+series per pixel exactly as for the training plots (`biodiv.mapinfer`), shape it into
+whatever the checkpoint's architecture expects (`FacetEnsemble.model_inputs` -- the raw
+curve for the deployed 1D-CNN, `C1D01_curve1d_kndvi`, or the serpentine image for a 2D-CNN
+checkpoint), attach the centre-pixel topography (Copernicus GLO-30, same derivatives as
+`scripts/03`) and the two constant covariates (plot area, recording protocol), run the five
+all-data seed checkpoints, back-transform and average, and write one GeoTIFF per (tile,
+year) with the seven facets plus quality layers.
 
 The Landsat archive is read ONCE per tile for the whole ``years[0]-2 .. years[-1]`` span
 and every year's window is cut from it in memory: 27 target years share 29 archive years,
@@ -52,9 +54,9 @@ from biodiv import maptask as mt            # noqa: E402
 from biodiv.maptask import to_utm, to_lonlat  # noqa: E402,F401
 
 UTM = "EPSG:32719"
-DEFAULT_CKPT = ("results/models_unified/"
-                "C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final")
-DEFAULT_OOF = ("results/models_unified/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/"
+DEFAULT_CKPT = ("results/models_unified_topofix/"
+                "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final")
+DEFAULT_OOF = ("results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/"
                "kfold5_block20_unified/oof_predictions.csv")
 
 
@@ -222,8 +224,6 @@ def main() -> None:
             print("range clipping: training targets loaded")
         except Exception as e:                      # noqa: BLE001
             print(f"range clipping unavailable ({type(e).__name__}: {e}); predictions unclipped")
-    perm = mi.serpentine_perm(mi.NGS)
-
     meta = dict(tag=args.tag, years=f"{years[0]}-{years[-1]}", tile_km=args.tile_km,
                 resolution=args.resolution, area_m2=args.area_m2, stratum=args.stratum,
                 mask=args.mask, ckpt_dir=str(args.ckpt_dir), n_seeds=len(ckpts),
@@ -312,7 +312,7 @@ def main() -> None:
             # lifetime independent of the credential lifetime.
             configure_s3_access(aws_unsigned=False, requester_pays=True, client=client)
             t0 = time.time()
-            rows = mt.run_tile(dc, tile, cfg, ens, resid, y_train, perm, skip)
+            rows = mt.run_tile(dc, tile, cfg, ens, resid, y_train, skip)
             _append(man_path, rows)
             ok = [r for r in rows if r.get("status") == "ok"]
             if not ok:

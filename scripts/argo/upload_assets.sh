@@ -18,23 +18,34 @@
 # from the pod's own runs (argo/probe-s3.yaml answers that) and would then be
 # referenced in place with -p s3-mapbiomas=<prefix> instead of re-uploaded.
 #
-# Override the sources with env vars if the paths differ:
+# Override the sources with env vars if the paths differ. MAPB defaults under DISK
+# (Javier's Mac layout: checkpoints and MapBiomas share the external drive); a machine
+# where they live apart -- e.g. the GPU workstation, checkpoints under the repo's own
+# results/, MapBiomas on a separate data mount -- overrides MAPB on its own:
 #   DISK=/Volumes/... REPO=~/GitHub/Biodiversity_Chile ./argo/upload_assets.sh
+#   DISK=results/models_unified_topofix REPO=. MAPB=/mnt/data/GIS/MapBiomas ./argo/upload_assets.sh
 set -euo pipefail
 
 DISK="${DISK:-/Volumes/Lopatin 1TB}"
 REPO="${REPO:-$HOME/Documents/GitHub/Biodiversity_Chile}"
+MAPB="${MAPB:-$DISK/MapBiomas}"
 A="${A:-s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/assets}"
 M="${M:-s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/MapBiomas}"
 
-# The all-data refit on corrected topography (models_unified_topofix). The
-# checkpoints are 151,571 bytes each, dated 2 Sep; the pre-topofix run under
-# models_unified/ is ~148 KB and 15 Aug. The oof MUST come from the same
-# parent: smearing back-transforms with the checkpoint's own target scaler,
-# so an oof from the other run is a silently wrong correction, not an error.
-CKPT="$DISK/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final"
-OOF="$DISK/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv"
-MAPB="$DISK/MapBiomas"
+# The deployed model is now the 1D-CNN (C1D01_curve1d_kndvi), not the 2D-CNN
+# (C2D02_serpentine_kndvi) -- essentially tied on skill (td_inext_q0 0.781 vs
+# 0.783, pd_inext_q0 0.602 vs 0.616) but simpler: no MAE-pretrained trunk to
+# carry into deployment, no serpentine reshape, at essentially the same
+# parameter count (14,535 vs 15,175 -- matched by design). See scripts/77 for the
+# all-data refit on corrected topography (models_unified_topofix), 149,139
+# bytes per checkpoint, dated 8 Sep. The oof MUST come from the same parent:
+# smearing back-transforms with the checkpoint's own target scaler, so an oof
+# from a different run (or the old C2D02 one) is a silently wrong correction,
+# not an error. `biodiv.mapinfer.FacetEnsemble` detects the architecture from
+# the checkpoint's own `input_shape`, so this is the only file that needs to
+# know which model is deployed.
+CKPT="$DISK/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final"
+OOF="$DISK/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/kfold5_block20_unified/oof_predictions.csv"
 TILES="$REPO/results/figures/tiles_native_10km.csv"
 DERIVED="$REPO/data/derived"
 

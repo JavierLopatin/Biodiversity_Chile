@@ -104,7 +104,7 @@ def test_grid_transform_puts_the_first_cell_centre_where_the_template_has_it():
 # --------------------------------------------------------------------------------------
 
 CKPT = (ROOT / "results/models_unified_topofix/"
-        "C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final")
+        "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final")
 
 
 @pytest.mark.skipif(not CKPT.is_dir(), reason="deployed checkpoints not present")

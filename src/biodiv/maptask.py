@@ -177,7 +177,7 @@ def load_tile(dc, tile: dict, cfg: TileConfig):
     return da
 
 
-def run_tile(dc, tile: dict, cfg: TileConfig, ens, resid, y_train, perm,
+def run_tile(dc, tile: dict, cfg: TileConfig, ens, resid, y_train,
              skip_years: frozenset[int] = frozenset()) -> list[dict]:
     """One tile, every requested year, written out. Returns the manifest rows."""
     todo = [y for y in cfg.years if y not in skip_years]
@@ -212,7 +212,7 @@ def run_tile(dc, tile: dict, cfg: TileConfig, ens, resid, y_train, perm,
         run = np.isfinite(curves).all(axis=1) & nat
         pred = np.full((ny * nx, len(targets)), np.nan, np.float32)
         if run.any():
-            images = mi.images_from_curves(curves[run], perm)
+            images = ens.model_inputs(curves[run])
             pred[run] = ens.predict(images, ctx.iloc[np.flatnonzero(run)],
                                     resid_scaled=resid, y_train=y_train, batch=cfg.batch)
         layers = {t: pred[:, j].reshape(ny, nx) for j, t in enumerate(targets)}
@@ -277,8 +277,7 @@ def worker_state(payload: Payload, cfg: TileConfig) -> dict:
     configure_s3_access(aws_unsigned=False, requester_pays=True)
 
     ens = mi.FacetEnsemble([io.BytesIO(b) for _, b in payload.ckpts], device=cfg.device)
-    st = dict(dc=datacube.Datacube(app="biodiv-map-tile"), ens=ens,
-              perm=mi.serpentine_perm(mi.NGS))
+    st = dict(dc=datacube.Datacube(app="biodiv-map-tile"), ens=ens)
     _STATE.clear()                      # one ensemble per worker, never a growing cache
     _STATE[key] = st
     return st
@@ -304,7 +303,7 @@ def run_tile_remote(tile: dict, payload: Payload, cfg: TileConfig,
         from datacube.utils.aws import configure_s3_access
         configure_s3_access(aws_unsigned=False, requester_pays=True)
         return run_tile(st["dc"], tile, cfg, st["ens"], payload.resid, payload.y_train,
-                        st["perm"], frozenset(skip_years))
+                        frozenset(skip_years))
     except Exception as e:                                          # noqa: BLE001
         return [dict(tile_id=tile["tile_id"], year=y, status="error",
                      error=f"{type(e).__name__}: {str(e)[:200]}")
