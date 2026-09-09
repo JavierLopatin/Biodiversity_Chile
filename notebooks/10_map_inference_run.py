@@ -15,6 +15,18 @@
 # every table below is read from a log or a manifest that the run itself wrote, so re-running
 # it shows the current state rather than a snapshot of prose.
 #
+# **That run is over and its output was deleted.** It predicted with the two-dimensional
+# network initialised from a masked autoencoder, which stopped being the deployed model on
+# 2026-09-08, and it wrote its rasters with a plot area of 500 m² where `docs/21` records
+# 900. The 1,096 tiles it had finished were purged rather than kept, so nothing produced here
+# survives and no run is resumable from it.
+#
+# What survives is everything this notebook was written for. The four findings below are
+# about input/output and cluster allocation, not about which network runs: the deployed model
+# changed, the shape of the problem did not. The per-tile costs are the one thing to re-measure
+# — they were timed on the two-dimensional network, and the one now deployed has no serpentine
+# reshape, so the budget in `docs/21` section 8.4 is likely an overestimate.
+#
 # It exists because four things in this run turned out the opposite of what the design
 # assumed, and each was found by measuring rather than reasoning:
 #
@@ -28,7 +40,9 @@
 # The code itself, run on one tile, is in
 # `11_map_inference_walkthrough.ipynb`; this notebook is the evidence.
 #
-# The run is still in progress while this is written. The last section shows where it is.
+# The last section counts what is in the destination prefix. It reads zero now, and that is
+# correct: the prefix was emptied with the purge described above, and the run with the
+# one-dimensional network has not been launched.
 
 # %%
 import json

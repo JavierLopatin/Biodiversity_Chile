@@ -12,9 +12,14 @@
 #
 # The processing path of `scripts/73_map_inference.py`, shown as code and then **run** on one
 # tile: load the tile's whole Landsat archive span once, cut a causal `y-2..y` window per
-# target year, build a 100-step raw kNDVI curve for every pixel, fold it into the serpentine
-# image, attach the pixel's topography, run the five all-data seed checkpoints, back-transform,
-# and write a ten-band GeoTIFF.
+# target year, build a 100-step raw kNDVI curve for every pixel, hand it to the model in the
+# shape its own checkpoint declares, attach the pixel's topography, run the five all-data seed
+# checkpoints, back-transform, and write a ten-band GeoTIFF.
+#
+# The deployed model is the one-dimensional network, so the curve goes in as a curve. Until
+# 2026-09-08 it was a two-dimensional network and the same curve was folded into a 10x10
+# serpentine image first; `FacetEnsemble` reads `input_shape` off the checkpoint and builds
+# whichever of the two it is, so this notebook does not care which is loaded.
 #
 # The companion notebook, `10_map_inference_run.ipynb`, is the record of the production run —
 # what was measured, what broke, where it stands. This one is only the mechanism.
@@ -132,12 +137,16 @@ from biodiv import mapinfer as mi                      # noqa: E402
 # Datacube is built -- the same boot order `scripts/73` and `scripts/35` follow.
 configure_s3_access(aws_unsigned=False, requester_pays=True)
 
-CKPT = ROOT / ("results/models_unified_topofix/"
-               "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final")
-OOF = ROOT / ("results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/"
-              "kfold5_block20_unified/oof_predictions.csv")
+# Resolved through `biodiv.assets`, which reads them from this checkout, from another
+# directory, or from the S3 prefix the Argo workflow stages -- whichever BIODIV_ASSETS names.
+# That is what lets someone with read access to the bucket run this notebook without the
+# repository's `results/` tree. Defaults are the workflow's own prefix.
+from biodiv import assets                              # noqa: E402
+print(assets.describe())
+CKPT, OOF = assets.ckpt_dir(), assets.oof_csv()
 
 ens = mi.FacetEnsemble(sorted(CKPT.glob("model_seed*.pt")))
+print(f"family {ens.family}, {len(ens.members)} seeds, targets {list(ens.targets)}")
 resid = mi.oof_residuals_scaled(OOF, ens.members[0].scaler, ens.targets)
 y_train = mi.training_targets(ROOT / "data" / "derived", ens.targets)
 print(f"{len(ens.members)} seeds ({ens.family}) | targets {ens.targets}")
@@ -295,10 +304,15 @@ display(t)
 #      2 load threads and 2 torch threads per tile, not 4 and 8: four tiles share one
 #      process and therefore one GIL, and the load is what the GIL blocks.
 #
-# B=s3://easido-prod-user-scratch/$(python -c \
-#     "import boto3;print(boto3.client('sts').get_caller_identity()['UserId'])")/biodiv
-# CK=results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr_FINAL_alldata/final
-# OOF=results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv
+# The September 2026 run used the C2D02+MAE checkpoints and wrote to the personal scratch
+# prefix. Both are superseded: the model is the C1D01 below, and the destination is the team
+# prefix, which collaborators can read and which is not deleted after 30 days. The 1,096 tiles
+# that run wrote were purged -- wrong model, and `area_m2` 500 instead of the 900 the spec
+# records -- so there is nothing of it left to resume from.
+#
+# B=s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv
+# CK=results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr_FINAL_alldata/final
+# OOF=results/models_unified_topofix/C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr/kfold5_block20_unified/oof_predictions.csv
 #
 # setsid nohup env BIODIV_UNIFIED=1 BIODIV_CURVES=_raw100 python -u scripts/73_map_inference.py \
 #     --tiles-file results/figures/tiles_run_gateway.csv --years 2000-2026 \
