@@ -283,3 +283,113 @@ cd ~/temp/Biodiversity_Chile && scripts/start_maps.sh
 `scripts/run_maps_supervised.sh <gateway|pod>` es el supervisor por mitad: cuenta lo que falta
 como las teselas sin sus 27 años escritos y relanza con `--resume` hasta que no queda ninguna.
 Un relanzamiento solo cuesta las teselas que estaban en vuelo.
+
+### 8.6 El cambio a 1D-CNN no mueve el presupuesto (medido 2026-09-09)
+
+El modelo desplegado pasó del 2D-CNN a la 1D-CNN (`docs/20` §9.7). Como la 1D no pliega la
+curva en imagen, cabía esperar que el trabajo por año cayera lo suficiente como para que la
+carga volviera a dominar y §8.4 quedara **sobreestimada**. Se midió y **no ocurre**: §8.4 se
+queda como está.
+
+Lo único que cambia entre familias es `model_inputs` + `predict` —la carga de Landsat y el
+`_emit` del GeoTIFF son el mismo código—, así que se cronometró ese término solo, en una
+misma máquina y con el tamaño real de una tesela (40.190 píxeles predichos, 5 semillas):
+
+| familia | forma de entrada | `model_inputs` | `predict` | total | ms/píxel |
+|---|---|---:|---:|---:|---:|
+| C1D | `(40190, 1, 100)` | 0,000 s | 26,00 s | **26,00 s** | 0,647 |
+| C2D | `(40190, 1, 10, 10)` | 0,012 s | 27,58 s | **27,59 s** | 0,687 |
+
+**La 1D es 5,8 % más barata, y la transformada serpentina no costaba nada**: 12 ms por año
+sobre 37.500. El ahorro viene del forward, no del plegado. Trasladado a la línea base de
+§8.4 *en su propio hardware*, que es la única forma válida de compararlo: el trabajo por año
+pasa de 28 s a 26,4 s, la tesela de 27 años de 1.858 s a 1.815 s, y el total de Chile de
+3.059 a ~2.988 horas-tesela — **un 2,3 %**, muy por debajo de la dispersión entre teselas de
+la propia §8.4 (carga 553–1.777 s).
+
+Corolario que corrige una lectura ingenua de §8.4: **el forward es el ~69 % del trabajo por
+año** (26,0 s de 37,5 s; el resto es `year_curves`, la máscara MapBiomas y la escritura del
+GeoTIFF). El «la carga es el ~80 %» de §8.4 es sobre **10 años y por tesela completa**,
+porque la carga se paga una sola vez; dentro del término por año la CNN nunca fue
+despreciable.
+
+Piloto de verificación (`results/maps/pilot_c1d/`, tesela `t2_446`, 27/27 años ok, compuerta
+`scripts/74` en ALL PASS con errores de 0,00e+00 en contexto, entradas y forward):
+
+| pieza | pod, 8 núcleos, `--torch-threads 4` | §8.4, gateway, 2 núcleos |
+|---|---:|---:|
+| carga Landsat 1998–2026 | 294 s | 1.102 s |
+| trabajo por año (mediana) | 37,5 s | 28 s |
+| ms por píxel-año | 0,934 | 0,52 |
+
+**Estos absolutos no entran a §8.4 y no son comparables con ella.** La línea base se midió en
+workers de gateway de 2 núcleos con torch pinneado a 2 (`logs/calib_gateway.log`); el piloto
+corrió en el pod con 8 núcleos y 4 hilos de torch. Que el ms/píxel-año del pod sea *peor*
+(0,934 contra 0,52) lo demuestra: son máquinas distintas, no modelos distintos. Sustituir una
+serie por la otra habría atribuido al modelo una diferencia que es de hardware.
+
+#### `--worker-cores 2` deja de ser elección y pasa a ser medición
+
+Dado que el forward es el ~69 % del trabajo por año, cuánto escala con hilos de torch decide
+el reparto de núcleos. Medido sobre el C1D desplegado, 5 semillas:
+
+| hilos | ms/píxel | speedup | eficiencia |
+|---:|---:|---:|---:|
+| 1 | 1,512 | 1,00× | 100 % |
+| 2 | 0,848 | 1,78× | **89 %** |
+| 4 | 0,600 | 2,52× | 63 % |
+| 8 | 0,450 | 3,36× | 42 % |
+
+El escalado es marcadamente sublineal. En la ruta de gateway torch queda pinneado a
+`--worker-cores` (`scripts/73_map_inference.py:387`), de modo que la corrida de §8.4 usa 2
+hilos: **el punto eficiente**. Con un presupuesto fijo de núcleos conviene repartirlos en
+muchos workers flacos, no en pocos gordos —a 8 hilos se desperdicia el 58 % de cada núcleo
+añadido—, así que `--worker-cores 2` se mantiene, ahora con una medición detrás.
+
+### 8.7 El smearing era un tercio del año-tesela (medido y corregido 2026-09-09)
+
+Perfilando por etapas un año-tesela real (`t18_600`, 38.934 píxeles predichos, 5 semillas)
+aparece un costo que §8.4 no podía ver, porque cronometra "trabajo por año" como un bloque:
+
+| etapa | s | % |
+|---|---:|---:|
+| `predict_scaled` (forward torch) | 21,60 | 63,2 % |
+| **retransformación + smearing** | **10,83** | **31,7 %** |
+| `year_curves` | 1,52 | 4,4 % |
+| `native_mask` + `model_inputs` + GeoTIFF | 0,25 | 0,7 % |
+
+`inverse_with_smearing` hace 128 llamadas a `scaler.inverse_transform`, una por draw de Duan,
+repetidas por semilla: **640 inversas por año-tesela**. Las salidas obvias no sirven, y se
+midieron antes de descartarlas: apilar los draws en una sola llamada a sklearn no gana nada
+(2,16 contra 2,20 s), vectorizar la inversa Yeo-Johnson en numpy monohilo es *más lenta*
+(0,86x), y en torch da 1,43x con 8 hilos pero **0,69x con 2**, que es lo que tiene un worker
+de gateway. El costo es la aritmética —`np.power` sobre 34,9 M elementos float64—, no el
+overhead de sklearn.
+
+Lo que sí sirve es la estructura: `draws` es un escalar por (draw, target) difundido sobre
+todas las filas, y el clip es por columna, así que para un target fijo el estimador entero es
+una **función monótona de una sola variable** sobre el dominio acotado `[lo_s, hi_s]`. Se
+tabula una vez por semilla (`targets.build_smearing_table`) y se interpola.
+
+A/B sobre la misma tesela, exacto contra tabla, tres años:
+
+| | exacto | tabla |
+|---|---:|---:|
+| primer año (incluye construir la tabla) | 47,1 s | 42,6 s |
+| años siguientes | 40,8 s | **28,1 s (1,45x)** |
+
+Peor error relativo 1,7e-5, siempre en TD₀ —2e-4 especies sobre ~7—, y `n_obs`, `span_days` y
+`native` bitwise idénticas. La compuerta `scripts/74` sigue en ALL PASS con la misma tabla de
+R² y los mismos gaps `[0,053, 0,03]`.
+
+**La tabla es solo del camino de mapas.** `inverse_with_smearing` también corre en
+`dl_runner.py` y en los baselines, de donde salen todos los R² publicados (§9.3, §9.5 y §9.7
+de `docs/20`); ahí el smearing corre sobre 3.102 parcelas y no cuesta nada, así que la ruta
+exacta sigue siendo la de la validación cruzada y esos números no se mueven. `--smearing-exact`
+fuerza la ruta vieja en los mapas.
+
+El tamaño de grilla (`SMEARING_GRID`) se dimensiona contra el **costo de construir**, no
+contra el error, que sobra en todo el rango: construir cuesta una pasada de los 128 draws
+sobre M filas, así que un M cercano al número de píxeles de una tesela hace que la tabla
+cueste tanto como el año que reemplaza —a 65.536 una tesela de un año midió 0,87x, más lenta
+que el camino exacto.
