@@ -1,0 +1,45 @@
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator PowerTransformer from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+4 tiles of 10 km, years 2000-2026 (10), archive span 1998-2026
+ensemble: 5 seeds, targets ['lcbd_count_sorensen', 'pd_inext_q0', 'pd_inext_q1', 'pd_inext_q2', 'td_inext_q0', 'td_inext_q1', 'td_inext_q2'], context ['topo_elevation', 'topo_slope', 'topo_northness', 'topo_eastness', 'topo_heat_load', 'topo_tpi', 'topo_tri', 'topo_curvature', 'topo_topo_flat', 'area_log10', 'area_stratum_counts', 'area_stratum_presence', 'area_stratum_basal']
+smearing: residuals from results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv ([2499, 888, 888, 888, 895, 895, 895] usable per target)
+range clipping: training targets loaded
+dask: local cluster, 8 workers; dashboard /user/jlopatin/proxy/8787/status
+/env/lib/python3.12/site-packages/distributed/client.py:3398: UserWarning: Sending large graph of size 13.97 MiB.
+This may cause some slowdown.
+Consider loading the data with Dask directly
+ or using futures or delayed objects to embed the data into the graph without repetition.
+See also https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask for more information.
+  warnings.warn(
+[1/4] t17_600: 1788 dates, 333x333 px, load 304s
+    10 years in 516s (pred px/yr median 27601)
+/env/lib/python3.12/site-packages/distributed/client.py:3398: UserWarning: Sending large graph of size 13.86 MiB.
+This may cause some slowdown.
+Consider loading the data with Dask directly
+ or using futures or delayed objects to embed the data into the graph without repetition.
+See also https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask for more information.
+  warnings.warn(
+[2/4] t17_601: 1767 dates, 333x333 px, load 291s
+    10 years in 557s (pred px/yr median 40178)
+/env/lib/python3.12/site-packages/distributed/client.py:3398: UserWarning: Sending large graph of size 13.48 MiB.
+This may cause some slowdown.
+Consider loading the data with Dask directly
+ or using futures or delayed objects to embed the data into the graph without repetition.
+See also https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask for more information.
+  warnings.warn(
+[3/4] t17_602: 1726 dates, 333x333 px, load 274s
+    10 years in 491s (pred px/yr median 31412)
+/env/lib/python3.12/site-packages/distributed/client.py:3398: UserWarning: Sending large graph of size 14.08 MiB.
+This may cause some slowdown.
+Consider loading the data with Dask directly
+ or using futures or delayed objects to embed the data into the graph without repetition.
+See also https://docs.dask.org/en/stable/best-practices.html#load-data-with-dask for more information.
+  warnings.warn(
+[4/4] t18_600: 1811 dates, 333x333 px, load 313s
+    10 years in 653s (pred px/yr median 46445)
+
+-> results/maps/bench_j1/ (manifest.csv, run.json, tiles.csv, <tile>_<year>.tif)

@@ -1,0 +1,59 @@
+5769 tiles of 10 km, years 2000-2026 (27), archive span 1998-2026
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator PowerTransformer from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+ensemble: 5 seeds, targets ['lcbd_count_sorensen', 'pd_inext_q0', 'pd_inext_q1', 'pd_inext_q2', 'td_inext_q0', 'td_inext_q1', 'td_inext_q2'], context ['topo_elevation', 'topo_slope', 'topo_northness', 'topo_eastness', 'topo_heat_load', 'topo_tpi', 'topo_tri', 'topo_curvature', 'topo_topo_flat', 'area_log10', 'area_stratum_counts', 'area_stratum_presence', 'area_stratum_basal']
+smearing: residuals from results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv ([2499, 888, 888, 888, 895, 895, 895] usable per target)
+range clipping: training targets loaded
+torch threads pinned to 2 (= --worker-cores)
+gateway easihub.68104a4e7c804f0a92ecbffa80def789: 128 workers x 2 cores / 8 GB, 1 tile(s) each; dashboard https://hub.datacubechile.cl/services/dask-gateway/clusters/easihub.68104a4e7c804f0a92ecbffa80def789/status
+  5 workers up (10 cores granted of 256 asked)
+uploaded biodiv_worker.zip (125 kB) to the workers
+submitted 5769 tiles
+[1/5769] t8_479: FutureCancelledError: finalize-hlgfinalizecompute-f71ca24139fb4f8aba0648698f17d26c cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 1 failed, 3 min elapsed, eta 308.8 h
+[2/5769] t6_522: FutureCancelledError: finalize-hlgfinalizecompute-3e781e1c34504e3085e2fd0781a521b3 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 2 failed, 3 min elapsed, eta 158.1 h
+[3/5769] t7_500: FutureCancelledError: finalize-hlgfinalizecompute-782a7a4e78f64b4495bbc8f668de6005 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 3 failed, 4 min elapsed, eta 112.8 h
+[4/5769] t8_527: FutureCancelledError: finalize-hlgfinalizecompute-27866ff70a8f4b149378130d754bb7c6 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 4 failed, 4 min elapsed, eta 93.4 h
+[5/5769] t8_531: FutureCancelledError: finalize-hlgfinalizecompute-d30a616d7b894e6083abcf807b90015b cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 5 failed, 4 min elapsed, eta 79.7 h
+[6/5769] t7_460: FutureCancelledError: finalize-hlgfinalizecompute-50a6a1bd988e4279a286f72a45008a8e cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 6 failed, 4 min elapsed, eta 70.1 h
+[7/5769] t6_445: FutureCancelledError: finalize-hlgfinalizecompute-b9dea58d8c994fe1b502a14828c4e958 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 7 failed, 4 min elapsed, eta 61.0 h
+[8/5769] t7_449: FutureCancelledError: finalize-hlgfinalizecompute-c4a4fcb9d80847baabcd5c77d7ca0e02 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 8 failed, 4 min elapsed, eta 53.6 h
+[9/5769] t6_505: FutureCancelledError: finalize-hlgfinalizecompute-5e545edbcd684d6b91b8378c501cf2de cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 9 failed, 4 min elapsed, eta 47.7 h
+[10/5769] t8_453: FutureCancelledError: finalize-hlgfinalizecompute-86ac907d2575489fb838d729069c2d29 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 10 failed, 5 min elapsed, eta 44.0 h
+[11/5769] t7_452: FutureCancelledError: finalize-hlgfinalizecompute-962082c264e94b96902a781641dee7dc cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 11 failed, 5 min elapsed, eta 40.0 h
+[12/5769] t8_466: FutureCancelledError: finalize-hlgfinalizecompute-2a1fbfc286d14ea6a3627a62af7bb1c7 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 12 failed, 5 min elapsed, eta 36.7 h
+[13/5769] t7_437: FutureCancelledError: finalize-hlgfinalizecompute-bdfaf609c6eb4bfcae1306d4b27bae67 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 13 failed, 5 min elapsed, eta 33.9 h
+[14/5769] t7_436: FutureCancelledError: finalize-hlgfinalizecompute-d26f7c49bade4861887f6430f5330bf2 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 14 failed, 5 min elapsed, eta 31.5 h
+[15/5769] t8_465: FutureCancelledError: finalize-hlgfinalizecompute-892093e728494623adc614a4050691f4 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 15 failed, 5 min elapsed, eta 29.5 h
+[16/5769] t7_495: FutureCancelledError: finalize-hlgfinalizecompute-911c2317256c4013bf07172e4725901f cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 16 failed, 5 min elapsed, eta 27.6 h
+[17/5769] t8_523: FutureCancelledError: finalize-hlgfinalizecompute-78118bbf37054687a4eaa673636b2798 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 17 failed, 5 min elapsed, eta 26.0 h
+[18/5769] t7_496: FutureCancelledError: finalize-hlgfinalizecompute-36d106638b4f46528cbc3840d5662abb cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 18 failed, 5 min elapsed, eta 24.6 h
+[19/5769] t8_504: FutureCancelledError: finalize-hlgfinalizecompute-215419c72f404e68ba8d0b42270f2fff cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 19 failed, 5 min elapsed, eta 23.3 h
+[20/5769] t7_480: FutureCancelledError: finalize-hlgfinalizecompute-095f50733acc430083d622c787b13f95 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 20 failed, 5 min elapsed, eta 22.2 h
+[21/5769] t9_421: FutureCancelledError: finalize-hlgfinalizecompute-31e604d223534198b925b95494b3dec2 cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 21 failed, 5 min elapsed, eta 21.1 h
+[22/5769] t7_530: FutureCancelledError: finalize-hlgfinalizecompute-a93176df980841e6891d663f67c8f7fc cancelled for reason: scheduler-connection-lost.
+Client lost the connection to the scheduler. Please check your connection and re-run your   |  0 ok / 22 failed, 5 min elapsed, eta 20.2 h

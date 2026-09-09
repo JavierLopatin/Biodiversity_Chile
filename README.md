@@ -78,8 +78,9 @@ cuyo eje vertical **no** es manufacturado: `stack5` (5 índices × 52 semanas) y
 cuatro opciones de fusión topográfica y las decisiones no obvias (sesgo de retransformación,
 padding circular por eje, jitter sub-paso), en [`docs/08_modelling.md`](docs/08_modelling.md).
 
-Exploración de resultados:
-[`notebooks/03_explore_modelling_results.ipynb`](notebooks/03_explore_modelling_results.ipynb).
+Exploración de resultados de esta fase:
+[`notebooks/archive/03_explore_modelling_results.ipynb`](notebooks/archive/03_explore_modelling_results.ipynb)
+(archivado: lee `results/models/`, que son artefactos por corrida y no están versionados).
 Compuertas de validación: `python -m pytest tests/test_modelling.py -q`.
 
 ### Variables respuesta

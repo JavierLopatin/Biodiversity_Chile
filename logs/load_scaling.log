@@ -1,0 +1,10 @@
+ tile km           px     Mpx   dates   load s    s/Mpx  implied fixed
+       5       27,889   0.028    1811   1900.6  68147.2
+      10      112,225   0.112    1811   1892.3  16862.0
+      20      444,889   0.445    1811   2195.6   4935.2
+
+fit: load = 1846.9 s fixed + 765.4 s per Mpx
+  fixed share at 10 km (0.111 Mpx): 96 %
+  predicted 10 km:   1932 s  (  1932 s per 10 km-equivalent area)
+  predicted 20 km:   2187 s  (   547 s per 10 km-equivalent area)
+  predicted 30 km:   2612 s  (   290 s per 10 km-equivalent area)

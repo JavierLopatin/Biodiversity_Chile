@@ -1,0 +1,5 @@
+      0s  second-cluster workers: 0
+     75s  second-cluster workers: 5
+result: second cluster reached 5 workers while production holds 5
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x7f971fc1e6c0>

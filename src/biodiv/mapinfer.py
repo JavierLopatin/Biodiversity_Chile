@@ -246,11 +246,17 @@ class Member:
 class FacetEnsemble:
     """The five all-data seed checkpoints of the deployed 2D-CNN, as one predictor."""
 
-    def __init__(self, ckpt_paths: list[Path] | list[str], device: str = "cpu",
-                 width: str = "B"):
+    def __init__(self, ckpt_paths: list, device: str = "cpu", width: str = "B"):
+        """``ckpt_paths`` are paths, or open binary files.
+
+        The file-like form is what the gateway workers get: they cannot see the home
+        directory, so the five checkpoints are broadcast to them as bytes rather than read
+        from disk (`biodiv.maptask`). Same tensors either way -- ``torch.load`` does not care
+        -- and the member keeps a synthetic name so error messages still say which seed.
+        """
         self.device = torch.device(device)
         self.members: list[Member] = []
-        for p in ckpt_paths:
+        for i, p in enumerate(ckpt_paths):
             ck = torch.load(p, map_location="cpu", weights_only=False)
             pre: Preprocessor = ck["ctx_preprocessor"]
             targets = list(ck["targets"])
@@ -259,7 +265,8 @@ class FacetEnsemble:
                                 pad_mode="zeros", fusion="late")
             model.load_state_dict(ck["state_dict"])
             model.to(self.device).eval()
-            self.members.append(Member(Path(p), model, pre, ck["target_scaler"], targets,
+            name = Path(p) if isinstance(p, (str, Path)) else Path(f"<seed{i}:in-memory>")
+            self.members.append(Member(name, model, pre, ck["target_scaler"], targets,
                                        tuple(ck.get("input_shape", ()))))
         if not self.members:
             raise ValueError("no checkpoints")
@@ -436,13 +443,26 @@ def load_kndvi(dc, bbox_utm, year_start: int, year_end: int, resolution: int = 3
 
 
 def _terrain_fn():
-    """`terrain()` from scripts/03, imported by path so the script stays the single source."""
+    """`terrain()` from scripts/03, so the script stays the single source of the derivatives.
+
+    Two ways in, and the order matters. On the pod the script is read from the repo by path,
+    which is the original arrangement and keeps `scripts/03` authoritative. On a dask-gateway
+    worker there is no repo -- `biodiv` arrives as a zip on sys.path -- and a path load cannot
+    reach inside a zip anyway, so the caller (`scripts/73.package_biodiv`) copies that same
+    file into the archive as `biodiv._terrain_src` and this falls through to importing it.
+    The copy is rebuilt from the live script on every run, so the two cannot drift apart
+    within a run; that, and not a second implementation, is what keeps the terrain identical
+    on both sides.
+    """
     root = Path(__file__).resolve().parents[2]
-    spec = importlib.util.spec_from_file_location(
-        "extract_topography", root / "scripts" / "03_extract_topography.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.terrain
+    script = root / "scripts" / "03_extract_topography.py"
+    if script.exists():
+        spec = importlib.util.spec_from_file_location("extract_topography", script)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.terrain
+    from . import _terrain_src                     # shipped copy, worker side
+    return _terrain_src.terrain
 
 
 def load_terrain(dc, template: xr.DataArray, lat_deg: float, resolution: int = 30,

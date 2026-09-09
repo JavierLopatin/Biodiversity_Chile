@@ -2,7 +2,7 @@
 
 `jupytext` is not installed in this environment and this is the only thing we need from it.
 The .py file is the reviewable artefact: notebooks do not diff, so the source of truth for
-`03_explore_modelling_results.ipynb` is `03_explore_modelling_results.py` and the notebook is
+`09_map_timeseries.ipynb` is `09_map_timeseries.py` and the notebook is
 regenerated from it.
 
 `--check` executes every code cell in-process with a `display` shim and reports which ones
@@ -10,8 +10,8 @@ raise. Worth running before committing: a notebook that fails on cell 2 is worse
 notebook, and the failure only shows up when someone opens it.
 
 Usage:
-    python notebooks/build_notebook.py notebooks/03_explore_modelling_results.py
-    python notebooks/build_notebook.py --check notebooks/03_explore_modelling_results.py
+    python notebooks/build_notebook.py notebooks/09_map_timeseries.py
+    python notebooks/build_notebook.py --check notebooks/09_map_timeseries.py
 """
 import json, sys, re
 

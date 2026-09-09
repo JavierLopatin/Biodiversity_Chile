@@ -238,3 +238,78 @@ no las categorías curadas de WoS (`WC=`), así que un filtro por disciplina no 
 entre ambos. En sentido contrario, el número de resultados en inglés frente a otros idiomas
 no es evidencia de sesgo del índice cuando la consulta está en inglés: la consulta misma
 selecciona el idioma.
+
+## Cómo obtener la clave y correr la búsqueda en WoS
+
+1. Entrar a `https://developer.clarivate.com`, crear cuenta (el correo institucional de la
+   UAI da acceso a lo que la suscripción de la universidad habilite) y confirmar el mail.
+2. En *My Portal → Register an app*, crear una aplicación y suscribirla al producto
+   **Web of Science Starter API**. La clave aparece en la ficha de la aplicación como
+   *Primary key*. Si la biblioteca tiene contratada la **Expanded API**, suscribir también
+   esa: devuelve resúmenes, afiliaciones, financiamiento y referencias citadas, que la
+   Starter no trae.
+3. Exportarla en el entorno, sin escribirla en ningún archivo versionado:
+
+```bash
+export WOS_API_KEY='...'            # o añadir a ~/.zshrc, nunca al repositorio
+python scripts/75_literature_search.py --backend wos --out results/literature
+python scripts/75_literature_search.py --backend wos --queries B7a,B7b,B7c --bibtex
+```
+
+El endpoint verificado el 2026-09-02 es
+`https://api.clarivate.com/apis/wos-starter/v1/documents`, con la consulta en `q`, la base
+en `db=WOS` y la clave en la cabecera `X-ApiKey`; responde 401 sin clave, que es la prueba
+de que la URL y los parámetros son correctos.
+
+Límites a tener en cuenta: la Starter tiene un tope mensual de registros y admite pocas
+peticiones por segundo, de ahí `--sleep`; `--limit` acota cuántos registros se descargan por
+bloque, mientras que el conteo total de la consulta se guarda igual en `summary.csv`. Para
+las búsquedas de vacío (B7a, B7b, B7c) basta `--limit 50`, porque lo que interesa es el
+conteo y los primeros títulos.
+
+`--bibtex` resuelve cada DOI encontrado contra Crossref y escribe un `.bib` por bloque, con
+el mismo procedimiento con que se verificó `paper/refs.bib`. Deliberadamente no se usa el
+BibTeX que exporta Web of Science, porque trae claves propias y campos sin verificar.
+
+Advertencia sobre el backend `crossref`: su parámetro de búsqueda es difuso y devuelve
+cientos de miles de coincidencias con relevancia decreciente, así que sirve para resolver un
+título conocido, no para contar. Los conteos citables salen de `wos`, y los de `openalex`
+solo como referencia de magnitud.
+
+## Barrido provisional en OpenAlex (2026-09-03)
+
+La suscripción al *Free Institutional Member Plan* de la Web of Science Starter API quedó
+en `Subscription approval is pending`, así que estos conteos vienen de OpenAlex y son
+**órdenes de magnitud, no cifras citables**: la búsqueda de OpenAlex es difusa sobre texto
+completo, por lo que B1 devuelve 47.265 registros para una consulta que en WoS, restringida
+a título, resumen y palabras clave, devolverá bastante menos. Cuando llegue la clave hay que
+repetir el barrido con `--backend wos` y reemplazar esta tabla.
+
+| Bloque | Tema | Años | Registros |
+|--------|------|------|-----------|
+| B1  | núcleo: diversidad de plantas por teledetección | 2015-2026 | 47.265 |
+| B2  | fenología / series de tiempo como predictor | 2015-2026 | 14.978 |
+| B3  | hipótesis de variación espectral y sus críticas | 2000-2026 | 1.076 |
+| B4  | mapas de diversidad a gran escala desde bases de parcelas | 2018-2026 | 1.117 |
+| B5  | validación cruzada espacial, área de aplicabilidad | 2017-2026 | 2.117 |
+| B5b | transferibilidad temporal entre años | 2015-2026 | 1.284 |
+| B6  | aprendizaje profundo sobre series de imágenes | 2019-2026 | 7.637 |
+| B7a | VACÍO: diversidad filogenética por teledetección | 2010-2026 | 3.928 |
+| B7b | VACÍO: LCBD / recambio composicional | 2010-2026 | 295 |
+| B7c | VACÍO: dark diversity por teledetección | 2010-2026 | 129 |
+| B8  | contexto regional: Chile y Sudamérica | 2010-2026 | 3.625 |
+
+Lo que el cruce contra el manuscrito arrojó:
+
+- **B7b confirma el encuadre.** De los 295 registros, los primeros están dominados por beta
+  diversidad acuática y por *generalized dissimilarity modelling*, no por LCBD desde
+  sensores ópticos. Pero el barrido destapó dos ausencias reales en `refs.bib`, ya añadidas
+  y verificadas por DOI: `rocchini2018measuring` (Methods Ecol Evol) y `rocchini2021from`
+  (Ecological Informatics).
+- **B7c no está vacío.** Existe un grupo consolidado de trabajos que estiman dark diversity
+  con LiDAR aéreo en Europa. El manuscrito no reclama esa faceta, así que no toca ninguna
+  afirmación, pero conviene no escribir nunca que la dark diversity no se ha estimado por
+  teledetección.
+- Candidatas periféricas no citadas, por si hacen falta en la Discusión: BioSCape
+  (`10.1038/s44185-024-00071-5`) y la estimación de alfa y beta diversidad de líquenes
+  (`10.1016/j.ecolind.2023.110173`).

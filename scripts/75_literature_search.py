@@ -188,6 +188,44 @@ def _get(url: str, headers: dict | None = None, tries: int = 4) -> dict:
     raise RuntimeError("unreachable")
 
 
+def crossref_bibtex(doi: str) -> str:
+    """One verified BibTeX entry, built from the Crossref record of ``doi``.
+
+    Deliberately not the BibTeX that Web of Science exports: that carries its own keys and
+    unverified fields. Everything in `paper/refs.bib` was resolved this way, so entries
+    produced here drop straight in.
+    """
+    it = _get(f"{CROSSREF_URL}/{urllib.parse.quote(doi)}")["message"]
+    au = " and ".join(
+        f"{a['family']}, {a.get('given', '')}".rstrip(", ") if "family" in a
+        else a.get("name", "") for a in it.get("author", []))
+    au = " and ".join(x for x in au.split(" and ") if x.strip())
+    year = (it.get("issued", {}).get("date-parts", [[None]])[0][0]
+            or it.get("created", {}).get("date-parts", [[None]])[0][0])
+    fam = (it.get("author", [{}])[0].get("family", "anon") or "anon").lower()
+    fam = "".join(c for c in fam if c.isalpha()) or "anon"
+    title = " ".join((it.get("title") or [""])[0].split())
+    word = next((w.lower() for w in title.split() if len(w) > 4 and w.isalpha()), "ref")
+    key = f"{fam}{year}{word}"
+    typ = "article" if it.get("type") == "journal-article" else (
+        "inproceedings" if it.get("type") == "proceedings-article" else "misc")
+    lines = [f"@{typ}{{{key},"]
+    if au:
+        lines.append(f"  author = {{{au}}},")
+    lines.append(f"  title = {{{title.replace('&', chr(92) + '&')}}},")
+    jr = (it.get("container-title") or [""])[0]
+    if jr:
+        lines.append(f"  journal = {{{jr.replace('&', chr(92) + '&')}}},")
+    if year:
+        lines.append(f"  year = {{{year}}},")
+    for fld, tag in (("volume", "volume"), ("issue", "number"), ("page", "pages")):
+        if it.get(fld):
+            lines.append(f"  {tag} = {{{it[fld]}}},")
+    lines.append(f"  doi = {{{it['DOI']}}}")
+    lines.append("}")
+    return "\n".join(lines)
+
+
 # --------------------------------------------------------------------------------------
 # backends
 # --------------------------------------------------------------------------------------
@@ -287,6 +325,11 @@ def main() -> None:
     p.add_argument("--sleep", type=float, default=1.0, help="seconds between requests")
     p.add_argument("--out", default="results/literature")
     p.add_argument("--list", action="store_true", help="print the queries and exit")
+    p.add_argument("--bibtex", action="store_true",
+                   help="resolve every DOI found against Crossref and write a .bib per "
+                        "query, using the same verification path as paper/refs.bib")
+    p.add_argument("--min-citations", type=int, default=0, dest="min_citations",
+                   help="with --bibtex, only export records at or above this citation count")
     args = p.parse_args()
 
     if args.list:
@@ -330,6 +373,19 @@ def main() -> None:
             w.writeheader()
             w.writerows(rows)
         print(f"    {total} hits, {len(rows)} retrieved -> {f}")
+        if args.bibtex:
+            keep = [r for r in rows if r["doi"]
+                    and int(r["citations"] or 0) >= args.min_citations]
+            entries, failed = [], 0
+            for r in keep:
+                try:
+                    entries.append(crossref_bibtex(r["doi"]))
+                    time.sleep(0.2)
+                except Exception:                                # noqa: BLE001
+                    failed += 1
+            b = out / f"{k}.bib"
+            b.write_text("\n\n".join(e for e in entries if e) + "\n")
+            print(f"    {len(entries)} BibTeX entries ({failed} DOIs unresolved) -> {b}")
         summary.append(dict(query_id=k, label=q["label"], backend=args.backend,
                             years=f"{q['years'][0]}-{q['years'][1]}", total=total,
                             retrieved=len(rows), date=str(date.today()), query=query))

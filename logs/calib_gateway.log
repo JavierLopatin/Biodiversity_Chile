@@ -1,0 +1,25 @@
+8 tiles of 10 km, years 2000-2026 (10), archive span 1998-2026
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator PowerTransformer from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+ensemble: 5 seeds, targets ['lcbd_count_sorensen', 'pd_inext_q0', 'pd_inext_q1', 'pd_inext_q2', 'td_inext_q0', 'td_inext_q1', 'td_inext_q2'], context ['topo_elevation', 'topo_slope', 'topo_northness', 'topo_eastness', 'topo_heat_load', 'topo_tpi', 'topo_tri', 'topo_curvature', 'topo_topo_flat', 'area_log10', 'area_stratum_counts', 'area_stratum_presence', 'area_stratum_basal']
+smearing: residuals from results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv ([2499, 888, 888, 888, 895, 895, 895] usable per target)
+range clipping: training targets loaded
+torch threads pinned to 2 (= --worker-cores)
+gateway easihub.7d2d60a9dbb24dd0a2cf6d68625d495b: 8 workers x 2 cores / 8 GB, 1 tile(s) each; dashboard https://hub.datacubechile.cl/services/dask-gateway/clusters/easihub.7d2d60a9dbb24dd0a2cf6d68625d495b/status
+uploaded biodiv_worker.zip (125 kB) to the workers
+submitted 8 tiles
+[1/8] t2_446: ok  |  1 ok / 0 failed, 13 min elapsed, eta 1.5 h
+[2/8] t11_458: ok  |  2 ok / 0 failed, 19 min elapsed, eta 0.9 h
+[3/8] t16_455: ok  |  3 ok / 0 failed, 19 min elapsed, eta 0.5 h
+[4/8] t35_638: ok  |  4 ok / 0 failed, 26 min elapsed, eta 0.4 h
+[5/8] t28_665: ok  |  5 ok / 0 failed, 28 min elapsed, eta 0.3 h
+[6/8] t62_390: ok  |  6 ok / 0 failed, 30 min elapsed, eta 0.2 h
+[7/8] t24_626: ok  |  7 ok / 0 failed, 32 min elapsed, eta 0.1 h
+[8/8] t20_600: ok  |  8 ok / 0 failed, 36 min elapsed, eta 0.0 h
+gateway cluster shut down
+
+-> s3://easido-prod-user-scratch/<user-scratch-prefix>/biodiv/maps/_calib/ (<tile>_<year>.tif), manifest results/maps/_calib_gateway/manifest.csv

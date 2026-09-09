@@ -1,0 +1,19 @@
+2 tiles of 10 km, years 2020-2020 (1), archive span 2018-2020
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/env/lib/python3.12/site-packages/sklearn/base.py:463: InconsistentVersionWarning: Trying to unpickle estimator PowerTransformer from version 1.3.1 when using version 1.8.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+ensemble: 5 seeds, targets ['lcbd_count_sorensen', 'pd_inext_q0', 'pd_inext_q1', 'pd_inext_q2', 'td_inext_q0', 'td_inext_q1', 'td_inext_q2'], context ['topo_elevation', 'topo_slope', 'topo_northness', 'topo_eastness', 'topo_heat_load', 'topo_tpi', 'topo_tri', 'topo_curvature', 'topo_topo_flat', 'area_log10', 'area_stratum_counts', 'area_stratum_presence', 'area_stratum_basal']
+smearing: residuals from results/models_unified_topofix/C2D02_serpentine_kndvi_raw100_pg-all_unified_maekndvi_m06_ctr/kfold5_block20_unified/oof_predictions.csv ([2499, 888, 888, 888, 895, 895, 895] usable per target)
+range clipping: training targets loaded
+torch threads pinned to 2 (= --worker-cores)
+gateway easihub.17c0f89ff9f747deb3d092eb03b461d4: 2 workers x 2 cores / 8 GB, 1 tile(s) each; dashboard https://hub.datacubechile.cl/services/dask-gateway/clusters/easihub.17c0f89ff9f747deb3d092eb03b461d4/status
+uploaded biodiv_worker.zip (125 kB) to the workers
+submitted 2 tiles
+[1/2] t17_601: ok  |  1 ok / 0 failed, 3 min elapsed, eta 0.0 h
+[2/2] t18_600: ok  |  2 ok / 0 failed, 3 min elapsed, eta 0.0 h
+gateway cluster shut down
+
+-> s3://easido-prod-user-scratch/<user-scratch-prefix>/biodiv/maps/_smoke/ (<tile>_<year>.tif), manifest results/maps/_smoke_gateway/manifest.csv
