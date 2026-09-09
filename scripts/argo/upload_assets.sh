@@ -33,10 +33,11 @@ A="${A:-s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/assets}"
 M="${M:-s3://easido-prod-dc-data-projects/easi-workflows-team/biodiv/MapBiomas}"
 
 # The deployed model is now the 1D-CNN (C1D01_curve1d_kndvi), not the 2D-CNN
-# (C2D02_serpentine_kndvi) -- essentially tied on skill (td_inext_q0 0.781 vs
-# 0.783, pd_inext_q0 0.602 vs 0.616) but simpler: no MAE-pretrained trunk to
-# carry into deployment, no serpentine reshape, at essentially the same
-# parameter count (14,535 vs 15,175 -- matched by design). See scripts/77 for the
+# (C2D02_serpentine_kndvi) -- essentially tied on td_inext_q0 (0.781 vs 0.783)
+# and actually ahead on pd_inext_q0 (0.602 vs 0.586), simpler besides: no
+# MAE-pretrained trunk to carry into deployment, no serpentine reshape, at
+# essentially the same parameter count (14,535 vs 15,175 -- matched by
+# design). See scripts/77 for the
 # all-data refit on corrected topography (models_unified_topofix), 149,139
 # bytes per checkpoint, dated 8 Sep. The oof MUST come from the same parent:
 # smearing back-transforms with the checkpoint's own target scaler, so an oof
