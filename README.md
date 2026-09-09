@@ -127,7 +127,6 @@ separate tracker, so a rerun never repeats finished work.
 |---|---|---|
 | **Parcelas-CL** | 1,485 georeferenced vegetation plots, 675 woody species, 1976–2026, 30.25°–54.82°S | [10.5281/zenodo.20602096](https://doi.org/10.5281/zenodo.20602096) · preprint [10.21203/rs.3.rs-9986019/v1](https://doi.org/10.21203/rs.3.rs-9986019/v1) |
 | **Living Trees Chile** | 2,021 forest inventory sites, 59,408 stem records | Used by collaboration; citation pending publication |
-| **Rasgos-CL** | 662 Chilean woody species, 25,174 records, 23 functional traits | [github.com/dylancraven/Rasgos-CL](https://github.com/dylancraven/Rasgos-CL) · [10.1111/geb.13755](https://doi.org/10.1111/geb.13755) |
 | **MapBiomas Chile** | Annual land cover, collection 2, 1999–2024 | [mapbiomas.org](https://chile.mapbiomas.org/) |
 | **Landsat** | Collection 2 surface reflectance, via Data Cube Chile | Requester-pays; ODC index inside EASI |
 
