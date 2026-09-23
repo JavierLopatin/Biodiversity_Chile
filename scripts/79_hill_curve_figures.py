@@ -19,12 +19,17 @@ curva agrupada es union de dos floras, no acumulacion dentro de una comunidad.
 
 Si los CSV no traen columna `source` se dibuja una sola linea, como antes.
 
+Las curvas salen de las parcelas de cada faceta (scripts/56 y 59, docs/24 paso 6). `--woody`
+lee las variantes lenosas y escribe las figuras con sufijo _woody.
+
 Uso:
     python scripts/79_hill_curve_figures.py
+    python scripts/79_hill_curve_figures.py --woody
 """
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -103,9 +108,10 @@ def _legend(ax) -> None:
 
 
 def main() -> None:
-    hc = pd.read_csv(DERIVED / "unified_hill_curves.csv")
-    hc = hc[hc["dataset"] == "unificado completo"]
-    bc = pd.read_csv(DERIVED / "unified_beta_freq_curve.csv")
+    sfx = "_woody" if "--woody" in sys.argv[1:] else ""
+    hc = pd.read_csv(DERIVED / f"unified_hill_curves{sfx}.csv")
+    hc = hc[hc["dataset"] == "unificado analisis"]
+    bc = pd.read_csv(DERIVED / f"unified_beta_freq_curve{sfx}.csv")
 
     # Texto principal: solo q=0, las tres facetas que el manuscrito reporta.
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.6))
@@ -115,9 +121,9 @@ def main() -> None:
     _legend(axes[0])
     fig.tight_layout()
     for ext in ("png", "pdf"):
-        fig.savefig(FIG_DIR / f"fig24_hill_curves_q0.{ext}", dpi=DPI)
+        fig.savefig(FIG_DIR / f"fig24_hill_curves_q0{sfx}.{ext}", dpi=DPI)
     plt.close(fig)
-    print(f"-> {FIG_DIR / 'fig24_hill_curves_q0'}.{{png,pdf}}")
+    print(f"-> {FIG_DIR / ('fig24_hill_curves_q0' + sfx)}.{{png,pdf}}")
 
     # Suplemento: q=1 y q=2.
     fig, axes = plt.subplots(2, 3, figsize=(15, 9))
@@ -128,9 +134,9 @@ def main() -> None:
     _legend(axes[0, 0])
     fig.tight_layout()
     for ext in ("png", "pdf"):
-        fig.savefig(FIG_DIR / f"figS6_hill_curves_q12.{ext}", dpi=DPI)
+        fig.savefig(FIG_DIR / f"figS6_hill_curves_q12{sfx}.{ext}", dpi=DPI)
     plt.close(fig)
-    print(f"-> {FIG_DIR / 'figS6_hill_curves_q12'}.{{png,pdf}}")
+    print(f"-> {FIG_DIR / ('figS6_hill_curves_q12' + sfx)}.{{png,pdf}}")
 
 
 if __name__ == "__main__":

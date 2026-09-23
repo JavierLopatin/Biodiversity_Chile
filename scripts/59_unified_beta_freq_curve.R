@@ -1,38 +1,47 @@
 #!/usr/bin/env Rscript
-# Curva de particion de Hill (alfa/beta/gamma, q=0,1,2) por remuestreo creciente, sobre el
-# pool de frecuencia maximizado (Parcelas-CL completo, cepas continuas + Living Trees
-# completo). Ver scripts/lib/beta_freq.R para el porque del diseno (row-relativizacion
-# resuelve el problema de unidades inconmensurables) y scripts/58_recover_zamorano_cover.py
-# para el hallazgo que la motiva (cobertura real de 84 parcelas recuperada desde
-# data/Parcelas_CL_RAW/).
+# Curva de particion de Hill (alfa/beta/gamma, q=0,1,2) por remuestreo creciente. Ver
+# scripts/lib/beta_freq.R para el porque del diseno (row-relativizacion antes de pooler).
+#
+# Substrato (decision del autor, 2026-09-23, docs/24 paso 6): las parcelas que llevan
+# lcbd_count_sorensen (scripts/62), con su conteo real de individuos de
+# occurrences_unified_counts.parquet. Antes salia del pool de frecuencia maximizado
+# (Parcelas-CL completo con cepas continuas + Living Trees completo), que describe un pool
+# que el modelo nunca ve; ahora la curva describe el recambio que LCBD reparte.
+#
+# `--woody`: occurrences_unified_counts_woody.parquet y lcbd_count_sorensen_woody.parquet
+# (scripts/83), salida unified_beta_freq_curve_woody.csv.
 #
 # Uso:
 #   Rscript scripts/59_unified_beta_freq_curve.R
-#   Rscript scripts/59_unified_beta_freq_curve.R --reps 200
+#   Rscript scripts/59_unified_beta_freq_curve.R --woody --reps 200
 
 suppressWarnings(suppressMessages({
   library(arrow); library(hillR)
 }))
-source("scripts/lib/parcelas_comm.R")
 source("scripts/lib/beta_freq.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 getarg <- function(flag, default) {
   i <- match(flag, args); if (is.na(i)) default else as.numeric(args[i + 1])
 }
-ZIP        <- "data/20602096.zip"
-LT_LONG    <- "data/derived/living_trees_long.parquet"
-ZAM_FIX    <- "data/derived/zamorano_cover_corrected.parquet"
-OUT        <- "data/derived/unified_beta_freq_curve.csv"
+SFX        <- if ("--woody" %in% args) "_woody" else ""
+OCC        <- sprintf("data/derived/occurrences_unified_counts%s.parquet", SFX)
+LCBD       <- sprintf("data/derived/lcbd_count_sorensen%s.parquet", SFX)
+OUT        <- sprintf("data/derived/unified_beta_freq_curve%s.csv", SFX)
 Q          <- c(0, 1, 2)
 REPS       <- getarg("--reps", 100)
 N_SIZES    <- getarg("--n-sizes", 12)
 SEED       <- 42
 
-message("== pool de frecuencia ==")
-pc <- parcelas_species(ZIP, quiet = TRUE)
-pc$raw <- apply_zamorano_correction(pc$raw, ZAM_FIX)
-comm <- build_freq_pool(pc$raw, LT_LONG)
+message("== pool de conteo (parcelas con LCBD) ==")
+occ <- as.data.frame(read_parquet(OCC))
+ids <- as.data.frame(read_parquet(LCBD))
+ids <- ids$PlotObservationID[!is.na(ids$lcbd_count_sorensen)]
+occ <- occ[occ$PlotObservationID %in% ids, ]
+comm <- as.matrix(as.data.frame.matrix(xtabs(Value ~ PlotObservationID + species, data = occ)))
+comm <- comm[rowSums(comm) > 0, colSums(comm) > 0, drop = FALSE]
+stopifnot(nrow(comm) == length(ids))
+message(sprintf("  %d parcelas x %d especies (%s)", nrow(comm), ncol(comm), basename(LCBD)))
 
 N <- nrow(comm)
 sizes <- unique(round(exp(seq(log(10), log(N), length.out = N_SIZES))))
