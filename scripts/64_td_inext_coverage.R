@@ -17,9 +17,12 @@ suppressWarnings(suppressMessages({
 }))
 
 DERIVED <- "data/derived"
+# `--woody`: lee occurrences_unified_counts_woody.parquet (scripts/83, docs/24) y escribe
+# con sufijo _woody; sin la bandera, los nombres de siempre (variante con hierbas).
+SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
 t_start <- Sys.time()
 
-occ <- read_parquet(file.path(DERIVED, "occurrences_unified_counts.parquet"))
+occ <- read_parquet(file.path(DERIVED, paste0("occurrences_unified_counts", SFX, ".parquet")))
 comm <- xtabs(Value ~ PlotObservationID + species, data = occ)
 comm <- comm[rowSums(comm) > 0, ]
 sp_per_plot <- rowSums(comm > 0)
@@ -66,8 +69,8 @@ out <- data.frame(
   sc_td_inext = sc_obs[ok],
   n_ind_td_inext = n_ind[ok]
 )
-write_parquet(out, file.path(DERIVED, "td_inext_coverage.parquet"))
-cat(sprintf("-> %s (%d parcelas)\n", file.path(DERIVED, "td_inext_coverage.parquet"), nrow(out)))
+write_parquet(out, file.path(DERIVED, paste0("td_inext_coverage", SFX, ".parquet")))
+cat(sprintf("-> %s (%d parcelas)\n", file.path(DERIVED, paste0("td_inext_coverage", SFX, ".parquet")), nrow(out)))
 
 # --- comparacion contra hill_q0_unified ya existente (q0, riqueza observada) --------------
 resp <- read_parquet(file.path(DERIVED, "unified_diversity_responses.parquet"))

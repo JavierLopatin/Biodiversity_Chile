@@ -40,6 +40,7 @@ import numpy as np                              # noqa: E402
 from biodiv import features as feat             # noqa: E402
 from biodiv import runlog                       # noqa: E402
 from biodiv import substrates as sub            # noqa: E402
+from biodiv import targets as tg                # noqa: E402
 from biodiv.dl_runner import run_dl             # noqa: E402
 from biodiv.models_conv import PhenoNetS, Pheno1D, count_params   # noqa: E402
 from biodiv.trainer import TrainCfg             # noqa: E402
@@ -96,6 +97,8 @@ def _variant_tags(args, eff: dict) -> list[str]:
         tags.append(args.target_set.replace("_", "-"))
     if feat.unified_flag():
         tags.append("unified")
+    if tg.pg_targets_suffix():
+        tags.append(tg.pg_targets_suffix().lstrip("_"))
     if getattr(args, "arch", "sep") != "sep":
         tags.append(args.arch)
     if getattr(args, "row_width", 0):

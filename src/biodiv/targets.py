@@ -22,6 +22,7 @@ on the training fold only, and every reported metric is computed after inverting
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
 
 import numpy as np
@@ -130,6 +131,17 @@ TARGET_SOURCE |= (
     | {t: "pd_inext_coverage_unified_padded.parquet" for t in TARGETS_PG_PD}
     | {t: "td_inext_coverage_unified_padded.parquet" for t in TARGETS_PG_TD}
 )
+
+#: Suffix for the PG-style padded parquets, read from the environment at load time.
+#: `BIODIV_TARGETS=_woody` points them at the woody-only variant (herbaceous records of the
+#: full-flora Becerra census removed, `scripts/83_filter_woody_occurrences.py`, docs/24).
+#: Same pattern as `BIODIV_CURVES`: one switch for the whole process, and `11_run_conv`
+#: tags the run id with it so the two variants never share a results directory.
+PG_TARGETS_SUFFIX_ENV = "BIODIV_TARGETS"
+
+
+def pg_targets_suffix() -> str:
+    return os.environ.get(PG_TARGETS_SUFFIX_ENV, "")
 
 #: Reporting groups. Averaging R2 across facets that behave differently hides both: alpha
 #: is not predictable across contributors while composition is, so one grand mean reports
@@ -248,9 +260,13 @@ def load_targets(derived: Path | str = "data/derived",
     # They are joined here rather than merged on disk so that each script stays the single
     # owner of its own output and a rerun of one never has to touch the others.
     frames = []
+    pg_sources = {TARGET_SOURCE[t] for t in TARGETS_ALL_PG}
+    sfx = pg_targets_suffix()
     for src in dict.fromkeys(TARGET_SOURCE[t] for t in names):
         cols = [t for t in names if TARGET_SOURCE[t] == src]
         f = derived / src
+        if sfx and src in pg_sources:
+            f = f.with_name(f.stem + sfx + f.suffix)
         if not f.exists():
             raise FileNotFoundError(
                 f"{f} is missing but {cols} were requested. Run the script that writes it: "

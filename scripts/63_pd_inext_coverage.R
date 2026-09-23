@@ -18,10 +18,13 @@ suppressWarnings(suppressMessages({
 }))
 
 DERIVED <- "data/derived"
+# `--woody`: lee occurrences_unified_counts_woody.parquet (scripts/83, docs/24) y escribe
+# con sufijo _woody; sin la bandera, los nombres de siempre (variante con hierbas).
+SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
 t_start <- Sys.time()
 
 tree <- read.tree(file.path(DERIVED, "phylo_tree_unified.tre"))
-occ  <- read_parquet(file.path(DERIVED, "occurrences_unified_counts.parquet"))
+occ  <- read_parquet(file.path(DERIVED, paste0("occurrences_unified_counts", SFX, ".parquet")))
 
 occ$species_ <- gsub(" ", "_", occ$species)
 occ_tree <- occ[occ$species_ %in% tree$tip.label, ]
@@ -77,8 +80,8 @@ out <- data.frame(
   sc_pd_inext = sc_obs[ok],
   n_ind_pd_inext = n_ind[ok]
 )
-write_parquet(out, file.path(DERIVED, "pd_inext_coverage.parquet"))
-cat(sprintf("-> %s (%d parcelas)\n", file.path(DERIVED, "pd_inext_coverage.parquet"), nrow(out)))
+write_parquet(out, file.path(DERIVED, paste0("pd_inext_coverage", SFX, ".parquet")))
+cat(sprintf("-> %s (%d parcelas)\n", file.path(DERIVED, paste0("pd_inext_coverage", SFX, ".parquet")), nrow(out)))
 
 # --- comparacion contra pd_faith_unified ya existente (q0, comparable a Faith's PD) -------
 resp <- read_parquet(file.path(DERIVED, "unified_phylo_responses.parquet"))

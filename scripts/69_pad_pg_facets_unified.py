@@ -16,6 +16,7 @@ Non-destructive -- writes new `*_unified_padded.parquet` files, leaves the origi
 (diagnostic, partial-N) untouched.
 """
 
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -31,12 +32,16 @@ SOURCES = {
 
 
 def main() -> None:
+    # --woody: pad the woody-only variant (scripts/83, docs/24) -> *_unified_padded_woody
+    sfx = "_woody" if "--woody" in sys.argv[1:] else ""
     plots = pd.read_parquet(DERIVED / "plots_unified.parquet")
     all_ids = plots[ID_COL].astype(str)
     assert all_ids.is_unique
     full_index = pd.Index(all_ids, name=ID_COL)
 
     for src_name, out_name in SOURCES.items():
+        src_name = src_name.replace(".parquet", f"{sfx}.parquet")
+        out_name = out_name.replace(".parquet", f"{sfx}.parquet")
         src = DERIVED / src_name
         df = pd.read_parquet(src).set_index(ID_COL)
         df.index = df.index.astype(str)
