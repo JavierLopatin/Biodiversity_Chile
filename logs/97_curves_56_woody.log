@@ -1,0 +1,55 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+== comunidades ==
+  TD: 881 parcelas x 151 especies (td_inext_coverage_woody.parquet)
+  PD: 877 parcelas x 142 especies con punta en el arbol (pd_inext_coverage_woody.parquet)
+  [parcelas_cl] 230 parcelas x 114 especies
+  TD unificado analisis: n=230, endpoint=460
+    0.1 min
+  [living_trees] 651 parcelas x 70 especies
+  TD unificado analisis: n=651, endpoint=1302
+    0.1 min
+  [pooled] 881 parcelas x 151 especies
+  TD unificado analisis: n=881, endpoint=1762
+    0.2 min
+  [parcelas_cl] 226 parcelas x 105 especies
+  PD unificado analisis: n=226, endpoint=452
+    0.0 min
+  [living_trees] 651 parcelas x 70 especies
+  PD unificado analisis: n=651, endpoint=1302
+    0.0 min
+  [pooled] 877 parcelas x 142 especies
+  PD unificado analisis: n=877, endpoint=1754
+    0.1 min
+
+  total: 0.5 min
+  -> data/derived/unified_hill_curves_woody.csv  (729 filas)
+
+== resumen (observado -> 2n) ==
+  q=0  taxonomica           parcelas_cl            obs(n= 230)   114.00 -> 2n= 460   134.90 (+18.3%)
+  q=0  taxonomica           living_trees           obs(n= 651)    70.00 -> 2n=1302    75.62 (+8.0%)
+  q=0  taxonomica           pooled                 obs(n= 881)   151.00 -> 2n=1762   172.25 (+14.1%)
+  q=0  filogenetica_meanPD  parcelas_cl            obs(n= 226)    20.60 -> 2n= 452    23.22 (+12.7%)
+  q=0  filogenetica_meanPD  living_trees           obs(n= 651)    13.52 -> 2n=1302    14.26 (+5.5%)
+  q=0  filogenetica_meanPD  pooled                 obs(n= 877)    23.91 -> 2n=1754    25.96 (+8.6%)
+  q=1  taxonomica           parcelas_cl            obs(n= 230)    51.04 -> 2n= 460    52.48 (+2.8%)
+  q=1  taxonomica           living_trees           obs(n= 651)    36.29 -> 2n=1302    36.50 (+0.6%)
+  q=1  taxonomica           pooled                 obs(n= 881)    57.55 -> 2n=1762    58.13 (+1.0%)
+  q=1  filogenetica_meanPD  parcelas_cl            obs(n= 226)     9.99 -> 2n= 452    10.09 (+1.0%)
+  q=1  filogenetica_meanPD  living_trees           obs(n= 651)     7.12 -> 2n=1302     7.13 (+0.2%)
+  q=1  filogenetica_meanPD  pooled                 obs(n= 877)     9.41 -> 2n=1754     9.44 (+0.3%)
+  q=2  taxonomica           parcelas_cl            obs(n= 230)    33.79 -> 2n= 460    34.06 (+0.8%)
+  q=2  taxonomica           living_trees           obs(n= 651)    28.09 -> 2n=1302    28.16 (+0.3%)
+  q=2  taxonomica           pooled                 obs(n= 881)    40.73 -> 2n=1762    40.85 (+0.3%)
+  q=2  filogenetica_meanPD  parcelas_cl            obs(n= 226)     7.01 -> 2n= 452     7.03 (+0.3%)
+  q=2  filogenetica_meanPD  living_trees           obs(n= 651)     5.57 -> 2n=1302     5.57 (+0.1%)
+  q=2  filogenetica_meanPD  pooled                 obs(n= 877)     6.53 -> 2n=1754     6.53 (+0.1%)
+
+listo.

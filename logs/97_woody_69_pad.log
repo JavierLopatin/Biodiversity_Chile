@@ -1,0 +1,3 @@
+lcbd_count_sorensen_woody.parquet: 2499 observed rows padded to 3102 (full unified pool) -> lcbd_count_sorensen_unified_padded_woody.parquet  [pool: PCL=1082 LT=2020]
+pd_inext_coverage_woody.parquet: 877 observed rows padded to 3102 (full unified pool) -> pd_inext_coverage_unified_padded_woody.parquet  [pool: PCL=1082 LT=2020]
+td_inext_coverage_woody.parquet: 881 observed rows padded to 3102 (full unified pool) -> td_inext_coverage_unified_padded_woody.parquet  [pool: PCL=1082 LT=2020]

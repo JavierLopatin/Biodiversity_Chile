@@ -1,0 +1,32 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+== pool de conteo (parcelas con LCBD) ==
+  2499 parcelas x 167 especies (lcbd_count_sorensen_woody.parquet)
+
+== [parcelas_cl] 479 parcelas x 127 especies, reps=100; tamanos: 10, 14, 20, 29, 41, 58, 83, 117, 167, 237, 337, 479 ==
+
+== [living_trees] 2020 parcelas x 76 especies, reps=100; tamanos: 10, 16, 26, 43, 69, 112, 181, 293, 475, 769, 1247, 2020 ==
+
+== [pooled] 2499 parcelas x 167 especies, reps=100; tamanos: 10, 17, 27, 45, 74, 123, 203, 336, 554, 916, 1513, 2499 ==
+  0.4 min
+-> data/derived/unified_beta_freq_curve_woody.csv (108 filas)
+
+== resumen (n chico -> n grande, por q) ==
+  parcelas_cl  q=0  n=  10: alfa=5.01 beta=6.49 gamma=32.2  ->  n= 479: alfa=4.93 beta=25.74 gamma=127.0
+  parcelas_cl  q=1  n=  10: alfa=2.71 beta=6.06 gamma=16.3  ->  n= 479: alfa=2.62 beta=14.09 gamma=37.0
+  parcelas_cl  q=2  n=  10: alfa=2.05 beta=5.80 gamma=11.8  ->  n= 479: alfa=1.98 beta=10.67 gamma=21.1
+  living_trees q=0  n=  10: alfa=3.58 beta=6.48 gamma=22.9  ->  n=2020: alfa=3.61 beta=21.05 gamma=76.0
+  living_trees q=1  n=  10: alfa=2.28 beta=6.02 gamma=13.7  ->  n=2020: alfa=2.24 beta=13.15 gamma=29.4
+  living_trees q=2  n=  10: alfa=1.79 beta=5.80 gamma=10.4  ->  n=2020: alfa=1.73 beta=10.86 gamma=18.8
+  pooled       q=0  n=  10: alfa=3.93 beta=7.06 gamma=27.6  ->  n=2499: alfa=3.86 beta=43.22 gamma=167.0
+  pooled       q=1  n=  10: alfa=2.42 beta=6.68 gamma=16.1  ->  n=2499: alfa=2.31 beta=18.54 gamma=42.8
+  pooled       q=2  n=  10: alfa=1.87 beta=6.54 gamma=12.3  ->  n=2499: alfa=1.77 beta=14.31 gamma=25.4
+
+listo.
