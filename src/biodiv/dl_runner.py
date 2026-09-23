@@ -33,7 +33,7 @@ from . import runlog
 from . import substrates as sub
 from . import targets as tg
 from .models_conv import build_model, count_params
-from .trainer import CurveDataset, TrainCfg, predict, train_one_fold
+from .trainer import CurveDataset, TrainCfg, predict, seed_everything, train_one_fold
 
 ID_COL = "PlotObservationID"
 
@@ -155,6 +155,11 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
             Ys = tg.apply_target_scaler(Y_full, scaler)
             mask = tg.target_mask(Y_full)
 
+            # Seed before build_model: the weights are drawn from the global torch RNG, and
+            # train_one_fold seeds only after they exist. Without this the first model of
+            # the process starts from OS entropy and, through early stopping, every later
+            # (seed, fold) inherits a different RNG state.
+            seed_everything(seed)
             if family == "MLP":
                 pre_tab = feat.Preprocessor(standardise=True).fit(Xtab, fit_ids)
                 Xin = pre_tab.transform(Xtab)

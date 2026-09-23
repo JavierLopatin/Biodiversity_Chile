@@ -58,7 +58,7 @@ from biodiv import targets as tg                                    # noqa: E402
 from biodiv.dl_runner import substrate_builder                      # noqa: E402
 from biodiv.models_conv import build_model, count_params            # noqa: E402
 from biodiv.trainer import (                                        # noqa: E402
-    CurveDataset, TrainCfg, train_fixed_epochs, train_one_fold,
+    CurveDataset, TrainCfg, seed_everything, train_fixed_epochs, train_one_fold,
 )
 
 ID_COL = "PlotObservationID"
@@ -155,6 +155,7 @@ def main() -> None:
         mask = tg.target_mask(Y_full)
 
         imgs = images  # normalize="none" -> no per-fold standardisation of the curve
+        seed_everything(seed)  # before build_model: init draws from the global torch RNG
         model = build_model(FAMILY, c_in=imgs.shape[1], n_out=n_out, n_ctx=ctx_all.shape[1],
                             width="B")
 
