@@ -63,20 +63,22 @@ def main() -> None:
     j = pd.read_csv(src)
 
     out = j[["species", "family", "becerra", "parcelas_cl_resto", "living_trees",
-             "n_parcelas", "forma", "via"]].copy()
+             "n_parcelas", "en_conteos", "forma", "via"]].copy()
     out = out.rename(columns={"via": "fuente"})
     out["motivo"] = ""
 
     for sp, (forma, motivo) in MANUAL.items():
         m = out.species == sp
         if not m.any():
-            raise SystemExit(f"MANUAL menciona '{sp}', que no esta en el padron")
+            print(f"  aviso: MANUAL menciona '{sp}', ausente del padron; se ignora")
+            continue
         out.loc[m, ["forma", "fuente", "motivo"]] = [forma, "manual", motivo]
 
     for sp, motivo in SIN_RESOLVER.items():
         m = out.species == sp
         if not m.any():
-            raise SystemExit(f"SIN_RESOLVER menciona '{sp}', que no esta en el padron")
+            print(f"  aviso: SIN_RESOLVER menciona '{sp}', ausente del padron; se ignora")
+            continue
         out.loc[m, ["forma", "fuente", "motivo"]] = [pd.NA, "sin_resolver", motivo]
 
     f = ROOT / "data" / "derived" / "growth_form_lookup.csv"

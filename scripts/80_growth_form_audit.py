@@ -53,7 +53,12 @@ def normalize(name: str) -> str:
 
 
 def build_roster() -> pd.DataFrame:
-    occ = pd.read_parquet(DERIVED / "occurrences_unified_counts.parquet")
+    # Superconjunto, no solo el subconjunto de conteos reales: las curvas de acumulacion
+    # (scripts/56, 59) arman la comunidad desde Parcelas-CL completo mas living_trees, o
+    # sea del estrato de cobertura tambien. Un lookup que solo cubriera las 261 especies
+    # con conteo dejaria sin asignar las ~330 que solo aparecen en cobertura.
+    occ = pd.read_parquet(DERIVED / "occurrences_unified.parquet")
+    conteos = set(pd.read_parquet(DERIVED / "occurrences_unified_counts.parquet").species)
     plots = pd.read_parquet(DERIVED / "plots_unified.parquet")[
         ["PlotObservationID", "Owner", "source"]]
     fam = pd.read_csv(DERIVED / "phylo_species_status_unified.csv")[["species", "family"]]
@@ -70,6 +75,7 @@ def build_roster() -> pd.DataFrame:
     wide["n_parcelas"] = wide[["becerra", "parcelas_cl_resto", "living_trees"]].sum(axis=1)
     wide = wide.merge(fam, on="species", how="left")
 
+    wide["en_conteos"] = wide.species.isin(conteos)
     wide["nombre_normalizado"] = wide.species.map(normalize)
     wide["solo_genero"] = wide.species.str.split().str.len() == 1
     wide["infraespecifico"] = wide.species.str.contains(r" (?:var|subsp|ssp|f)\. ", regex=True)

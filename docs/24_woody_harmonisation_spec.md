@@ -33,10 +33,13 @@ Filtrar los registros no leñosos de las 60 parcelas de Becerra y **conservar la
 parcelas**. No hay que tocar las otras 835: ya son solo leñosas.
 
 La asignación de forma de crecimiento ya está resuelta y versionada en
-`data/derived/growth_form_lookup.csv` (`scripts/80` → `scripts/81` → `scripts/82`): 214
-taxones por nombre aceptado o sinónimo del catálogo de Rodríguez et al. 2018, 30 por
-herencia de género unánime, 11 manuales con su motivo, y 6 sin resolver que no entran al
-filtro (51 registros, 0,5%). Efecto medido sobre la riqueza observada por parcela:
+`data/derived/growth_form_lookup.csv` (`scripts/80` → `scripts/81` → `scripts/82`). Cubre
+las 593 especies del superconjunto `occurrences_unified.parquet`, con la columna
+`en_conteos` marcando las 261 que importan para las facetas y las curvas. Sobre esas 261:
+214 por nombre aceptado o sinónimo del catálogo de Rodríguez et al. 2018, 30 por herencia
+de género unánime, 11 manuales con su motivo, y 6 sin resolver que no entran al filtro
+(51 registros, 0,5%). Los 33 taxones sin asignar del lookup viven todos fuera de
+`en_conteos`. Efecto medido sobre la riqueza observada por parcela:
 
 | | antes | después |
 |---|---|---|
@@ -56,10 +59,26 @@ Ninguna parcela queda sin leñosas, así que el pool conserva las 3.102.
 3. `scripts/63_pd_inext_coverage.R` → `pd_inext_coverage.parquet`
 4. `scripts/64_td_inext_coverage.R` → `td_inext_coverage.parquet`
 5. `scripts/69_pad_pg_facets_unified.py` → versiones padded al pool de 3.102
-6. **Curvas de acumulación**, que también están contaminadas. Ojo: `scripts/56` y
-   `scripts/59` NO leen `occurrences_unified_counts.parquet`; arman la comunidad desde el
-   zip de Parcelas-CL más `living_trees_long.parquet`, vía `lib/unified_comm.R` y
-   `lib/beta_freq.R`. El filtro leñoso hay que inyectarlo ahí aparte. Después `python scripts/79_hill_curve_figures.py`
+6. **Curvas de acumulación, recalculadas sobre las parcelas del análisis.** Decisión del
+   autor (2026-09-23), y cambia el alcance respecto de lo que hacían `scripts/56` y
+   `scripts/59`: esos arman la comunidad desde el zip de Parcelas-CL completo más
+   `living_trees_long.parquet` (vía `lib/unified_comm.R` y `lib/beta_freq.R`), o sea 593
+   especies incluyendo todo el estrato de cobertura. Las curvas tienen que salir del mismo
+   conjunto de parcelas sobre el que se ajusta y valida cada faceta, porque la figura vive
+   en §Diversity facets para describir las variables respuesta: si describe un pool que el
+   modelo nunca ve, el lector asocia 610 especies efectivas a una predicción hecha sobre
+   895 parcelas.
+
+   Panel por panel:
+   - TD: las 895 parcelas que llevan TD₀
+   - PD: las 888 que llevan PD₀
+   - beta: las 2.499 que llevan LCBD
+
+   Substrato común: `occurrences_unified_counts.parquet` filtrado a leñosas, no el zip.
+   Con esto el lookup de 261 especies basta y sobra; las 332 que solo aparecen en
+   cobertura dejan de importar (de ellas 33 quedaban sin asignar).
+
+   Después `python scripts/79_hill_curve_figures.py` regenera las figuras. Después `python scripts/79_hill_curve_figures.py`
    regenera `fig24_hill_curves_q0` y `figS6_hill_curves_q12`. Las cifras que el manuscrito
    cita hoy en §Diversity facets (610 especies efectivas en q=0, PD media 53,3, beta de 7,6
    a 128,4) salieron del pool sin filtrar y van a bajar.
