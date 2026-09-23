@@ -150,7 +150,20 @@ run_pd <- function(comm, label) {
 }
 
 t_all <- Sys.time()
-curves <- rbind(run_td(comm_td, LABEL), run_pd(comm_pd, LABEL))
+# Cada curva tres veces: por base y sobre el agrupado (columna `source`). Las dos bases
+# comparten pocas especies y muestrean rangos latitudinales distintos, asi que el agrupado
+# solo no distingue acumulacion dentro de una flora de union de dos (docs/24).
+SOURCES <- c(parcelas_cl = "^PCL_", living_trees = "^LT_", pooled = ".")
+by_source <- function(comm, run) {
+  do.call(rbind, lapply(names(SOURCES), function(k) {
+    sub <- comm[grepl(SOURCES[[k]], rownames(comm)), , drop = FALSE]
+    sub <- sub[, colSums(sub) > 0, drop = FALSE]
+    message(sprintf("  [%s] %d parcelas x %d especies", k, nrow(sub), ncol(sub)))
+    cbind(source = k, run(sub, LABEL), stringsAsFactors = FALSE)
+  }))
+}
+curves <- rbind(by_source(comm_td, run_td), by_source(comm_pd, run_pd))
+curves <- curves[, c("dataset", "source", setdiff(names(curves), c("dataset", "source")))]
 message(sprintf("\n  total: %.1f min", as.numeric(difftime(Sys.time(), t_all, units = "mins"))))
 
 OUT <- file.path(OUT_DIR, sprintf("unified_hill_curves%s.csv", SFX))
@@ -162,8 +175,8 @@ message(sprintf("  -> %s  (%d filas)", OUT, nrow(curves)))
 # --------------------------------------------------------------------------------------
 
 message("\n== resumen (observado -> 2n) ==")
-for (qi in Q) for (m in unique(curves$metric)) for (d in unique(curves$dataset)) {
-  z <- curves[curves$metric == m & curves$dataset == d & curves$q == qi, ]
+for (qi in Q) for (m in unique(curves$metric)) for (d in names(SOURCES)) {
+  z <- curves[curves$metric == m & curves$source == d & curves$q == qi, ]
   if (!nrow(z)) next
   obs <- z[z$method == "Observed", ][1, ]
   ext <- z[nrow(z), ]

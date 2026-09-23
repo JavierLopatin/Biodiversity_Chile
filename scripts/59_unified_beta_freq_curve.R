@@ -43,25 +43,31 @@ comm <- comm[rowSums(comm) > 0, colSums(comm) > 0, drop = FALSE]
 stopifnot(nrow(comm) == length(ids))
 message(sprintf("  %d parcelas x %d especies (%s)", nrow(comm), ncol(comm), basename(LCBD)))
 
-N <- nrow(comm)
-sizes <- unique(round(exp(seq(log(10), log(N), length.out = N_SIZES))))
-message(sprintf("  tamanos: %s", paste(sizes, collapse = ", ")))
-
-message(sprintf("\n== curva (remuestreo, reps=%d) ==", REPS))
+# Tres curvas: por base y sobre el agrupado (columna `source`, docs/24).
+SOURCES <- c(parcelas_cl = "^PCL_", living_trees = "^LT_", pooled = ".")
 t0 <- Sys.time()
-curve <- beta_freq_curve(comm, sizes, q = Q, reps = REPS, seed = SEED)
+curve <- do.call(rbind, lapply(names(SOURCES), function(k) {
+  sub <- comm[grepl(SOURCES[[k]], rownames(comm)), , drop = FALSE]
+  sub <- sub[, colSums(sub) > 0, drop = FALSE]
+  N <- nrow(sub)
+  sizes <- unique(round(exp(seq(log(10), log(N), length.out = N_SIZES))))
+  message(sprintf("\n== [%s] %d parcelas x %d especies, reps=%d; tamanos: %s ==",
+                  k, N, ncol(sub), REPS, paste(sizes, collapse = ", ")))
+  cbind(source = k, beta_freq_curve(sub, sizes, q = Q, reps = REPS, seed = SEED),
+        stringsAsFactors = FALSE)
+}))
 message(sprintf("  %.1f min", as.numeric(difftime(Sys.time(), t0, units = "mins"))))
 
 write.csv(curve, OUT, row.names = FALSE)
 message(sprintf("-> %s (%d filas)", OUT, nrow(curve)))
 
 message("\n== resumen (n chico -> n grande, por q) ==")
-for (qi in Q) {
-  d <- curve[curve$q == qi, ]
+for (k in names(SOURCES)) for (qi in Q) {
+  d <- curve[curve$source == k & curve$q == qi, ]
   d <- d[order(d$n), ]
   lo <- d[1, ]; hi <- d[nrow(d), ]
-  message(sprintf("  q=%d  n=%4d: alfa=%.2f beta=%.2f gamma=%.1f  ->  n=%4d: alfa=%.2f beta=%.2f gamma=%.1f",
-                  qi, lo$n, lo$alpha_mean, lo$beta_mean, lo$gamma_mean,
+  message(sprintf("  %-12s q=%d  n=%4d: alfa=%.2f beta=%.2f gamma=%.1f  ->  n=%4d: alfa=%.2f beta=%.2f gamma=%.1f",
+                  k, qi, lo$n, lo$alpha_mean, lo$beta_mean, lo$gamma_mean,
                   hi$n, hi$alpha_mean, hi$beta_mean, hi$gamma_mean))
 }
 
