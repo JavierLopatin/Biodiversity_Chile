@@ -56,19 +56,20 @@ Ninguna parcela queda sin leñosas, así que el pool conserva las 3.102.
 3. `scripts/63_pd_inext_coverage.R` → `pd_inext_coverage.parquet`
 4. `scripts/64_td_inext_coverage.R` → `td_inext_coverage.parquet`
 5. `scripts/69_pad_pg_facets_unified.py` → versiones padded al pool de 3.102
-6. **Curvas de acumulación**, que también salen de la tabla de ocurrencias y por lo tanto
-   también están contaminadas: `scripts/56_unified_hill_curves.R` y
-   `scripts/59_unified_beta_freq_curve.R`. Después `python scripts/79_hill_curve_figures.py`
+6. **Curvas de acumulación**, que también están contaminadas. Ojo: `scripts/56` y
+   `scripts/59` NO leen `occurrences_unified_counts.parquet`; arman la comunidad desde el
+   zip de Parcelas-CL más `living_trees_long.parquet`, vía `lib/unified_comm.R` y
+   `lib/beta_freq.R`. El filtro leñoso hay que inyectarlo ahí aparte. Después `python scripts/79_hill_curve_figures.py`
    regenera `fig24_hill_curves_q0` y `figS6_hill_curves_q12`. Las cifras que el manuscrito
    cita hoy en §Diversity facets (610 especies efectivas en q=0, PD media 53,3, beta de 7,6
    a 128,4) salieron del pool sin filtrar y van a bajar.
 7. Reajuste con `scripts/11_run_conv.py`, esquema `kfold5_block20_unified`, 5 semillas,
    para **C1D01** (el desplegado) y **C2D02** (control de arquitectura). Salida a
    `results/models_unified_woody/` para no pisar `models_unified_topofix`.
-8. **Correr también la variante CON hierbas en el mismo entorno de hoy.** Ver la nota de
-   entorno más abajo: el `models_unified_topofix` existente ya no sirve de línea base
-   limpia, así que el contraste tiene que ser contra una corrida fresca, no contra la
-   antigua.
+8. **Correr también la variante CON hierbas**, con el arreglo de semilla aplicado. No por
+   deriva de entorno (ver abajo, esa sospecha era infundada) sino porque la corrida
+   topofix existente se produjo con el bug de inicialización y sus semillas no son
+   reproducibles.
 9. Comparar las dos corridas frescas faceta por faceta.
 
 ## Tres cosas que hay que vigilar
@@ -82,14 +83,31 @@ Ninguna parcela queda sin leñosas, así que el pool conserva las 3.102.
   rama vienen del megaárbol, pero hay que comprobarlo antes de interpretar deltas.
 - **Entorno.** Ejecutar en pop-os, no en el Mac: el Mac no tiene iNEXT.3D, adespatial ni
   V.PhyloMaker2, y arrastra numpy 2.4 / pandas 2.3 / torch 2.12 contra numpy 1.24 /
-  pandas 1.5 en pop-os. Pero **el argumento de constancia de entorno ya no se sostiene
-  solo**: el commit `6186fd4` reescribió los checkpoints del C1D01 con sklearn 1.8, contra
-  el sklearn 1.3.1 que figura en el `config.json` de la corrida topofix. Es decir, pop-os
-  tampoco es hoy el entorno que produjo la Tabla 3. Por eso el paso 8: la comparación
-  válida es entre dos corridas frescas del mismo día, no contra `models_unified_topofix`.
-- **Reproducibilidad de semillas.** El commit `d32a76c` reporta que la semilla 0 del refit
-  all-data no es reproducible. Verificar si eso afecta también al esquema de bloques antes
-  de leer diferencias del orden de la dispersión entre semillas.
+  pandas 1.5 en pop-os. Corregido 2026-09-23: una versión anterior de este documento
+  afirmaba que pop-os había derivado a sklearn 1.8 y que por eso `models_unified_topofix`
+  dejaba de servir de línea base. **Es falso.** El entorno de pop-os coincide versión por
+  versión con el bloque `versions` del `config.json` de topofix (python 3.11.6, numpy
+  1.24.4, pandas 1.5.3, scipy 1.10.0, sklearn 1.3.1, torch 2.0.1+cu117). Los commits
+  `6186fd4` y `d32a76c` salieron de una máquina cloud distinta (Tesla T4, python 3.12.13,
+  sklearn 1.8/1.9.1) y solo tocaron los checkpoints `C1D01_..._FINAL_alldata/final/` del
+  refit de mapas, no los directorios `kfold5_block20_unified`. La deriva no toca la Tabla 3.
+- **Bug de inicialización de semilla — este sí obliga a rehacer la línea base.** En
+  `src/biodiv/dl_runner.py` se llama a `build_model` antes de `train_one_fold`, y
+  `seed_everything` corre dentro de `train_one_fold` (`src/biodiv/trainer.py:124`), o sea
+  *después* de inicializar los pesos. El primer modelo del proceso arranca desde la
+  entropía del proceso. Bajo validación cruzada el daño es peor que en el refit all-data:
+  con parada temprana, el número de épocas del fold 0 depende de esa inicialización, y con
+  él las extracciones del RNG, así que el estado que hereda cada (semilla, fold) siguiente
+  cambia en cascada. En el all-data las épocas fijas cortaban la cascada.
+
+  Esto no es cosmético para este manuscrito. La Tabla 3 reporta media ± desviación entre
+  cinco semillas y se niega explícitamente a interpretar diferencias menores que esa
+  dispersión. Si las semillas no están controladas, esa desviación no estima dispersión
+  entre semillas: mezcla ruido de entropía del proceso. El criterio de comparación del
+  paper depende de que el arreglo se aplique.
+
+  Arreglo: mover `seed_everything` antes de `build_model` en `dl_runner.py` y en
+  `scripts/77`. Después correr las dos variantes frescas con el arreglo puesto.
 
 ## Defectos de nomenclatura detectados (arreglar en el paso 1)
 
