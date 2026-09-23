@@ -1,0 +1,2 @@
+    C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr: 14,535 parameters, input (1, 100)
+  C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr kfold5_block20_unified [  7.3m] lcbd_count_sorensen=+0.425 pd_inext_q0=+0.600 pd_inext_q1=+0.033 pd_inext_q2=+0.083 td_inext_q0=+0.770 td_inext_q1=-0.111 td_inext_q2=-0.067
