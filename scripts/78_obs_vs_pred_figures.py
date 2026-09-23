@@ -15,6 +15,7 @@ Uso:
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -25,6 +26,8 @@ ROOT = Path(__file__).resolve().parents[1]
 FIG_DIR = ROOT / "results" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
+#: Corrida por defecto. `--run` apunta a cualquier otra; `--tag` cambia el sufijo de
+#: las figuras para no pisar las de otra variante.
 RUN = (ROOT / "results" / "models_unified_topofix"
        / "C1D01_curve1d_kndvi_raw100_pg-all_unified_ctr"
        / "kfold5_block20_unified" / "oof_predictions.csv")
@@ -57,9 +60,9 @@ def r2(obs: pd.Series, pred: pd.Series) -> float:
     return 1.0 - ((pred - obs) ** 2).sum() / ((obs - obs.mean()) ** 2).sum()
 
 
-def load() -> tuple[pd.DataFrame, dict[str, tuple[float, float]]]:
+def load(run: Path = RUN) -> tuple[pd.DataFrame, dict[str, tuple[float, float]]]:
     """Ensemble por parcela, y el R2 medio entre semillas con su desviacion."""
-    raw = pd.read_csv(RUN)
+    raw = pd.read_csv(run)
     ens = raw.groupby("PlotObservationID").mean(numeric_only=True)
     ens["living_trees"] = ens.index.astype(str).str.startswith("LT_")
 
@@ -118,11 +121,16 @@ def figure(ens: pd.DataFrame, seed_r2: dict, facets: list, stem: str,
 
 
 def main() -> None:
-    ens, seed_r2 = load()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--run", type=Path, default=RUN, help="oof_predictions.csv a dibujar")
+    ap.add_argument("--tag", default="", help="sufijo de las figuras, p.ej. _woody")
+    args = ap.parse_args()
+
+    ens, seed_r2 = load(args.run)
     figure(ens, seed_r2, [f for f in FACETS if f[2]],
-           "fig23_obs_vs_pred_c1d_block20", ncols=3, figsize=(14, 5.2))
+           f"fig23_obs_vs_pred_c1d_block20{args.tag}", ncols=3, figsize=(14, 5.2))
     figure(ens, seed_r2, FACETS,
-           "figS5_obs_vs_pred_c1d_all_facets", ncols=4, figsize=(17, 9.5))
+           f"figS5_obs_vs_pred_c1d_all_facets{args.tag}", ncols=4, figsize=(17, 9.5))
 
 
 if __name__ == "__main__":
