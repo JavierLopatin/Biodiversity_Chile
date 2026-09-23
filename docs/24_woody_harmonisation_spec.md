@@ -74,6 +74,19 @@ Ninguna parcela queda sin leñosas, así que el pool conserva las 3.102.
    - PD: las 888 que llevan PD₀
    - beta: las 2.499 que llevan LCBD
 
+   **Tres líneas por panel**, decisión del autor: Parcelas-CL, Living Trees y el pool
+   agrupado. El agrupado va porque es sobre el que se ajusta el modelo; las dos por
+   separado van porque sin ellas el agrupado engaña. Sobre el pool filtrado a leñosas las
+   dos bases comparten 36 especies de 167 (Jaccard 0,216), con 91 exclusivas de
+   Parcelas-CL y 40 de Living Trees, y muestrean rangos distintos: Living Trees 30,6-55,0°S
+   con 2.020 parcelas, Parcelas-CL 31,3-36,3°S con 479. O sea buena parte del ascenso de la
+   curva agrupada es unión de dos floras, no acumulación dentro de una comunidad, y el pie
+   de figura tiene que declararlo.
+
+   Formato de salida: `unified_hill_curves.csv` y `unified_beta_freq_curve.csv` con una
+   columna `source` de valores `parcelas_cl`, `living_trees`, `pooled`. `scripts/79` ya la
+   consume y dibuja las tres líneas; si la columna falta vuelve a una sola línea.
+
    Substrato común: `occurrences_unified_counts.parquet` filtrado a leñosas, no el zip.
    Con esto el lookup de 261 especies basta y sobra; las 332 que solo aparecen en
    cobertura dejan de importar (de ellas 33 quedaban sin asignar).

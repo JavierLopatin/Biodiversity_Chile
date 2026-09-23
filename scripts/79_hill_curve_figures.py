@@ -11,6 +11,14 @@ Taxonomica y filogenetica vienen de la rarefaccion/extrapolacion de iNEXT sobre 
 (`unified_beta_freq_curve.csv`), que es el recambio regional que LCBD reparte entre
 parcelas -- LCBD es por parcela y no tiene curva de acumulacion propia.
 
+Cada panel lleva tres lineas: Parcelas-CL, Living Trees y el pool agrupado. El agrupado
+esta porque es sobre el que se ajusta el modelo; las dos por separado estan porque sin
+ellas el agrupado engana. Las dos bases comparten 36 especies lenosas de 167 (Jaccard
+0,216) y muestrean rangos latitudinales distintos, asi que buena parte del ascenso de la
+curva agrupada es union de dos floras, no acumulacion dentro de una comunidad.
+
+Si los CSV no traen columna `source` se dibuja una sola linea, como antes.
+
 Uso:
     python scripts/79_hill_curve_figures.py
 """
@@ -38,31 +46,60 @@ plt.rcParams.update({
     "ytick.labelsize": 11,
 })
 
-HILL = {"taxonomica": ("Taxonomic diversity (TD)", GREEN),
-        "filogenetica_meanPD": ("Phylogenetic diversity (PD)", BLUE)}
+HILL = {"taxonomica": "Taxonomic diversity (TD)",
+        "filogenetica_meanPD": "Phylogenetic diversity (PD)"}
+
+#: Una linea por base, mas el agrupado. El agrupado va en negro y mas grueso porque es el
+#: pool que el modelo ve; las dos bases van en color para que se lea de donde viene el
+#: ascenso.
+SOURCES = [("parcelas_cl", BLUE, "Parcelas-CL", 1.8, "-"),
+           ("living_trees", ORANGE, "Living Trees", 1.8, "-"),
+           ("pooled", "#333333", "pooled", 2.4, "-")]
+
+
+def _series(df: pd.DataFrame):
+    """(subconjunto, color, etiqueta, grosor) por fuente; una sola serie si no hay `source`."""
+    if "source" not in df.columns:
+        return [(df, GREEN, None, 2.0)]
+    out = []
+    for key, color, label, lw, _ in SOURCES:
+        z = df[df["source"] == key]
+        if len(z):
+            out.append((z, color, label, lw))
+    return out
 
 
 def hill_panel(ax, hc: pd.DataFrame, metric: str, q: int) -> None:
     """Rarefaccion en linea continua, extrapolacion punteada, banda de confianza."""
-    label, color = HILL[metric]
-    z = hc[(hc["q"] == q) & (hc["metric"] == metric)].sort_values("n")
-    interp = z[z["method"].isin(["Rarefaction", "Observed"])]
-    extrap = z[z["method"].isin(["Observed", "Extrapolation"])]
-    obs = z[z["method"] == "Observed"]
-    ax.plot(interp["n"], interp["value"], "-", color=color, lw=2)
-    ax.plot(extrap["n"], extrap["value"], "--", color=color, lw=2)
-    ax.fill_between(z["n"], z["lo"], z["hi"], color=color, alpha=0.15)
-    ax.scatter(obs["n"], obs["value"], color=color, s=45, zorder=5)
-    ax.set(title=f"{label}, $q={q}$", xlabel="plots pooled", ylabel="effective species")
+    sel = hc[(hc["q"] == q) & (hc["metric"] == metric)]
+    for z, color, label, lw in _series(sel):
+        z = z.sort_values("n")
+        interp = z[z["method"].isin(["Rarefaction", "Observed"])]
+        extrap = z[z["method"].isin(["Observed", "Extrapolation"])]
+        obs = z[z["method"] == "Observed"]
+        ax.plot(interp["n"], interp["value"], "-", color=color, lw=lw, label=label)
+        ax.plot(extrap["n"], extrap["value"], "--", color=color, lw=lw)
+        ax.fill_between(z["n"], z["lo"], z["hi"], color=color, alpha=0.12)
+        ax.scatter(obs["n"], obs["value"], color=color, s=40, zorder=5)
+    ax.set(title=f"{HILL[metric]}, $q={q}$", xlabel="plots pooled",
+           ylabel="effective species")
 
 
 def beta_panel(ax, bc: pd.DataFrame, q: int) -> None:
-    z = bc[bc["q"] == q].sort_values("n")
-    ax.plot(z["n"], z["beta_mean"], "-", color=ORANGE, lw=2)
-    ax.fill_between(z["n"], z["beta_lo"], z["beta_hi"], color=ORANGE, alpha=0.15)
+    for z, color, label, lw in _series(bc[bc["q"] == q]):
+        z = z.sort_values("n")
+        ax.plot(z["n"], z["beta_mean"], "-", color=color, lw=lw, label=label)
+        ax.fill_between(z["n"], z["beta_lo"], z["beta_hi"], color=color, alpha=0.12)
     ax.set(title=f"Hill beta, $q={q}$", xlabel="plots pooled",
            ylabel="effective communities")
     ax.set_xscale("log")
+
+
+def _legend(ax) -> None:
+    """Leyenda solo cuando hay mas de una fuente que distinguir."""
+    handles, labels = ax.get_legend_handles_labels()
+    if len(labels) > 1:
+        ax.legend(loc="lower right", fontsize=10, framealpha=0.9)
 
 
 def main() -> None:
@@ -75,6 +112,7 @@ def main() -> None:
     hill_panel(axes[0], hc, "taxonomica", 0)
     hill_panel(axes[1], hc, "filogenetica_meanPD", 0)
     beta_panel(axes[2], bc, 0)
+    _legend(axes[0])
     fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(FIG_DIR / f"fig24_hill_curves_q0.{ext}", dpi=DPI)
@@ -87,6 +125,7 @@ def main() -> None:
         hill_panel(axes[row, 0], hc, "taxonomica", q)
         hill_panel(axes[row, 1], hc, "filogenetica_meanPD", q)
         beta_panel(axes[row, 2], bc, q)
+    _legend(axes[0, 0])
     fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(FIG_DIR / f"figS6_hill_curves_q12.{ext}", dpi=DPI)
