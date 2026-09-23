@@ -116,12 +116,33 @@ def main() -> None:
 
     j = roster.merge(cat, on="nombre_normalizado", how="left", indicator=True)
     j["en_catalogo"] = j._merge == "both"
+    j["via"] = np.where(j.en_catalogo, "especie", "")
     j = j.drop(columns="_merge")
+
+    # Segunda pasada por genero. Cubre dos casos que el cruce por especie no puede:
+    # los 16 registros identificados solo a nivel de genero, y las recombinaciones
+    # posteriores a 2018 que la base usa y el catalogo de 2018 no conoce. Solo se
+    # hereda la forma cuando TODAS las especies del genero en el catalogo coinciden
+    # en ella; si el genero mezcla lenosas y hierbas, se deja sin resolver.
+    if args.catalog_habit_col:
+        cat_g = cat.copy()
+        cat_g["genero"] = cat_g.nombre_normalizado.str.split().str[0]
+        unanime = (cat_g.groupby("genero")[args.catalog_habit_col]
+                        .agg(["nunique", "first", "size"]))
+        unanime = unanime[unanime["nunique"] == 1]["first"]
+        falta = ~j.en_catalogo
+        gen = j.loc[falta, "nombre_normalizado"].str.split().str[0]
+        heredado = gen.map(unanime)
+        j.loc[falta, args.catalog_habit_col] = heredado
+        j.loc[falta & heredado.notna(), "via"] = "genero"
+        j["en_catalogo"] = j[args.catalog_habit_col].notna()
     f2 = OUT / "taxa_roster_vs_catalogo.csv"
     j.to_csv(f2, index=False)
     print(f"\n-> {f2}")
     print(f"   casan {int(j.en_catalogo.sum())} de {len(j)}; "
           f"sin casar {int((~j.en_catalogo).sum())}")
+    if "via" in j:
+        print("   resueltos por:", j[j.en_catalogo].via.value_counts().to_dict())
     faltan = j[~j.en_catalogo].sort_values("n_parcelas", ascending=False)
     if len(faltan):
         print("\n   sin casar (mayor a menor ocurrencia):")
