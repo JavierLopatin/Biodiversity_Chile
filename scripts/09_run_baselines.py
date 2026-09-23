@@ -109,6 +109,8 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
         ident += f"_{target_set.replace('_', '-')}"
     if feat.unified_flag():
         ident += "_unified"
+    if tg.pg_targets_suffix():
+        ident += tg.pg_targets_suffix()
     cfg = runlog.RunConfig(
         run_id=ident + (f"_s{seeds[0]}" if seeds[0] else ""),
         family=meta["family"], scheme=scheme, features=spec, index=idx,

@@ -1,0 +1,30 @@
+{
+  "run_id": "RF03pc_curve-topo_ctr-area_kndvi_raw100_pg-all_unified_herbcommon",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "curve+topo_ctr+area",
+  "substrate": "",
+  "index": "kndvi",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "RF03 with the curve at the centre pixel only",
+  "git": "bdbf0a336e3091a79690908685e103b88cc00ca5-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  }
+}
