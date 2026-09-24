@@ -408,13 +408,27 @@ def _block_clim(t: Tables, ids: pd.Index) -> pd.DataFrame:
     The normal ends in 2000, before the earliest census in 2003, so it is causal for every
     plot in the subset.
     """
-    path = t.derived / "climate.parquet"
+    # Same two-file arrangement as `topo` above: prefer the unified extraction when it
+    # exists so this block stops NaN-imputing for the 2,020 Living Trees rows, and fall
+    # back to the Parcelas-CL-only table otherwise. The fallback needs the "PCL_" prefix
+    # for the same reason `lsp` and `doy` do -- `climate.parquet` keeps Parcelas-CL's raw
+    # numeric id ("32477"), so without it `.reindex(ids)` returns all-NaN for *every* plot
+    # on the unified pool, Parcelas-CL included, and the Preprocessor then fills the whole
+    # block with the training-fold median. That failure is silent: no error, no warning,
+    # just a block that contributes nothing.
+    unified = unified_flag()
+    unified_path = t.derived / "climate_unified.parquet"
+    path = unified_path if unified and unified_path.exists() else t.derived / "climate.parquet"
     if not path.exists():
         raise SystemExit(
             f"{path} not found — run `python scripts/22_extract_climate.py` first "
-            "(needs a Data Cube Chile connection)."
+            "(needs a Data Cube Chile connection). For the unified pool, point it at "
+            "`--plots data/derived/plots_unified.parquet --out "
+            "data/derived/climate_unified.parquet` so the ids carry their source prefix."
         )
     clim = pd.read_parquet(path).set_index(ID_COL)
+    if unified and path != unified_path:
+        clim.index = "PCL_" + clim.index.astype(str)
     return clim.reindex(ids)
 
 
