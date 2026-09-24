@@ -75,6 +75,15 @@ MODELS: dict[str, dict] = {
                   note="RF01 with the LSP block at the centre pixel only"),
     "RF03p": dict(family="RF", spec="curve+topo+area", per_index=True, curve_px="center",
                   note="RF03 with the curve at the centre pixel only"),
+    # Gate: does the phenological trajectory add anything over static predictors? Same
+    # folds, curve at the centre pixel as in RF03p (the RF the paper reports). RFG1 carries
+    # no curve block, so it does not depend on the vegetation index.
+    "RFG1": dict(family="RF", spec="clim+topo+area", per_index=False, curve_px="center",
+                 note="compuerta: predictores estaticos, sin fenologia"),
+    "RFG2": dict(family="RF", spec="curve+topo+area", per_index=True, curve_px="center",
+                 note="compuerta: fenologia, lo que el paper defiende hoy"),
+    "RFG3": dict(family="RF", spec="clim+curve+topo+area", per_index=True, curve_px="center",
+                 note="compuerta: ambos, para ver si la fenologia suma sobre el clima"),
 }
 
 
