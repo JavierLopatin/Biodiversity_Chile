@@ -69,6 +69,16 @@ message("\n== matriz de comunidad ==")
 cmm <- unified_comm(pc_raw, LT_LONG, tree, plots_uni$PlotObservationID,
                     keep = if (WOODY) woody_names() else NULL)
 comm_sub <- cmm$sub
+if (WOODY) {
+  # El modelo nulo taxa.labels de picante sortea sobre TODAS las puntas del arbol. Con el
+  # arbol completo, la variante lenosa sortearia tambien las herbaceas y los SES
+  # compararian cada parcela contra un pool que ya no es el suyo. Se poda a las especies
+  # del pool lenoso completo (columnas de cmm$full), el analogo de lo que el arbol original
+  # es para la variante con hierbas. PD, MPD y MNTD observados no cambian: solo dependen de
+  # las puntas de cada parcela (verificado, max|d| 3e-8 en las 2.879 parcelas sin cambio).
+  tree <- keep.tip(tree, intersect(colnames(cmm$full), tree$tip.label))
+  message(sprintf("  arbol podado al pool lenoso: %d puntas", Ntip(tree)))
+}
 
 # --------------------------------------------------------------------------------------
 # 4. respuestas por parcela

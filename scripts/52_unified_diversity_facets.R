@@ -32,6 +32,7 @@ DERIVED <- file.path(ROOT, "data", "derived")
 K_AXES <- 2
 
 occ <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "occurrences_unified.parquet")))
+occ_ids_all <- unique(occ$PlotObservationID)   # antes del filtro lenoso
 SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
 if (nzchar(SFX)) {
   lk <- read.csv(file.path(DERIVED, "growth_form_lookup.csv"), stringsAsFactors = FALSE,
@@ -45,6 +46,21 @@ if (nzchar(SFX)) {
 }
 plots <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "plots_unified.parquet")))
 plot_ids <- sort(unique(plots$PlotObservationID))
+# Parcelas sin ninguna fila de ocurrencia, contadas ANTES del filtro leñoso: 8 de Living
+# Trees donde ningún árbol tiene D. occurrences_unified usa para Living Trees la vía de área
+# basal, que necesita D (scripts/50), así que quedan vacías. Pero no están vacías: cada una
+# es un rodal puro de Nothofagus (5 de ñirre, N. antarctica, que en alta latitud crece
+# multicaule y sin DAP) con 1 a 217 tallos en la vía de conteos
+# (occurrences_unified_counts.parquet). Su hill_q0 se toma de ahí. La vía de conteos no
+# pierde ningún tallo en Living Trees (59.259 de 59.259); la basal pierde exactamente estas 8.
+no_records <- setdiff(plot_ids, occ_ids_all)
+cnt <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "occurrences_unified_counts.parquet")))
+cnt <- cnt[cnt$PlotObservationID %in% no_records, ]
+if (nzchar(SFX)) cnt <- cnt[cnt$species %in% lk$species[lk$forma %in% "lenosa"], ]
+q0_counts <- tapply(cnt$species, cnt$PlotObservationID, function(x) length(unique(x)))
+q0_counts <- setNames(as.numeric(q0_counts[no_records]), no_records)
+cat(sprintf("parcelas sin ocurrencias en la via basal (hill_q0 desde conteos): %d  %s\n",
+            length(no_records), paste(sprintf("%s=%g", no_records, q0_counts), collapse = " ")))
 
 cat(sprintf("parcelas: %d, filas de ocurrencia: %d, especies: %d\n",
             length(plot_ids), nrow(occ), length(unique(occ$species))))
@@ -113,10 +129,10 @@ run_facet <- function(comm_beta, comm_nmds, method_beta, dist_method, label) {
 }
 
 # --- 2. beta presencia/ausencia, toda parcela con al menos 1 especie registrada ----------
-# 8 parcelas de Living Trees quedan con riqueza 0 (todos sus arboles sin D, ver script 50)
-# -- fila de puros ceros. Jaccard binario no esta definido entre dos comunidades vacias y
-# rompe la descomposicion espectral del PCoA (NA/Inf en eigen()). Se excluyen aqui, NO de
-# hill_q0 (0 es una riqueza real y valida ahi, no un hueco que esconder).
+# Las 8 parcelas de Living Trees sin ocurrencias (todos sus arboles sin D, ver script 50 y
+# `no_records` arriba) son filas de puros ceros. Jaccard binario no esta definido entre dos
+# comunidades vacias y rompe la descomposicion espectral del PCoA (NA/Inf en eigen()). Se
+# excluyen aqui; su hill_q0 sale de la via de conteos (`no_records` arriba).
 has_data <- rowSums(comm_full) > 0
 pa_ids <- plot_ids[has_data]
 cat(sprintf("parcelas excluidas de beta_pa por no tener ninguna especie registrada: %d de %d\n",
@@ -144,7 +160,8 @@ names(freq_res)[-1] <- paste0(names(freq_res)[-1], "_freq_unified")
 # --- 4. unir y escribir -------------------------------------------------------------------
 resp <- data.frame(
   PlotObservationID = plot_ids,
-  hill_q0_unified = as.numeric(hill_q0[plot_ids]),
+  hill_q0_unified = ifelse(plot_ids %in% no_records, q0_counts[plot_ids],
+                           as.numeric(hill_q0[plot_ids])),
   row.names = NULL
 )
 resp <- merge(resp, pa_res, by = "PlotObservationID", all.x = TRUE)

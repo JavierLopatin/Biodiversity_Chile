@@ -1,0 +1,40 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+== comunidad ==
+  Parcelas-CL: 10821 registros -> lenosa 8486, herbacea 1998, otra forma 1, sin resolver en el lookup 336, ausentes del lookup 0
+  Living Trees: 7286 registros -> 7286 conservados
+  registros con tip en el arbol: 15721 de 15772 (99.7%)
+  pool completo: 3497 parcelas x 318 especies
+  set unificado reportado: 3094 parcelas x 281 especies (de 3102 pedidas)
+
+== DarkDiv ==
+  0.5 s
+  probabilidades de pertenencia: mediana 0.350, p90 0.991
+
+  sensibilidad al umbral (rho contra la riqueza observada) -- confirmar que 0,9 sigue en la meseta, no asumirlo transferido:
+    thr 0.50 -> mediana  95.0 especies oscuras   rho(obs) = +0.470
+    thr 0.70 -> mediana  76.0 especies oscuras   rho(obs) = +0.320
+    thr 0.80 -> mediana  64.0 especies oscuras   rho(obs) = +0.269
+    thr 0.90 -> mediana  51.0 especies oscuras   rho(obs) = +0.231   <- elegido
+    thr 0.95 -> mediana  42.0 especies oscuras   rho(obs) = +0.209
+    thr 0.99 -> mediana  31.0 especies oscuras   rho(obs) = +0.152
+
+== dark diversity filogenetica ==
+  MPD del conjunto oscuro: mediana 288 Ma
+
+  -> unified_dark_diversity_woody.parquet  3102 filas, 8 sin cobertura
+
+== correlacion con riqueza (criterio de seleccion de script 27) ==
+  dark_n_unified       rho(hill_q0_unified) = +0.214
+  pool_n_unified       rho(hill_q0_unified) = +0.291
+  dark_mpd_unified     rho(hill_q0_unified) = -0.122
+  completeness_unified rho(hill_q0_unified) = +0.940
+
+listo.

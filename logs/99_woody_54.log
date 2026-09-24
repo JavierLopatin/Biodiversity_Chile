@@ -1,0 +1,45 @@
+The following package(s) were loaded before renv activated this project:
+- BiocManager [~/.cache/R/renv/cache/v5/linux-pop-jammy/R-4.6/x86_64-pc-linux-gnu/BiocManager/1.30.27/594af2c6021b55271b6759d004a25ca2/BiocManager]
+These packages are not managed by renv and may cause `renv::status()`
+and `renv::snapshot()` to report inconsistencies. Restart R in a clean
+session to recover. The paths above may help identify where each
+package was loaded from.
+Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
+
+- The project is out-of-sync -- use `renv::status()` for details.
+== lista de especies unificada ==
+  sinonimos aplicados a 90 registros de 5 generos: Hesperocyparis, Jarava, Leucostele, Neltuma, Temu
+  601 binomios unicos (de 675 taxones en Parcelas-CL)
+  familia desde el megaarbol: 567 | desde la lista manual: 30 generos
+  >> REVISAR estas asignaciones manuales de familia:
+     Lithraea=Anacardiaceae  Retanilla=Rhamnaceae  Podanthus=Asteraceae  Corynabutilon=Malvaceae  Diostea=Verbenaceae  Bridgesia=Sapindaceae  Flourensia=Asteraceae  Llagunoa=Sapindaceae  Anisomeria=Phytolaccaceae  Aristeguietia=Asteraceae  Ophryosporus=Asteraceae  Pleocarphus=Asteraceae  Lapageria=Philesiaceae  Rumex=Polygonaceae  Crocosmia=Iridaceae  Relchela=Poaceae  Podagrostis=Poaceae  Spinoliva=Asteraceae  Archidasyphyllum=Asteraceae  Trevoa=Rhamnaceae  Laureliopsis=Atherospermataceae  Gayella=Sapotaceae  Hemionitis=Pteridaceae  Microphyes=Caryophyllaceae  Phycella=Amaryllidaceae  Ovidia=Thymelaeaceae  Nierembergia=Solanaceae  Peyritschia=Poaceae  Synammia=Polypodiaceae  Glenniea=Sapindaceae
+  Living Trees: 76 especies, 67 ya en Parcelas-CL (mismo binomio exacto), 9 nuevas
+  especies nuevas -- familia desde el megaarbol: 8 | desde FAMILY_MANUAL: 1
+  lista unificada: 610 binomios (601 Parcelas-CL + 9 Living Trees nuevos)
+
+== arbol existente: 610 tips (no se reconstruye) ==
+
+== matriz de comunidad ==
+  Parcelas-CL: 10821 registros -> lenosa 8486, herbacea 1998, otra forma 1, sin resolver en el lookup 336, ausentes del lookup 0
+  Living Trees: 7286 registros -> 7286 conservados
+  registros con tip en el arbol: 15721 de 15772 (99.7%)
+  pool completo: 3497 parcelas x 318 especies
+  set unificado reportado: 3094 parcelas x 281 especies (de 3102 pedidas)
+  arbol podado al pool lenoso: 318 puntas
+
+== respuestas por parcela ==
+  parcelas con <2 especies en el arbol: 559 de 3094 (mpd/mntd dan NA ahi, picante lo maneja solo -- no se filtra la matriz)
+Hubo 50 o más avisos (use warnings() para ver los primeros 50)
+  SES con 499 aleatorizaciones (modelo nulo taxa.labels)...
+Hubo 50 o más avisos (use warnings() para ver los primeros 50)
+  -> unified_phylo_responses.parquet  3102 filas, 567 sin cobertura filogenetica
+
+  correlacion con la riqueza (el criterio de script 25 para elegir targets):
+    pd_faith_unified   r = +0.859
+    mpd_unified        r = +0.097
+    mntd_unified       r = -0.148
+    ses_pd_unified     r = +0.111
+    ses_mpd_unified    r = +0.115
+    ses_mntd_unified   r = +0.088
+
+listo.

@@ -7,15 +7,14 @@ package was loaded from.
 Set `RENV_CONFIG_NAMESPACES_CHECK=FALSE` to silence this check.
 
 - The project is out-of-sync -- use `renv::status()` for details.
-filtro lenoso: 15051 filas -> lenosa 13126, herbacea 1761, otra forma 1, sin resolver 163, ausentes 0
 parcelas sin ocurrencias en la via basal (hill_q0 desde conteos): 8  LT_1126=1 LT_1288=1 LT_1988=1 LT_2002=1 LT_2005=1 LT_2007=1 LT_535=1 LT_651=1
-parcelas: 3102, filas de ocurrencia: 13126, especies: 307
+parcelas: 3102, filas de ocurrencia: 15051, especies: 593
 Abundance_parameter en occ:
 
  Abundance Basal_area      Cover         NA       <NA> 
-      2363       7298       3201        264          0 
+      3654       7298       3833        266          0 
 parcelas excluidas de beta_pa por no tener ninguna especie registrada: 8 de 3102
-[14:19:26] [presence-absence] 3094 parcelas x 307 especies
+[14:19:26] [presence-absence] 3094 parcelas x 593 especies
 [14:19:26] [presence-absence] beta.div (method=jaccard, nperm=999) ...
 Registered S3 methods overwritten by 'adegraphics':
   method         from
@@ -41,24 +40,24 @@ Registered S3 method overwritten by 'spdep':
 Registered S3 method overwritten by 'adespatial':
   method          from       
   plot.multispati adegraphics
-[15:02:05] [presence-absence] beta.div listo
-[15:02:05] [presence-absence] PCoA (distance=jaccard) ...
-[15:03:15] [presence-absence] PCoA listo
-[presence-absence] PCoA varianza explicada por 2 ejes: 13.0%
+[15:31:27] [presence-absence] beta.div listo
+[15:31:27] [presence-absence] PCoA (distance=jaccard) ...
+[15:32:33] [presence-absence] PCoA listo
+[presence-absence] PCoA varianza explicada por 2 ejes: 12.9%
 Aviso:
 In run_facet(comm_pa, comm_pa, "jaccard", "jaccard", "presence-absence") :
-  [presence-absence] PCoA explica poca varianza (13.0% en 2 ejes)
+  [presence-absence] PCoA explica poca varianza (12.9% en 2 ejes)
 parcelas con abundancia real (fuera del estrato 'presencia'): 3040 de 3102
-[15:03:15] [frequency] 3040 parcelas x 299 especies
-[15:03:15] [frequency] beta.div (method=hellinger, nperm=999) ...
-[15:03:40] [frequency] beta.div listo
-[15:03:40] [frequency] PCoA (distance=bray) ...
-[15:04:44] [frequency] PCoA listo
+[15:32:33] [frequency] 3040 parcelas x 584 especies
+[15:32:33] [frequency] beta.div (method=hellinger, nperm=999) ...
+[15:33:22] [frequency] beta.div listo
+[15:33:22] [frequency] PCoA (distance=bray) ...
+[15:34:22] [frequency] PCoA listo
 [frequency] PCoA varianza explicada por 2 ejes: 7.0%
 Aviso:
 In run_facet(comm_freq, comm_freq_rel, "hellinger", "bray", "frequency") :
   [frequency] PCoA explica poca varianza (7.0% en 2 ejes)
-cor(hill_q0_unified, riqueza reportada) = 0.7780 (chequeo de sanidad, debiera ser ~1)
+cor(hill_q0_unified, riqueza reportada) = 1.0000 (chequeo de sanidad, debiera ser ~1)
 filas: 3102, NA en *_freq_unified: 62 (esperado = fuera de abundancia real = 62)
 
-escrito: /mnt/rapidita_4T/GitHub/Biodiversity_Chile/data/derived/unified_diversity_responses_woody.parquet
+escrito: /mnt/rapidita_4T/GitHub/Biodiversity_Chile/data/derived/unified_diversity_responses.parquet

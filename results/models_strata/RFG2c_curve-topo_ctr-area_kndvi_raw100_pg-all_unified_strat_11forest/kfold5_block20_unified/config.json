@@ -1,0 +1,30 @@
+{
+  "run_id": "RFG2c_curve-topo_ctr-area_kndvi_raw100_pg-all_unified_strat_11forest",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "curve+topo_ctr+area",
+  "substrate": "",
+  "index": "kndvi",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "compuerta: fenologia, lo que el paper defiende hoy",
+  "git": "c88a9c52b9a79d3064cefce24d526755377d649d-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  }
+}
