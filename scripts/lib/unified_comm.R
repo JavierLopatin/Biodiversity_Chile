@@ -117,7 +117,7 @@ unified_comm <- function(pc_raw, lt_long_path, tree, plot_ids_report, quiet = FA
 #' (`forma` NA) quedan afuera, igual que en scripts/83. Un nombre ausente del lookup
 #' también queda afuera: sin asignación no se inventa una.
 woody_names <- function(lookup_path = "data/derived/growth_form_lookup.csv") {
-  lk <- read.csv(lookup_path, stringsAsFactors = FALSE)
+  lk <- read.csv(lookup_path, stringsAsFactors = FALSE, na.strings = c("", "NA"))
   lk$species[!is.na(lk$forma) & lk$forma == "lenosa"]
 }
 
@@ -131,10 +131,11 @@ woody_names <- function(lookup_path = "data/derived/growth_form_lookup.csv") {
 filter_woody <- function(pc_raw, lt, keep, lookup_path = "data/derived/growth_form_lookup.csv",
                          quiet = FALSE) {
   say <- function(...) if (!quiet) message(sprintf(...))
-  lk <- read.csv(lookup_path, stringsAsFactors = FALSE)
+  lk <- read.csv(lookup_path, stringsAsFactors = FALSE, na.strings = c("", "NA"))
   forma <- lk$forma[match(pc_raw$Accepted_species, lk$species)]
-  say("  Parcelas-CL: %d registros -> lenosa %d, herbacea %d, sin resolver en el lookup %d, ausentes del lookup %d",
+  say("  Parcelas-CL: %d registros -> lenosa %d, herbacea %d, otra forma %d, sin resolver en el lookup %d, ausentes del lookup %d",
       nrow(pc_raw), sum(forma %in% "lenosa"), sum(forma %in% "herbacea"),
+      sum(!is.na(forma) & !forma %in% c("lenosa", "herbacea")),
       sum(is.na(forma) & pc_raw$Accepted_species %in% lk$species),
       sum(!pc_raw$Accepted_species %in% lk$species))
   lt_keep <- lt$species %in% keep

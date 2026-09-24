@@ -34,10 +34,12 @@ K_AXES <- 2
 occ <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "occurrences_unified.parquet")))
 SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
 if (nzchar(SFX)) {
-  lk <- read.csv(file.path(DERIVED, "growth_form_lookup.csv"), stringsAsFactors = FALSE)
+  lk <- read.csv(file.path(DERIVED, "growth_form_lookup.csv"), stringsAsFactors = FALSE,
+                 na.strings = c("", "NA"))
   forma <- lk$forma[match(occ$species, lk$species)]
-  cat(sprintf("filtro lenoso: %d filas -> lenosa %d, herbacea %d, sin resolver %d, ausentes %d\n",
+  cat(sprintf("filtro lenoso: %d filas -> lenosa %d, herbacea %d, otra forma %d, sin resolver %d, ausentes %d\n",
               nrow(occ), sum(forma %in% "lenosa"), sum(forma %in% "herbacea"),
+              sum(!is.na(forma) & !forma %in% c("lenosa", "herbacea")),
               sum(is.na(forma) & occ$species %in% lk$species), sum(!occ$species %in% lk$species)))
   occ <- occ[forma %in% "lenosa", ]
 }
