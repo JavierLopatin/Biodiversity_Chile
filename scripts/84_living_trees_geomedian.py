@@ -11,10 +11,8 @@ espectro y fenologia medido asi confunde "espectro contra curva" con "sin datos 
 Por que NO hace falta volver al Data Cube. `scripts/35_extract_living_trees.py` ya extrajo las
 series por la misma via: mismo modulo `biodiv.cube`, mismos flags de `qa_pixel` y el mismo
 `clear_mask`, misma ventana causal de tres años aplicada en la extraccion, y la misma escala
-de reflectancia. Verificado ademas que `cube_predictors` trae agregacion `_center`, que es el
-pixel central solo -- el mismo que guardan las series de Living Trees. La paridad es por
-construccion, no por replicacion: este script llama a las mismas funciones de
-`src/biodiv/geomedian.py` que usa `scripts/18`.
+de reflectancia. La paridad es por construccion, no por replicacion: este script llama a las
+mismas funciones de `src/biodiv/geomedian.py` que usa `scripts/18`.
 
 Lo unico que cambia es el origen del arreglo (n_obs, 6): alli se lee de un cubo, aqui de las
 seis tablas de banda ya extraidas.
@@ -38,8 +36,18 @@ sys.path.insert(0, str(ROOT / "src"))
 from biodiv import geomedian as gmod  # noqa: E402
 
 LT_DIR = ROOT / "data" / "derived" / "living_trees"
-#: `_center` y no `_median`: las series de Living Trees guardan el pixel central, y es la
-#: agregacion que `cube_predictors` expone con ese mismo nombre para Parcelas-CL.
+#: `_center` y no `_median`. Living Trees guarda las dos agregaciones que dejo
+#: `scripts/35` -- `_center` y `_mean5x5` -- y Parcelas-CL expone siete en
+#: `cube_predictors` (`center`, `mean`, `median`, `trimmed`, `sd`, `cv`, `npx`). De esas,
+#: `center` es la unica que significa lo mismo en ambas fuentes: un solo pixel, el que
+#: contiene la coordenada.
+#:
+#: `median` es la mediana sobre los 25 pixeles y Living Trees no la tiene, asi que usarla
+#: dejaria 2.020 de 3.102 filas imputadas. `mean5x5` contra `mean` seria la otra pareja
+#: comparable y queda pendiente evaluarla: promedia sobre la misma ventana pero es una
+#: estadistica menos robusta que la mediana ante un pixel que falla. Mezclar `mean5x5` en
+#: una fuente con `median` en la otra seria un metodo distinto por fuente, que es el
+#: artefacto que este bloque existe para evitar.
 PX = "center"
 SUFFIX = "_center"
 
