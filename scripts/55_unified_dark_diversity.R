@@ -31,6 +31,9 @@ PLOTS   <- "data/derived/plots_unified.parquet"
 TREE    <- "data/derived/phylo_tree_unified.tre"
 OUT_DIR <- "data/derived"
 THR     <- getarg("--thr", 0.9)
+# `--woody` (docs/24): pool de co-ocurrencia filtrado a leñosas; escribe _woody.
+WOODY   <- "--woody" %in% args
+SFX     <- if (WOODY) "_woody" else ""
 
 # --------------------------------------------------------------------------------------
 # 1. comunidad -- pool completo, no el subset reportado
@@ -40,7 +43,8 @@ message("== comunidad ==")
 tree <- read.tree(TREE)
 us <- unified_species(ZIP, LT_LONG, quiet = TRUE)
 plots_uni <- read_parquet(PLOTS)
-cmm <- unified_comm(us$pc_raw, LT_LONG, tree, plots_uni$PlotObservationID)
+cmm <- unified_comm(us$pc_raw, LT_LONG, tree, plots_uni$PlotObservationID,
+                    keep = if (WOODY) woody_names() else NULL)
 comm <- cmm$full                      # pool: TODO Parcelas-CL + TODO Living Trees
 obs <- rowSums(comm)
 
@@ -99,16 +103,16 @@ dark <- data.frame(
 
 out <- merge(data.frame(PlotObservationID = plots_uni$PlotObservationID),
              dark, by = "PlotObservationID", all.x = TRUE)
-write_parquet(out, file.path(OUT_DIR, "unified_dark_diversity.parquet"))
-message(sprintf("\n  -> unified_dark_diversity.parquet  %d filas, %d sin cobertura",
-                nrow(out), sum(is.na(out$dark_n_unified))))
+write_parquet(out, file.path(OUT_DIR, paste0("unified_dark_diversity", SFX, ".parquet")))
+message(sprintf("\n  -> unified_dark_diversity%s.parquet  %d filas, %d sin cobertura",
+                SFX, nrow(out), sum(is.na(out$dark_n_unified))))
 
 # --------------------------------------------------------------------------------------
 # 5. que sirve como target -- mismo criterio de script 27
 # --------------------------------------------------------------------------------------
 
 message("\n== correlacion con riqueza (criterio de seleccion de script 27) ==")
-hill <- read_parquet(file.path(OUT_DIR, "unified_diversity_responses.parquet"))
+hill <- read_parquet(file.path(OUT_DIR, paste0("unified_diversity_responses", SFX, ".parquet")))
 m <- merge(out, hill, by = "PlotObservationID", all.x = TRUE)
 rho <- function(a, b) cor(a, b, method = "spearman", use = "complete.obs")
 for (v in c("dark_n_unified", "pool_n_unified", "dark_mpd_unified", "completeness_unified")) {

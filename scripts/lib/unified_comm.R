@@ -71,10 +71,17 @@ unified_species <- function(zip, lt_long_path, quiet = FALSE) {
 #' criterio que `scripts/27_compute_dark_diversity.R` ya usa para Parcelas-CL solo: mas
 #' parcelas de co-ocurrencia dan mejor estimacion de pool, aunque no todas se reporten.
 #' `sub`: solo `plot_ids_report` (el set unificado de modelado, ~3.102 parcelas).
-unified_comm <- function(pc_raw, lt_long_path, tree, plot_ids_report, quiet = FALSE) {
+unified_comm <- function(pc_raw, lt_long_path, tree, plot_ids_report, quiet = FALSE,
+                         keep = NULL) {
   say <- function(...) if (!quiet) message(sprintf(...))
 
   lt <- as.data.frame(arrow::read_parquet(lt_long_path))
+  # `keep`: variante leñosa (docs/24). Una parcela sin ninguna leñosa sale de la matriz;
+  # 54 y 55 la reponen como NA en su merge final contra plots_unified.
+  if (!is.null(keep)) {
+    f <- filter_woody(pc_raw, lt, keep, quiet = quiet)
+    pc_raw <- f$pc_raw; lt <- f$lt
+  }
   combined <- rbind(
     data.frame(PlotObservationID = paste0("PCL_", pc_raw$PlotObservationID),
               tip = pc_raw$tip, stringsAsFactors = FALSE),
@@ -101,4 +108,37 @@ unified_comm <- function(pc_raw, lt_long_path, tree, plot_ids_report, quiet = FA
   }
 
   list(full = full, sub = sub)
+}
+
+
+#' Nombres a conservar en la variante leñosa (docs/24).
+#'
+#' `forma == "lenosa"` en `growth_form_lookup.csv`. Las herbáceas y los sin resolver
+#' (`forma` NA) quedan afuera, igual que en scripts/83. Un nombre ausente del lookup
+#' también queda afuera: sin asignación no se inventa una.
+woody_names <- function(lookup_path = "data/derived/growth_form_lookup.csv") {
+  lk <- read.csv(lookup_path, stringsAsFactors = FALSE)
+  lk$species[!is.na(lk$forma) & lk$forma == "lenosa"]
+}
+
+
+#' Filtra `pc_raw` (por `Accepted_species`) y la tabla larga de Living Trees (por
+#' `species`) a `keep`, e informa cuánto se descarta y por qué.
+#'
+#' `Accepted_species` y no `binom`: es la clave con la que se construyó el lookup, y cubre
+#' el 100% de los registros de Parcelas-CL de las parcelas del modelo (el binom, después de
+#' los sinónimos de género de `parcelas_species`, pierde ~1%).
+filter_woody <- function(pc_raw, lt, keep, lookup_path = "data/derived/growth_form_lookup.csv",
+                         quiet = FALSE) {
+  say <- function(...) if (!quiet) message(sprintf(...))
+  lk <- read.csv(lookup_path, stringsAsFactors = FALSE)
+  forma <- lk$forma[match(pc_raw$Accepted_species, lk$species)]
+  say("  Parcelas-CL: %d registros -> lenosa %d, herbacea %d, sin resolver en el lookup %d, ausentes del lookup %d",
+      nrow(pc_raw), sum(forma %in% "lenosa"), sum(forma %in% "herbacea"),
+      sum(is.na(forma) & pc_raw$Accepted_species %in% lk$species),
+      sum(!pc_raw$Accepted_species %in% lk$species))
+  lt_keep <- lt$species %in% keep
+  say("  Living Trees: %d registros -> %d conservados", nrow(lt), sum(lt_keep))
+  list(pc_raw = pc_raw[pc_raw$Accepted_species %in% keep, , drop = FALSE],
+       lt = lt[lt_keep, , drop = FALSE])
 }

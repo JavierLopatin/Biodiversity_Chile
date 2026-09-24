@@ -15,8 +15,13 @@
 # ape::pcoa(correction="cailliez"). Nombres con sufijo _unified -- no tocan
 # data/derived/biodiversity_responses.parquet (target de modelado actual, intacto).
 #
+# `--woody`: descarta de occurrences_unified.parquet todo lo que no sea `forma == "lenosa"`
+# en growth_form_lookup.csv (herbáceas y sin resolver, docs/24) y escribe
+# unified_diversity_responses_woody.parquet.
+#
 # Uso:
 #   Rscript scripts/52_unified_diversity_facets.R
+#   Rscript scripts/52_unified_diversity_facets.R --woody
 
 suppressPackageStartupMessages({
   library(arrow)
@@ -27,6 +32,15 @@ DERIVED <- file.path(ROOT, "data", "derived")
 K_AXES <- 2
 
 occ <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "occurrences_unified.parquet")))
+SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
+if (nzchar(SFX)) {
+  lk <- read.csv(file.path(DERIVED, "growth_form_lookup.csv"), stringsAsFactors = FALSE)
+  forma <- lk$forma[match(occ$species, lk$species)]
+  cat(sprintf("filtro lenoso: %d filas -> lenosa %d, herbacea %d, sin resolver %d, ausentes %d\n",
+              nrow(occ), sum(forma %in% "lenosa"), sum(forma %in% "herbacea"),
+              sum(is.na(forma) & occ$species %in% lk$species), sum(!occ$species %in% lk$species)))
+  occ <- occ[forma %in% "lenosa", ]
+}
 plots <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "plots_unified.parquet")))
 plot_ids <- sort(unique(plots$PlotObservationID))
 
@@ -144,6 +158,6 @@ n_na_freq <- sum(is.na(resp$lcbd_freq_unified))
 cat(sprintf("filas: %d, NA en *_freq_unified: %d (esperado = fuera de abundancia real = %d)\n",
             nrow(resp), n_na_freq, length(plot_ids) - length(freq_ids)))
 
-out_path <- file.path(DERIVED, "unified_diversity_responses.parquet")
+out_path <- file.path(DERIVED, paste0("unified_diversity_responses", SFX, ".parquet"))
 arrow::write_parquet(resp, out_path)
 cat(sprintf("\nescrito: %s\n", out_path))

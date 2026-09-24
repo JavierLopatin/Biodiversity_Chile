@@ -25,6 +25,11 @@ LT_LONG <- "data/derived/living_trees_long.parquet"
 PLOTS   <- "data/derived/plots_unified.parquet"
 OUT_DIR <- "data/derived"
 N_RUNS  <- getarg("--runs", 499)
+# `--woody` (docs/24): filtra la comunidad a leñosas con growth_form_lookup.csv, NO
+# reconstruye el árbol (lee phylo_tree_unified.tre: las métricas podan a la comunidad) y
+# escribe unified_phylo_responses_woody.parquet.
+WOODY   <- "--woody" %in% args
+SFX     <- if (WOODY) "_woody" else ""
 SEED    <- 42
 
 message("== lista de especies unificada ==")
@@ -37,26 +42,32 @@ plots_uni <- read_parquet(PLOTS)
 # 2. arbol
 # --------------------------------------------------------------------------------------
 
-message("\n== arbol (V.PhyloMaker2, GBOTB.extended.TPL, escenario S3) ==")
-set.seed(SEED)
-t0 <- Sys.time()
-built <- phylo.maker(sp.list = sp[, c("species", "genus", "family")], scenarios = "S3")
-tree <- built$scenario.3
-message(sprintf("  %d tips en %.1f min", Ntip(tree),
-                as.numeric(difftime(Sys.time(), t0, units = "mins"))))
-st <- table(built$species.list$status)
-message(sprintf("  posicion propia del megaarbol: %d   injertadas por genero: %d (%.0f%%)",
-                st[["prune"]], st[["bind"]], 100 * st[["bind"]] / sum(st)))
-write.tree(tree, file.path(OUT_DIR, "phylo_tree_unified.tre"))
-write.csv(built$species.list, file.path(OUT_DIR, "phylo_species_status_unified.csv"),
-          row.names = FALSE)
+if (WOODY) {
+  tree <- read.tree(file.path(OUT_DIR, "phylo_tree_unified.tre"))
+  message(sprintf("\n== arbol existente: %d tips (no se reconstruye) ==", Ntip(tree)))
+} else {
+  message("\n== arbol (V.PhyloMaker2, GBOTB.extended.TPL, escenario S3) ==")
+  set.seed(SEED)
+  t0 <- Sys.time()
+  built <- phylo.maker(sp.list = sp[, c("species", "genus", "family")], scenarios = "S3")
+  tree <- built$scenario.3
+  message(sprintf("  %d tips en %.1f min", Ntip(tree),
+                  as.numeric(difftime(Sys.time(), t0, units = "mins"))))
+  st <- table(built$species.list$status)
+  message(sprintf("  posicion propia del megaarbol: %d   injertadas por genero: %d (%.0f%%)",
+                  st[["prune"]], st[["bind"]], 100 * st[["bind"]] / sum(st)))
+  write.tree(tree, file.path(OUT_DIR, "phylo_tree_unified.tre"))
+  write.csv(built$species.list, file.path(OUT_DIR, "phylo_species_status_unified.csv"),
+            row.names = FALSE)
+}
 
 # --------------------------------------------------------------------------------------
 # 3. matriz de comunidad
 # --------------------------------------------------------------------------------------
 
 message("\n== matriz de comunidad ==")
-cmm <- unified_comm(pc_raw, LT_LONG, tree, plots_uni$PlotObservationID)
+cmm <- unified_comm(pc_raw, LT_LONG, tree, plots_uni$PlotObservationID,
+                    keep = if (WOODY) woody_names() else NULL)
 comm_sub <- cmm$sub
 
 # --------------------------------------------------------------------------------------
@@ -102,7 +113,7 @@ resp <- data.frame(
 # descartan -- mismo criterio que script 25/07
 resp <- merge(data.frame(PlotObservationID = plots_uni$PlotObservationID),
               resp, by = "PlotObservationID", all.x = TRUE)
-write_parquet(resp, file.path(OUT_DIR, "unified_phylo_responses.parquet"))
+write_parquet(resp, file.path(OUT_DIR, paste0("unified_phylo_responses", SFX, ".parquet")))
 message(sprintf("  -> unified_phylo_responses.parquet  %d filas, %d sin cobertura filogenetica",
                 nrow(resp), sum(is.na(resp$pd_faith_unified))))
 
