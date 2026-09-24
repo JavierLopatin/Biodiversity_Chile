@@ -222,6 +222,15 @@ def _load_tables(derived: str, sfx: str, unified: bool = False) -> Tables:
     if cube_path.exists():
         cube = pd.read_parquet(cube_path)
         cube = cube.set_index(ID_COL) if ID_COL in cube.columns else cube.set_index("plot_id")
+        if unified:
+            # Same raw-id problem as `lsp` and `doy` above, and it reaches further: every
+            # cube-derived block (`gm`, `obscomp`, `seas`, `svh`, `contrast`, `composite`)
+            # resolves through `_cube`, so without this all six return all-NaN for *every*
+            # plot on the unified pool -- Parcelas-CL included, not just the Living Trees
+            # gap -- and the Preprocessor fills them with the training-fold median. Silent:
+            # no error, no warning, just blocks that contribute nothing. Measured before the
+            # fix: 0 of 3,102 plots with a non-null `gm_` value; after it, 1,082.
+            cube.index = "PCL_" + cube.index.astype(str)
 
     return Tables(plots=plots, lsp=lsp, curves=curves,
                   pixels=d / f"phenoshape_pixels{sfx}.parquet",

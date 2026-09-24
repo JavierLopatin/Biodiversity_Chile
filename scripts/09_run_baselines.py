@@ -84,6 +84,17 @@ MODELS: dict[str, dict] = {
                  note="compuerta: fenologia, lo que el paper defiende hoy"),
     "RFG3": dict(family="RF", spec="clim+curve+topo+area", per_index=True, curve_px="center",
                  note="compuerta: ambos, para ver si la fenologia suma sobre el clima"),
+    # Segunda compuerta: el espectro con el eje temporal descartado, contra la curva. La
+    # pregunta la dejo planteada el docstring de `_block_gm` y nunca se corrio -- si la
+    # curva ajustada no le gana a un geomediano mas sus MAD, lo que el proyecto atribuye a
+    # la fenologia no era fenologia. RFG4 y RFG5 no llevan bloque de curva y por eso no
+    # dependen del indice de vegetacion.
+    "RFG4": dict(family="RF", spec="gm+topo+area", per_index=False, curve_px="center",
+                 note="compuerta espectral: geomediano y MAD, sin eje temporal"),
+    "RFG5": dict(family="RF", spec="gm+clim+topo+area", per_index=False, curve_px="center",
+                 note="compuerta espectral: espectro mas clima"),
+    "RFG6": dict(family="RF", spec="gm+clim+curve+topo+area", per_index=True, curve_px="center",
+                 note="compuerta espectral: espectro, clima y fenologia juntos"),
 }
 
 
