@@ -17,9 +17,15 @@ DERIVED <- "data/derived"
 # `--woody`: lee occurrences_unified_counts_woody.parquet (scripts/83, docs/24) y escribe
 # con sufijo _woody; sin la bandera, los nombres de siempre (variante con hierbas).
 SFX <- if ("--woody" %in% commandArgs(trailingOnly = TRUE)) "_woody" else ""
+# `--pcl`: la matriz de comunidad solo con las parcelas de Parcelas-CL. El LCBD pasa a medir
+# unicidad dentro de esa flora y no contra un pool dominado por Living Trees. Salida con
+# sufijo adicional _pcl (lcbd_count_sorensen_woody_pcl.parquet).
+PCL_ONLY <- "--pcl" %in% commandArgs(trailingOnly = TRUE)
 
 occ <- read_parquet(file.path(DERIVED, paste0("occurrences_unified_counts", SFX, ".parquet")))
+if (PCL_ONLY) occ <- occ[startsWith(occ$PlotObservationID, "PCL_"), ]
 comm <- xtabs(Value ~ PlotObservationID + species, data = occ)
+comm <- comm[, colSums(comm) > 0]
 comm <- comm[rowSums(comm) > 0, ]
 cat(sprintf("pool de conteo real: %d parcelas x %d especies\n", nrow(comm), ncol(comm)))
 
@@ -36,8 +42,8 @@ out <- data.frame(
   lcbd_count_sorensen = as.numeric(lcbd$LCBD)
 )
 
-write_parquet(out, file.path(DERIVED, paste0("lcbd_count_sorensen", SFX, ".parquet")))
-cat(sprintf("\n-> %s (%d parcelas)\n", file.path(DERIVED, paste0("lcbd_count_sorensen", SFX, ".parquet")), nrow(out)))
+write_parquet(out, file.path(DERIVED, paste0("lcbd_count_sorensen", SFX, if (PCL_ONLY) "_pcl" else "", ".parquet")))
+cat(sprintf("\n-> %s (%d parcelas)\n", file.path(DERIVED, paste0("lcbd_count_sorensen", SFX, if (PCL_ONLY) "_pcl" else "", ".parquet")), nrow(out)))
 
 # --- comparacion contra las LCBD ya existentes (pool completo, otro coeficiente) ---------
 resp <- read_parquet(file.path(DERIVED, "unified_diversity_responses.parquet"))

@@ -1,10 +1,10 @@
 {
-  "run_id": "RFG5c_gm-clim-topo_ctr-area_raw100_pg-all_unified_woodypcl",
+  "run_id": "RFG3c_clim-curve-topo_ctr-area_kndvi_raw100_pg-all_unified_woodypclown",
   "family": "RF",
   "scheme": "kfold5_block20_unified",
-  "features": "gm+clim+topo_ctr+area",
+  "features": "clim+curve+topo_ctr+area",
   "substrate": "",
-  "index": "",
+  "index": "kndvi",
   "target_set": "pg_all",
   "seeds": [
     0,
@@ -16,7 +16,7 @@
   "params": {
     "px": "center"
   },
-  "notes": "compuerta espectral: espectro mas clima",
+  "notes": "compuerta: ambos, para ver si la fenologia suma sobre el clima",
   "git": "e2971e065aa56ea451a6c2b244f732b7725ff23a-dirty",
   "versions": {
     "python": "3.11.6",
