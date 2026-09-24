@@ -1,7 +1,10 @@
 #!/usr/bin/env Rscript
 # LCBD leñoso recalculado DENTRO de cada estrato de vegetación (propuesta de modelos por
-# tipo, Fassnacht et al. 2021). Estratos: forest_type de CONAF para Living Trees, y
-# Parcelas-CL como un estrato propio (es una fuente, no un tipo de vegetación).
+# tipo, Fassnacht et al. 2021). Estratos: nivel 2 de la jerarquía oficial de MapBiomas Chile
+# (legend.csv), muestreado en cada parcela por scripts/89. Clases nativas: 1.1 Forest (3,
+# 59, 60, 61), 2.4 Shrubland (66), 2.2 Grassland (12), 2.1 Wetland, 2.3 Steppe. Se usa una
+# clase de mapa, y no el forest_type de CONAF, porque solo de la primera existe un mapa
+# wall-to-wall donde aplicar los modelos por estrato. Además cubre las dos fuentes.
 #
 # Mismo estimador que scripts/62 (beta.div.comp(coef="S", quant=TRUE) -> LCBD.comp(sqrt.D)),
 # pero sobre la matriz de cada estrato sola. Con el LCBD contra el pool de las 2.499 el
@@ -20,9 +23,19 @@ DERIVED <- "data/derived"
 MIN_N <- 50
 
 occ <- as.data.frame(read_parquet(file.path(DERIVED, "occurrences_unified_counts_woody.parquet")))
-plots <- as.data.frame(read_parquet(file.path(DERIVED, "plots_unified.parquet")))
-plots$estrato <- ifelse(plots$source == "living_trees", plots$forest_type, "Parcelas-CL")
-occ$estrato <- plots$estrato[match(occ$PlotObservationID, plots$PlotObservationID)]
+mb <- as.data.frame(read_parquet(file.path(DERIVED, "mapbiomas_class_unified.parquet")))
+lg <- read.csv("MapBiomas/legend.csv", stringsAsFactors = FALSE)
+mb$estrato <- lg$level2[match(mb$mb_code, lg$code)]
+mb$estrato[!mb$mb_native] <- NA          # silvicultura, salar, pradera...: fuera
+# Grassland se fusiona con Shrubland en "NoBosque": MapBiomas define Grassland como dominado
+# por vegetación herbácea natural, así que una parcela así clasificada con cinco o más
+# especies LEÑOSAS es funcionalmente un matorral (o un borde mal clasificado). Wetland (12
+# parcelas) y Steppe (6) se descartan: aportan 18 parcelas de LCBD y cero de riqueza, a
+# cambio de meter bofedales y estepa patagónica junto al matorral mediterráneo.
+mb$estrato[mb$estrato %in% c("2.4 Shrubland", "2.2 Grassland")] <- "NoBosque"
+mb$estrato[mb$estrato %in% c("2.1 Wetland", "2.3 Steppe")] <- NA
+occ$estrato <- mb$estrato[match(occ$PlotObservationID, mb$PlotObservationID)]
+occ <- occ[!is.na(occ$estrato), ]
 
 n_by <- tapply(occ$PlotObservationID, occ$estrato, function(x) length(unique(x)))
 keep <- names(n_by)[n_by >= MIN_N]
