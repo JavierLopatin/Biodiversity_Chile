@@ -89,11 +89,11 @@ MODELS: dict[str, dict] = {
     # curva ajustada no le gana a un geomediano mas sus MAD, lo que el proyecto atribuye a
     # la fenologia no era fenologia. RFG4 y RFG5 no llevan bloque de curva y por eso no
     # dependen del indice de vegetacion.
-    "RFG4": dict(family="RF", spec="gm+topo+area", per_index=False, curve_px="center",
+    "RFG4": dict(family="RF", spec="gm+topo+area", per_index=False, curve_px="center", agg="center",
                  note="compuerta espectral: geomediano y MAD, sin eje temporal"),
-    "RFG5": dict(family="RF", spec="gm+clim+topo+area", per_index=False, curve_px="center",
+    "RFG5": dict(family="RF", spec="gm+clim+topo+area", per_index=False, curve_px="center", agg="center",
                  note="compuerta espectral: espectro mas clima"),
-    "RFG6": dict(family="RF", spec="gm+clim+curve+topo+area", per_index=True, curve_px="center",
+    "RFG6": dict(family="RF", spec="gm+clim+curve+topo+area", per_index=True, curve_px="center", agg="center",
                  note="compuerta espectral: espectro, clima y fenologia juntos"),
 }
 
@@ -144,8 +144,15 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
 
     t0 = time.time()
     ids = feat.plot_ids(derived)
+    # `agg` elige que agregacion de pixeles usan los bloques del cubo. El default es
+    # `median`, la mediana sobre los 25 pixeles, pero Living Trees solo tiene el pixel
+    # central: sus series se extrajeron asi (`scripts/35`) y su geomediano se calcula
+    # sobre ellas (`scripts/84`). Una spec con `gm` que corra sobre el pool unificado con
+    # `median` vuelve a dejar 2.020 de 3.102 filas en NaN, que es justo el artefacto que
+    # el bloque espectral tiene que evitar. Por eso las specs pueden fijarlo.
     X_full, _ = feat.build_design(spec, index=index, derived=derived, ids=ids,
-                                  px=meta.get("curve_px", px))
+                                  px=meta.get("curve_px", px),
+                                  agg=meta.get("agg", feat.DEFAULT_AGG))
     _, Y_full, names = tg.load_targets(derived, target_set, plot_ids=ids)
     if multioutput:
         keep = [j for j, n in enumerate(names) if n in tg.TARGETS_MAIN]

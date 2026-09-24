@@ -231,6 +231,17 @@ def _load_tables(derived: str, sfx: str, unified: bool = False) -> Tables:
             # no error, no warning, just blocks that contribute nothing. Measured before the
             # fix: 0 of 3,102 plots with a non-null `gm_` value; after it, 1,082.
             cube.index = "PCL_" + cube.index.astype(str)
+            # Living Trees carries only the `gm_*_center` family, from
+            # `scripts/84_living_trees_geomedian.py`. Without it the spectral blocks
+            # NaN-impute for 2,020 of 3,102 rows, and that constant doubles as a source
+            # label -- the same artefact that the woody harmonisation had to undo. The
+            # columns it does not carry (`obscomp`, `seas`, the other aggregations) stay
+            # NaN for those rows, which is honest: they were never extracted.
+            lt_path = d / "cube_predictors_living_trees.parquet"
+            if lt_path.exists():
+                lt_cube = pd.read_parquet(lt_path).set_index(ID_COL)
+                cube = pd.concat([cube, lt_cube.reindex(columns=cube.columns, fill_value=np.nan)
+                                  if set(lt_cube.columns) - set(cube.columns) else lt_cube])
 
     return Tables(plots=plots, lsp=lsp, curves=curves,
                   pixels=d / f"phenoshape_pixels{sfx}.parquet",
