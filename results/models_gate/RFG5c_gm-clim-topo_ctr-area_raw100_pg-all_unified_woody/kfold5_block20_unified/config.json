@@ -1,0 +1,30 @@
+{
+  "run_id": "RFG5c_gm-clim-topo_ctr-area_raw100_pg-all_unified_woody",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "gm+clim+topo_ctr+area",
+  "substrate": "",
+  "index": "",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "compuerta espectral: espectro mas clima",
+  "git": "b7336caad1dc7b4c0985f45a5498d943a8c22a85-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  }
+}
