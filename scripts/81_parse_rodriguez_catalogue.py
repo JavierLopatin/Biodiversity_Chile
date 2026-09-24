@@ -29,7 +29,10 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "results" / "taxa"
+#: `results/` esta en el .gitignore y este parseo tiene que viajar entre maquinas
+#: (pop-os no tiene el PDF), asi que la tabla derivada va a data/derived, que si
+#: esta exceptuado. Es una tabla factual especie->habito, no el articulo.
+OUT = ROOT / "data" / "derived"
 
 #: Entrada de especie aceptada: genero + epiteto en negrita-cursiva.
 ENTRY = re.compile(r"_\*\*([A-ZÁÉÍÓÚÑ][a-záéíóúñ\-]+)\s+([a-záéíóúñ\-]+)\*\*_")
