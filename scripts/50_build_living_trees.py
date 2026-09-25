@@ -142,11 +142,25 @@ def build(args: argparse.Namespace) -> None:
             f"{sites_path} not found -- needed for the real PlotSize_m2 (not all Living "
             "Trees plots are 500 m2). Run the satellite extraction step first."
         )
-    sites = pd.read_parquet(sites_path)[["lat", "lon", "plot_size_m2"]]
+    # `win_*` viaja con el tamano de parcela y no por comodidad: `cv_groups._buffered_train`
+    # excluye del entrenamiento todo lo que solape la ventana causal del fold de test, y lo
+    # hace comparando `win_end >= lo` y `win_start <= hi`. Con NaN esas comparaciones dan
+    # False, asi que una fuente sin ventana NUNCA se excluye y el hold-out temporal se
+    # vuelve inerte para ella, en silencio. Medido antes de este arreglo: 8.076 filas de
+    # entrenamiento dentro del rango de anos de su propio test, repartidas en 15 de las 29
+    # celdas LLTO, todas de Living Trees y ninguna de Parcelas-CL.
+    sites = pd.read_parquet(sites_path)[
+        ["lat", "lon", "plot_size_m2", "win_start", "win_end", "win_years"]]
     plots = plots.merge(sites, on=["lat", "lon"], how="left")
     if plots["plot_size_m2"].isna().any():
         n_missing = plots["plot_size_m2"].isna().sum()
         raise SystemExit(f"{n_missing} plots did not match sites.parquet on (lat, lon)")
+    win_na = plots[["win_start", "win_end", "win_years"]].isna().any(axis=1).sum()
+    if win_na:
+        raise SystemExit(
+            f"{win_na} plots sin ventana causal tras el merge con sites.parquet. El "
+            "hold-out temporal del esquema LLTO seria inerte para ellas."
+        )
     plots["PlotSize_m2"] = plots.pop("plot_size_m2")
     print(f"PlotSize_m2 (real, from sites.parquet): "
           f"{plots['PlotSize_m2'].value_counts().to_dict()}")

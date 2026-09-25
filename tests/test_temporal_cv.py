@@ -162,3 +162,38 @@ def test_real_schemes_are_leakage_free(scheme):
         pytest.skip(f"{scheme} no está en la tabla; correr scripts/08")
     plots = pd.read_parquet(ROOT / "data/derived/plots_subset.parquet")
     assert_buffer_holds(cv[cv["scheme"] == scheme], plots)
+
+
+# ---------------------------------------------------------------------------
+# Sobre el pool real, no sintetico.
+#
+# Los tests de arriba usan `synth()`, donde la ventana causal siempre existe. Por eso no
+# vieron el fallo real: `plots_unified.parquet` traia `win_start`/`win_end`/`win_years` en
+# NaN para las 2.020 filas de Living Trees, porque `scripts/50` seleccionaba de
+# `sites.parquet` solo `plot_size_m2` y dejaba las ventanas fuera. `_buffered_train` compara
+# `win_end >= lo` y `win_start <= hi`; con NaN esas comparaciones dan False, asi que ninguna
+# fila de esa fuente se excluia nunca y el hold-out temporal era inerte para dos tercios del
+# pool, sin error ni aviso. Medido antes del arreglo: 8.076 filas de entrenamiento dentro
+# del rango de anos de su propio test en 15 de las 29 celdas LLTO, todas Living Trees.
+# ---------------------------------------------------------------------------
+
+UNIFIED = Path(__file__).resolve().parents[1] / "data" / "derived" / "plots_unified.parquet"
+
+
+@pytest.mark.skipif(not UNIFIED.exists(), reason="requiere plots_unified.parquet")
+def test_unified_pool_carries_a_causal_window_for_every_source():
+    """Toda parcela del pool real tiene ventana, en las dos fuentes."""
+    plots = pd.read_parquet(UNIFIED)
+    missing = plots[["win_start", "win_end", "win_years"]].isna().any(axis=1)
+    assert not missing.any(), (
+        f"{int(missing.sum())} parcelas sin ventana causal, por fuente "
+        f"{plots.loc[missing, 'source'].value_counts().to_dict()}"
+    )
+
+
+@pytest.mark.skipif(not UNIFIED.exists(), reason="requiere plots_unified.parquet")
+def test_causal_window_ends_at_the_census_year():
+    """La ventana es causal: termina en el ano del censo, nunca despues."""
+    plots = pd.read_parquet(UNIFIED).dropna(subset=["win_end", "Year"])
+    late = plots["win_end"] > plots["Year"]
+    assert not late.any(), f"{int(late.sum())} parcelas con ventana que mira al futuro"

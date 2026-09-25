@@ -92,6 +92,16 @@ def build(args: argparse.Namespace) -> None:
     assert not dup.any(), f"{dup.sum()} PlotObservationID duplicados tras unificar"
     assert plots["lon"].notna().all() and plots["lat"].notna().all(), \
         "lon/lat faltante en alguna parcela unificada"
+    # La ventana causal tiene que llegar completa desde las dos fuentes. Si una la trae en
+    # NaN, `cv_groups._buffered_train` no excluye ninguna de sus filas del entrenamiento
+    # --las comparaciones con NaN dan False-- y el hold-out temporal del esquema LLTO deja
+    # de existir para esa fuente sin que nada falle.
+    win_na = plots[["win_start", "win_end", "win_years"]].isna().any(axis=1)
+    assert not win_na.any(), (
+        f"{int(win_na.sum())} parcelas sin ventana causal, por fuente "
+        f"{plots.loc[win_na, 'source'].value_counts().to_dict()}. El hold-out temporal "
+        "seria inerte para ellas."
+    )
 
     tf = Transformer.from_crs("EPSG:4326", LAEA_CHILE, always_xy=True)
     x_m, y_m = tf.transform(plots["lon"].to_numpy(), plots["lat"].to_numpy())
