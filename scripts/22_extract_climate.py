@@ -119,6 +119,9 @@ def main() -> None:
     p.add_argument("--out", default="data/derived/climate.parquet")
     p.add_argument("--start", type=int, default=1971)
     p.add_argument("--end", type=int, default=2000)
+    p.add_argument("--monthly-out", default=None, dest="monthly_out",
+                   help="ademas de las normales, escribe la serie mensual de precipitacion "
+                        "por parcela (formato largo). Es lo que necesita un SPI.")
     args = p.parse_args()
 
     import datacube
@@ -161,6 +164,26 @@ def main() -> None:
     out = pd.DataFrame({ID_COL: plots[ID_COL].to_numpy()})
     for name, arr in fields.items():
         out[name] = arr[iy, ix]
+
+    # La serie mensual ya existe en memoria: `PR` es (n_anos, 12, ny, nx) y el bucle de
+    # arriba la construyo entera para promediarla. Escribirla no cuesta una extraccion
+    # nueva, solo un reshape -- y sin ella no hay SPI, porque un indice de sequia se define
+    # contra la distribucion historica del propio pixel, no contra una normal escalar.
+    if args.monthly_out:
+        n_plots = len(plots)
+        vals = PR[:, :, iy, ix]                   # (n_anos, 12, n_parcelas)
+        yy, mm = np.meshgrid(years, np.arange(1, 13), indexing="ij")
+        monthly = pd.DataFrame({
+            ID_COL: np.tile(plots[ID_COL].to_numpy(), len(years) * 12),
+            "year": np.repeat(yy.ravel(), n_plots),
+            "month": np.repeat(mm.ravel(), n_plots),
+            "pr": vals.reshape(-1),
+        })
+        Path(args.monthly_out).parent.mkdir(parents=True, exist_ok=True)
+        monthly.to_parquet(args.monthly_out, index=False)
+        n_na = int(monthly.pr.isna().sum())
+        print(f"-> {args.monthly_out}  ({len(monthly):,} filas, "
+              f"{len(years)} anos x 12 meses x {n_plots} parcelas, {n_na} NaN)")
 
     n_nan = int(out.drop(columns=[ID_COL]).isna().to_numpy().sum())
     print(f"NaN en el bloque: {n_nan}")
