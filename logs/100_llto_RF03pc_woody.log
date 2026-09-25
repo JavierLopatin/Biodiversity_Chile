@@ -1,0 +1,3 @@
+scheme=kfold_loc_time_unified  seeds=[0, 1, 2]  targets=pg_all
+
+  RF03pc_curve-topo_ctr-area_kndvi_raw100_pg-all_unified_woody kfold_loc_time_unified [499.2s] lcbd_count_sorensen=+0.337 pd_inext_q0=-0.014 pd_inext_q1=-0.051 pd_inext_q2=-0.058 td_inext_q0=-0.125 td_inext_q1=-0.021 td_inext_q2=-0.023

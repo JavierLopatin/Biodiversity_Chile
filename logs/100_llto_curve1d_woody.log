@@ -1,0 +1,2 @@
+    C1D01_curve1d_kndvi_raw100_pg-all_unified_woody_ctr: 14,535 parameters, input (1, 100)
+  C1D01_curve1d_kndvi_raw100_pg-all_unified_woody_ctr kfold_loc_time_unified [ 23.5m] lcbd_count_sorensen=+0.106 pd_inext_q0=-0.086 pd_inext_q1=-0.330 pd_inext_q2=-0.332 td_inext_q0=-0.191 td_inext_q1=-0.106 td_inext_q2=-0.145
