@@ -32,13 +32,22 @@ def interp_grid(t: np.ndarray, v: np.ndarray, ngs: int, roll: int = ROLL,
     if ok.sum() < 5:
         return np.full(ngs, np.nan)
     t, v = t[ok], v[ok]
+    # Dos observaciones validas el mismo dia se promedian antes de interpolar. Son dos
+    # medidas del mismo pixel el mismo dia -- escenas de orbitas que se solapan-- y su
+    # promedio es la combinacion correcta. Sin esto, `np.interp` recibia dos puntos con la
+    # misma abscisa y devolvia el que quedara ultimo tras un `np.argsort` que no es estable:
+    # la curva dependia del orden de llegada de los datos. Pasaba en 210 de las 1.082
+    # parcelas de Parcelas-CL, las que tienen empate de fecha, con p99 |d| 0,0175.
+    t, inv = np.unique(t, return_inverse=True)
+    v = np.bincount(inv, weights=v) / np.bincount(inv)   # ordena, y promedia los empates
+    if len(t) < 5:
+        return np.full(ngs, np.nan)
     lo = t.min() if t_min is None else t_min
     hi = t.max() if t_max is None else t_max
     if not (hi > lo):
         return np.full(ngs, np.nan)
     grid = np.linspace(lo, hi, ngs)
-    o = np.argsort(t)
-    g = np.interp(grid, t[o], v[o])
+    g = np.interp(grid, t, v)
     if roll and roll > 1:
         c = np.cumsum(np.insert(g, 0, 0.0))
         h = roll // 2

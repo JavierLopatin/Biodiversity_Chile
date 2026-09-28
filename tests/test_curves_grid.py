@@ -99,3 +99,32 @@ def test_raw_series_matches_interp_grid_per_pixel():
     np.testing.assert_allclose(
         out[:, 0, 0],
         curves.interp_grid(tt, v, 52, roll=3, t_min=tt.min(), t_max=tt.max()))
+
+
+def test_same_day_observations_do_not_make_the_curve_depend_on_arrival_order():
+    """Dos observaciones validas el mismo dia se promedian, y el orden deja de importar.
+
+    `np.argsort` no es estable y `np.interp` con abscisas repetidas se queda con el punto
+    que caiga ultimo, asi que la curva dependia del orden en que llegaran las filas. Afectaba
+    a 210 de las 1.082 parcelas de Parcelas-CL -- las que tienen empate de fecha-- y hacia
+    irreproducibles sus curvas raw100 publicadas.
+    """
+    t = np.array([0.0, 10.0, 10.0, 20.0, 30.0, 40.0])
+    v = np.array([0.1, 0.8, 0.2, 0.3, 0.4, 0.5])
+    o = np.array([3, 1, 0, 5, 2, 4])
+    a = curves.interp_grid(t, v, 20, roll=0)
+    assert np.allclose(a, curves.interp_grid(t[o], v[o], 20, roll=0))
+
+    # el empate vale el promedio de las dos, no una de ellas
+    esperado = np.interp(np.linspace(0, 40, 20),
+                         np.array([0.0, 10.0, 20.0, 30.0, 40.0]),
+                         np.array([0.1, 0.5, 0.3, 0.4, 0.5]))
+    assert np.allclose(a, esperado)
+
+
+def test_series_without_ties_are_untouched_by_the_tie_handling():
+    """El desempate no puede mover las curvas que no tienen fechas repetidas."""
+    t = np.array([0.0, 10.0, 20.0, 30.0, 40.0])
+    v = np.array([0.1, 0.5, 0.3, 0.4, 0.5])
+    assert np.allclose(curves.interp_grid(t, v, 20, roll=0),
+                       np.interp(np.linspace(0, 40, 20), t, v))
