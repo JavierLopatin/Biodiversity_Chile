@@ -33,6 +33,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import calendar
 import sys
 import time
 from pathlib import Path
@@ -75,8 +76,13 @@ def monthly_fields(dc, bbox: tuple[float, float, float, float], year: int
     tmax = g.mean("time")["tmax"].values
 
     # dias con dato por celda y mes, contra los dias de calendario de ese mes
+    # Los dias del mes salen del CALENDARIO, no de `ds.time`. Contar los timestamps
+    # presentes deja dos agujeros: si al producto le falta una fecha, esa fecha no suma ni
+    # a `valid` ni al denominador y el mes pasa intacto; y si le falta el mes entero, el
+    # denominador es 0, la comparacion `valid < 0.9*0` es falsa, y el cero falso sobrevive
+    # por el mismo camino que esta mascara existe para cerrar.
     valid = ds["pr"].notnull().groupby("time.month").sum("time").values
-    n_days = np.array([int((ds.time.dt.month.values == m).sum()) for m in range(1, 13)])
+    n_days = np.array([calendar.monthrange(year, m)[1] for m in range(1, 13)])
     incomplete = valid < (MIN_DAY_FRAC * n_days[:, None, None])
     pr = np.where(incomplete, np.nan, pr)
     return pr, tmin, tmax, ds
