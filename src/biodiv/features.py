@@ -278,9 +278,20 @@ def _block_lsp(t: Tables, ids: pd.Index, index: str, centre: bool = False,
     return sub
 
 
-@lru_cache(maxsize=2)
-def _lsp_unified(derived: str) -> pd.DataFrame:
-    f = Path(derived) / "lsp_unified_v2lin.parquet"
+#: Suffix of the unified LSP table, read from the environment. ``BIODIV_LSPU=tcfe`` points
+#: ``lspu`` at ``lsp_unified_v2lintcfe.parquet`` (topographically corrected reflectance,
+#: scripts/96-97). Same pattern as BIODIV_CURVES: one switch per process, and scripts/09
+#: tags the run id with it.
+LSPU_SUFFIX_ENV = "BIODIV_LSPU"
+
+
+def lspu_suffix() -> str:
+    return os.environ.get(LSPU_SUFFIX_ENV, "")
+
+
+@lru_cache(maxsize=4)
+def _lsp_unified(derived: str, sfx: str = "") -> pd.DataFrame:
+    f = Path(derived) / f"lsp_unified_v2lin{sfx}.parquet"
     if not f.exists():
         raise FileNotFoundError(f"{f} not found -- run `python scripts/92_lsp_unified.py`")
     return pd.read_parquet(f).set_index([ID_COL, "index", "px"]).sort_index()
@@ -297,7 +308,7 @@ def _block_lsp_unified(t: Tables, ids: pd.Index, index: str, px: str = "center",
     reconstructor (linear + shrink) and ``hemisphere="auto"``. ``px`` picks the centre pixel
     or the per-acquisition 5x5 mean, fitted as one series in both sources.
     """
-    tab = _lsp_unified(str(t.derived))
+    tab = _lsp_unified(str(t.derived), lspu_suffix())
     sub = tab.xs((index, px), level=("index", "px")).reindex(ids)[LSP_METRICS]
     sub.columns = [f"lspu_{c}" for c in LSP_METRICS]
     if circular_doy:

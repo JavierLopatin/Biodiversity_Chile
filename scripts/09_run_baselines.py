@@ -137,6 +137,8 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
         ident += "_unified"
     if tg.pg_targets_suffix():
         ident += tg.pg_targets_suffix()
+    if "lspu" in meta["spec"] and feat.lspu_suffix():
+        ident += f"_lspu{feat.lspu_suffix()}"
     cfg = runlog.RunConfig(
         run_id=ident + (f"_s{seeds[0]}" if seeds[0] else ""),
         family=meta["family"], scheme=scheme, features=spec, index=idx,
