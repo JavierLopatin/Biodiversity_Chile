@@ -111,12 +111,17 @@ def main() -> None:
                 lo = (int(we) - 2) * 12
                 hi = int(we) * 12 + 11
                 w = s[(ym >= lo) & (ym <= hi)]
-                # Exigir la mayoria de la ventana. Un nanmean sobre 3 de 36 meses devuelve
-                # un numero que se lee igual que uno sobre 36, y despues de la mascara de
-                # meses incompletos de `scripts/22` los huecos son posibles.
-                ok = np.isfinite(w)
-                rec[f"spi{k}_win_mean"] = w[ok].mean() if ok.sum() >= 0.75 * len(w) else np.nan
-                rec[f"spi{k}_win_frac"] = ok.mean() if len(w) else np.nan
+                # El denominador son los meses que la ventana DEBERIA tener, no los que se
+                # recuperaron. Dividir por len(w) hace que una ventana truncada --una
+                # parcela censada en 2022, cuya ventana 2020-2022 se sale de CR2MET, que
+                # acaba en 2021-- devuelva fraccion 1,0 y pase el filtro con 24 meses de
+                # los 36. Medido: 271 parcelas de 2022-2023 pasaban asi.
+                n_expected = 12 * int(plots.at[pid, "win_years"]) \
+                    if np.isfinite(plots.at[pid, "win_years"]) else 36
+                ok = int(np.isfinite(w).sum())
+                rec[f"spi{k}_win_frac"] = ok / n_expected
+                rec[f"spi{k}_win_mean"] = (w[np.isfinite(w)].mean()
+                                           if ok >= 0.75 * n_expected else np.nan)
         rows.append(rec)
 
     out = pd.DataFrame(rows)
