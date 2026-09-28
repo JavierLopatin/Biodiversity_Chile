@@ -30,6 +30,7 @@ Una sola pasada, rango completo, para no volver al cubo por cada ventana.
 | Bandas | `blue green red nir swir1 swir2` más `qa_pixel` |
 | Píxel | `center` y `mean5x5`, misma convención que `scripts/35_extract_living_trees.py` |
 | Resolución | 30 m, EPSG:32719 |
+| Geometría solar | cenit y acimut por adquisición, si el producto los expone |
 
 **Bandas crudas, no índices.** `scripts/35:24` ya lo dice: los índices son con pérdida y SAVI no
 se recupera. Con las seis bandas guardadas, los cinco índices actuales y cualquier otro se
@@ -45,6 +46,8 @@ series_band_<banda>_<px>.parquet
     time                datetime64[ns]
     sensor              str      landsat5 | landsat7 | landsat8 | landsat9
     clear_frac_5x5      float32  fracción de los 25 píxeles válidos según qa_pixel
+    sun_zenith          float32  grados, si el producto lo expone; NaN si no
+    sun_azimuth         float32  grados desde el norte, sentido horario; NaN si no
     band_<banda>        float32
 ```
 
@@ -59,6 +62,13 @@ tendencia 2000–2026 medida sin esta columna es inatribuible entre fenología y
 métrica LSP ajustada sobre 12 observaciones no es comparable con una ajustada sobre 60. Hoy
 `n_obs` se guarda por ajuste (`scripts/92_lsp_unified.py:109`), que llega tarde: hace falta por
 observación para poder ponderar o filtrar antes de ajustar.
+
+**`sun_zenith` / `sun_azimuth`** son un pedido nuevo, para la corrección topográfica SCS+C: la
+condición de iluminación es `cos(gamma) = cos(theta_s)cos(pendiente) + sin(theta_s)sin(pendiente)cos(phi_s - orientacion)`,
+y sin la geometría del sol no se calcula. Se pueden derivar analíticamente de `time` más
+`lat`/`lon` con error por debajo de 0,1 grados, así que **no bloquean la corrida**: si el
+producto no las expone como medida, dejarlas en NaN y seguir. Pedirlas igual sirve como
+contraste contra el cálculo analítico.
 
 Más un `extraction.json` con la misma estructura que el de Living Trees (parámetros, `n_loads`,
 `n_written`, envelope) y un `manifest.csv` por parcela con el conteo de observaciones por año y
