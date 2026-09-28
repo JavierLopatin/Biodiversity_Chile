@@ -95,6 +95,12 @@ MODELS: dict[str, dict] = {
                  note="compuerta espectral: espectro mas clima"),
     "RFG6": dict(family="RF", spec="gm+clim+curve+topo+area", per_index=True, curve_px="center", agg="center",
                  note="compuerta espectral: espectro, clima y fenologia juntos"),
+    # LSP for both sources through one path (scripts/92), so that the three representations
+    # -- geomedian (RFG4), LSP metrics (RFG7), raw curve (RFG2) -- compare on the full pool.
+    "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
+                 note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
+    "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",
+                 note="compuerta LSP: metricas fenologicas mas clima"),
 }
 
 
