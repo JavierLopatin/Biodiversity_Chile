@@ -31,8 +31,8 @@ plt.rcParams.update({"font.size": 11, "axes.labelsize": 12, "axes.titlesize": 13
 
 L2 = {3: "Forest", 59: "Forest", 60: "Forest", 61: "Forest",
       66: "NoBosque", 12: "NoBosque"}
-RUNS = {"clima": "RFG1c_clim-topo_ctr-area_raw100_unified-all_unified_woody",
-        "fenologia": "RFG2c_curve-topo_ctr-area_kndvi_raw100_unified-all_unified_woody"}
+RUNS = {"climate": "RFG1c_clim-topo_ctr-area_raw100_unified-all_unified_woody",
+        "phenology": "RFG2c_curve-topo_ctr-area_kndvi_raw100_unified-all_unified_woody"}
 OBS, PRE = "hill_q0_unified_obs", "hill_q0_unified_pred"
 
 
@@ -80,9 +80,9 @@ def main() -> None:
     # --- A y B: los dos cortes espaciales
     for k, (col, groups, title) in enumerate([
             (0, [("parcelas_cl", BLUE, "Parcelas-CL"), ("living_trees", ORANGE, "Living Trees")],
-             "A. Fuente"),
-            (1, [("NoBosque", GREEN, "No bosque"), ("Forest", PURPLE, "Bosque")],
-             "B. Estrato MapBiomas")]):
+             "A. Inventory"),
+            (1, [("NoBosque", GREEN, "Non-forest"), ("Forest", PURPLE, "Forest")],
+             "B. MapBiomas stratum")]):
         ax = fig.add_subplot(gs[:, col])
         chile.plot(ax=ax, facecolor="#F2F2F2", edgecolor="#BBBBBB", linewidth=0.3)
         key = "source" if k == 0 else "lvl2"
@@ -103,10 +103,10 @@ def main() -> None:
                boxprops=dict(color=GREY), medianprops=dict(color=ORANGE, lw=2),
                whiskerprops=dict(color=GREY), capprops=dict(color=GREY))
     ax.axhline(0, color="#333333", lw=0.8, ls="--")
-    ax.set(title="C. Estrés hídrico de la ventana censal", xlabel="año de censo",
-           ylabel="SPI 12 meses")
+    ax.set(title="C. Water stress over the census window", xlabel="census year",
+           ylabel="SPI, 12 months")
     ax.set_xticks(yrs[::2]); ax.set_xticklabels(yrs[::2], rotation=45)
-    ax.text(0.03, 0.06, "todo bajo 0 = megasequía", transform=ax.transAxes, fontsize=9,
+    ax.text(0.03, 0.06, "all windows below 0: megadrought", transform=ax.transAxes, fontsize=9,
             color=GREY)
 
     # --- D: SPI contra latitud, el confusor
@@ -115,28 +115,28 @@ def main() -> None:
                             ("living_trees", ORANGE, "Living Trees")]:
         s = z[z.source == val]
         ax.scatter(s.lat, s.spi12_win_mean, s=4, alpha=0.4, linewidths=0, color=color, label=lab)
-    ax.set(title="D. El SPI sigue la latitud", xlabel="latitud", ylabel="SPI 12 meses")
+    ax.set(title="D. SPI tracks latitude", xlabel="latitude", ylabel="SPI, 12 months")
     ax.legend(fontsize=8, markerscale=2.5)
-    ax.text(0.03, 0.9, r"$\rho$(SPI, lat) = $-$0,67 dentro de año", transform=ax.transAxes,
+    ax.text(0.03, 0.9, r"$\rho$(SPI, lat) = $-$0.67 within year", transform=ax.transAxes,
             fontsize=9, color=GREY)
 
     # --- E y F: el resultado, por tercil
     for k, (lab, run) in enumerate(RUNS.items()):
         ax = fig.add_subplot(gs[k, 3])
         t = tercile_result(j, run)
-        for tercil, color, name in [(0, "#B4451F", "seco"), (1, GREY, "medio"),
-                                    (2, "#2C7FB8", "húmedo")]:
+        for tercil, color, name in [(0, "#B4451F", "dry"), (1, GREY, "mid"),
+                                    (2, "#2C7FB8", "wet")]:
             s = t[t.tercil == tercil].sort_values("year")
             ax.plot(s.year, s.r2, "-o", color=color, ms=5, lw=1.8, label=name)
         d0 = t[t.tercil == 0].set_index("year").r2 - t[t.tercil == 2].set_index("year").r2
-        ax.set(title=f"{'EF'[k]}. Predicción de riqueza — {lab}",
-               xlabel="año de censo" if k else "", ylabel="$R^2$ fuera de fold")
+        ax.set(title=f"{'EF'[k]}. Richness prediction, {lab}",
+               xlabel="census year" if k else "", ylabel="out-of-fold $R^2$")
         ax.axhline(0, color="#333333", lw=0.8, ls=":")
         ax.legend(fontsize=8, ncol=3, loc="lower right")
-        ax.text(0.03, 0.9, f"seco − húmedo = {d0.mean():+.3f}  ({int((d0>0).sum())}/{len(d0)} años)",
+        ax.text(0.03, 0.9, f"dry − wet = {d0.mean():+.3f}  ({int((d0>0).sum())}/{len(d0)} years)",
                 transform=ax.transAxes, fontsize=9, color="#B4451F")
 
-    fig.suptitle("Divisiones del pool y efecto del estrés hídrico sobre la predicción",
+    fig.suptitle("Pool divisions and the effect of water stress on prediction",
                  fontsize=15, y=0.98)
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig25_divisions_and_drought.{ext}", dpi=DPI, bbox_inches="tight")

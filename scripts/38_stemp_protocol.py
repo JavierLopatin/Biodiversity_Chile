@@ -95,7 +95,7 @@ def main() -> None:
     # ------------------------------------------------------------------ Overview
     A(section("1. Overview"))
     A("| campo | valor |\n|---|---|")
-    A(field("Model title", "Predicción de facetas de diversidad vegetal desde fenología "
+    A(field("Model title", "Predicting plant diversity facets from satellite phenology "
             "Landsat, Chile central", True))
     A(field("Author names", "J. Lopatin", True))
     A(field("Contact", "javierlopatin@gmail.com", True))

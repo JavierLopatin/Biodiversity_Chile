@@ -124,10 +124,10 @@ def main() -> None:
         style = dict(lw=1.8, zorder=3) if name.startswith("G") else dict(lw=1.0, ls="--")
         ax.plot(v, np.arange(1, len(v) + 1) / len(v), label=name, **style)
     ax.set_xscale("symlog", linthresh=0.1)
-    ax.set_xlabel("distancia al vecino de entrenamiento más próximo (km)")
-    ax.set_ylabel("proporción acumulada")
+    ax.set_xlabel("distance to nearest training neighbour (km)")
+    ax.set_ylabel("cumulative proportion")
     ax.legend(fontsize=6.5, loc="lower right")
-    ax.set_title("Lo que la validación pone a prueba, contra lo que el mapa hará", fontsize=8)
+    ax.set_title("What the validation tests, against what the map will do", fontsize=8)
     fg.save_figure(fig, "sampling_pattern", args.fig_dir)
     print(f"\n  -> {args.out}\n  -> {args.fig_dir}/sampling_pattern.pdf")
 

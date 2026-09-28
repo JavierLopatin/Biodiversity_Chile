@@ -134,10 +134,10 @@ def main() -> None:
     ax.hist(r.di, bins=bins, density=True, alpha=0.55, label="dominio nativo")
     ax.axvline(r.threshold, color="k", lw=1.2, ls="--",
                label=f"umbral {r.threshold:.2f}")
-    ax.set_xlabel("índice de disimilitud (DI)")
-    ax.set_ylabel("densidad")
+    ax.set_xlabel("dissimilarity index (DI)")
+    ax.set_ylabel("density")
     ax.legend(fontsize=6.5)
-    ax.set_title(f"Área de aplicabilidad: {100 * r.fraction_inside:.0f} % del dominio dentro",
+    ax.set_title(f"Area of applicability: {100 * r.fraction_inside:.0f} % of the domain inside",
                  fontsize=8)
     fg.save_figure(fig, "aoa_di", args.fig_dir)
     print(f"\n  -> {args.out}\n  -> {args.fig_dir}/aoa_di.pdf")
