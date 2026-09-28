@@ -83,7 +83,12 @@ def curve_matrix(plot_ids, index="ndvi"):
 
 # --------------------------------------------------------------------------- figures
 def fig_map_study_area(D, out):
-    """Fig 1. Plot locations over the Chile basemap, panelled by census year and richness."""
+    """La zona de estudio de Parcelas-CL sola, 30-38S.
+
+    Superada por `scripts/93_study_area_unified.py`, que dibuja la figura 1 sobre el pool
+    unificado (3.102 parcelas, hasta 55S) y anade la clase MapBiomas. Esta queda como
+    material suplementario, con otro nombre de salida para no pisar aquella.
+    """
     db = D.get("db", D["plots"].assign(plot_id=D["plots"]["PlotObservationID"]))
     fig, axes = plt.subplots(1, 3, figsize=(10.5, 5.6))
 
@@ -111,7 +116,7 @@ def fig_map_study_area(D, out):
     axes[2].set_xlabel("Longitude (°)")
 
     fig.tight_layout()
-    return F.save_figure(fig, "fig01_study_area", out)
+    return F.save_figure(fig, "figS_study_area_parcelas_cl", out)
 
 
 def fig_sampling(D, out):
