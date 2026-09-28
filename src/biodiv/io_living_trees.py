@@ -147,3 +147,29 @@ def dropped_report(xlsx: str | Path) -> dict:
         "n_sites_sharing_pixel": int(len(sites) - sites["pixel_id"].nunique()),
         "year_range": [int(sites["year"].min()), int(sites["year"].max())],
     }
+
+
+def site_to_plot(derived: str | Path = "data/derived") -> pd.Series:
+    """`site_id` -> `PlotObservationID`, cruzando por coordenada.
+
+    Las dos numeraciones son independientes y NO se corresponden: `site_id` lo asigna la
+    extraccion satelital (`scripts/35`) y `PlotObservationID` el lado de especies
+    (`scripts/50`), cada uno ordenando por su cuenta. `LT_0` es el sitio `LT0861`, no
+    `LT0000`. Derivar uno del otro por el numero asigna el predictor a la parcela
+    equivocada en 2.019 de 2.020 casos, a una mediana de 699 km, y el 97 % a mas de 100 km
+    -- el error que `scripts/84` tuvo hasta 2026-09-28 y que nada detecto porque el
+    resultado es una tabla completa, sin NaN, con valores plausibles.
+
+    La coordenada si es clave comun y exacta: resuelve 2.020 de 2.020. Es el cruce que ya
+    hacian `scripts/67`, `68`, `70`, `92` y `95`, cada uno por su cuenta; esta funcion
+    existe para que no se vuelva a implementar una sexta vez y salga mal.
+    """
+    d = Path(derived)
+    sites = pd.read_parquet(d / "living_trees" / "sites.parquet")[["site_id", "lat", "lon"]]
+    plots = pd.read_parquet(d / "living_trees_plots.parquet")[["PlotObservationID",
+                                                               "lat", "lon"]]
+    m = plots.merge(sites, on=["lat", "lon"], how="left")
+    missing = m["site_id"].isna().sum()
+    if missing:
+        raise ValueError(f"{missing} parcelas Living Trees sin site_id por coordenada")
+    return m.set_index("site_id")["PlotObservationID"]

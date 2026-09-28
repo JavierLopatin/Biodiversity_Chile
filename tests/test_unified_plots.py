@@ -74,3 +74,27 @@ def test_both_sources_present_and_projected(plots, prefix):
 def test_ids_unique_and_prefixed(plots):
     assert plots.index.is_unique
     assert plots.index.str.startswith(("PCL_", "LT_")).all()
+
+
+def test_living_trees_site_id_is_not_derivable_from_the_plot_number():
+    """El cruce site_id <-> PlotObservationID va por coordenada y solo por coordenada.
+
+    `scripts/84` derivaba uno del otro por el numero (`LT0000 -> LT_0`) y acertaba en 1 de
+    2.020 parcelas: cada una recibia el geomediano de otra, a una mediana de 699 km. Nada
+    fallo, porque la tabla salia completa y con valores plausibles. Este test fija que las
+    dos numeraciones son independientes, para que el atajo no vuelva a parecer razonable.
+    """
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+    from biodiv.io_living_trees import site_to_plot
+
+    xwalk = site_to_plot()
+    by_number = "LT_" + xwalk.index.str[2:].str.lstrip("0").where(
+        xwalk.index.str[2:].str.lstrip("0") != "", "0")
+    agree = (xwalk.to_numpy() == by_number.to_numpy()).sum()
+    assert len(xwalk) == 2020, f"{len(xwalk)} parcelas cruzadas, se esperaban 2.020"
+    assert agree <= 1, (
+        f"{agree} de {len(xwalk)} coinciden por numero: si esto sube, alguien realineo las "
+        "numeraciones y hay que revisar si el atajo volvio a entrar en algun script"
+    )

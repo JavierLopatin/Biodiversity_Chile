@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from biodiv import geomedian as gmod  # noqa: E402
+from biodiv import io_living_trees as io_lt  # noqa: E402
 
 LT_DIR = ROOT / "data" / "derived" / "living_trees"
 #: `_center` y no `_median`. Living Trees guarda las dos agregaciones que dejo
@@ -66,9 +67,10 @@ def load_bands() -> pd.DataFrame:
     return M[M.notna().all(axis=1)]
 
 
-def site_to_plot(site_id: str) -> str:
-    """LT0000 -> LT_0, que es el esquema que da `scripts/50`."""
-    return f"LT_{int(str(site_id)[2:])}"
+#: El cruce va por coordenada, en `biodiv.io_living_trees.site_to_plot`. Este script tuvo
+#: hasta 2026-09-28 un `site_to_plot` propio que derivaba `LT0000 -> LT_0` por el numero, y
+#: las dos numeraciones son independientes: acertaba en 1 de 2.020 parcelas y le entregaba a
+#: cada una el geomediano de otra, a una mediana de 699 km.
 
 
 def main() -> None:
@@ -77,10 +79,17 @@ def main() -> None:
     args = ap.parse_args()
 
     M = load_bands()
-    rows = []
+    xwalk = io_lt.site_to_plot()
+    rows, orphan = [], 0
     for site, g in M.groupby(level="site_id"):
+        # `sites.parquet` trae 2.021 sitios y el lado de especies 2.020: uno se cayo al
+        # construir las parcelas y no tiene target, asi que su geomediano no va a ninguna
+        # parte. Se cuenta y se informa en vez de reventar o de colarse en silencio.
+        if site not in xwalk.index:
+            orphan += 1
+            continue
         X = g.to_numpy(dtype=float)
-        row = {"PlotObservationID": site_to_plot(site), f"gm_count{SUFFIX}": float(len(X))}
+        row = {"PlotObservationID": xwalk[site], f"gm_count{SUFFIX}": float(len(X))}
         if len(X) >= gmod.MIN_OBS:
             gm = gmod.geometric_median(X)
             for b, v in zip(gmod.BANDS, gm):
@@ -94,7 +103,8 @@ def main() -> None:
     out = pd.DataFrame(rows)
     f = ROOT / args.out
     out.to_parquet(f, index=False)
-    print(f"-> {f}  ({len(out)} parcelas, {out.shape[1] - 1} columnas)")
+    print(f"-> {f}  ({len(out)} parcelas, {out.shape[1] - 1} columnas), "
+          f"{orphan} sitios sin parcela")
     n_ok = out.filter(like="gm_band_").notna().all(axis=1).sum()
     print(f"   con geomediano: {int(n_ok)}  (el resto no alcanza {gmod.MIN_OBS} observaciones)")
     print(f"\n   escala de las bandas, para comparar con Parcelas-CL:")
