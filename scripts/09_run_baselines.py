@@ -97,6 +97,14 @@ MODELS: dict[str, dict] = {
                  note="compuerta espectral: espectro, clima y fenologia juntos"),
     # LSP for both sources through one path (scripts/92), so that the three representations
     # -- geomedian (RFG4), LSP metrics (RFG7), raw curve (RFG2) -- compare on the full pool.
+    # Geomedian recomputed from the observation table for each reflectance version
+    # (scripts/99, BIODIV_GMO), to test the topographic correction where no ratio cancels it.
+    "RFG4o": dict(family="RF", spec="gmo+topo+area", per_index=False, curve_px="center",
+                  note="geomediano del pixel central desde observaciones, por version de reflectancia"),
+    "RFG5o": dict(family="RF", spec="gmo+clim+topo+area", per_index=False, curve_px="center",
+                  note="compuerta espectral con gm bien cruzado: espectro mas clima"),
+    "RFG6o": dict(family="RF", spec="gmo+clim+curve+topo+area", per_index=True, curve_px="center",
+                  note="compuerta espectral con gm bien cruzado: espectro, clima y fenologia"),
     "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
                  note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
     "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",
@@ -137,6 +145,10 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
         ident += "_unified"
     if tg.pg_targets_suffix():
         ident += tg.pg_targets_suffix()
+    if "gmo" in meta["spec"]:
+        ident += f"_gmo{feat.gmo_suffix()}"
+    if "lspu" in meta["spec"] and feat.lspu_suffix():
+        ident += f"_lspu{feat.lspu_suffix()}"
     cfg = runlog.RunConfig(
         run_id=ident + (f"_s{seeds[0]}" if seeds[0] else ""),
         family=meta["family"], scheme=scheme, features=spec, index=idx,

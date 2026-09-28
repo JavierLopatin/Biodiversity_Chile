@@ -123,7 +123,13 @@ def build(args: argparse.Namespace) -> None:
         "Latitude": "lat",
         "Longitude": "lon",
         "Elevation": "elevation",
-        "Slope": "slope",
+        # `slope_field`, not `slope`: this is the slope recorded in the field by the inventory
+        # crews, NOT the DEM slope the `topo` block uses (topography*.parquet, degrees). It
+        # cannot be degrees: max 140 (Los Rios; 120 in La Araucania), 100 plots > 60 and 16 >
+        # 90, Spearman 0.66 against the DEM slope. Most likely percent, possibly mixed units
+        # between crews. Named apart so nobody feeds it to a cosine (topographic correction,
+        # heat load) thinking it is the terrain slope.
+        "Slope": "slope_field",
         "Chilean forest type": "forest_type",
         "Date": "Year",
     })
