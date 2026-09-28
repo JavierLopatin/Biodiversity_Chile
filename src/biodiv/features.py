@@ -72,7 +72,12 @@ LSP_METRICS = ["sos", "pos", "eos", "vsos", "vpos", "veos", "los", "msp", "mau",
 #: LSP metrics whose value is a day-of-year, i.e. circular. Optionally re-encoded as
 #: (sin, cos) with ``--circular-doy``; left raw by default because trees handle a monotone
 #: DOY axis fine and the re-encoding only matters for the MLP.
-DOY_METRICS = ["sos", "pos", "eos", "msp", "mau", "trough"]
+#: Metricas de PhenoLSP que son dia del ano, las unicas que el modo `circular_doy`
+#: puede convertir a seno/coseno. `trough` estaba en la lista y no es un dia: es el
+#: valor del indice en el minimo (rango observado -0,97 a 0,89), asi que
+#: sin(2*pi*trough/365) daba un angulo de casi cero para todas las parcelas. `mos`
+#: si es un dia y faltaba.
+DOY_METRICS = ["sos", "pos", "eos", "msp", "mos", "mau"]
 
 TOPO_VARS = ["elevation", "slope", "northness", "eastness", "heat_load",
              "tpi", "tri", "curvature"]          # 'aspect' deliberately excluded
