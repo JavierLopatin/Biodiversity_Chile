@@ -46,9 +46,23 @@ ID_COL = "PlotObservationID"
 PAD = 0.1                 # degrees of margin around the plot bounding box
 
 
+#: Fraccion minima de dias validos para dar un mes por bueno. CR2MET es una grilla diaria
+#: continua sobre tierra chilena, asi que un mes incompleto en la celda de una parcela es
+#: senal de problema, no de estacionalidad.
+MIN_DAY_FRAC = 0.9
+
+
 def monthly_fields(dc, bbox: tuple[float, float, float, float], year: int
                    ) -> tuple[np.ndarray, np.ndarray, np.ndarray, object]:
-    """Monthly precipitation total and mean tmin/tmax for one year, shaped (12, ny, nx)."""
+    """Monthly precipitation total and mean tmin/tmax for one year, shaped (12, ny, nx).
+
+    La suma mensual se enmascara donde el mes no esta completo. Sin eso,
+    ``groupby().sum()`` usa ``skipna=True`` y un mes entero sin datos sale **0**, no NaN --
+    y un cero falso de precipitacion no se distingue de un mes extremadamente seco. Para
+    una normal de 30 anos eso se diluye; para un SPI, que compara cada mes contra la
+    distribucion historica de su propio pixel, produce un extremo espurio. CR2MET trae NaN
+    en oceano y en territorio argentino dentro del bbox, asi que el caso no es hipotetico.
+    """
     lon0, lon1, lat0, lat1 = bbox
     ds = dc.load(product="cr2met", x=(lon0, lon1), y=(lat0, lat1),
                  time=(f"{year}-01-01", f"{year}-12-31"),
@@ -59,6 +73,12 @@ def monthly_fields(dc, bbox: tuple[float, float, float, float], year: int
     pr = g.sum("time")["pr"].values           # mm per month
     tmin = g.mean("time")["tmin"].values
     tmax = g.mean("time")["tmax"].values
+
+    # dias con dato por celda y mes, contra los dias de calendario de ese mes
+    valid = ds["pr"].notnull().groupby("time.month").sum("time").values
+    n_days = np.array([int((ds.time.dt.month.values == m).sum()) for m in range(1, 13)])
+    incomplete = valid < (MIN_DAY_FRAC * n_days[:, None, None])
+    pr = np.where(incomplete, np.nan, pr)
     return pr, tmin, tmax, ds
 
 

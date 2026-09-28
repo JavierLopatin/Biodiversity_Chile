@@ -111,7 +111,12 @@ def main() -> None:
                 lo = (int(we) - 2) * 12
                 hi = int(we) * 12 + 11
                 w = s[(ym >= lo) & (ym <= hi)]
-                rec[f"spi{k}_win_mean"] = np.nanmean(w) if np.isfinite(w).any() else np.nan
+                # Exigir la mayoria de la ventana. Un nanmean sobre 3 de 36 meses devuelve
+                # un numero que se lee igual que uno sobre 36, y despues de la mascara de
+                # meses incompletos de `scripts/22` los huecos son posibles.
+                ok = np.isfinite(w)
+                rec[f"spi{k}_win_mean"] = w[ok].mean() if ok.sum() >= 0.75 * len(w) else np.nan
+                rec[f"spi{k}_win_frac"] = ok.mean() if len(w) else np.nan
         rows.append(rec)
 
     out = pd.DataFrame(rows)
