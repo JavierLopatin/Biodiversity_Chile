@@ -273,6 +273,40 @@ def _block_lsp(t: Tables, ids: pd.Index, index: str, centre: bool = False,
     return sub
 
 
+@lru_cache(maxsize=2)
+def _lsp_unified(derived: str) -> pd.DataFrame:
+    f = Path(derived) / "lsp_unified_v2lin.parquet"
+    if not f.exists():
+        raise FileNotFoundError(f"{f} not found -- run `python scripts/92_lsp_unified.py`")
+    return pd.read_parquet(f).set_index([ID_COL, "index", "px"]).sort_index()
+
+
+def _block_lsp_unified(t: Tables, ids: pd.Index, index: str, px: str = "center",
+                       circular_doy: bool = False) -> pd.DataFrame:
+    """LSP for BOTH sources through one code path (``scripts/92_lsp_unified.py``).
+
+    ``lsp``/``lsp_ctr`` read ``lsp_all_auto``, which exists for Parcelas-CL only and was
+    computed on the acquisition's original curves; on the unified pool that block arrives
+    NaN for all of Living Trees and gets median-imputed, which the RF learns as a source
+    label. Here both sources are refit from their raw observations with the same
+    reconstructor (linear + shrink) and ``hemisphere="auto"``. ``px`` picks the centre pixel
+    or the per-acquisition 5x5 mean, fitted as one series in both sources.
+    """
+    tab = _lsp_unified(str(t.derived))
+    sub = tab.xs((index, px), level=("index", "px")).reindex(ids)[LSP_METRICS]
+    sub.columns = [f"lspu_{c}" for c in LSP_METRICS]
+    if circular_doy:
+        # DOY-valued metrics of PhenoLSP. Not DOY_METRICS: there `trough` is listed as a day,
+        # but PhenoLSP returns it as a curve value (median ~0,16), and `mos` is a day.
+        extra = {}
+        for m in ("sos", "pos", "eos", "msp", "mau", "mos"):
+            d = sub[f"lspu_{m}"].to_numpy(float)
+            extra[f"lspu_{m}_sin"] = np.sin(2 * np.pi * d / 365.0)
+            extra[f"lspu_{m}_cos"] = np.cos(2 * np.pi * d / 365.0)
+        sub = pd.concat([sub, pd.DataFrame(extra, index=sub.index)], axis=1)
+    return sub
+
+
 def _block_curve(t: Tables, ids: pd.Index, index: str, px: str = "mean5x5") -> pd.DataFrame:
     cols = step_cols(t.curves)
     sub = t.curves.xs((index, px), level=("index", "px")).reindex(ids)[cols]
@@ -499,7 +533,7 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
     """
     t = load_tables(derived)
     ids = pd.Index(t.plots[ID_COL]) if ids is None else pd.Index(ids)
-    needs_index = {"lsp", "lsp_ctr", "curve", "qc", "composite"}
+    needs_index = {"lsp", "lsp_ctr", "lspu", "curve", "qc", "composite"}
     parts: list[pd.DataFrame] = []
 
     for name in spec.split("+"):
@@ -510,6 +544,8 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_lsp(t, ids, index, centre=False, circular_doy=circular_doy))
         elif name == "lsp_ctr":
             parts.append(_block_lsp(t, ids, index, centre=True, circular_doy=circular_doy))
+        elif name == "lspu":
+            parts.append(_block_lsp_unified(t, ids, index, px=px, circular_doy=circular_doy))
         elif name == "curve":
             parts.append(_block_curve(t, ids, index, px=px))
         elif name == "qc":
