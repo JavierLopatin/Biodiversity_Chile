@@ -586,6 +586,14 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_lsp(t, ids, index, centre=True, circular_doy=circular_doy))
         elif name == "gmo":
             parts.append(_block_gm_obs(t, ids))
+        elif name in ("gmomed", "gmomad", "gmoall"):
+            # Ablation of the geomedian block: the spectral medians (6 bands + 5 indices),
+            # the three MADs (temporal dispersion around the geomedian), or both without
+            # gm_count (the number of observations, which differs by source).
+            b = _block_gm_obs(t, ids)
+            mad = [c for c in b.columns if c.endswith(("emad", "smad", "bcmad"))]
+            med = [c for c in b.columns if c not in mad and not c.endswith("gm_count")]
+            parts.append(b[{"gmomed": med, "gmomad": mad, "gmoall": med + mad}[name]])
         elif name == "lspu":
             parts.append(_block_lsp_unified(t, ids, index, px=px, circular_doy=circular_doy))
         elif name == "curve":

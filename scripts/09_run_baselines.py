@@ -105,6 +105,14 @@ MODELS: dict[str, dict] = {
                   note="compuerta espectral con gm bien cruzado: espectro mas clima"),
     "RFG6o": dict(family="RF", spec="gmo+clim+curve+topo+area", per_index=True, curve_px="center",
                   note="compuerta espectral con gm bien cruzado: espectro, clima y fenologia"),
+    "RFG4m": dict(family="RF", spec="gmomed+topo+area", per_index=False, curve_px="center",
+                  note="ablacion gm: solo medianas espectrales (bandas + indices)"),
+    "RFG4d": dict(family="RF", spec="gmomad+topo+area", per_index=False, curve_px="center",
+                  note="ablacion gm: solo las tres MAD (dispersion temporal)"),
+    "RFG4a": dict(family="RF", spec="gmoall+topo+area", per_index=False, curve_px="center",
+                  note="ablacion gm: medianas + MAD, sin gm_count"),
+    "RFG5a": dict(family="RF", spec="gmoall+clim+topo+area", per_index=False, curve_px="center",
+                  note="geomediano sin gm_count mas clima"),
     "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
                  note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
     "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",
@@ -145,7 +153,7 @@ def run_one(model: str, scheme: str, index: str | None, seeds: list[int],
         ident += "_unified"
     if tg.pg_targets_suffix():
         ident += tg.pg_targets_suffix()
-    if "gmo" in meta["spec"]:
+    if "gmo" in meta["spec"]:  # gmo, gmomed, gmomad, gmoall
         ident += f"_gmo{feat.gmo_suffix()}"
     if "lspu" in meta["spec"] and feat.lspu_suffix():
         ident += f"_lspu{feat.lspu_suffix()}"
