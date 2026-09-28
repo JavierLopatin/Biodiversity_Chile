@@ -442,6 +442,30 @@ def _block_gm(t: Tables, ids: pd.Index, agg: str = DEFAULT_AGG) -> pd.DataFrame:
     return _cube_cols(t, ids, ("gm_",), agg, "geomedian").add_prefix("gmA_")
 
 
+#: Suffix of the per-version geomedian table (scripts/99), read from the environment.
+GMO_SUFFIX_ENV = "BIODIV_GMO"
+
+
+def gmo_suffix() -> str:
+    return os.environ.get(GMO_SUFFIX_ENV, "nc")
+
+
+@lru_cache(maxsize=4)
+def _gm_obs(derived: str, sfx: str) -> pd.DataFrame:
+    f = Path(derived) / f"gm_center_{sfx}.parquet"
+    if not f.exists():
+        raise FileNotFoundError(f"{f} not found -- run `python scripts/99_topocorr_null_and_gm.py`")
+    return pd.read_parquet(f).set_index(ID_COL)
+
+
+def _block_gm_obs(t: Tables, ids: pd.Index) -> pd.DataFrame:
+    """Centre-pixel geomedian recomputed from the observation table (scripts/99), for
+    both sources through one path and for each reflectance version (original ``nc`` or
+    topographically corrected). Same columns and prefix as ``gm`` at ``agg="center"``."""
+    tab = _gm_obs(str(t.derived), gmo_suffix())
+    return tab.reindex(ids)[[c for c in tab.columns if c.startswith("gm_")]].add_prefix("gmA_")
+
+
 def _block_obscomp(t: Tables, ids: pd.Index, index: str | None = None,
                    agg: str = DEFAULT_AGG) -> pd.DataFrame:
     """Composites over the *real observations* rather than over the interpolated curve.
@@ -560,6 +584,8 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_lsp(t, ids, index, centre=False, circular_doy=circular_doy))
         elif name == "lsp_ctr":
             parts.append(_block_lsp(t, ids, index, centre=True, circular_doy=circular_doy))
+        elif name == "gmo":
+            parts.append(_block_gm_obs(t, ids))
         elif name == "lspu":
             parts.append(_block_lsp_unified(t, ids, index, px=px, circular_doy=circular_doy))
         elif name == "curve":

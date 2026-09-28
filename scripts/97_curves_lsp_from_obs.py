@@ -66,16 +66,20 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--versions", nargs="+", default=VERSIONS)
+    ap.add_argument("--obs", default="obs_center_unified_tc.parquet",
+                    help="obs_center_unified_tcnull.parquet para las versiones nulas (scripts/99)")
     a = ap.parse_args()
+    versions = a.versions
 
-    o = pd.read_parquet(DERIVED / "obs_center_unified_tc.parquet").sort_values([ID, "time"])
+    o = pd.read_parquet(DERIVED / a.obs).sort_values([ID, "time"])
     tasks = []
     for pid, g in o.groupby(ID, sort=True):
-        cols = {v: {ix: g[f"{ix}_{v}"].to_numpy(float) for ix in INDICES} for v in VERSIONS}
+        cols = {v: {ix: g[f"{ix}_{v}"].to_numpy(float) for ix in INDICES} for v in versions}
         tasks.append((pid, g.source.iloc[0], g.time.to_numpy(), cols))
     if a.limit:
         tasks = tasks[:a.limit]
-    print(f"{len(tasks)} parcelas x {len(VERSIONS)} versiones x {len(INDICES)} índices")
+    print(f"{len(tasks)} parcelas x {len(versions)} versiones x {len(INDICES)} índices")
     curves, lsps = [], []
     with ProcessPoolExecutor(a.workers, initializer=lsp92._init) as ex:
         for c, l in ex.map(one_plot, tasks, chunksize=8):
@@ -84,7 +88,7 @@ def main() -> None:
     if a.limit:
         print(ls.groupby("v").lsp_error.apply(lambda s: (s != "").sum()))
         return
-    for v in VERSIONS:
+    for v in versions:
         sfx = f"_raw100{v}"
         cu[cu.v == v].drop(columns="v").to_parquet(DERIVED / f"phenoshape_by_index{sfx}_unified.parquet", index=False)
         shutil.copyfile(DERIVED / "phenoshape_doy_grid_raw100.parquet", DERIVED / f"phenoshape_doy_grid{sfx}.parquet")
