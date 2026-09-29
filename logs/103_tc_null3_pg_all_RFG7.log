@@ -1,0 +1,3 @@
+scheme=kfold5_block20_unified  seeds=[0, 1, 2]  targets=pg_all
+
+  RFG7c_lspu-topo_ctr-area_kndvi_raw100null3_pg-all_unified_woody_lspunull3 kfold5_block20_unified [ 74.0s] lcbd_count_sorensen=+0.446 pd_inext_q0=+0.056 pd_inext_q1=+0.095 pd_inext_q2=+0.074 td_inext_q0=+0.006 td_inext_q1=+0.087 td_inext_q2=+0.087

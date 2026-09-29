@@ -44,32 +44,33 @@ def main() -> None:
     rows = []
     for f in glob.glob(str(RUNS / "*" / SCHEME / "oof_predictions.csv")):
         run = Path(f).parts[-3]
-        spec = "curva" if run.startswith("RFG2") else "lsp"
-        v = re.search(r"_raw100(nc|tcfe|tccsall|tccs)", run).group(1)
+        spec = {"RFG2": "curva", "RFG7": "lsp", "RFG4": "gm"}[run[:4]]
+        v = re.search(r"_raw100(nc|tcfe|tccsall|tccs|null\d)", run).group(1)
+        ix = next((i for i in ("kndvi", "evi", "savi") if f"_{i}_" in run), "bandas")
         tset = "unified-all" if "unified-all" in run else "pg-all"
         oof = pd.read_csv(f).merge(topo, on=ID, how="left")
         for t in TARGETS[tset]:
             d = oof[oof[f"{t}_obs"].notna()]
             for sc, g in [("todas", d)] + list(d.groupby("slope_cls")):
                 for seed, h in g.groupby("seed"):
-                    rows.append(dict(spec=spec, version=v, target=t, slope_cls=sc, seed=seed,
+                    rows.append(dict(spec=spec, index=ix, version=v, target=t, slope_cls=sc, seed=seed,
                                      n=h[ID].nunique(), R2=r2(h[f"{t}_obs"], h[f"{t}_pred"])))
     r = pd.DataFrame(rows)
-    base = r[r.version == "nc"].set_index(["spec", "target", "slope_cls", "seed"]).R2
-    r["dR2"] = r.R2 - r.set_index(["spec", "target", "slope_cls", "seed"]).index.map(base)
-    out = (r.groupby(["target", "spec", "slope_cls", "version"])
+    key = ["spec", "index", "target", "slope_cls", "seed"]
+    base = r[r.version == "nc"].set_index(key).R2
+    r["dR2"] = r.R2 - r.set_index(key).index.map(base)
+    out = (r.groupby(["target", "spec", "index", "slope_cls", "version"])
              .agg(n=("n", "first"), R2=("R2", "mean"), dR2=("dR2", "mean"), dR2_sd=("dR2", "std"))
              .reset_index())
     RUNS.mkdir(parents=True, exist_ok=True)
     out.to_csv(RUNS / "r2_by_slope.csv", index=False)
     order = ["todas"] + LABELS
-    for t in out.target.unique():
-        for sp in ["curva", "lsp"]:
-            x = out[(out.target == t) & (out.spec == sp)]
-            p = x.pivot_table(index="slope_cls", columns="version", values=["R2", "dR2"]).reindex(order)
-            n = x.groupby("slope_cls").n.first().reindex(order)
-            print(f"\n== {t} / {sp} ==  (n por clase: {n.to_dict()})")
-            print(p.round(3).to_string())
+    for (t, sp, ix), x in out.groupby(["target", "spec", "index"]):
+        p = x.pivot_table(index="slope_cls", columns="version", values="dR2").reindex(order)
+        n = x.groupby("slope_cls").n.first().reindex(order)
+        r0 = x[x.version == "nc"].set_index("slope_cls").R2.reindex(order)
+        print(f"\n== {t} / {sp} / {ix} ==  ΔR² contra nc (R² nc: {r0.round(3).to_dict()}; n: {n.to_dict()})")
+        print(p.round(3).to_string())
     print(f"\n-> {RUNS / 'r2_by_slope.csv'}")
 
 
