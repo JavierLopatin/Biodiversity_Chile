@@ -102,7 +102,8 @@ def make_run_id(family: str, tag: str, index: str = "", substrate: str = "",
     return "_".join(p.replace("+", "-").replace("/", "-") for p in parts if p)
 
 
-def data_fingerprints(derived: str | Path = "data/derived") -> dict[str, str]:
+def data_fingerprints(derived: str | Path = "data/derived",
+                      target_set: str | None = None) -> dict[str, str]:
     """SHA-1 of the data files whose version the run depends on beyond the code commit.
 
     The config's ``git`` field pins the code, but not the data: curves, the unified LSP
@@ -122,6 +123,24 @@ def data_fingerprints(derived: str | Path = "data/derived") -> dict[str, str]:
         "gmo": d / f"gm_center_{os.environ.get('BIODIV_GMO', 'nc')}.parquet",
         "cube_lt": d / "cube_predictors_living_trees.parquet",
     }
+    # Targets too: the woody harmonisation changed them mid-project, and which version a
+    # run was fitted against is exactly the kind of change nobody can place afterwards.
+    if target_set:
+        try:
+            from . import targets as tg
+            names = tg.resolve_targets(target_set)
+            sfx_t = tg.pg_targets_suffix()
+            srcs = dict.fromkeys(tg.TARGET_SOURCE[t] for t in names)
+            sfx_sources = {tg.TARGET_SOURCE[t] for t in tg.TARGETS_ALL_PG} | {
+                "unified_diversity_responses.parquet", "unified_phylo_responses.parquet",
+                "unified_dark_diversity.parquet"}
+            for src in srcs:
+                f = d / src
+                if sfx_t and src in sfx_sources:
+                    f = f.with_name(f.stem + sfx_t + f.suffix)
+                cands[f"target:{f.stem}"] = f
+        except Exception:  # noqa: BLE001 -- the fingerprint must never break a run
+            pass
     out = {}
     for k, f in cands.items():
         if f.exists():
@@ -135,7 +154,7 @@ def write_run(cfg: RunConfig, oof: pd.DataFrame, per_seed: pd.DataFrame,
     out = cfg.outdir(root)
     out.mkdir(parents=True, exist_ok=True)
     meta = cfg.to_json()
-    meta["data_sha1"] = data_fingerprints()
+    meta["data_sha1"] = data_fingerprints(target_set=getattr(cfg, "target_set", None))
     (out / "config.json").write_text(json.dumps(meta, indent=2, default=str))
     oof.to_csv(out / "oof_predictions.csv", index=False)
     per_seed.to_csv(out / "per_seed_metrics.csv", index=False)
