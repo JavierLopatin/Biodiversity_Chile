@@ -1,0 +1,2 @@
+    C2D02_serpentine_kndvi_raw100_pg-all_unified_woody_ctr: 15,175 parameters, input (1, 10, 10)
+  C2D02_serpentine_kndvi_raw100_pg-all_unified_woody_ctr kfold_loc_time_unified [ 19.9m] lcbd_count_sorensen=+0.101 pd_inext_q0=-0.104 pd_inext_q1=-0.244 pd_inext_q2=-0.220 td_inext_q0=-0.191 td_inext_q1=-0.124 td_inext_q2=-0.163

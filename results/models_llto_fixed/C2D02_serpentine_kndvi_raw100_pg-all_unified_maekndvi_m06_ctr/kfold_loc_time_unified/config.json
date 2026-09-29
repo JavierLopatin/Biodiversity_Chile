@@ -30,7 +30,7 @@
     "n_params": 15175
   },
   "notes": "C2D on serpentine",
-  "git": "3930d92a1252f3d2c062c064d0c4e8b15d303dd5-dirty",
+  "git": "935a936ce7d5a37bf5537ae1d6eb50716b7fa9be-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
@@ -39,5 +39,14 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded": "lcbd_count_sorensen_unified_padded.parquet:9baebfdc36e9",
+    "target:pd_inext_coverage_unified_padded": "pd_inext_coverage_unified_padded.parquet:f08c38cfc011",
+    "target:td_inext_coverage_unified_padded": "td_inext_coverage_unified_padded.parquet:2c5736e66ecb"
   }
 }
