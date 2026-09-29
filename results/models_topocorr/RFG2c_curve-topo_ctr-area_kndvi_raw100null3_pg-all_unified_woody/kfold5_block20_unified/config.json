@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta: fenologia, lo que el paper defiende hoy",
-  "git": "98366a009a37ffef7e2c2ce5966a23e1b002fad8-dirty",
+  "git": "f14960fd40d94adcac2040280f7fd4883325f391-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
@@ -26,5 +26,14 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100null3_unified.parquet:bca42ffc5494",
+    "lspu": "lsp_unified_v2linnull3.parquet:82cd097c9f0f",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woody": "lcbd_count_sorensen_unified_padded_woody.parquet:37c422a7f057",
+    "target:pd_inext_coverage_unified_padded_woody": "pd_inext_coverage_unified_padded_woody.parquet:d5f797c4fec8",
+    "target:td_inext_coverage_unified_padded_woody": "td_inext_coverage_unified_padded_woody.parquet:2073ef7e357d"
   }
 }
