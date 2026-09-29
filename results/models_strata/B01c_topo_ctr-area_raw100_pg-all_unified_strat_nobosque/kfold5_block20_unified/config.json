@@ -1,0 +1,39 @@
+{
+  "run_id": "B01c_topo_ctr-area_raw100_pg-all_unified_strat_nobosque",
+  "family": "BASE",
+  "scheme": "kfold5_block20_unified",
+  "features": "topo_ctr+area",
+  "substrate": "",
+  "index": "",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "no-phenology reference",
+  "git": "b08d8eb1253016f8f26fc0c0b6630b0ab7957f1b-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_strat_nobosque": "lcbd_count_sorensen_unified_padded_strat_nobosque.parquet:4bfe1e9012bd",
+    "target:pd_inext_coverage_unified_padded_strat_nobosque": "pd_inext_coverage_unified_padded_strat_nobosque.parquet:6e547ba8d1c7",
+    "target:td_inext_coverage_unified_padded_strat_nobosque": "td_inext_coverage_unified_padded_strat_nobosque.parquet:975466726e62"
+  }
+}

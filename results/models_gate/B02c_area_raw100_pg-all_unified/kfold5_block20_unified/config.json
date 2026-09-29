@@ -1,0 +1,39 @@
+{
+  "run_id": "B02c_area_raw100_pg-all_unified",
+  "family": "BASE",
+  "scheme": "kfold5_block20_unified",
+  "features": "area",
+  "substrate": "",
+  "index": "",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "sampling-effort baseline for risk R3",
+  "git": "b08d8eb1253016f8f26fc0c0b6630b0ab7957f1b-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded": "lcbd_count_sorensen_unified_padded.parquet:9baebfdc36e9",
+    "target:pd_inext_coverage_unified_padded": "pd_inext_coverage_unified_padded.parquet:f08c38cfc011",
+    "target:td_inext_coverage_unified_padded": "td_inext_coverage_unified_padded.parquet:2c5736e66ecb"
+  }
+}
