@@ -41,13 +41,29 @@ def cr2(o, p):
     return float(1 - ((o - p) ** 2).sum() / (o ** 2).sum())
 
 
-def lenses(oof: pd.DataFrame, t: str, band: float) -> pd.DataFrame:
+SLOPE_BINS, SLOPE_LABELS = [-0.01, 5, 15, 25, 90], ["<5", "5-15", "15-25", ">25"]
+
+
+def lenses(oof: pd.DataFrame, t: str, band: float, by_slope: bool = False) -> pd.DataFrame:
+    """R² por semilla en las cinco lecturas. Con ``by_slope`` se repite dentro de cada clase
+    de pendiente del DEM (columna ``slope``), y el índice pasa a (slope_cls, seed)."""
     d = oof[oof[f"{t}_obs"].notna()].rename(columns={f"{t}_obs": "o", f"{t}_pred": "p"})
+    if by_slope:
+        d = d.assign(slope_cls=pd.cut(d.slope, SLOPE_BINS, labels=SLOPE_LABELS).astype(str))
+        parts = [lenses_plain(d, band).assign(slope_cls="todas")] + [
+            lenses_plain(g, band).assign(slope_cls=sc) for sc, g in d.groupby("slope_cls")]
+        return pd.concat(parts).reset_index().set_index(["slope_cls", "seed"])
+    return lenses_plain(d, band)
+
+
+def lenses_plain(d: pd.DataFrame, band: float) -> pd.DataFrame:
     rows = []
     for seed, g in d.groupby("seed"):
         pcl, lt = g[g.source == "parcelas_cl"].copy(), g[g.source == "living_trees"].copy()
         out = {"todas": r2(g.o, g.p), "parcelas_cl": r2(pcl.o, pcl.p) if len(pcl) > 2 else np.nan,
-               "living_trees": r2(lt.o, lt.p) if len(lt) > 2 else np.nan}
+               "living_trees": r2(lt.o, lt.p) if len(lt) > 2 else np.nan,
+               "n_todas": g[ID].nunique(), "n_parcelas_cl": pcl[ID].nunique(),
+               "n_living_trees": lt[ID].nunique()}
         if len(pcl) > 2:
             for c in ("o", "p"):
                 pcl[c + "c"] = pcl[c] - pcl.groupby("Owner")[c].transform("mean")
