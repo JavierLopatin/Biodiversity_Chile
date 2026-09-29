@@ -19,6 +19,12 @@ residualizado contra latitud, porque el SPI crudo dentro de un ano es en dos ter
 proyecto ya descarto cuatro veces. Solo Living Trees: es un protocolo, area fija, y los anos con
 potencia suficiente.
 
+Dos pisos, no uno. `piso` es topografia+area y `coords` es lon/lat/elevacion: geografia pura,
+sin nada remoto ni climatico. El segundo es mucho mas exigente y contesta directo la pregunta
+que un revisor hace primero -- cuanto de esto es mas que saber donde estas. Agrupado, tres
+numeros de geografia reproducen casi todo (PCoA 1 p/a: coords 0,702 contra 0,704 del modelo
+completo), asi que sin este control los R2 agrupados no significan lo que parecen.
+
 El control que hace legible el eje de estres es el piso. Si el R2 de los bloques remotos cambia
 entre terciles PERO el piso topografia+area no se mueve, el cambio no puede ser varianza del
 target -- tendria que arrastrar al piso igual. Ese contraste se emite como columna aparte.
@@ -46,6 +52,7 @@ SCHEME = "kfold5_block20_unified"
 
 REPS = {
     "area_sola":   "B02c_area_raw100",
+    "coords":      "B03c_coords_raw100",
     "piso":        "B01c_topo_ctr-area_raw100",
     "clima":       "RFG1c_clim-topo_ctr-area_raw100",
     "curva":       "RFG2c_curve-topo_ctr-area_kndvi_raw100",
@@ -164,20 +171,29 @@ def main() -> None:
     print(f"-> {OUT}  ({len(f)} filas)")
 
     # --- la mejor representacion por faceta, con el piso al lado para que se lea contra algo
+    # `piso`, `coords` y `area_sola` son lineas base y no compiten por "mejor bloque": si se
+    # dejan competir, `coords` gana cuatro facetas y la tabla dice que la mejor representacion
+    # remota es no usar sensores remotos.
+    BASES = ["piso", "coords", "area_sola"]
     g = f[f.estres == "todas"]
     pi = g[g.representacion == "piso"].set_index(["familia", "faceta"])
-    best = (g[g.representacion != "piso"]
-            .sort_values("R2", ascending=False)
+    co = g[g.representacion == "coords"].set_index(["familia", "faceta"])
+    best = (g[~g.representacion.isin(BASES)]
+            .sort_values("R2_en_banda", ascending=False)
             .groupby(["familia", "faceta"]).first().reset_index())
     k = list(zip(best.familia, best.faceta))
     best["R2_piso"] = [pi.R2.get(x, np.nan) for x in k]
     best["R2_piso_en_banda"] = [pi.R2_en_banda.get(x, np.nan) for x in k]
+    best["R2_coords"] = [co.R2.get(x, np.nan) for x in k]
+    best["R2_coords_en_banda"] = [co.R2_en_banda.get(x, np.nan) for x in k]
     best["sobre_piso"] = best.R2 - best.R2_piso
     best["sobre_piso_en_banda"] = best.R2_en_banda - best.R2_piso_en_banda
+    best["sobre_coords_en_banda"] = best.R2_en_banda - best.R2_coords_en_banda
     best = best[["familia", "grupo", "faceta", "n", "representacion", "R2", "R2_sd",
                  "R2_piso", "sobre_piso", "R2_en_banda", "R2_piso_en_banda",
-                 "sobre_piso_en_banda"]].sort_values(["grupo", "sobre_piso_en_banda"],
-                                                     ascending=[True, False])
+                 "sobre_piso_en_banda", "R2_coords", "R2_coords_en_banda",
+                 "sobre_coords_en_banda"]].sort_values(["grupo", "sobre_coords_en_banda"],
+                                                       ascending=[True, False])
     best.to_csv(OUT.with_name("sintesis_lenoso_resumen.csv"), index=False)
     print(f"-> {OUT.with_name('sintesis_lenoso_resumen.csv')}")
     print("\nMejor representacion por faceta. `en_banda` centra dentro de 2 grados de latitud:")
