@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "RF03 with the curve at the centre pixel only",
-  "git": "bdbf0a336e3091a79690908685e103b88cc00ca5-dirty",
+  "git": "fe8ab97c8ce62878f071a2edf079046544fe0d3d-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
@@ -26,5 +26,14 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woody": "lcbd_count_sorensen_unified_padded_woody.parquet:37c422a7f057",
+    "target:pd_inext_coverage_unified_padded_woody": "pd_inext_coverage_unified_padded_woody.parquet:d5f797c4fec8",
+    "target:td_inext_coverage_unified_padded_woody": "td_inext_coverage_unified_padded_woody.parquet:2073ef7e357d"
   }
 }

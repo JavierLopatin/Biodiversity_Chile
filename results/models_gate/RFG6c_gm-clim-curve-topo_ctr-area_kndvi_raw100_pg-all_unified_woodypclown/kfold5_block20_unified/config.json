@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta espectral: espectro, clima y fenologia juntos",
-  "git": "e2971e065aa56ea451a6c2b244f732b7725ff23a-dirty",
+  "git": "fe8ab97c8ce62878f071a2edf079046544fe0d3d-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
@@ -26,5 +26,14 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woodypclown": "lcbd_count_sorensen_unified_padded_woodypclown.parquet:3c3ce900a923",
+    "target:pd_inext_coverage_unified_padded_woodypclown": "pd_inext_coverage_unified_padded_woodypclown.parquet:3f3906502859",
+    "target:td_inext_coverage_unified_padded_woodypclown": "td_inext_coverage_unified_padded_woodypclown.parquet:bd0e6e9f0c62"
   }
 }
