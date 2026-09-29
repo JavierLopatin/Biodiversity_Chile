@@ -102,12 +102,41 @@ def make_run_id(family: str, tag: str, index: str = "", substrate: str = "",
     return "_".join(p.replace("+", "-").replace("/", "-") for p in parts if p)
 
 
+def data_fingerprints(derived: str | Path = "data/derived") -> dict[str, str]:
+    """SHA-1 of the data files whose version the run depends on beyond the code commit.
+
+    The config's ``git`` field pins the code, but not the data: curves, the unified LSP
+    table and the per-version geomedian are regenerated in place, and a run made after
+    pulling a code fix but before regenerating its outputs carries the new commit and the
+    old data. Recording the file hashes makes "which curves did this run see" answerable
+    later, on any machine, without trusting file modification times.
+    """
+    import hashlib
+    d = Path(derived)
+    sfx = os.environ.get("BIODIV_CURVES", "")
+    unified = bool(os.environ.get("BIODIV_UNIFIED"))
+    cands = {
+        "curves": d / (f"phenoshape_by_index{sfx}_unified.parquet" if unified
+                       else f"phenoshape_by_index{sfx}.parquet"),
+        "lspu": d / f"lsp_unified_v2lin{os.environ.get('BIODIV_LSPU', '')}.parquet",
+        "gmo": d / f"gm_center_{os.environ.get('BIODIV_GMO', 'nc')}.parquet",
+        "cube_lt": d / "cube_predictors_living_trees.parquet",
+    }
+    out = {}
+    for k, f in cands.items():
+        if f.exists():
+            out[k] = f"{f.name}:{hashlib.sha1(f.read_bytes()).hexdigest()[:12]}"
+    return out
+
+
 def write_run(cfg: RunConfig, oof: pd.DataFrame, per_seed: pd.DataFrame,
               pooled: pd.DataFrame, extra: dict[str, pd.DataFrame] | None = None,
               root: Path = RESULTS) -> Path:
     out = cfg.outdir(root)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "config.json").write_text(json.dumps(cfg.to_json(), indent=2, default=str))
+    meta = cfg.to_json()
+    meta["data_sha1"] = data_fingerprints()
+    (out / "config.json").write_text(json.dumps(meta, indent=2, default=str))
     oof.to_csv(out / "oof_predictions.csv", index=False)
     per_seed.to_csv(out / "per_seed_metrics.csv", index=False)
     pooled.to_csv(out / "pooled_metrics.csv", index=False)
