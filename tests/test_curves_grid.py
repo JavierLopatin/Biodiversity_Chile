@@ -106,8 +106,8 @@ def test_same_day_observations_do_not_make_the_curve_depend_on_arrival_order():
 
     `np.argsort` no es estable y `np.interp` con abscisas repetidas se queda con el punto
     que caiga ultimo, asi que la curva dependia del orden en que llegaran las filas. Afectaba
-    a 210 de las 1.082 parcelas de Parcelas-CL -- las que tienen empate de fecha-- y hacia
-    irreproducibles sus curvas raw100 publicadas.
+    a 371 de las 1.082 parcelas de Parcelas-CL -- el 34 %, las que tienen dos observaciones
+    validas el mismo dia-- y hacia irreproducibles sus curvas raw100 publicadas.
     """
     t = np.array([0.0, 10.0, 10.0, 20.0, 30.0, 40.0])
     v = np.array([0.1, 0.8, 0.2, 0.3, 0.4, 0.5])
