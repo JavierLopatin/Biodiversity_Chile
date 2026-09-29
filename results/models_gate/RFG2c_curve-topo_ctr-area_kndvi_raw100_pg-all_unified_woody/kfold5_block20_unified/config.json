@@ -26,5 +26,15 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
-  }
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woody": "lcbd_count_sorensen_unified_padded_woody.parquet:37c422a7f057",
+    "target:pd_inext_coverage_unified_padded_woody": "pd_inext_coverage_unified_padded_woody.parquet:d5f797c4fec8",
+    "target:td_inext_coverage_unified_padded_woody": "td_inext_coverage_unified_padded_woody.parquet:2073ef7e357d"
+  },
+  "data_sha1_backfill": "agregado a posteriori con el hash de los archivos actuales: la corrida se hizo despues de regenerar las curvas raw100 (logs/107_regen_67.log -> logs/107_rerun_*_RFG2.log) y antes de que runlog registrara data_sha1 (4b78fab)"
 }

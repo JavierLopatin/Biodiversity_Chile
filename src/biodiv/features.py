@@ -439,7 +439,11 @@ def _block_gm(t: Tables, ids: pd.Index, agg: str = DEFAULT_AGG) -> pd.DataFrame:
     discarded. If the fitted curve cannot beat a geomedian plus its MADs, the gain the
     project attributes to phenology was never about phenology.
     """
-    return _cube_cols(t, ids, ("gm_",), agg, "geomedian").add_prefix("gmA_")
+    # gm_count (the number of valid observations in the window) is left out: it tracks
+    # cloudiness and the source inventory, not spectra. Worth nothing in LCBD (0,463 vs
+    # 0,464) but +0,025 in hill_q0, i.e. it acts as a source/climate indicator there.
+    b = _cube_cols(t, ids, ("gm_",), agg, "geomedian")
+    return b.drop(columns=[c for c in b.columns if c.startswith("gm_count")]).add_prefix("gmA_")
 
 
 #: Suffix of the per-version geomedian table (scripts/99), read from the environment.
@@ -463,7 +467,8 @@ def _block_gm_obs(t: Tables, ids: pd.Index) -> pd.DataFrame:
     both sources through one path and for each reflectance version (original ``nc`` or
     topographically corrected). Same columns and prefix as ``gm`` at ``agg="center"``."""
     tab = _gm_obs(str(t.derived), gmo_suffix())
-    return tab.reindex(ids)[[c for c in tab.columns if c.startswith("gm_")]].add_prefix("gmA_")
+    cols = [c for c in tab.columns if c.startswith("gm_") and c != "gm_count"]  # see _block_gm
+    return tab.reindex(ids)[cols].add_prefix("gmA_")
 
 
 def _block_obscomp(t: Tables, ids: pd.Index, index: str | None = None,
