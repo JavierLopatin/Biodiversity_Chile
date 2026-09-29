@@ -369,6 +369,16 @@ def _block_area(t: Tables, ids: pd.Index) -> pd.DataFrame:
     return out
 
 
+def _block_spi(t: Tables, ids: pd.Index) -> pd.DataFrame:
+    """Drought over the causal window: SPI-12 and SPI-24 averaged over the window months
+    (scripts/91, CR2MET 1979-2021). NaN for censuses after 2021 (407 of 3,102 plots): the
+    Preprocessor imputes them with the fold median plus an _isna indicator, and that
+    indicator is also a census-year (and partly source) proxy, so read SPI runs with it."""
+    f = Path(t.derived) / "spi_unified.parquet"
+    s = pd.read_parquet(f).set_index(ID_COL).reindex(ids)
+    return s[["spi12_win_mean", "spi24_win_mean"]].add_prefix("spi_")
+
+
 def _block_coords(t: Tables, ids: pd.Index) -> pd.DataFrame:
     p = t.plots.set_index(ID_COL).reindex(ids)
     return pd.DataFrame({
@@ -589,6 +599,8 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_lsp(t, ids, index, centre=False, circular_doy=circular_doy))
         elif name == "lsp_ctr":
             parts.append(_block_lsp(t, ids, index, centre=True, circular_doy=circular_doy))
+        elif name == "spi":
+            parts.append(_block_spi(t, ids))
         elif name == "gmo":
             parts.append(_block_gm_obs(t, ids))
         elif name in ("gmomed", "gmomad", "gmoall"):

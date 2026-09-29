@@ -113,6 +113,16 @@ MODELS: dict[str, dict] = {
                   note="ablacion gm: medianas + MAD, sin gm_count"),
     "RFG5a": dict(family="RF", spec="gmoall+clim+topo+area", per_index=False, curve_px="center",
                   note="geomediano sin gm_count mas clima"),
+    # Coordinates and drought on top of the best pool spec (gm + climate), for mapping
+    # (coordinates) and as a drought test (SPI over the causal window, scripts/91).
+    "RFC1": dict(family="RF", spec="gmoall+clim+coords+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + coordenadas"),
+    "RFC2": dict(family="RF", spec="gmoall+clim+spi+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + SPI de la ventana"),
+    "RFC3": dict(family="RF", spec="gmoall+clim+coords+spi+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + coordenadas + SPI"),
+    "RFC4": dict(family="RF", spec="curve+coords+topo+area", per_index=True, curve_px="center",
+                 note="curva + coordenadas (la curva es lo que funciona en NoBosque)"),
     "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
                  note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
     "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",
