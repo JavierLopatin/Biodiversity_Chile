@@ -2,6 +2,12 @@
 
 Fecha: 2026-09-29. Estado: **propuesta, ninguna decisión tomada**.
 
+> **CORRECCIÓN (misma fecha, tras revisar `docs/10` y la literatura 2021–2026).** La primera
+> versión de este documento se escribió sin leer `docs/10_findings.md`, y por eso proponía como
+> nuevas dos cosas que este proyecto ya hizo. Ver la sección **"Lo que ya se probó aquí"** al
+> final: el GDM ya se corrió y **ganó**, y la agregación taxonómica ya se probó y **casi no
+> movió nada**. El orden recomendado cambia en consecuencia.
+
 Base: el corpus `Floristic-composition` del vault (9 papers, 2004–2021, paradigma
 ordenación + regresión), cruzado con lo medido en este repo el 2026-09-29
 (`scripts/107`, `scripts/109`, `results/tables/sintesis_lenoso_resumen.csv`).
@@ -160,3 +166,145 @@ multiestacional ayudó de forma **inconsistente** y en un sitio **empeoró** el 
 
 La 4 (multivariado) es la de mayor techo y la de mayor riesgo; la dejaría para cuando las
 primeras tres digan si la ordenación se puede arreglar.
+
+---
+
+# Lo que ya se probó aquí (y yo no había mirado)
+
+`docs/10_findings.md` §3 llegó a este mismo diagnóstico antes que yo, con los números del pool
+anterior: **57,6 % de los pares con Jaccard = 1,0 exacto**, mediana de la disimilitud
+exactamente 1,0, 70,6 % por encima de 0,9. Y sacó la conclusión correcta, que es de familia de
+modelo y no de número de ejes:
+
+> "Una ordenación lineal tiene que gastar ejes representando una distancia que dejó de variar."
+
+## GDM ya se corrió, y ganó
+
+`scripts/21_run_gdm.py`. Resultados sobre pares entre parcelas excluidas, ρ de Spearman contra
+el Jaccard observado, esquema `kfold5_owner`, 62 predictores:
+
+| | ρ |
+|---|---|
+| GDM solo distancia geográfica | +0,435 |
+| **GDM con los predictores** | **+0,492** |
+| SGDM (sCCA fold-local + GDM) | +0,436 |
+| RF sobre 8 ejes PCoA → distancia | +0,425 |
+| techo: los **2 ejes verdaderos** | +0,465 |
+| techo: los 8 ejes verdaderos | +0,530 |
+
+**El GDM desde satélite reproduce la composición observada mejor que conocer los valores
+verdaderos de los dos ejes que el proyecto modela hoy** (+0,492 contra +0,465).
+
+La razón por la que funciona es la que hace falta aquí: el enlace de GDM, `d = 1 − exp(−η)`, es
+**asintótico en 1 por construcción** (Ferrier et al. 2007), o sea que la saturación deja de ser
+un problema y pasa a ser la forma esperada del modelo. Las I-splines monótonas por predictor
+dejan además que la tasa de recambio varíe a lo largo del gradiente.
+
+**Por qué no está en el paper.** Por decisión de alcance, no por resultado: el banco de pruebas
+de agosto-2026 sobre Parcelas-CL sola (`docs/14, 16, 17`) quedó fuera del manuscrito. El GDM
+salió con él. **Esa decisión se tomó antes de que existieran el pool unificado, el control de
+coordenadas y el espectro del PCoA.**
+
+Cautela que ya venía anotada y que hoy se confirma por otra vía: la distancia geográfica sola
+da +0,435 y el aporte propio de los predictores es **+0,057**. Encaja exacto con lo medido hoy
+con `B03` — la geografía hace casi todo el trabajo, y el margen remoto real es de esa magnitud.
+
+## La agregación taxonómica ya se probó, y casi no movió nada
+
+`docs/10` §3: agregando a género (313 taxones en vez de 570), la saturación baja de 57,6 % a
+**53,0 %** y la varianza de dos ejes sube de 12,5 % a **13,4 %**.
+
+Eso rebaja mucho mi Propuesta 2. El >96 % de Harris et al. 2015 salió de una turbera con pocos
+tipos funcionales y un gradiente corto; aquí el problema no es resolución taxonómica sino
+muestrear parcelas de ~4 especies a lo largo de 26 grados de latitud. Sigue siendo posible que
+un agrupamiento **funcional** (no taxonómico) se comporte distinto, pero la evidencia local
+dice que el efecto será chico.
+
+---
+
+# Literatura 2021–2026 que el corpus del vault no cubre
+
+El corpus llega a 2021. Revisión rápida en línea, 2026-09-29.
+
+## 1. GDM tiene dos generaciones nuevas, y es el estándar continental
+
+- **Mokany et al. 2022**, *Ecography*, "Patterns and drivers of plant diversity across
+  Australia" ([10.1111/ecog.06426](https://doi.org/10.1111/ecog.06426)). **El análogo más
+  cercano a este proyecto que he encontrado**: parcelas armonizadas de múltiples fuentes a
+  escala continental (HAVPlot, 219.552 parcelas, 115.083 usadas), modelando riqueza y
+  disimilitud composicional estandarizadas a 400 m², mapeadas a ~90 m. **D² = 33,0 % y 32,7 %.**
+  Predictores más fuertes: combinación de temperatura y precipitación, luego textura de suelo y
+  heterogeneidad topográfica. Usa GDM sobre disimilitud por pares, no LCBD por parcela.
+- **White et al. 2024**, *Methods in Ecology and Evolution*, spGDMM
+  ([10.1111/2041-210X.14259](https://doi.org/10.1111/2041-210X.14259)): GDM mixto espacial, con
+  función de media que varía en el espacio y efectos aleatorios espaciales que capturan
+  dependencia que los predictores no explican.
+- **stGDMM** (arXiv [2608.05352](https://arxiv.org/abs/2608.05352), 2026): GDM conjunto
+  **espacial y temporal**, con cuantificación de incertidumbre. Directamente relevante al eje
+  de sequía y al mapa multitemporal 2000–2026.
+
+## 2. Un aviso sobre LCBD, que es nuestra faceta titular
+
+- **GDUM — Generalised Dissimilarity Uniqueness Models** (bioRxiv
+  [2025.09.28.679068](https://doi.org/10.1101/2025.09.28.679068)). Tesis: los gradientes
+  ambientales que producen cambio composicional direccional **inflan o distorsionan** la
+  relación LCBD–ambiente, porque moldean la propia matriz de disimilitud de la que sale el
+  LCBD. Las relaciones LCBD–ambiente en U que se reportan a lo largo de gradientes de elevación
+  pueden venir del muestreo y no de un mecanismo ecológico. GDUM modela a la vez el gradiente
+  de disimilitud por pares y el efecto de sitio sobre la unicidad, para separar lo direccional
+  de lo no direccional. En su caso de estudio microbiano, **tener en cuenta el gradiente de pH
+  invirtió el patrón de U a jorobado**.
+  **Por qué importa aquí:** nuestro LCBD se modela a lo largo de 26 grados de latitud, que es
+  el gradiente direccional más fuerte imaginable. El centrado dentro de banda ataca parte del
+  problema, pero no el mecanismo que describe este paper, que actúa dentro de la matriz.
+
+## 3. Embeddings de modelos fundacionales: promesa, y un aviso que nos apunta directo
+
+- **AlphaEarth Foundations** (Google DeepMind): embeddings anuales de 64 dimensiones a 10 m,
+  integrando Sentinel-1/2, Landsat, GEDI, ERA5-Land y más. Ya hay mapeo de comunidades
+  forestales con composición por especie sobre 65 millones de hectáreas.
+- **Pero**: *"Geospatial embeddings detect old-growth forests but buffered spatial validation
+  narrows their advantage over Sentinel features"* (arXiv
+  [2609.28194](https://arxiv.org/abs/2609.28194), 2026). Bajo validación cruzada **aleatoria**
+  los embeddings ganan por bastante; bajo **validación espacial con buffer** la ventaja se
+  estrecha mucho. Los autores concluyen que su superioridad aparente refleja en parte métricas
+  infladas por dependencia espacial. **Nuestro diseño es exactamente ese: bloques de 20 km.**
+- Y un segundo negativo, además en los Andes: *"Spectral indices outperform AlphaEarth
+  foundation embeddings for aboveground biomass estimation in a regenerating tropical Andean
+  forest"*.
+- Limitación dura para nosotros: AlphaEarth es anual desde ~2017. Nuestros censos van de 2003 a
+  2026 y el mapa pedido es 2000–2026. No cubre la mitad temprana.
+
+## 4. Confirmaciones del paradigma de ordenación, a escala pequeña
+
+- **Abutaha et al. 2021**, *Applied Vegetation Science*, Gebel Elba, Egipto
+  ([10.1111/avsc.12582](https://doi.org/10.1111/avsc.12582)), con Feilhauer de coautor: usan
+  **NMDS1 como la respuesta de beta** y un GAM sobre variables de DEM, SoilGrids y PlanetScope.
+  **80,6 % en NMDS1** — pero con 133 parcelas en una sola montaña árida. Confirma el paradigma
+  donde el gradiente es corto y el paisaje uno solo.
+- **Robertson et al. 2023**, *JGR Biogeosciences*
+  ([10.1029/2022JG007350](https://doi.org/10.1029/2022JG007350)): biodivMapR y especies
+  espectrales; la capacidad de detectar beta **cae con resolución espacial más gruesa**, y la
+  ventana de mapeo limita a su vez la resolución del mapa de beta. Relevante porque nosotros
+  trabajamos a 30 m con parcelas de 250–900 m².
+
+---
+
+# Orden recomendado, corregido
+
+1. **Rehacer el GDM sobre el pool unificado leñoso**, con el esquema `kfold5_block20_unified` y
+   con la geografía dentro del modelo como control (la variante `gdm_geo` ya existe). Es la
+   familia de modelo que el diagnóstico selecciona, ya está implementada aquí
+   (`scripts/21_run_gdm.py`), ya ganó una vez, y la literatura continental de 2022–2026 la
+   confirma como el estándar para este problema. **Coste bajo, valor alto, riesgo bajo.**
+2. **La métrica de preservación de información** (Feilhauer et al. 2021) como criterio común,
+   para poder comparar GDM, LCBD y ejes de ordenación en un solo marco.
+3. **Leer GDUM** antes de fijar la redacción sobre LCBD. Si su crítica aplica —y a primera
+   vista aplica—, hay que declararla aunque no se implemente.
+4. **Isomap**, ya no como primera opción sino como comparador de la ordenación, con `k` elegido
+   dentro del fold.
+5. **Ablación de SWIR**, dos corridas, para cerrar la especulación de Feilhauer et al. 2013.
+
+Lo que baja de prioridad: la agregación taxonómica (ya probada aquí, efecto chico) y los
+embeddings fundacionales (no cubren 2000–2017, y su ventaja se estrecha justo bajo el tipo de
+validación que usamos).
