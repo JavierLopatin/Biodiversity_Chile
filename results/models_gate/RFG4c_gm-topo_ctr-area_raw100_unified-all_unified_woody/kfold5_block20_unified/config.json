@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta espectral: geomediano y MAD, sin eje temporal",
-  "git": "c88a9c52b9a79d3064cefce24d526755377d649d-dirty",
+  "git": "68a6f200c7578ded4897f3653698ca2dd816f8b2-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",

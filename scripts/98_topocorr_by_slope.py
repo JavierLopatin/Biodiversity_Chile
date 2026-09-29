@@ -44,7 +44,10 @@ def main() -> None:
     rows = []
     for f in glob.glob(str(RUNS / "*" / SCHEME / "oof_predictions.csv")):
         run = Path(f).parts[-3]
-        spec = {"RFG2": "curva", "RFG7": "lsp", "RFG4": "gm"}[run[:4]]
+        spec = {"RFG2c": "curva", "RFG7c": "lsp", "RFG4oc": "gm", "RFG4ac": "gm_sin_count",
+                "RFG5ac": "gm_clima"}.get(run.split("_")[0])
+        if spec is None:
+            continue
         v = re.search(r"_raw100(nc|tcfe|tccsall|tccs|null\d)", run).group(1)
         ix = next((i for i in ("kndvi", "evi", "savi") if f"_{i}_" in run), "bandas")
         tset = "unified-all" if "unified-all" in run else "pg-all"

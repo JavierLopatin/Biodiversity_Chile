@@ -23,10 +23,12 @@ lo lee con --versions null1 null2 null3.
 
 Uso:
     python scripts/99_topocorr_null_and_gm.py
+    python scripts/99_topocorr_null_and_gm.py --draws 4 10 --suffix _b   # sorteos 4..10, sin gm
 """
 
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import sys
 from concurrent.futures import ProcessPoolExecutor
@@ -61,13 +63,20 @@ def gm_one(args):
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--draws", nargs=2, type=int, default=[1, N_DRAWS],
+                    help="primer y último sorteo (semilla 1000 + k); la semilla fija el sorteo")
+    ap.add_argument("--suffix", default="", help="sufijo del parquet de salida")
+    ap.add_argument("--no-gm", action="store_true")
+    a = ap.parse_args()
+    draws = range(a.draws[0], a.draws[1] + 1)
     o = pd.read_parquet(DERIVED / "obs_center_unified_tc.parquet")
     assert gmod.BANDS == BANDS
     F = np.column_stack([o[f"{b}_{REF}"].to_numpy() / o[b].to_numpy() for b in BANDS])
     corrected = np.isfinite(F).all(axis=1) & (np.abs(F - 1) > 0).any(axis=1)
     print(f"observaciones corregidas por {REF}: {corrected.sum()} de {len(o)}")
     idx = np.flatnonzero(corrected)
-    for k in range(1, N_DRAWS + 1):
+    for k in draws:
         rng = np.random.default_rng(1000 + k)
         Fk = np.ones_like(F)
         Fk[idx] = F[rng.permutation(idx)]
@@ -79,8 +88,10 @@ def main() -> None:
         d = np.abs(o[f"kndvi_null{k}"] - o["kndvi_nc"])[corrected]
         d0 = np.abs(o["kndvi_tcfe"] - o["kndvi_nc"])[corrected]
         print(f"  null{k}: |Δ kNDVI| mediana {np.nanmedian(d):.4f} (real {np.nanmedian(d0):.4f})")
-    keep = [ID, "source", "time"] + [f"{c}_null{k}" for k in range(1, N_DRAWS + 1) for c in BANDS + INDICES]
-    o[keep].to_parquet(DERIVED / "obs_center_unified_tcnull.parquet", index=False)
+    keep = [ID, "source", "time"] + [f"{c}_null{k}" for k in draws for c in BANDS + INDICES]
+    o[keep].to_parquet(DERIVED / f"obs_center_unified_tcnull{a.suffix}.parquet", index=False)
+    if a.no_gm:
+        return
 
     for v in VERSIONS_GM:
         cols = BANDS if v == "nc" else [f"{b}_{v}" for b in BANDS]

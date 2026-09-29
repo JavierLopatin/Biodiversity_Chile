@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta espectral: espectro mas clima",
-  "git": "b7336caad1dc7b4c0985f45a5498d943a8c22a85-dirty",
+  "git": "68a6f200c7578ded4897f3653698ca2dd816f8b2-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
