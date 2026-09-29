@@ -1,0 +1,3 @@
+scheme=kfold5_block20_unified  seeds=[0, 1, 2]  targets=unified_all
+
+  RFG6c_gm-clim-curve-topo_ctr-area_kndvi_raw100_unified-all_unified_woody kfold5_block20_unified [382.8s] hill_q0_unified=+0.435 lcbd_pa_unified=+0.427 pcoa1_pa_unified=+0.696 pcoa2_pa_unified=+0.782 lcbd_freq_unified=+0.387 pcoa1_freq_unified=+0.532 pcoa2_freq_unified=+0.525 mpd_unified=+0.237 mntd_unified=+0.102 ses_pd_unified=+0.204 ses_mpd_unified=+0.253 ses_mntd_unified=+0.124 dark_n_unified=+0.696

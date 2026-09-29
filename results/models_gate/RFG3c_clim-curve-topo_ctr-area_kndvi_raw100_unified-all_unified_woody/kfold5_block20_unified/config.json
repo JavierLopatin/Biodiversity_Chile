@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta: ambos, para ver si la fenologia suma sobre el clima",
-  "git": "c88a9c52b9a79d3064cefce24d526755377d649d-dirty",
+  "git": "2141a1eda40de7836bc6e9a0c419d1c712da3e03-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
@@ -26,5 +26,14 @@
     "scikit-learn": "1.3.1",
     "torch": "2.0.1+cu117",
     "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:unified_diversity_responses_woody": "unified_diversity_responses_woody.parquet:0bdfa9827e72",
+    "target:unified_phylo_responses_woody": "unified_phylo_responses_woody.parquet:42a4f8fd3f76",
+    "target:unified_dark_diversity_woody": "unified_dark_diversity_woody.parquet:c99719018887"
   }
 }

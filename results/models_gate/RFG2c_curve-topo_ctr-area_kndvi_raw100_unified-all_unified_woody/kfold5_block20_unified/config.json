@@ -17,7 +17,7 @@
     "px": "center"
   },
   "notes": "compuerta: fenologia, lo que el paper defiende hoy",
-  "git": "c88a9c52b9a79d3064cefce24d526755377d649d-dirty",
+  "git": "4b78fab6f78c707adc9c639babc763a5ef579187-dirty",
   "versions": {
     "python": "3.11.6",
     "numpy": "1.24.4",
