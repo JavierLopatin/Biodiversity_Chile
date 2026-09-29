@@ -48,7 +48,7 @@ def main() -> None:
                 "RFG5ac": "gm_clima"}.get(run.split("_")[0])
         if spec is None:
             continue
-        v = re.search(r"_raw100(nc|tcfe|tccsall|tccs|null\d)", run).group(1)
+        v = re.search(r"_raw100(nc|tcfe|tccsall|tccs|null\d+)", run).group(1)
         ix = next((i for i in ("kndvi", "evi", "savi") if f"_{i}_" in run), "bandas")
         tset = "unified-all" if "unified-all" in run else "pg-all"
         oof = pd.read_csv(f).merge(topo, on=ID, how="left")

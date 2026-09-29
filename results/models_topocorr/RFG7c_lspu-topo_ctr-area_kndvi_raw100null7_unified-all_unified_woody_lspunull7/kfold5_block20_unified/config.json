@@ -1,0 +1,39 @@
+{
+  "run_id": "RFG7c_lspu-topo_ctr-area_kndvi_raw100null7_unified-all_unified_woody_lspunull7",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "lspu+topo_ctr+area",
+  "substrate": "",
+  "index": "kndvi",
+  "target_set": "unified_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "compuerta LSP: metricas fenologicas unificadas, pixel central",
+  "git": "bef60eedf56b8563e13fcdac691d4198d78c8282-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100null7_unified.parquet:af77675bc33a",
+    "lspu": "lsp_unified_v2linnull7.parquet:a4bf985edbcf",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:unified_diversity_responses_woody": "unified_diversity_responses_woody.parquet:0bdfa9827e72",
+    "target:unified_phylo_responses_woody": "unified_phylo_responses_woody.parquet:42a4f8fd3f76",
+    "target:unified_dark_diversity_woody": "unified_dark_diversity_woody.parquet:c99719018887"
+  }
+}
