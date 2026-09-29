@@ -37,6 +37,17 @@ RUNS = {"climate": "RFG1c_clim-topo_ctr-area_raw100_unified-all_unified_woody",
         "phenology": "RFG2c_curve-topo_ctr-area_kndvi_raw100_unified-all_unified_woody"}
 OBS, PRE = "hill_q0_unified_obs", "hill_q0_unified_pred"
 
+#: Para la tabla, no para la figura: el mismo contraste sobre los cuatro bloques y las dos
+#: facetas. El signo del efecto depende de la faceta, asi que reportarlo solo para riqueza
+#: --que es lo que muestra la figura-- daria una conclusion al reves para composicion.
+RUNS_TABLA = dict(RUNS,
+                  geomedian="RFG4c_gm-topo_ctr-area_raw100_unified-all_unified_woody",
+                  geomedian_climate="RFG5c_gm-clim-topo_ctr-area_raw100_unified-all_unified_woody")
+TARGETS_TABLA = ["hill_q0_unified", "lcbd_pa_unified"]
+#: 120 por ano, o sea 40 por tercil. Con el umbral de 60 que usa la figura entran anos cuyo
+#: R2 dentro de un tercil es degenerado y domina cualquier promedio.
+MIN_N_TABLA = 120
+
 
 def r2(a, b):
     return 1 - ((b - a) ** 2).sum() / ((a - a.mean()) ** 2).sum()
@@ -72,8 +83,43 @@ def tercile_result(j: pd.DataFrame, run: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def tabla_terciles(j: pd.DataFrame) -> pd.DataFrame:
+    """Seco menos humedo por ano, para cada bloque y cada faceta."""
+    rows = []
+    for target in TARGETS_TABLA:
+        obs, pre = f"{target}_obs", f"{target}_pred"
+        for nombre, run in RUNS_TABLA.items():
+            f = ROOT / "results" / "models_gate" / run / "kfold5_block20_unified" / "oof_predictions.csv"
+            o = pd.read_csv(f).groupby("PlotObservationID").mean(numeric_only=True)
+            e = o.join(j[["source", "Year", "lat", "spi12_win_mean"]])
+            z = e[(e.source == "living_trees") & e[obs].notna() & e.spi12_win_mean.notna()]
+            for y, g in z.groupby("Year"):
+                if len(g) < MIN_N_TABLA:
+                    continue
+                g = g.copy()
+                g["res"] = g.spi12_win_mean - np.polyval(
+                    np.polyfit(g.lat, g.spi12_win_mean, 1), g.lat)
+                g["t"] = pd.qcut(g.res, 3, labels=[0, 1, 2])
+                r = {int(k): r2(s[obs], s[pre]) for k, s in g.groupby("t", observed=True)}
+                rows.append(dict(target=target, bloque=nombre, year=int(y), n=len(g),
+                                 seco=r[0], medio=r[1], humedo=r[2],
+                                 seco_menos_humedo=r[0] - r[2]))
+    return pd.DataFrame(rows)
+
+
 def main() -> None:
     j = load()
+    tb = tabla_terciles(j)
+    out = ROOT / "results" / "tables" / "terciles_estres.csv"
+    tb.to_csv(out, index=False)
+    res = (tb.groupby(["target", "bloque"])
+             .agg(anios=("year", "nunique"),
+                  seco_menos_humedo=("seco_menos_humedo", "mean"),
+                  anios_seco_mejor=("seco_menos_humedo", lambda s: int((s > 0).sum())))
+             .round(3))
+    print(f"-> {out}")
+    print(res.to_string())
+    print()
     fig = plt.figure(figsize=(12, 8))
     gs = fig.add_gridspec(2, 2, hspace=0.45, wspace=0.26)
 
