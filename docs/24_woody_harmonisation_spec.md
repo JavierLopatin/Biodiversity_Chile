@@ -1,7 +1,10 @@
 # Armonización del target a plantas leñosas — especificación para pop-os
 
-Fecha: 2026-09-23. Estado: **esperando el catálogo oficial de flora vascular de Chile**
-antes de fijar la lista de formas de crecimiento.
+Fecha: 2026-09-23. **Decisión cerrada el 2026-09-29** (ver la última sección): el paper usa el
+pool leñoso y la variante con hierbas pasa al suplemento como control.
+
+Estado de la lista de formas de crecimiento: **esperando el catálogo oficial de flora vascular de
+Chile** antes de fijarla.
 
 ## Por qué
 
@@ -150,6 +153,60 @@ Ninguna parcela queda sin leñosas, así que el pool conserva las 3.102.
   *Schinus polygama*/*polygamus*, *Nothofagus leonii*/*x leonii*. Verificado que ninguno
   coexiste con su par en la misma parcela, así que fusionarlos no altera la riqueza por
   parcela; sí baja el conteo del pool de 261 a 258 y quita puntas duplicadas del árbol.
+
+## DECISIÓN CERRADA (2026-09-29): el paper usa el pool leñoso
+
+El autor decidió el 2026-09-29: **el pool del paper es el armonizado a leñosas**
+(`BIODIV_TARGETS=_woody` sobre `pg_all`, variantes `_woody` de las facetas). La variante con
+hierbas pasa al suplemento como control de artefacto de protocolo, no como resultado.
+
+Lo que faltaba para decidir era el factorial completo con hierbas. Hasta el 2026-09-29 la
+variante con hierbas se había corrido **solo con la curva**, así que su TD₀ de 0,675 y su PD₀ de
+0,581 no tenían con qué compararse, y se leían como "con hierbas la fenología sí predice
+riqueza". Corrido el juego completo (pop-os, `results/models_gate/*_pg-all_unified`), la lectura
+se invierte:
+
+| spec, con hierbas | TD₀ | sin las 60 de Becerra |
+|---|---|---|
+| **área de parcela sola** (`B02c`) | **0,825** | −0,006 |
+| clima | 0,821 | −0,085 |
+| geomediano + clima | 0,807 | −0,114 |
+| LSP | 0,696 | −1,535 |
+| curva | 0,675 | −1,998 |
+| piso topografía + área | 0,674 | −1,193 |
+
+Dos cosas que este contraste añade a lo que ya decía este documento el 23-sep:
+
+1. **No es fenología ni clima: es el área de la parcela.** El área sola, un predictor que no
+   mira el satélite, es la mejor spec de todo el factorial con hierbas. Las únicas parcelas de
+   Parcelas-CL de exactamente 500 m² son las 60 de Becerra, y su TD₀ medio es 49,5 contra 6,6–8,9
+   en los demás tamaños de PCL y 7,3–7,4 en Living Trees. El área es un identificador del
+   protocolo de flora completa, no una variable ecológica.
+2. **Por eso el clima también las encuentra.** Las 60 están todas en una sola localidad
+   (Coquimbo), así que la posición basta para identificarlas y no hace falta fenología. El 0,821
+   del clima es la misma etiqueta por otra puerta.
+
+Quitando esas 60 —el 6,7 % de las 895 parcelas con TD₀— **todas** las representaciones caen a
+cero o por debajo. Un R² que vive entero en el 6,7 % de la muestra no es una relación ecológica.
+Esto reproduce por otra vía la caída de 0,815 a −0,422 que este documento ya reportaba, y la
+extiende a todos los bloques de predictores.
+
+En leñoso el artefacto no existe, y no porque se corrija: al armonizar, las parcelas de Becerra
+pasan a tener riqueza leñosa normal (6,8 contra 28,2), el contraste de protocolo desaparece y el
+R² de riqueza es ≈0 desde el principio. **El ≈0 del pool leñoso es el resultado honesto; el 0,68
+con hierbas era el artefacto.**
+
+Control versionado: `scripts/106_becerra_control.py` →
+`results/tables/control_becerra.csv` y `results/tables/td0_por_tamano_parcela.csv`.
+El factorial lleva `area_sola` como fila fija (`scripts/105_factorial.py`) para que la lectura
+falsa no pueda volver.
+
+LCBD es indiferente a la decisión. Con hierbas contra leñoso, sobre las mismas 2.499 parcelas:
+gm+clima 0,505 / 0,505 · gm 0,467 / 0,467 · piso 0,358 / 0,358 · área sola 0,322 / 0,322, y las
+cuatro que no coinciden exacto lo hacen por 0,001–0,002 (clima 0,462 / 0,460 · clima+curva
+0,481 / 0,482 · curva 0,452 / 0,450 · LSP 0,446 / 0,448) — por debajo de la desviación entre
+semillas. La composición no depende de qué formas de crecimiento se censen; la riqueza sí, y por
+eso la riqueza es donde la armonización decide.
 
 ## Qué queda bloqueado en el manuscrito hasta que esto corra
 

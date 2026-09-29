@@ -3,12 +3,19 @@
 
 Una sola tabla larga con las cuatro dimensiones que el analisis fue abriendo, y con los
 huecos declarados como filas y no como ausencias. Un hueco que no aparece es un hueco que
-nadie ve: la variante con hierbas solo se corrio con la curva, y esa ausencia estuvo
-sosteniendo la idea de que con hierbas la fenologia predice PD0 y TD0 -- cuando en lenoso,
-para PD0, el clima le gana a la curva.
+nadie ve: durante semanas la variante con hierbas se corrio SOLO con la curva, y esa ausencia
+sostuvo la idea de que con hierbas la fenologia predice riqueza.
+
+Cerrado el hueco el 2026-09-29, la idea resulto falsa. Con hierbas el area sola -- un predictor
+que no mira el satelite-- le gana a todo en riqueza (TD0 0,825 contra 0,821 del clima y 0,675
+de la curva), porque etiqueta el protocolo de flora completa de Becerra: 60 parcelas de 500 m2
+en una sola localidad, con TD0 medio 49,5 contra 6,6-8,9 en el resto. Quitando esas 60, el 6,7 %
+de la muestra, todas las representaciones caen a cero o por debajo. El detalle esta en
+`scripts/106_becerra_control.py`; aqui basta con que `area_sola` sea una fila del factorial, para
+que nadie vuelva a leer el 0,68 de la curva como fenologia.
 
 Dimensiones:
-    representacion   piso | clima | curva | lsp | gm | gm+clima | clima+curva
+    representacion   area_sola | piso | clima | curva | lsp | gm | gm+clima | clima+curva
     hierbas          con_hierbas | lenoso
     cobertura        pool | Forest | NoBosque
     estres           todas | seco | medio | humedo   (tercil de SPI residualizado
@@ -34,11 +41,11 @@ ROOT = Path(__file__).resolve().parents[1]
 DERIVED = ROOT / "data" / "derived"
 GATE = ROOT / "results" / "models_gate"
 STRATA = ROOT / "results" / "models_strata"
-UNIW = ROOT / "results" / "models_unified_woody"
 OUT = ROOT / "results" / "tables" / "factorial.csv"
 SCHEME = "kfold5_block20_unified"
 
 REPS = {
+    "area_sola":   ("B02c",  "area_raw100"),
     "piso":        ("B01c",  "topo_ctr-area_raw100"),
     "clima":       ("RFG1c", "clim-topo_ctr-area_raw100"),
     "curva":       ("RFG2c", "curve-topo_ctr-area_kndvi_raw100"),
@@ -47,11 +54,16 @@ REPS = {
     "gm_clima":    ("RFG5c", "gm-clim-topo_ctr-area_raw100"),
     "lsp":         ("RFG7c", "lspu-topo_ctr-area_kndvi_raw100"),
 }
-#: (carpeta, sufijo del run_id, cobertura, variante de hierbas). La unica corrida RF con
-#: hierbas vive en models_unified_woody y con prefijo RF03pc, no RFG2c: es de la tanda
-#: anterior a la compuerta espectral y nunca se rehizo con los demas bloques.
+#: `area_sola` no es un bloque de predictores, es el control que decide hierbas contra lenoso:
+#: con hierbas le gana a todo lo demas en riqueza sin mirar el satelite, porque el area etiqueta
+#: el protocolo de Becerra. Ver `scripts/106_becerra_control.py`. Sin esta fila, el factorial
+#: invita a leer el 0,68 de la curva como fenologia.
+
+#: (carpeta, sufijo del run_id, cobertura, variante de hierbas). Todo vive ya en models_gate con
+#: los mismos prefijos RFG: la tanda con hierbas se rehizo el 2026-09-29 bajo la compuerta
+#: espectral, asi que ya no hace falta el desvio a models_unified_woody con prefijo RF03pc.
 POOLS = [(GATE, "pg-all_unified_woody", "pool", "lenoso"),
-         (UNIW, "pg-all_unified", "pool", "con_hierbas"),
+         (GATE, "pg-all_unified", "pool", "con_hierbas"),
          (STRATA, "pg-all_unified_strat_11forest", "Forest", "lenoso"),
          (STRATA, "pg-all_unified_strat_nobosque", "NoBosque", "lenoso")]
 TARGETS = ["lcbd_count_sorensen", "pd_inext_q0", "td_inext_q0"]
@@ -94,8 +106,7 @@ def main() -> None:
     rows = []
     for carpeta, sufijo, pool, hierbas in POOLS:
         for rep, (fam, feats) in REPS.items():
-            fam_ = "RF03pc" if (hierbas == "con_hierbas" and rep == "curva") else fam
-            d = carpeta / f"{fam_}_{feats}_{sufijo}" / SCHEME / "oof_predictions.csv"
+            d = carpeta / f"{fam}_{feats}_{sufijo}" / SCHEME / "oof_predictions.csv"
             if not d.exists():
                 for t in TARGETS:
                     rows.append(dict(representacion=rep, hierbas=hierbas, cobertura=pool,
