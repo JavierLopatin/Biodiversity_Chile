@@ -136,6 +136,14 @@ MODELS: dict[str, dict] = {
                  note="gm + clima + nivel + textura GLCM 5x5"),
     "RFT4": dict(family="RF", spec="gmoall+clim+lvl5+topo+area", per_index=False, curve_px="center",
                  note="gm + clima + nivel de la ventana 5x5 (sin textura)"),
+    # Canopy height of Lang et al. 2023 (ETH, 10 m), scripts/129-130. Read within band and by
+    # stratum: pooled, D1 showed it is largely a transform of gm + climate (R2 0.83).
+    "RFE1": dict(family="RF", spec="gmoall+clim+eth+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + altura ETH (píxel, SD, ventanas)"),
+    "RFE2": dict(family="RF", spec="eth+topo+area", per_index=False, curve_px="center",
+                 note="altura ETH sola"),
+    "RFE3": dict(family="RF", spec="gmoall+clim+ethdisp+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + dispersión de altura ETH en ventanas"),
     "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
                  note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
     "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",

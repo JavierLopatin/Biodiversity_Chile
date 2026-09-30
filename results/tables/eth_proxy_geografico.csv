@@ -1,0 +1,15 @@
+predictores,respuesta,metrica,valor
+"eth_control (h, h==0, SD, n_mask)",latitud,R2_cv_bloques,0.22576722645542613
+"eth_control (h, h==0, SD, n_mask)",Forest/NoBosque,AUC_cv_bloques,0.8527175123492108
+"eth_bloque (h, SD, ventanas)",latitud,R2_cv_bloques,0.2907234168698052
+"eth_bloque (h, SD, ventanas)",Forest/NoBosque,AUC_cv_bloques,0.8600303122185955
+solo eth_h == 0,latitud,R2_cv_bloques,0.05382341241374389
+solo eth_h == 0,Forest/NoBosque,AUC_cv_bloques,0.5185895580169371
+gm (gmoall) referencia,latitud,R2_cv_bloques,0.5960624785114361
+gm (gmoall) referencia,Forest/NoBosque,AUC_cv_bloques,0.9201345299067903
+eth_isna,fuente,frac_LT_entre_enmascaradas,0.9411764705882353
+eth_isna,fuente,frac_LT_pool,0.6511927788523533
+eth_isna,latitud,mannwhitney_p,4.042589687400519e-08
+eth_isna,latitud,lat_mediana_enmascaradas,-45.06399443438405
+eth_h == 0,estrato,frac_NoBosque_entre_ceros,0.9821428571428571
+eth_h == 0,n,n_ceros,112.0

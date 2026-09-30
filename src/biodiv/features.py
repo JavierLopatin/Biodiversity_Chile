@@ -393,6 +393,20 @@ def _block_glcm(t: Tables, ids: pd.Index, kind: str, w: int) -> pd.DataFrame:
     return g[cols]
 
 
+def _block_eth(t: Tables, ids: pd.Index, disp_only: bool = False) -> pd.DataFrame:
+    """Canopy height of Lang et al. 2023 (ETH, 10 m, 2020), scripts/126 + 129: height and
+    ensemble SD at the plot pixel, and mean / sd / q10-50-90 of height (plus mean SD) in 3x3,
+    5x5 and 9x9 windows. ``eth_sd`` is PREDICTIVE UNCERTAINTY of the ensemble, not spread of
+    height within the pixel; the within-window ``_h{k}_sd`` are the structural dispersion.
+    ``ethdisp`` keeps only those dispersions. The census-to-2020 lag is left out: it is a
+    census-year proxy. 34 plots are masked (32 LT, median 45°S)."""
+    e = pd.read_parquet(Path(t.derived) / "eth_canopy_plot.parquet").set_index(ID_COL).reindex(ids)
+    e = e.drop(columns=["eth_desfase_anios"], errors="ignore")
+    if disp_only:
+        e = e[[c for c in e.columns if c.startswith("eth_h") and c.endswith("_sd")]]
+    return e
+
+
 def _block_coords(t: Tables, ids: pd.Index) -> pd.DataFrame:
     p = t.plots.set_index(ID_COL).reindex(ids)
     return pd.DataFrame({
@@ -667,6 +681,8 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_seas(t, ids, index=None, agg=agg))
         elif name in ("tex5", "tex3", "lvl5", "lvl3"):
             parts.append(_block_glcm(t, ids, name[:3], int(name[3])))
+        elif name in ("eth", "ethdisp"):
+            parts.append(_block_eth(t, ids, disp_only=name == "ethdisp"))
         elif name == "svh":
             parts.append(_block_svh(t, ids))
         elif name == "clim":
