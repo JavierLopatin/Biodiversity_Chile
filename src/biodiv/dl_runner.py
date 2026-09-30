@@ -99,7 +99,10 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
         params=dict(rotation=rotation, normalize=normalize, ctx=ctx_spec, px=px,
                     loss=cfg_t.loss, lr=cfg_t.lr, batch_size=cfg_t.batch_size,
                     max_epochs=cfg_t.max_epochs, patience=cfg_t.patience,
-                    augment=cfg_t.augment, mixup=cfg_t.mixup),
+                    augment=cfg_t.augment, mixup=cfg_t.mixup,
+                    **(dict(coral_lambda=cfg_t.coral_lambda,
+                            coral_ramp_epochs=cfg_t.coral_ramp_epochs,
+                            coral_bn_update=cfg_t.coral_bn_update) if cfg_t.coral else {})),
         notes=notes)
     if runlog.already_done(cfg, out_root) and not force:
         print(f"  [skip] {run_id} / {scheme}")
@@ -207,7 +210,10 @@ def run_dl(*, family: str, run_id: str, scheme: str, substrate: str = "curve1d",
 
             model, hist, resid_val = train_one_fold(
                 model, ds(ifit, True), ds(ival, False), cfg_t, seed=seed,
-                use_patch=(fusion in ("patch", "patchctx")), verbose=verbose)
+                use_patch=(fusion in ("patch", "patchctx")), verbose=verbose,
+                # Deep CORAL is transductive: the outer test block's predictors, never
+                # its targets (the loss reads only the embedding).
+                ds_target=ds(ite, False) if cfg_t.coral else None)
             pred_s = predict(model, ds(ite, False), cfg_t,
                              use_patch=(fusion in ("patch", "patchctx")))
 

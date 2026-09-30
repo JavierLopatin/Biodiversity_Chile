@@ -114,6 +114,11 @@ def _variant_tags(args, eff: dict) -> list[str]:
             tags.append(f"{name.replace('_', '')[:4]}{v:g}".replace(".", "").replace("-", "m"))
     if getattr(args, "seed_start", 0):
         tags.append(f"s{args.seed_start}")
+    if getattr(args, "coral_lambda", None) is not None:
+        # Deep CORAL arm: lambda and whether the target pass updates the BatchNorm running
+        # stats (AdaBN) or not. lambda = 0 is its own control, not the run without --coral.
+        tags.append(f"coral{args.coral_lambda:g}".replace(".", "")
+                    + ("bnupd" if args.coral_bn_update else ""))
     if getattr(args, "init_from", None):
         # el checkpoint entero, no un "mae" plano. Tres preentrenamientos distintos con la
         # misma etiqueta colisionan en un unico run_id: dos se pisan y el tercero sale
@@ -160,7 +165,10 @@ def run(substrate: str, index: str | None, args, width: str | None = None,
                    augment=eff["augment"], mixup=eff["mixup"],
                    aug=dict(jitter_sd=args.jitter_sd, amp=args.aug_amp,
                             baseline=args.aug_baseline, noise=args.aug_noise,
-                            slope=args.aug_slope, prob=args.aug_prob))
+                            slope=args.aug_slope, prob=args.aug_prob),
+                   coral=args.coral_lambda is not None,
+                   coral_lambda=args.coral_lambda or 0.0,
+                   coral_bn_update=args.coral_bn_update)
     if args.px == "center":
         ident += "_ctr"
     run_dl(family=fam, run_id=ident, scheme=args.scheme, substrate=substrate, index=index,
@@ -264,6 +272,11 @@ def main() -> None:
                    help="checkpoint from scripts/31_pretrain_mae.py. Loads the pretrained "
                         "trunk; everything else about the run is unchanged, so the "
                         "comparison against the same run without it isolates pretraining")
+    p.add_argument("--coral-lambda", type=float, default=None, dest="coral_lambda",
+                   help="Deep CORAL on the pooled curve embedding, transductive on the "
+                        "outer test block; 0 is the same-path control")
+    p.add_argument("--coral-bn-update", action="store_true", dest="coral_bn_update",
+                   help="let the target pass update BatchNorm running stats (AdaBN)")
     p.add_argument("--force", action="store_true")
     p.add_argument("--count-params", action="store_true")
     p.add_argument("--shapes", action="store_true")
