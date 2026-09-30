@@ -1,0 +1,39 @@
+{
+  "run_id": "RFE1c_gmoall-clim-eth-topo_ctr-area_raw100_pg-all_unified_woody_gmonc",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "gmoall+clim+eth+topo_ctr+area",
+  "substrate": "",
+  "index": "",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "gm + clima + altura ETH (p\u00edxel, SD, ventanas)",
+  "git": "76c328df5c3e238815a12db31b8ef6fba841da5b-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woody": "lcbd_count_sorensen_unified_padded_woody.parquet:37c422a7f057",
+    "target:pd_inext_coverage_unified_padded_woody": "pd_inext_coverage_unified_padded_woody.parquet:d5f797c4fec8",
+    "target:td_inext_coverage_unified_padded_woody": "td_inext_coverage_unified_padded_woody.parquet:2073ef7e357d"
+  }
+}

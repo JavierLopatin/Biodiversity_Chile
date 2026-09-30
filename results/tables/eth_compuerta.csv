@@ -1,0 +1,1249 @@
+tipo,familia,target,etiqueta,lectura,valor,DE
+modelo,pg-all,lcbd_count_sorensen,B03,todas,0.43679421242756056,0.002925432749634416
+modelo,pg-all,lcbd_count_sorensen,B03,banda,0.10934587431098619,0.00492962089900605
+modelo,pg-all,lcbd_count_sorensen,B03,Forest,0.176691281687641,0.0074937855727942836
+modelo,pg-all,lcbd_count_sorensen,B03,Forest_banda,0.084769071956171,0.005898189946323081
+modelo,pg-all,lcbd_count_sorensen,B03,NoBosque_30-35,-0.18868588316096316,0.06202072569211807
+modelo,pg-all,lcbd_count_sorensen,B03,NoBosque_30-35_banda,0.1016238050550643,0.042529434661507826
+modelo,pg-all,lcbd_count_sorensen,B03,NoBosque_>35,-0.028420119481869954,0.035346006795036494
+modelo,pg-all,lcbd_count_sorensen,B03,NoBosque_>35_banda,0.07373346529404334,0.00971326424242091
+modelo,pg-all,lcbd_count_sorensen,B01,todas,0.35484998393918915,0.004636526690961559
+modelo,pg-all,lcbd_count_sorensen,B01,banda,0.031703970982901675,0.003766344868022311
+modelo,pg-all,lcbd_count_sorensen,B01,Forest,0.0911022887617633,0.020438291268709382
+modelo,pg-all,lcbd_count_sorensen,B01,Forest_banda,0.03041798228308183,0.004068368962328509
+modelo,pg-all,lcbd_count_sorensen,B01,NoBosque_30-35,-1.6487423512485149,0.1488289926247486
+modelo,pg-all,lcbd_count_sorensen,B01,NoBosque_30-35_banda,-0.8180686926120441,0.044604014217588306
+modelo,pg-all,lcbd_count_sorensen,B01,NoBosque_>35,-0.03047996911397166,0.021426901247711006
+modelo,pg-all,lcbd_count_sorensen,B01,NoBosque_>35_banda,0.004718350319104873,0.004807585296160435
+modelo,pg-all,lcbd_count_sorensen,RFG5a,todas,0.5005601326333647,0.001354326332235464
+modelo,pg-all,lcbd_count_sorensen,RFG5a,banda,0.20802933844675708,0.0040675532588026345
+modelo,pg-all,lcbd_count_sorensen,RFG5a,Forest,0.23394647287004636,0.006428016748829729
+modelo,pg-all,lcbd_count_sorensen,RFG5a,Forest_banda,0.14282032681907839,0.005307481073076274
+modelo,pg-all,lcbd_count_sorensen,RFG5a,NoBosque_30-35,0.2232862594477862,0.07300998529710112
+modelo,pg-all,lcbd_count_sorensen,RFG5a,NoBosque_30-35_banda,0.2173204264096721,0.06066167495620585
+modelo,pg-all,lcbd_count_sorensen,RFG5a,NoBosque_>35,0.16912372270846734,0.023083831696975976
+modelo,pg-all,lcbd_count_sorensen,RFG5a,NoBosque_>35_banda,0.15613330331412212,0.011537932966778977
+modelo,pg-all,lcbd_count_sorensen,RFE1,todas,0.5071209596175136,0.0003608323455146821
+modelo,pg-all,lcbd_count_sorensen,RFE1,banda,0.21919616025152858,0.0028144543931060383
+modelo,pg-all,lcbd_count_sorensen,RFE1,Forest,0.2437616939267974,0.006277841670638221
+modelo,pg-all,lcbd_count_sorensen,RFE1,Forest_banda,0.15353741071622504,0.004975997095440548
+modelo,pg-all,lcbd_count_sorensen,RFE1,NoBosque_30-35,0.22072707061621522,0.08005365971103624
+modelo,pg-all,lcbd_count_sorensen,RFE1,NoBosque_30-35_banda,0.2310005083661583,0.05712990408150389
+modelo,pg-all,lcbd_count_sorensen,RFE1,NoBosque_>35,0.1838201619298807,0.020453479112375494
+modelo,pg-all,lcbd_count_sorensen,RFE1,NoBosque_>35_banda,0.17568915829841894,0.009232348170450553
+modelo,pg-all,lcbd_count_sorensen,RFE2,todas,0.41554233610828356,0.0036559365890678334
+modelo,pg-all,lcbd_count_sorensen,RFE2,banda,0.1021115464054108,0.003672947722903633
+modelo,pg-all,lcbd_count_sorensen,RFE2,Forest,0.13815440509434393,0.012305119178477882
+modelo,pg-all,lcbd_count_sorensen,RFE2,Forest_banda,0.07051727489829114,0.004296694892986897
+modelo,pg-all,lcbd_count_sorensen,RFE2,NoBosque_30-35,-0.5685363277968948,0.0950726071909395
+modelo,pg-all,lcbd_count_sorensen,RFE2,NoBosque_30-35_banda,-0.4094790579808098,0.05031786196030911
+modelo,pg-all,lcbd_count_sorensen,RFE2,NoBosque_>35,0.035839754926212906,0.01855796672185445
+modelo,pg-all,lcbd_count_sorensen,RFE2,NoBosque_>35_banda,0.0523367861846293,0.002450162726989692
+modelo,pg-all,lcbd_count_sorensen,RFE3,todas,0.5012407391699006,0.0011938425951795147
+modelo,pg-all,lcbd_count_sorensen,RFE3,banda,0.20955447250191758,0.004149191765385589
+modelo,pg-all,lcbd_count_sorensen,RFE3,Forest,0.23523740273002894,0.006098227549567222
+modelo,pg-all,lcbd_count_sorensen,RFE3,Forest_banda,0.1439755967097863,0.004755745596468229
+modelo,pg-all,lcbd_count_sorensen,RFE3,NoBosque_30-35,0.21323133516436887,0.06564117309414569
+modelo,pg-all,lcbd_count_sorensen,RFE3,NoBosque_30-35_banda,0.22032636856969137,0.03914649590851686
+modelo,pg-all,lcbd_count_sorensen,RFE3,NoBosque_>35,0.1717208983188028,0.017375337619902734
+modelo,pg-all,lcbd_count_sorensen,RFE3,NoBosque_>35_banda,0.16066786157609705,0.008167888572080924
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,todas,0.006560826984148875,0.0012864570270274328
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,banda,0.011166821804771502,0.0024582138529571826
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,Forest,0.009815221056751033,0.0013439691386212837
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,Forest_banda,0.010717083897146651,0.0025303378291924006
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,NoBosque_30-35,-0.0025591888315709874,0.007097135645246302
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,NoBosque_30-35_banda,0.013680081956486179,0.010877707283747833
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,NoBosque_>35,0.014696439221413357,0.003972743849760286
+par,pg-all,lcbd_count_sorensen,RFE1 − RFG5a,NoBosque_>35_banda,0.019555854984296833,0.0035755648875667764
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,todas,0.0006806065365360103,0.0003529206081369375
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,banda,0.0015251340551604893,0.0012340182584357651
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,Forest,0.0012909298599825814,0.0003848646155012925
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,Forest_banda,0.0011552698907079106,0.001167612031972466
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,NoBosque_30-35,-0.01005492428341733,0.015991143244887714
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,NoBosque_30-35_banda,0.0030059421600192593,0.023129035800789066
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,NoBosque_>35,0.002597175610335456,0.005813081294110751
+par,pg-all,lcbd_count_sorensen,RFE3 − RFG5a,NoBosque_>35_banda,0.004534558261974945,0.004575886791753297
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,todas,0.06069235216909452,0.001145705484889807
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,banda,0.07040757542250912,0.0005698291654359234
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,Forest,0.04705211633258063,0.008478100494523718
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,Forest_banda,0.040099292615209316,0.002072768725879317
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,NoBosque_30-35,1.08020602345162,0.08946160128550541
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,NoBosque_30-35_banda,0.4085896346312343,0.010151639825825228
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,NoBosque_>35,0.06631972404018456,0.007089910881100614
+par,pg-all,lcbd_count_sorensen,RFE2 − B01,NoBosque_>35_banda,0.047618435865524424,0.005313721591911311
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,todas,0.07032674718995302,0.002954361918419456
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,banda,0.1098502859405424,0.0042357872971667595
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,Forest,0.0670704122391564,0.00121600785097301
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,Forest_banda,0.06876833876005402,0.005572082139092417
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,NoBosque_30-35,0.4094129537771784,0.01869723032630435
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,NoBosque_30-35_banda,0.129376703311094,0.014938324127999711
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,NoBosque_>35,0.21224028141175066,0.018920379513106763
+par,pg-all,lcbd_count_sorensen,RFE1 − B03,NoBosque_>35_banda,0.10195569300437561,0.006406131910540702
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,todas,0.06376592020580414,0.001710182596260585
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,banda,0.09868346413577089,0.0019554194906467293
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,Forest,0.05725519118240537,0.0017968245457073227
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,Forest_banda,0.058051254862907374,0.0032048204621841327
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,NoBosque_30-35,0.4119721426087494,0.012280745803167493
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,NoBosque_30-35_banda,0.11569662135460783,0.02180722130878344
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,NoBosque_>35,0.1975438421903373,0.014947687289655304
+par,pg-all,lcbd_count_sorensen,RFG5a − B03,NoBosque_>35_banda,0.08239983802007878,0.004799825592929995
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,todas,-0.02125187631927694,0.0063024796164345585
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,banda,-0.0072343279055753955,0.007150887543105195
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,Forest,-0.038536876593297076,0.0060363163441480095
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,Forest_banda,-0.014251797057879859,0.007959043652405535
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,NoBosque_30-35,-0.3798504446359316,0.03331112546986882
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,NoBosque_30-35_banda,-0.511102863035874,0.008536458666888933
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,NoBosque_>35,0.06425987440808285,0.028569496738247383
+par,pg-all,lcbd_count_sorensen,RFE2 − B03,NoBosque_>35_banda,-0.021396679109414046,0.008498150564457409
+modelo,pg-all,td_inext_q0,B03,todas,0.024548702547358563,0.008074322685330697
+modelo,pg-all,td_inext_q0,B03,banda,-0.012493429824210311,0.006408054402495533
+modelo,pg-all,td_inext_q0,B03,Forest,0.012592738355714913,0.005965877458358356
+modelo,pg-all,td_inext_q0,B03,Forest_banda,0.0013007168794941422,0.0040202941272699765
+modelo,pg-all,td_inext_q0,B03,NoBosque_30-35,0.017958513694694183,0.0733907202114487
+modelo,pg-all,td_inext_q0,B03,NoBosque_30-35_banda,-0.12915203830473518,0.08843040888294039
+modelo,pg-all,td_inext_q0,B03,NoBosque_>35,0.03340042367374285,0.06402248528209434
+modelo,pg-all,td_inext_q0,B03,NoBosque_>35_banda,0.06131800025338722,0.04349290140288235
+modelo,pg-all,td_inext_q0,B01,todas,-0.03557011783973126,0.024613631862424358
+modelo,pg-all,td_inext_q0,B01,banda,-0.05664216671604808,0.024177011238102366
+modelo,pg-all,td_inext_q0,B01,Forest,-0.028337532017830142,0.01686823105712941
+modelo,pg-all,td_inext_q0,B01,Forest_banda,-0.024230392660496314,0.012100139436449801
+modelo,pg-all,td_inext_q0,B01,NoBosque_30-35,-0.15361877313512395,0.10965818844554534
+modelo,pg-all,td_inext_q0,B01,NoBosque_30-35_banda,-0.2752173782231287,0.13543992792430487
+modelo,pg-all,td_inext_q0,B01,NoBosque_>35,-0.07704445498032486,0.0625642309451515
+modelo,pg-all,td_inext_q0,B01,NoBosque_>35_banda,-0.06098660929027622,0.03947595710106347
+modelo,pg-all,td_inext_q0,RFG5a,todas,-0.0030344790893083915,0.016275768260824407
+modelo,pg-all,td_inext_q0,RFG5a,banda,-0.036244800734626104,0.016825840598330807
+modelo,pg-all,td_inext_q0,RFG5a,Forest,0.01529263788601339,0.006972654931461604
+modelo,pg-all,td_inext_q0,RFG5a,Forest_banda,0.007972669071167338,0.004207753197700717
+modelo,pg-all,td_inext_q0,RFG5a,NoBosque_30-35,-0.1935288426143905,0.10292492610627808
+modelo,pg-all,td_inext_q0,RFG5a,NoBosque_30-35_banda,-0.3604163604672697,0.13298911894414137
+modelo,pg-all,td_inext_q0,RFG5a,NoBosque_>35,-0.02109699758796883,0.047115055748471385
+modelo,pg-all,td_inext_q0,RFG5a,NoBosque_>35_banda,-0.021905623406047365,0.04277811860489373
+modelo,pg-all,td_inext_q0,RFE1,todas,-0.012116255535241168,0.020602418890895577
+modelo,pg-all,td_inext_q0,RFE1,banda,-0.045929186133171575,0.020762888970361045
+modelo,pg-all,td_inext_q0,RFE1,Forest,0.0015383158010106406,0.00882835672487512
+modelo,pg-all,td_inext_q0,RFE1,Forest_banda,-0.005750930170678292,0.006727722261355667
+modelo,pg-all,td_inext_q0,RFE1,NoBosque_30-35,-0.17539027375854724,0.11754511827541958
+modelo,pg-all,td_inext_q0,RFE1,NoBosque_30-35_banda,-0.3422637948785154,0.14500543160709706
+modelo,pg-all,td_inext_q0,RFE1,NoBosque_>35,-0.025720484988096353,0.06525978309686382
+modelo,pg-all,td_inext_q0,RFE1,NoBosque_>35_banda,-0.020953604707094436,0.04734891302166166
+modelo,pg-all,td_inext_q0,RFE2,todas,-0.05572039701976661,0.022036039737583717
+modelo,pg-all,td_inext_q0,RFE2,banda,-0.08426675803538101,0.02284599801750261
+modelo,pg-all,td_inext_q0,RFE2,Forest,-0.03732830657772027,0.016049231786336295
+modelo,pg-all,td_inext_q0,RFE2,Forest_banda,-0.038879456774032185,0.013091475432216566
+modelo,pg-all,td_inext_q0,RFE2,NoBosque_30-35,-0.2475292782257473,0.09305760206657397
+modelo,pg-all,td_inext_q0,RFE2,NoBosque_30-35_banda,-0.4012352516642212,0.11852958157894164
+modelo,pg-all,td_inext_q0,RFE2,NoBosque_>35,-0.0868537436209759,0.05996490138489391
+modelo,pg-all,td_inext_q0,RFE2,NoBosque_>35_banda,-0.07689129544160071,0.03326693728102877
+modelo,pg-all,td_inext_q0,RFE3,todas,0.0007626007214197594,0.0156740743311419
+modelo,pg-all,td_inext_q0,RFE3,banda,-0.03344385634170203,0.015356572709620578
+modelo,pg-all,td_inext_q0,RFE3,Forest,0.013885221048474264,0.00889465569438755
+modelo,pg-all,td_inext_q0,RFE3,Forest_banda,0.005911206317694188,0.006042405971124607
+modelo,pg-all,td_inext_q0,RFE3,NoBosque_30-35,-0.15602592541240945,0.08153308283065884
+modelo,pg-all,td_inext_q0,RFE3,NoBosque_30-35_banda,-0.32206525163469085,0.10643245005332191
+modelo,pg-all,td_inext_q0,RFE3,NoBosque_>35,-0.021178064736613617,0.047847148449711926
+modelo,pg-all,td_inext_q0,RFE3,NoBosque_>35_banda,-0.02383296543139013,0.03545911798201732
+par,pg-all,td_inext_q0,RFE1 − RFG5a,todas,-0.009081776445932777,0.006516973920154096
+par,pg-all,td_inext_q0,RFE1 − RFG5a,banda,-0.009684385398545473,0.007345995331491761
+par,pg-all,td_inext_q0,RFE1 − RFG5a,Forest,-0.013754322085002749,0.002204293851139376
+par,pg-all,td_inext_q0,RFE1 − RFG5a,Forest_banda,-0.01372359924184563,0.0028921797426434965
+par,pg-all,td_inext_q0,RFE1 − RFG5a,NoBosque_30-35,0.018138568855843234,0.03630776432771101
+par,pg-all,td_inext_q0,RFE1 − RFG5a,NoBosque_30-35_banda,0.01815256558875437,0.042916980275715506
+par,pg-all,td_inext_q0,RFE1 − RFG5a,NoBosque_>35,-0.004623487400127524,0.03826072329001141
+par,pg-all,td_inext_q0,RFE1 − RFG5a,NoBosque_>35_banda,0.0009520186989529315,0.037589533476315974
+par,pg-all,td_inext_q0,RFE3 − RFG5a,todas,0.003797079810728151,0.00309566874794648
+par,pg-all,td_inext_q0,RFE3 − RFG5a,banda,0.0028009443929240727,0.003581652339388045
+par,pg-all,td_inext_q0,RFE3 − RFG5a,Forest,-0.0014074168375391254,0.002033608916924454
+par,pg-all,td_inext_q0,RFE3 − RFG5a,Forest_banda,-0.0020614627534731498,0.00197169641346276
+par,pg-all,td_inext_q0,RFE3 − RFG5a,NoBosque_30-35,0.03750291720198103,0.02266132839470629
+par,pg-all,td_inext_q0,RFE3 − RFG5a,NoBosque_30-35_banda,0.038351108832578897,0.0281217226107138
+par,pg-all,td_inext_q0,RFE3 − RFG5a,NoBosque_>35,-8.106714864479041e-05,0.030033572162481186
+par,pg-all,td_inext_q0,RFE3 − RFG5a,NoBosque_>35_banda,-0.0019273420253427636,0.03214701003838765
+par,pg-all,td_inext_q0,RFE2 − B01,todas,-0.02015027918003535,0.00391913823157386
+par,pg-all,td_inext_q0,RFE2 − B01,banda,-0.027624591319332925,0.0028788872731425838
+par,pg-all,td_inext_q0,RFE2 − B01,Forest,-0.008990774559890133,0.0027719455307593996
+par,pg-all,td_inext_q0,RFE2 − B01,Forest_banda,-0.014649064113535873,0.0012838083387004043
+par,pg-all,td_inext_q0,RFE2 − B01,NoBosque_30-35,-0.09391050509062333,0.023153673917265916
+par,pg-all,td_inext_q0,RFE2 − B01,NoBosque_30-35_banda,-0.12601787344109247,0.027946069925668927
+par,pg-all,td_inext_q0,RFE2 − B01,NoBosque_>35,-0.00980928864065104,0.00656626385904742
+par,pg-all,td_inext_q0,RFE2 − B01,NoBosque_>35_banda,-0.015904686151324492,0.010320255210283853
+par,pg-all,td_inext_q0,RFE1 − B03,todas,-0.03666495808259973,0.015372136577975145
+par,pg-all,td_inext_q0,RFE1 − B03,banda,-0.03343575630896126,0.014526312284735957
+par,pg-all,td_inext_q0,RFE1 − B03,Forest,-0.011054422554704272,0.011939191465834631
+par,pg-all,td_inext_q0,RFE1 − B03,Forest_banda,-0.007051647050172434,0.010315355793007
+par,pg-all,td_inext_q0,RFE1 − B03,NoBosque_30-35,-0.19334878745324144,0.045134021729643814
+par,pg-all,td_inext_q0,RFE1 − B03,NoBosque_30-35_banda,-0.2131117565737802,0.05795087031177842
+par,pg-all,td_inext_q0,RFE1 − B03,NoBosque_>35,-0.0591209086618392,0.02242214510513047
+par,pg-all,td_inext_q0,RFE1 − B03,NoBosque_>35_banda,-0.08227160496048165,0.02173062046110472
+par,pg-all,td_inext_q0,RFG5a − B03,todas,-0.027583181636666954,0.01348975697755614
+par,pg-all,td_inext_q0,RFG5a − B03,banda,-0.023751370910415792,0.011736421542130214
+par,pg-all,td_inext_q0,RFG5a − B03,Forest,0.0026998995302984774,0.009734905404458958
+par,pg-all,td_inext_q0,RFG5a − B03,Forest_banda,0.006671952191673196,0.007485418228654041
+par,pg-all,td_inext_q0,RFG5a − B03,NoBosque_30-35,-0.21148735630908466,0.045702960827681306
+par,pg-all,td_inext_q0,RFG5a − B03,NoBosque_30-35_banda,-0.23126432216253456,0.06263103758776849
+par,pg-all,td_inext_q0,RFG5a − B03,NoBosque_>35,-0.05449742126171168,0.053713956658026064
+par,pg-all,td_inext_q0,RFG5a − B03,NoBosque_>35_banda,-0.08322362365943459,0.05325579086573105
+par,pg-all,td_inext_q0,RFE2 − B03,todas,-0.08026909956712518,0.014373475776170373
+par,pg-all,td_inext_q0,RFE2 − B03,banda,-0.0717733282111707,0.01646919549861576
+par,pg-all,td_inext_q0,RFE2 − B03,Forest,-0.04992104493343519,0.015316373536706316
+par,pg-all,td_inext_q0,RFE2 − B03,Forest_banda,-0.04018017365352633,0.016395164494652923
+par,pg-all,td_inext_q0,RFE2 − B03,NoBosque_30-35,-0.2654877919204415,0.019843003543300652
+par,pg-all,td_inext_q0,RFE2 − B03,NoBosque_30-35_banda,-0.272083213359486,0.03394295631813986
+par,pg-all,td_inext_q0,RFE2 − B03,NoBosque_>35,-0.12025416729471876,0.01358964401813066
+par,pg-all,td_inext_q0,RFE2 − B03,NoBosque_>35_banda,-0.13820929569498794,0.02249639233496572
+modelo,pg-all,pd_inext_q0,B03,todas,0.08192466917712,0.009842545684761422
+modelo,pg-all,pd_inext_q0,B03,banda,-0.009953333107191412,0.010276721746968153
+modelo,pg-all,pd_inext_q0,B03,Forest,0.13229930344357144,0.009293351672610568
+modelo,pg-all,pd_inext_q0,B03,Forest_banda,0.02787049691932238,0.010589149947896849
+modelo,pg-all,pd_inext_q0,B03,NoBosque_30-35,-0.5490428265465853,0.06239819830356396
+modelo,pg-all,pd_inext_q0,B03,NoBosque_30-35_banda,-0.44706669729751264,0.035081247986091385
+modelo,pg-all,pd_inext_q0,B03,NoBosque_>35,0.08601458763671432,0.014294015970085241
+modelo,pg-all,pd_inext_q0,B03,NoBosque_>35_banda,0.04572351020959198,0.012131300632483683
+modelo,pg-all,pd_inext_q0,B01,todas,0.03911358215821933,0.00280392563243334
+modelo,pg-all,pd_inext_q0,B01,banda,-0.04803865264828433,0.0029445484869893477
+modelo,pg-all,pd_inext_q0,B01,Forest,0.06901217938328974,0.0027968355974232104
+modelo,pg-all,pd_inext_q0,B01,Forest_banda,-0.01628128504186647,0.001418456056534193
+modelo,pg-all,pd_inext_q0,B01,NoBosque_30-35,-0.20270670554134015,0.050482399003509135
+modelo,pg-all,pd_inext_q0,B01,NoBosque_30-35_banda,-0.25451720898509334,0.029231943298175824
+modelo,pg-all,pd_inext_q0,B01,NoBosque_>35,-0.2170689607588631,0.01217668265541837
+modelo,pg-all,pd_inext_q0,B01,NoBosque_>35_banda,-0.27713333794215633,0.015847429792570953
+modelo,pg-all,pd_inext_q0,RFG5a,todas,0.12993738798165688,0.006768687351874585
+modelo,pg-all,pd_inext_q0,RFG5a,banda,0.025834262004985915,0.006927960336619303
+modelo,pg-all,pd_inext_q0,RFG5a,Forest,0.149064039896605,0.007903853562167037
+modelo,pg-all,pd_inext_q0,RFG5a,Forest_banda,0.04746473525996068,0.00836488465046615
+modelo,pg-all,pd_inext_q0,RFG5a,NoBosque_30-35,-0.059917499417421416,0.024472541562510657
+modelo,pg-all,pd_inext_q0,RFG5a,NoBosque_30-35_banda,-0.16092322961392527,0.027233150944640416
+modelo,pg-all,pd_inext_q0,RFG5a,NoBosque_>35,0.01709568978316182,0.00837742804479285
+modelo,pg-all,pd_inext_q0,RFG5a,NoBosque_>35_banda,-0.03699817836015303,0.016869455348116024
+modelo,pg-all,pd_inext_q0,RFE1,todas,0.12937630219790186,0.008916676745318725
+modelo,pg-all,pd_inext_q0,RFE1,banda,0.024427219081738578,0.00832746651102603
+modelo,pg-all,pd_inext_q0,RFE1,Forest,0.15312430133169364,0.00884903057610188
+modelo,pg-all,pd_inext_q0,RFE1,Forest_banda,0.051384271507593615,0.008135270869918576
+modelo,pg-all,pd_inext_q0,RFE1,NoBosque_30-35,-0.09960482059418152,0.009790632412927016
+modelo,pg-all,pd_inext_q0,RFE1,NoBosque_30-35_banda,-0.20672366652653804,0.008425874590638207
+modelo,pg-all,pd_inext_q0,RFE1,NoBosque_>35,-0.012839081843509495,0.010297122614696095
+modelo,pg-all,pd_inext_q0,RFE1,NoBosque_>35_banda,-0.07479892507732955,0.007269760845472035
+modelo,pg-all,pd_inext_q0,RFE2,todas,0.06659387750329908,0.005689748186403506
+modelo,pg-all,pd_inext_q0,RFE2,banda,-0.02622288503475086,0.006255008379813545
+modelo,pg-all,pd_inext_q0,RFE2,Forest,0.09209466394180192,0.004791115530896357
+modelo,pg-all,pd_inext_q0,RFE2,Forest_banda,0.0020328115113078526,0.005779709597090659
+modelo,pg-all,pd_inext_q0,RFE2,NoBosque_30-35,-0.1537578524253307,0.019065829952750947
+modelo,pg-all,pd_inext_q0,RFE2,NoBosque_30-35_banda,-0.2534501321325722,0.00825125450468398
+modelo,pg-all,pd_inext_q0,RFE2,NoBosque_>35,-0.13198178630827573,0.008097296548949464
+modelo,pg-all,pd_inext_q0,RFE2,NoBosque_>35_banda,-0.21749660451751804,0.027653907110573004
+modelo,pg-all,pd_inext_q0,RFE3,todas,0.1279323802955202,0.005489892662200807
+modelo,pg-all,pd_inext_q0,RFE3,banda,0.02383841413941834,0.005004208572934937
+modelo,pg-all,pd_inext_q0,RFE3,Forest,0.1473979486751852,0.004722925567143517
+modelo,pg-all,pd_inext_q0,RFE3,Forest_banda,0.04589295518326445,0.004627110373375241
+modelo,pg-all,pd_inext_q0,RFE3,NoBosque_30-35,-0.08239222518877994,0.02492671784982032
+modelo,pg-all,pd_inext_q0,RFE3,NoBosque_30-35_banda,-0.18479613311307622,0.023035825202794888
+modelo,pg-all,pd_inext_q0,RFE3,NoBosque_>35,0.04450955958513406,0.00496107582639228
+modelo,pg-all,pd_inext_q0,RFE3,NoBosque_>35_banda,-0.01764975903728838,0.014529796083201377
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,todas,-0.000561085783755022,0.002148018279484447
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,banda,-0.001407042923247337,0.0014189823379923976
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,Forest,0.004060261435088641,0.002485349150746622
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,Forest_banda,0.003919536247632934,0.0024767008586089653
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,NoBosque_30-35,-0.039687321176760104,0.02292586135017777
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,NoBosque_30-35_banda,-0.04580043691261274,0.02321002264710287
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,NoBosque_>35,-0.029934771626671314,0.01211361344906804
+par,pg-all,pd_inext_q0,RFE1 − RFG5a,NoBosque_>35_banda,-0.037800746717176516,0.015916176585730413
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,todas,-0.0020050076861366875,0.0016166242317229222
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,banda,-0.0019958478655675758,0.0021615810066661534
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,Forest,-0.0016660912214198076,0.0031981100903469162
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,Forest_banda,-0.0015717800766962275,0.0037738868163746204
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,NoBosque_30-35,-0.022474725771358523,0.026654418677248607
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,NoBosque_30-35_banda,-0.023872903499150944,0.026726585961430214
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,NoBosque_>35,0.027413869801972246,0.01027779207819504
+par,pg-all,pd_inext_q0,RFE3 − RFG5a,NoBosque_>35_banda,0.019348419322864647,0.017749758941970777
+par,pg-all,pd_inext_q0,RFE2 − B01,todas,0.027480295345079748,0.0053094058627522304
+par,pg-all,pd_inext_q0,RFE2 − B01,banda,0.02181576761353347,0.0046756671785910305
+par,pg-all,pd_inext_q0,RFE2 − B01,Forest,0.023082484558512178,0.0073541657432107145
+par,pg-all,pd_inext_q0,RFE2 − B01,Forest_banda,0.018314096553174324,0.006280765739159049
+par,pg-all,pd_inext_q0,RFE2 − B01,NoBosque_30-35,0.04894885311600946,0.03156100634659273
+par,pg-all,pd_inext_q0,RFE2 − B01,NoBosque_30-35_banda,0.001067076852521091,0.02101493466981963
+par,pg-all,pd_inext_q0,RFE2 − B01,NoBosque_>35,0.08508717445058737,0.01532204090872522
+par,pg-all,pd_inext_q0,RFE2 − B01,NoBosque_>35_banda,0.0596367334246383,0.01637382938160593
+par,pg-all,pd_inext_q0,RFE1 − B03,todas,0.04745163302078185,0.007083759149321743
+par,pg-all,pd_inext_q0,RFE1 − B03,banda,0.03438055218892999,0.006996212100505898
+par,pg-all,pd_inext_q0,RFE1 − B03,Forest,0.0208249978881222,0.0025889133566692427
+par,pg-all,pd_inext_q0,RFE1 − B03,Forest_banda,0.023513774588271235,0.004706945139648694
+par,pg-all,pd_inext_q0,RFE1 − B03,NoBosque_30-35,0.44943800595240374,0.06815877578345737
+par,pg-all,pd_inext_q0,RFE1 − B03,NoBosque_30-35_banda,0.24034303077097463,0.04295867680196309
+par,pg-all,pd_inext_q0,RFE1 − B03,NoBosque_>35,-0.09885366948022382,0.004036290217931629
+par,pg-all,pd_inext_q0,RFE1 − B03,NoBosque_>35_banda,-0.12052243528692153,0.0102375819449507
+par,pg-all,pd_inext_q0,RFG5a − B03,todas,0.04801271880453687,0.006837892141595491
+par,pg-all,pd_inext_q0,RFG5a − B03,banda,0.03578759511217733,0.006771407824862855
+par,pg-all,pd_inext_q0,RFG5a − B03,Forest,0.016764736453033557,0.0013906009463203672
+par,pg-all,pd_inext_q0,RFG5a − B03,Forest_banda,0.0195942383406383,0.002566473921169105
+par,pg-all,pd_inext_q0,RFG5a − B03,NoBosque_30-35,0.48912532712916384,0.08649762418549076
+par,pg-all,pd_inext_q0,RFG5a − B03,NoBosque_30-35_banda,0.2861434676835874,0.06019113937634632
+par,pg-all,pd_inext_q0,RFG5a − B03,NoBosque_>35,-0.0689188978535525,0.014922890003983339
+par,pg-all,pd_inext_q0,RFG5a − B03,NoBosque_>35_banda,-0.082721688569745,0.026070046579836487
+par,pg-all,pd_inext_q0,RFE2 − B03,todas,-0.015330791673820935,0.012889688731795303
+par,pg-all,pd_inext_q0,RFE2 − B03,banda,-0.01626955192755945,0.014912105631916667
+par,pg-all,pd_inext_q0,RFE2 − B03,Forest,-0.04020463950176952,0.013379421599835985
+par,pg-all,pd_inext_q0,RFE2 − B03,Forest_banda,-0.025837685408014528,0.015673443856089295
+par,pg-all,pd_inext_q0,RFE2 − B03,NoBosque_30-35,0.3952849741212546,0.04461812891009008
+par,pg-all,pd_inext_q0,RFE2 − B03,NoBosque_30-35_banda,0.1936165651649404,0.02747695554982531
+par,pg-all,pd_inext_q0,RFE2 − B03,NoBosque_>35,-0.21799637394499005,0.02184560999471847
+par,pg-all,pd_inext_q0,RFE2 − B03,NoBosque_>35_banda,-0.26322011472711,0.039745759185405384
+modelo,unified-all,hill_q0_unified,B03,todas,0.3057257314844492,0.0012287261503841473
+modelo,unified-all,hill_q0_unified,B03,banda,0.2307126732532321,0.0010931082626046585
+modelo,unified-all,hill_q0_unified,B03,Forest,0.3242698661372468,0.003021812448797406
+modelo,unified-all,hill_q0_unified,B03,Forest_banda,0.25378720900480534,0.0022031035905289115
+modelo,unified-all,hill_q0_unified,B03,NoBosque_30-35,0.15023576643108427,0.009834458342075534
+modelo,unified-all,hill_q0_unified,B03,NoBosque_30-35_banda,0.029417055218080617,0.012630744789258888
+modelo,unified-all,hill_q0_unified,B03,NoBosque_>35,0.3985952870417559,0.008260629422880438
+modelo,unified-all,hill_q0_unified,B03,NoBosque_>35_banda,0.3070229602036399,0.00899689676839691
+modelo,unified-all,hill_q0_unified,B01,todas,0.20647037063699306,0.011936894221077526
+modelo,unified-all,hill_q0_unified,B01,banda,0.15126025170245425,0.013151295535320422
+modelo,unified-all,hill_q0_unified,B01,Forest,0.25168697560805203,0.00379689768541671
+modelo,unified-all,hill_q0_unified,B01,Forest_banda,0.2099809488009767,0.004705679181802707
+modelo,unified-all,hill_q0_unified,B01,NoBosque_30-35,-0.049392378028493646,0.06234084798589663
+modelo,unified-all,hill_q0_unified,B01,NoBosque_30-35_banda,-0.13135561169225976,0.05047572558145226
+modelo,unified-all,hill_q0_unified,B01,NoBosque_>35,0.3219058391484864,0.00683727301294983
+modelo,unified-all,hill_q0_unified,B01,NoBosque_>35_banda,0.2337673037582475,0.006140370754864475
+modelo,unified-all,hill_q0_unified,RFG5a,todas,0.446761677728112,0.0023668071659320197
+modelo,unified-all,hill_q0_unified,RFG5a,banda,0.3847560394638346,0.0032723427934272767
+modelo,unified-all,hill_q0_unified,RFG5a,Forest,0.46103017357435677,0.0020938508305053762
+modelo,unified-all,hill_q0_unified,RFG5a,Forest_banda,0.4020263013635324,0.003511484728617549
+modelo,unified-all,hill_q0_unified,RFG5a,NoBosque_30-35,0.2443833758264867,0.008539303831797808
+modelo,unified-all,hill_q0_unified,RFG5a,NoBosque_30-35_banda,0.1361316165176574,0.008924198223012325
+modelo,unified-all,hill_q0_unified,RFG5a,NoBosque_>35,0.6174774797227812,0.004025356449380874
+modelo,unified-all,hill_q0_unified,RFG5a,NoBosque_>35_banda,0.5323577452133851,0.004803666017105032
+modelo,unified-all,hill_q0_unified,RFE1,todas,0.46383888969518633,0.003030559850358854
+modelo,unified-all,hill_q0_unified,RFE1,banda,0.4039300631774964,0.0020244814120638703
+modelo,unified-all,hill_q0_unified,RFE1,Forest,0.478154996660209,0.0026899948684719894
+modelo,unified-all,hill_q0_unified,RFE1,Forest_banda,0.42033760820752053,0.0031653283080352217
+modelo,unified-all,hill_q0_unified,RFE1,NoBosque_30-35,0.25465629846254595,0.007102324582944876
+modelo,unified-all,hill_q0_unified,RFE1,NoBosque_30-35_banda,0.15358607327487003,0.005223774282128594
+modelo,unified-all,hill_q0_unified,RFE1,NoBosque_>35,0.6433379222745551,0.006382810381935886
+modelo,unified-all,hill_q0_unified,RFE1,NoBosque_>35_banda,0.561124473821455,0.006010679569121997
+modelo,unified-all,hill_q0_unified,RFE2,todas,0.38497393884057396,0.007163109705443723
+modelo,unified-all,hill_q0_unified,RFE2,banda,0.326295005679948,0.011308247252347414
+modelo,unified-all,hill_q0_unified,RFE2,Forest,0.4019122275825014,0.00037029449555295204
+modelo,unified-all,hill_q0_unified,RFE2,Forest_banda,0.35062238531773665,0.004956749934911789
+modelo,unified-all,hill_q0_unified,RFE2,NoBosque_30-35,0.11487093192304303,0.029999356862917485
+modelo,unified-all,hill_q0_unified,RFE2,NoBosque_30-35_banda,0.00857791788454528,0.038804193957317205
+modelo,unified-all,hill_q0_unified,RFE2,NoBosque_>35,0.6255090230471948,0.005049845478099282
+modelo,unified-all,hill_q0_unified,RFE2,NoBosque_>35_banda,0.5519947570965624,0.005004607073469144
+modelo,unified-all,hill_q0_unified,RFE3,todas,0.444339321062468,0.0028719212196245012
+modelo,unified-all,hill_q0_unified,RFE3,banda,0.3816475818199196,0.003921003804596288
+modelo,unified-all,hill_q0_unified,RFE3,Forest,0.45972071052355684,0.0029170185438393407
+modelo,unified-all,hill_q0_unified,RFE3,Forest_banda,0.40009192724025633,0.004794643154822265
+modelo,unified-all,hill_q0_unified,RFE3,NoBosque_30-35,0.23998368849755655,0.005313106916650394
+modelo,unified-all,hill_q0_unified,RFE3,NoBosque_30-35_banda,0.1304893803722658,0.004759668793081561
+modelo,unified-all,hill_q0_unified,RFE3,NoBosque_>35,0.613395861674854,0.0012509005731460427
+modelo,unified-all,hill_q0_unified,RFE3,NoBosque_>35_banda,0.5278368389924125,0.0020519289504651824
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,todas,0.017077211967074308,0.0030763291036652787
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,banda,0.019174023713661836,0.0025366501528886433
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,Forest,0.017124823085852243,0.001974015432906226
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,Forest_banda,0.01831130684398811,0.00117891489964476
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,NoBosque_30-35,0.010272922636059278,0.006772987437932437
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,NoBosque_30-35_banda,0.017454456757212616,0.006959516369488881
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,NoBosque_>35,0.025860442551773815,0.0032550816690762544
+par,unified-all,hill_q0_unified,RFE1 − RFG5a,NoBosque_>35_banda,0.02876672860807002,0.0016822998818381736
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,todas,-0.0024223566656440174,0.0009262059855213239
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,banda,-0.003108457643914949,0.0009516395746475711
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,Forest,-0.0013094630507999305,0.000980734308019295
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,Forest_banda,-0.001934374123276091,0.00138151431586895
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,NoBosque_30-35,-0.004399687328930146,0.003474398765311914
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.00564223614539161,0.00426636993580935
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,NoBosque_>35,-0.004081618047927245,0.0038260988901299415
+par,unified-all,hill_q0_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.004520906220972602,0.004304308190278924
+par,unified-all,hill_q0_unified,RFE2 − B01,todas,0.1785035682035809,0.004806843731955158
+par,unified-all,hill_q0_unified,RFE2 − B01,banda,0.17503475397749377,0.0038270442516229047
+par,unified-all,hill_q0_unified,RFE2 − B01,Forest,0.1502252519744494,0.0037546178292130416
+par,unified-all,hill_q0_unified,RFE2 − B01,Forest_banda,0.14064143651675995,0.0028955136590047997
+par,unified-all,hill_q0_unified,RFE2 − B01,NoBosque_30-35,0.16426330995153668,0.03445744147042917
+par,unified-all,hill_q0_unified,RFE2 − B01,NoBosque_30-35_banda,0.13993352957680505,0.01170155761888342
+par,unified-all,hill_q0_unified,RFE2 − B01,NoBosque_>35,0.3036031838987084,0.011387827939811454
+par,unified-all,hill_q0_unified,RFE2 − B01,NoBosque_>35_banda,0.318227453338315,0.011027784645186943
+par,unified-all,hill_q0_unified,RFE1 − B03,todas,0.15811315821073713,0.0036229899092893696
+par,unified-all,hill_q0_unified,RFE1 − B03,banda,0.17321738992426428,0.002873013231703757
+par,unified-all,hill_q0_unified,RFE1 − B03,Forest,0.15388513052296224,0.0051142750726504505
+par,unified-all,hill_q0_unified,RFE1 − B03,Forest_banda,0.1665503992027152,0.005214254423498738
+par,unified-all,hill_q0_unified,RFE1 − B03,NoBosque_30-35,0.10442053203146169,0.00899116111997581
+par,unified-all,hill_q0_unified,RFE1 − B03,NoBosque_30-35_banda,0.12416901805678941,0.010411785388790647
+par,unified-all,hill_q0_unified,RFE1 − B03,NoBosque_>35,0.24474263523279918,0.003228575937770236
+par,unified-all,hill_q0_unified,RFE1 − B03,NoBosque_>35_banda,0.2541015136178152,0.003256741165285575
+par,unified-all,hill_q0_unified,RFG5a − B03,todas,0.1410359462436628,0.003594623332982197
+par,unified-all,hill_q0_unified,RFG5a − B03,banda,0.15404336621060244,0.003287199375499868
+par,unified-all,hill_q0_unified,RFG5a − B03,Forest,0.13676030743710998,0.005108270518071869
+par,unified-all,hill_q0_unified,RFG5a − B03,Forest_banda,0.1482390923587271,0.005257998807309933
+par,unified-all,hill_q0_unified,RFG5a − B03,NoBosque_30-35,0.09414760939540241,0.002229236069376412
+par,unified-all,hill_q0_unified,RFG5a − B03,NoBosque_30-35_banda,0.1067145612995768,0.003733068181648668
+par,unified-all,hill_q0_unified,RFG5a − B03,NoBosque_>35,0.21888219268102538,0.004262101405898663
+par,unified-all,hill_q0_unified,RFG5a − B03,NoBosque_>35_banda,0.22533478500974516,0.004202124240404592
+par,unified-all,hill_q0_unified,RFE2 − B03,todas,0.07924820735612477,0.008270623491517096
+par,unified-all,hill_q0_unified,RFE2 − B03,banda,0.09558233242671588,0.010692526558134357
+par,unified-all,hill_q0_unified,RFE2 − B03,Forest,0.0776423614452546,0.00339167637852222
+par,unified-all,hill_q0_unified,RFE2 − B03,Forest_banda,0.0968351763129313,0.005375270367440345
+par,unified-all,hill_q0_unified,RFE2 − B03,NoBosque_30-35,-0.03536483450804125,0.020720156154533133
+par,unified-all,hill_q0_unified,RFE2 − B03,NoBosque_30-35_banda,-0.020839137333535335,0.027723230477374242
+par,unified-all,hill_q0_unified,RFE2 − B03,NoBosque_>35,0.22691373600543888,0.011665538149629007
+par,unified-all,hill_q0_unified,RFE2 − B03,NoBosque_>35_banda,0.2449717968929226,0.011584830430519477
+modelo,unified-all,lcbd_pa_unified,B03,todas,0.3583455569974408,0.0086678899722679
+modelo,unified-all,lcbd_pa_unified,B03,banda,0.2150357562911225,0.004361700924247583
+modelo,unified-all,lcbd_pa_unified,B03,Forest,0.1579221658850499,0.009893734126251948
+modelo,unified-all,lcbd_pa_unified,B03,Forest_banda,0.14586710838370665,0.0023169912833443276
+modelo,unified-all,lcbd_pa_unified,B03,NoBosque_30-35,0.2180594937771244,0.043847756749016725
+modelo,unified-all,lcbd_pa_unified,B03,NoBosque_30-35_banda,0.23378984593543153,0.017193521884445475
+modelo,unified-all,lcbd_pa_unified,B03,NoBosque_>35,0.05683237772060116,0.03020925391509174
+modelo,unified-all,lcbd_pa_unified,B03,NoBosque_>35_banda,0.15129244370515008,0.004356485117442086
+modelo,unified-all,lcbd_pa_unified,B01,todas,0.2787030309971972,0.0025021245914756884
+modelo,unified-all,lcbd_pa_unified,B01,banda,0.1547980146674998,0.002493499920615434
+modelo,unified-all,lcbd_pa_unified,B01,Forest,0.05006661856295691,0.02382554086657771
+modelo,unified-all,lcbd_pa_unified,B01,Forest_banda,0.07293132815884151,0.0008017074951581204
+modelo,unified-all,lcbd_pa_unified,B01,NoBosque_30-35,0.08695656723437306,0.029531421424602775
+modelo,unified-all,lcbd_pa_unified,B01,NoBosque_30-35_banda,0.18706860250516286,0.008170862413404712
+modelo,unified-all,lcbd_pa_unified,B01,NoBosque_>35,0.01318078744105903,0.033322924896113736
+modelo,unified-all,lcbd_pa_unified,B01,NoBosque_>35_banda,0.040769128810932455,0.009932571159884189
+modelo,unified-all,lcbd_pa_unified,RFG5a,todas,0.44191827677683143,0.005444982241227746
+modelo,unified-all,lcbd_pa_unified,RFG5a,banda,0.3142246148648892,0.002767400235287018
+modelo,unified-all,lcbd_pa_unified,RFG5a,Forest,0.23045927227883747,0.005167815642612351
+modelo,unified-all,lcbd_pa_unified,RFG5a,Forest_banda,0.21355170685867594,0.004321808955443723
+modelo,unified-all,lcbd_pa_unified,RFG5a,NoBosque_30-35,0.3870630364794951,0.02205971053228128
+modelo,unified-all,lcbd_pa_unified,RFG5a,NoBosque_30-35_banda,0.3438417352732633,0.017156967392056584
+modelo,unified-all,lcbd_pa_unified,RFG5a,NoBosque_>35,0.18987082993528256,0.02302725886558316
+modelo,unified-all,lcbd_pa_unified,RFG5a,NoBosque_>35_banda,0.20071232286123394,0.006959533576743936
+modelo,unified-all,lcbd_pa_unified,RFE1,todas,0.4401157191625784,0.004504388929563285
+modelo,unified-all,lcbd_pa_unified,RFE1,banda,0.3126341374106317,0.0011130936254437251
+modelo,unified-all,lcbd_pa_unified,RFE1,Forest,0.2373556047345463,0.006809229441106196
+modelo,unified-all,lcbd_pa_unified,RFE1,Forest_banda,0.22011565514204345,0.0007190144240783014
+modelo,unified-all,lcbd_pa_unified,RFE1,NoBosque_30-35,0.3730063189660669,0.019314623379509035
+modelo,unified-all,lcbd_pa_unified,RFE1,NoBosque_30-35_banda,0.33027798685642157,0.01038711886059135
+modelo,unified-all,lcbd_pa_unified,RFE1,NoBosque_>35,0.17583727322501544,0.028985700200406327
+modelo,unified-all,lcbd_pa_unified,RFE1,NoBosque_>35_banda,0.1918825185239709,0.00987437919734883
+modelo,unified-all,lcbd_pa_unified,RFE2,todas,0.32531250535739004,0.0005697507003755203
+modelo,unified-all,lcbd_pa_unified,RFE2,banda,0.18696016092251924,0.003389068140549338
+modelo,unified-all,lcbd_pa_unified,RFE2,Forest,0.11319706995266725,0.01434205488578813
+modelo,unified-all,lcbd_pa_unified,RFE2,Forest_banda,0.11849572954084069,0.00035631810571072354
+modelo,unified-all,lcbd_pa_unified,RFE2,NoBosque_30-35,0.173767004876626,0.01941143299939681
+modelo,unified-all,lcbd_pa_unified,RFE2,NoBosque_30-35_banda,0.1714457044343989,0.014860043131789376
+modelo,unified-all,lcbd_pa_unified,RFE2,NoBosque_>35,0.020451347759039562,0.018566797008217978
+modelo,unified-all,lcbd_pa_unified,RFE2,NoBosque_>35_banda,0.06657864566303089,0.01605688302200155
+modelo,unified-all,lcbd_pa_unified,RFE3,todas,0.4404484248936115,0.003461932589894018
+modelo,unified-all,lcbd_pa_unified,RFE3,banda,0.31209237126369177,0.0024224321648767316
+modelo,unified-all,lcbd_pa_unified,RFE3,Forest,0.22789691249979083,0.005656571584906578
+modelo,unified-all,lcbd_pa_unified,RFE3,Forest_banda,0.21076837362549813,0.0007979644979190299
+modelo,unified-all,lcbd_pa_unified,RFE3,NoBosque_30-35,0.3890493083233076,0.01558845173583243
+modelo,unified-all,lcbd_pa_unified,RFE3,NoBosque_30-35_banda,0.344218713005007,0.014439559887042413
+modelo,unified-all,lcbd_pa_unified,RFE3,NoBosque_>35,0.18312313469870586,0.026656910447861094
+modelo,unified-all,lcbd_pa_unified,RFE3,NoBosque_>35_banda,0.19747732684595234,0.00900480295081261
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,todas,-0.0018025576142530382,0.001340850458232245
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,banda,-0.001590477454257481,0.002789445964150951
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,Forest,0.006896332455708827,0.004567577373606068
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,Forest_banda,0.0065639482833675196,0.004476822690832359
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,NoBosque_30-35,-0.014056717513428222,0.006160711075698454
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.013563748416841714,0.007466777803844922
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,NoBosque_>35,-0.014033556710267106,0.00602992820341197
+par,unified-all,lcbd_pa_unified,RFE1 − RFG5a,NoBosque_>35_banda,-0.008829804337263028,0.004329657830240425
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,todas,-0.001469851883219871,0.002061306951944207
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,banda,-0.0021322436011973847,0.002169670611528424
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,Forest,-0.002562359779046656,0.00334104563745822
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,Forest_banda,-0.0027833332331778093,0.003531593337599463
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,NoBosque_30-35,0.001986271843812467,0.006809312307248279
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,NoBosque_30-35_banda,0.00037697773174372173,0.006585550251549089
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,NoBosque_>35,-0.006747695236576701,0.004838279816802664
+par,unified-all,lcbd_pa_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.0032349960152815807,0.005407055470219297
+par,unified-all,lcbd_pa_unified,RFE2 − B01,todas,0.04660947436019284,0.002424168084790207
+par,unified-all,lcbd_pa_unified,RFE2 − B01,banda,0.03216214625501945,0.0014551244078757784
+par,unified-all,lcbd_pa_unified,RFE2 − B01,Forest,0.06313045138971034,0.009525086532374785
+par,unified-all,lcbd_pa_unified,RFE2 − B01,Forest_banda,0.045564401381999166,0.0011497698909545548
+par,unified-all,lcbd_pa_unified,RFE2 − B01,NoBosque_30-35,0.08681043764225294,0.016176871024085278
+par,unified-all,lcbd_pa_unified,RFE2 − B01,NoBosque_30-35_banda,-0.015622898070763927,0.010088611523901028
+par,unified-all,lcbd_pa_unified,RFE2 − B01,NoBosque_>35,0.0072705603179805305,0.016435063625159854
+par,unified-all,lcbd_pa_unified,RFE2 − B01,NoBosque_>35_banda,0.025809516852098424,0.012827836709703184
+par,unified-all,lcbd_pa_unified,RFE1 − B03,todas,0.08177016216513755,0.004532832762642193
+par,unified-all,lcbd_pa_unified,RFE1 − B03,banda,0.09759838111950918,0.004455652014248269
+par,unified-all,lcbd_pa_unified,RFE1 − B03,Forest,0.07943343884949643,0.004311317686997936
+par,unified-all,lcbd_pa_unified,RFE1 − B03,Forest_banda,0.07424854675833681,0.0028527327634038013
+par,unified-all,lcbd_pa_unified,RFE1 − B03,NoBosque_30-35,0.15494682518894246,0.025205745626782947
+par,unified-all,lcbd_pa_unified,RFE1 − B03,NoBosque_30-35_banda,0.09648814092099005,0.015842897443766466
+par,unified-all,lcbd_pa_unified,RFE1 − B03,NoBosque_>35,0.11900489550441429,0.0043122219030053005
+par,unified-all,lcbd_pa_unified,RFE1 − B03,NoBosque_>35_banda,0.04059007481882082,0.01203619566149187
+par,unified-all,lcbd_pa_unified,RFG5a − B03,todas,0.08357271977939058,0.0032876661312868797
+par,unified-all,lcbd_pa_unified,RFG5a − B03,banda,0.09918885857376665,0.0016666637854622468
+par,unified-all,lcbd_pa_unified,RFG5a − B03,Forest,0.07253710639378759,0.008864486181401243
+par,unified-all,lcbd_pa_unified,RFG5a − B03,Forest_banda,0.06768459847496928,0.002753634814312096
+par,unified-all,lcbd_pa_unified,RFG5a − B03,NoBosque_30-35,0.1690035427023707,0.02611381653689162
+par,unified-all,lcbd_pa_unified,RFG5a − B03,NoBosque_30-35_banda,0.11005188933783176,0.014835017640004262
+par,unified-all,lcbd_pa_unified,RFG5a − B03,NoBosque_>35,0.13303845221468139,0.007687697870183195
+par,unified-all,lcbd_pa_unified,RFG5a − B03,NoBosque_>35_banda,0.04941987915608385,0.008014931052884316
+par,unified-all,lcbd_pa_unified,RFE2 − B03,todas,-0.033033051640050805,0.009211991564884512
+par,unified-all,lcbd_pa_unified,RFE2 − B03,banda,-0.028075595368603268,0.006203720983076142
+par,unified-all,lcbd_pa_unified,RFE2 − B03,Forest,-0.04472509593238264,0.005130269825225621
+par,unified-all,lcbd_pa_unified,RFE2 − B03,Forest_banda,-0.027371378842865963,0.002130699422951497
+par,unified-all,lcbd_pa_unified,RFE2 − B03,NoBosque_30-35,-0.04429248890049842,0.027250700329733264
+par,unified-all,lcbd_pa_unified,RFE2 − B03,NoBosque_30-35_banda,-0.062344141501032624,0.018912814098045527
+par,unified-all,lcbd_pa_unified,RFE2 − B03,NoBosque_>35,-0.036381029961561596,0.013128653048365876
+par,unified-all,lcbd_pa_unified,RFE2 − B03,NoBosque_>35_banda,-0.0847137980421192,0.01387280376896359
+modelo,unified-all,lcbd_freq_unified,B03,todas,0.3211827388513691,0.005813012694776513
+modelo,unified-all,lcbd_freq_unified,B03,banda,0.15085844753604272,0.006198560630523635
+modelo,unified-all,lcbd_freq_unified,B03,Forest,0.08083487994878014,0.006615718021683565
+modelo,unified-all,lcbd_freq_unified,B03,Forest_banda,0.029501091136982405,0.005922802522434533
+modelo,unified-all,lcbd_freq_unified,B03,NoBosque_30-35,0.29796728570944403,0.019556996465470444
+modelo,unified-all,lcbd_freq_unified,B03,NoBosque_30-35_banda,0.33077812415194996,0.008021691644891896
+modelo,unified-all,lcbd_freq_unified,B03,NoBosque_>35,-0.09072991312490457,0.022852469123234596
+modelo,unified-all,lcbd_freq_unified,B03,NoBosque_>35_banda,0.005544557342941792,0.008531364222455191
+modelo,unified-all,lcbd_freq_unified,B01,todas,0.24895783791577808,0.011608893498883957
+modelo,unified-all,lcbd_freq_unified,B01,banda,0.1092823447460209,0.013398320875348533
+modelo,unified-all,lcbd_freq_unified,B01,Forest,0.012571889428730961,0.017147831883145927
+modelo,unified-all,lcbd_freq_unified,B01,Forest_banda,-0.0005485477515674667,0.01530501868555871
+modelo,unified-all,lcbd_freq_unified,B01,NoBosque_30-35,0.022543757488775722,0.01203248168457846
+modelo,unified-all,lcbd_freq_unified,B01,NoBosque_30-35_banda,0.18565814110063997,0.01582166361868401
+modelo,unified-all,lcbd_freq_unified,B01,NoBosque_>35,-0.000490807756623246,0.013295633711184597
+modelo,unified-all,lcbd_freq_unified,B01,NoBosque_>35_banda,0.04129505432917128,0.014457482094053507
+modelo,unified-all,lcbd_freq_unified,RFG5a,todas,0.39666047350030204,0.003600982260080959
+modelo,unified-all,lcbd_freq_unified,RFG5a,banda,0.24391730036901393,0.0037360251802728236
+modelo,unified-all,lcbd_freq_unified,RFG5a,Forest,0.14374732904692775,0.007572684385688637
+modelo,unified-all,lcbd_freq_unified,RFG5a,Forest_banda,0.07982930089056854,0.00802753110204826
+modelo,unified-all,lcbd_freq_unified,RFG5a,NoBosque_30-35,0.42369158834555026,0.016136930609028786
+modelo,unified-all,lcbd_freq_unified,RFG5a,NoBosque_30-35_banda,0.3899803359786464,0.01436430386933575
+modelo,unified-all,lcbd_freq_unified,RFG5a,NoBosque_>35,0.1050686071837081,0.018150112068731558
+modelo,unified-all,lcbd_freq_unified,RFG5a,NoBosque_>35_banda,0.10385431264228968,0.01506250425425757
+modelo,unified-all,lcbd_freq_unified,RFE1,todas,0.39807436432679744,0.002788143404281343
+modelo,unified-all,lcbd_freq_unified,RFE1,banda,0.24434228791716764,0.0031420221864720535
+modelo,unified-all,lcbd_freq_unified,RFE1,Forest,0.1500250915812905,0.00679899429720663
+modelo,unified-all,lcbd_freq_unified,RFE1,Forest_banda,0.08677997534870878,0.00772667095252165
+modelo,unified-all,lcbd_freq_unified,RFE1,NoBosque_30-35,0.41577242724801394,0.009893434443949337
+modelo,unified-all,lcbd_freq_unified,RFE1,NoBosque_30-35_banda,0.3769703718728293,0.00918100388029044
+modelo,unified-all,lcbd_freq_unified,RFE1,NoBosque_>35,0.10556762309599373,0.010889087895529866
+modelo,unified-all,lcbd_freq_unified,RFE1,NoBosque_>35_banda,0.10534946467712654,0.009461625947530567
+modelo,unified-all,lcbd_freq_unified,RFE2,todas,0.3075289828988678,0.0067803135668926895
+modelo,unified-all,lcbd_freq_unified,RFE2,banda,0.14539411272806926,0.008280516544423343
+modelo,unified-all,lcbd_freq_unified,RFE2,Forest,0.052888909564283014,0.011611725740399165
+modelo,unified-all,lcbd_freq_unified,RFE2,Forest_banda,0.01632178918033267,0.013330066845874504
+modelo,unified-all,lcbd_freq_unified,RFE2,NoBosque_30-35,0.2189399060746389,0.012459637739454856
+modelo,unified-all,lcbd_freq_unified,RFE2,NoBosque_30-35_banda,0.22170353284633382,0.012253695823974122
+modelo,unified-all,lcbd_freq_unified,RFE2,NoBosque_>35,0.026770991461045113,0.018176464291070542
+modelo,unified-all,lcbd_freq_unified,RFE2,NoBosque_>35_banda,0.049346282484379035,0.015041156626768729
+modelo,unified-all,lcbd_freq_unified,RFE3,todas,0.39389447760280044,0.005078161646167097
+modelo,unified-all,lcbd_freq_unified,RFE3,banda,0.24018139932665628,0.0054059595838678
+modelo,unified-all,lcbd_freq_unified,RFE3,Forest,0.14139385917836345,0.007513543726130595
+modelo,unified-all,lcbd_freq_unified,RFE3,Forest_banda,0.07736697333721414,0.008260599693893173
+modelo,unified-all,lcbd_freq_unified,RFE3,NoBosque_30-35,0.4201494682683558,0.013885752872304234
+modelo,unified-all,lcbd_freq_unified,RFE3,NoBosque_30-35_banda,0.3845320394498519,0.011723669115200624
+modelo,unified-all,lcbd_freq_unified,RFE3,NoBosque_>35,0.09638224051081194,0.018350322065370166
+modelo,unified-all,lcbd_freq_unified,RFE3,NoBosque_>35_banda,0.09762767102590153,0.01612375835671637
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,todas,0.0014138908264954193,0.0015116349823525261
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,banda,0.0004249875481537139,0.001377788078450596
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,Forest,0.006277762534362741,0.0007766966470659188
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,Forest_banda,0.006950674458140238,0.0004463770513471976
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,NoBosque_30-35,-0.007919161097536284,0.006249781836948205
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.013009964105817043,0.00525868063098947
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,NoBosque_>35,0.0004990159122856275,0.010215288534626733
+par,unified-all,lcbd_freq_unified,RFE1 − RFG5a,NoBosque_>35_banda,0.0014951520348368552,0.010160420078139939
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,todas,-0.002765995897501594,0.0015957310126917216
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,banda,-0.003735901042357659,0.0016703348290329732
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,Forest,-0.0023534698685642916,0.0010754891090169359
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,Forest_banda,-0.0024623275533544042,0.0008661838406476021
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,NoBosque_30-35,-0.003542120077194455,0.009533642960829678
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.005448296528794416,0.00867401269344791
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,NoBosque_>35,-0.008686366672896165,0.0008733622662260926
+par,unified-all,lcbd_freq_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.006226641616388158,0.0019849997612112463
+par,unified-all,lcbd_freq_unified,RFE2 − B01,todas,0.05857114498308976,0.004907302635367932
+par,unified-all,lcbd_freq_unified,RFE2 − B01,banda,0.03611176798204837,0.005128213488367726
+par,unified-all,lcbd_freq_unified,RFE2 − B01,Forest,0.04031702013555205,0.006821434225816411
+par,unified-all,lcbd_freq_unified,RFE2 − B01,Forest_banda,0.016870336931900137,0.004901148497212178
+par,unified-all,lcbd_freq_unified,RFE2 − B01,NoBosque_30-35,0.19639614858586318,0.019848248772897877
+par,unified-all,lcbd_freq_unified,RFE2 − B01,NoBosque_30-35_banda,0.03604539174569384,0.021776523540232243
+par,unified-all,lcbd_freq_unified,RFE2 − B01,NoBosque_>35,0.02726179921766836,0.00557478918244987
+par,unified-all,lcbd_freq_unified,RFE2 − B01,NoBosque_>35_banda,0.008051228155207757,0.003171959186276769
+par,unified-all,lcbd_freq_unified,RFE1 − B03,todas,0.07689162547542834,0.0031201919327344084
+par,unified-all,lcbd_freq_unified,RFE1 − B03,banda,0.09348384038112494,0.0031686204329525107
+par,unified-all,lcbd_freq_unified,RFE1 − B03,Forest,0.06919021163251034,0.006928708455871014
+par,unified-all,lcbd_freq_unified,RFE1 − B03,Forest_banda,0.05727888421172637,0.0018512185677942554
+par,unified-all,lcbd_freq_unified,RFE1 − B03,NoBosque_30-35,0.11780514153856995,0.02214302941770631
+par,unified-all,lcbd_freq_unified,RFE1 − B03,NoBosque_30-35_banda,0.04619224772087934,0.01681507882147141
+par,unified-all,lcbd_freq_unified,RFE1 − B03,NoBosque_>35,0.1962975362208983,0.01930450136493122
+par,unified-all,lcbd_freq_unified,RFE1 − B03,NoBosque_>35_banda,0.09980490733418475,0.008631058582196222
+par,unified-all,lcbd_freq_unified,RFG5a − B03,todas,0.07547773464893293,0.0024193622063586597
+par,unified-all,lcbd_freq_unified,RFG5a − B03,banda,0.09305885283297122,0.0026026815396216546
+par,unified-all,lcbd_freq_unified,RFG5a − B03,Forest,0.0629124490981476,0.007314866954311154
+par,unified-all,lcbd_freq_unified,RFG5a − B03,Forest_banda,0.05032820975358613,0.0021090778186449955
+par,unified-all,lcbd_freq_unified,RFG5a − B03,NoBosque_30-35,0.12572430263610623,0.025399235651952682
+par,unified-all,lcbd_freq_unified,RFG5a − B03,NoBosque_30-35_banda,0.05920221182669638,0.02173750425118267
+par,unified-all,lcbd_freq_unified,RFG5a − B03,NoBosque_>35,0.19579852030861267,0.010851980656792163
+par,unified-all,lcbd_freq_unified,RFG5a − B03,NoBosque_>35_banda,0.09830975529934789,0.0072076105964009865
+par,unified-all,lcbd_freq_unified,RFE2 − B03,todas,-0.01365375595250129,0.0014876885148656918
+par,unified-all,lcbd_freq_unified,RFE2 − B03,banda,-0.005464334807973444,0.0021307685376861668
+par,unified-all,lcbd_freq_unified,RFE2 − B03,Forest,-0.027945970384497126,0.009496969441868293
+par,unified-all,lcbd_freq_unified,RFE2 − B03,Forest_banda,-0.013179301956649736,0.007546774259196065
+par,unified-all,lcbd_freq_unified,RFE2 − B03,NoBosque_30-35,-0.0790273796348051,0.015210353645265486
+par,unified-all,lcbd_freq_unified,RFE2 − B03,NoBosque_30-35_banda,-0.10907459130561614,0.01573953584453329
+par,unified-all,lcbd_freq_unified,RFE2 − B03,NoBosque_>35,0.11750090458594968,0.015521969454549886
+par,unified-all,lcbd_freq_unified,RFE2 − B03,NoBosque_>35_banda,0.043801725141437244,0.00831795681785173
+modelo,unified-all,pcoa1_pa_unified,B03,todas,0.7021462226323333,0.009356595111172733
+modelo,unified-all,pcoa1_pa_unified,B03,banda,0.5690162919732398,0.005044361046110961
+modelo,unified-all,pcoa1_pa_unified,B03,Forest,0.7168843858392727,0.00990136011686481
+modelo,unified-all,pcoa1_pa_unified,B03,Forest_banda,0.6094558111782734,0.005752394761335724
+modelo,unified-all,pcoa1_pa_unified,B03,NoBosque_30-35,0.204519649813102,0.019751343349065052
+modelo,unified-all,pcoa1_pa_unified,B03,NoBosque_30-35_banda,0.20732338079888887,0.01664211833650391
+modelo,unified-all,pcoa1_pa_unified,B03,NoBosque_>35,0.6052999909610964,0.009308813707093248
+modelo,unified-all,pcoa1_pa_unified,B03,NoBosque_>35_banda,0.444282165234581,0.005599326640633041
+modelo,unified-all,pcoa1_pa_unified,B01,todas,0.36345413415280037,0.013286250759675825
+modelo,unified-all,pcoa1_pa_unified,B01,banda,0.21367057781739793,0.006446334385576397
+modelo,unified-all,pcoa1_pa_unified,B01,Forest,0.37342530559272386,0.013079707280885608
+modelo,unified-all,pcoa1_pa_unified,B01,Forest_banda,0.2474709173262106,0.0037145266594029924
+modelo,unified-all,pcoa1_pa_unified,B01,NoBosque_30-35,-0.2920718761019134,0.022862348051717264
+modelo,unified-all,pcoa1_pa_unified,B01,NoBosque_30-35_banda,-0.2873971304991105,0.021907333416553793
+modelo,unified-all,pcoa1_pa_unified,B01,NoBosque_>35,0.20149543770011666,0.022868250026331135
+modelo,unified-all,pcoa1_pa_unified,B01,NoBosque_>35_banda,0.14478865798583587,0.022082479306646155
+modelo,unified-all,pcoa1_pa_unified,RFG5a,todas,0.7063057441994203,0.006629062779933563
+modelo,unified-all,pcoa1_pa_unified,RFG5a,banda,0.5655481679690517,0.005512107341334946
+modelo,unified-all,pcoa1_pa_unified,RFG5a,Forest,0.7186729754921881,0.006106816490002226
+modelo,unified-all,pcoa1_pa_unified,RFG5a,Forest_banda,0.5903090454385277,0.004943312690922163
+modelo,unified-all,pcoa1_pa_unified,RFG5a,NoBosque_30-35,0.4440013799916884,0.015875268794253574
+modelo,unified-all,pcoa1_pa_unified,RFG5a,NoBosque_30-35_banda,0.3777989131490565,0.008091570337759344
+modelo,unified-all,pcoa1_pa_unified,RFG5a,NoBosque_>35,0.5892937183603864,0.01021197360488378
+modelo,unified-all,pcoa1_pa_unified,RFG5a,NoBosque_>35_banda,0.43780255185086087,0.008500894434840655
+modelo,unified-all,pcoa1_pa_unified,RFE1,todas,0.7109102965428559,0.007837622890259544
+modelo,unified-all,pcoa1_pa_unified,RFE1,banda,0.5709026904965367,0.006809737112047159
+modelo,unified-all,pcoa1_pa_unified,RFE1,Forest,0.7259509170853038,0.0071045747096603095
+modelo,unified-all,pcoa1_pa_unified,RFE1,Forest_banda,0.5994672174124464,0.005442349704052217
+modelo,unified-all,pcoa1_pa_unified,RFE1,NoBosque_30-35,0.43586371511760563,0.011871055727884777
+modelo,unified-all,pcoa1_pa_unified,RFE1,NoBosque_30-35_banda,0.3655443408741123,0.004973752939595289
+modelo,unified-all,pcoa1_pa_unified,RFE1,NoBosque_>35,0.584525481600623,0.013481998525356517
+modelo,unified-all,pcoa1_pa_unified,RFE1,NoBosque_>35_banda,0.43219669904624086,0.013364416244002208
+modelo,unified-all,pcoa1_pa_unified,RFE2,todas,0.3725979904845365,0.01709550963545469
+modelo,unified-all,pcoa1_pa_unified,RFE2,banda,0.24195497534942856,0.006769966958621098
+modelo,unified-all,pcoa1_pa_unified,RFE2,Forest,0.3830316341239765,0.017405906734768904
+modelo,unified-all,pcoa1_pa_unified,RFE2,Forest_banda,0.28321726550928766,0.005767150478225183
+modelo,unified-all,pcoa1_pa_unified,RFE2,NoBosque_30-35,0.008153604886636079,0.0190525660892183
+modelo,unified-all,pcoa1_pa_unified,RFE2,NoBosque_30-35_banda,-0.020948852322646278,0.01606143109292559
+modelo,unified-all,pcoa1_pa_unified,RFE2,NoBosque_>35,0.17094367199515526,0.022218582212674122
+modelo,unified-all,pcoa1_pa_unified,RFE2,NoBosque_>35_banda,0.11280714416798891,0.010411316894977917
+modelo,unified-all,pcoa1_pa_unified,RFE3,todas,0.7051776485232915,0.005430584855761856
+modelo,unified-all,pcoa1_pa_unified,RFE3,banda,0.563173828765002,0.003985780095309311
+modelo,unified-all,pcoa1_pa_unified,RFE3,Forest,0.7172640702003911,0.005138452921944374
+modelo,unified-all,pcoa1_pa_unified,RFE3,Forest_banda,0.587731559915272,0.0033655190423408387
+modelo,unified-all,pcoa1_pa_unified,RFE3,NoBosque_30-35,0.4468979447971779,0.013373190650131494
+modelo,unified-all,pcoa1_pa_unified,RFE3,NoBosque_30-35_banda,0.37892609656964776,0.00949951744397011
+modelo,unified-all,pcoa1_pa_unified,RFE3,NoBosque_>35,0.5885681384187044,0.008048526022517818
+modelo,unified-all,pcoa1_pa_unified,RFE3,NoBosque_>35_banda,0.43539508093000023,0.005948855595238942
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,todas,0.004604552343435597,0.0015629867800252828
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,banda,0.005354522527484955,0.0014701275039882796
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,Forest,0.007277941593115715,0.0011968311175370719
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,Forest_banda,0.00915817197391866,0.0006111474917908532
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,NoBosque_30-35,-0.008137664874082814,0.004577700169703927
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.012254572274944272,0.0031569408490752116
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,NoBosque_>35,-0.004768236759763345,0.003984506005185848
+par,unified-all,pcoa1_pa_unified,RFE1 − RFG5a,NoBosque_>35_banda,-0.005605852804620078,0.004872369746274123
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,todas,-0.0011280956761287413,0.001518327528886332
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,banda,-0.002374339204049799,0.002674588718959976
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,Forest,-0.0014089052917969729,0.00107954273655681
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,Forest_banda,-0.0025774855232556884,0.0019888697941238776
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,NoBosque_30-35,0.002896564805489462,0.005304935019180004
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,NoBosque_30-35_banda,0.001127183420591223,0.005750691591590245
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,NoBosque_>35,-0.0007255799416819864,0.0037077127487236804
+par,unified-all,pcoa1_pa_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.002407470920860688,0.006896676898922785
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,todas,0.009143856331736163,0.0038665044331380274
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,banda,0.02828439753203064,0.0014453341426053632
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,Forest,0.009606328531252687,0.004547834414647574
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,Forest_banda,0.03574634818307709,0.002948498504380201
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,NoBosque_30-35,0.30022548098854945,0.02481203565088181
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,NoBosque_30-35_banda,0.26644827817646416,0.01598952692858555
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,NoBosque_>35,-0.030551765704961393,0.0016887834836149733
+par,unified-all,pcoa1_pa_unified,RFE2 − B01,NoBosque_>35_banda,-0.031981513817846974,0.014185613397202273
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,todas,0.008764073910522585,0.0016671320367736056
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,banda,0.0018863985232969356,0.0018426797014798452
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,Forest,0.00906653124603111,0.002801069158992761
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,Forest_banda,-0.009988593765827022,0.001646190575184876
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,NoBosque_30-35,0.23134406530450366,0.008039693899754691
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,NoBosque_30-35_banda,0.15822096007522343,0.020901688872524138
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,NoBosque_>35,-0.0207745093604735,0.00726139298290861
+par,unified-all,pcoa1_pa_unified,RFE1 − B03,NoBosque_>35_banda,-0.01208546618834013,0.00973946173174627
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,todas,0.004159521567086988,0.002764674970514404
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,banda,-0.003468124004188019,0.0011663806268953595
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,Forest,0.0017885896529153955,0.0039053422950771554
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,Forest_banda,-0.01914676573974568,0.002064019423165563
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,NoBosque_30-35,0.23948173017858645,0.006087422200212658
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,NoBosque_30-35_banda,0.17047553235016769,0.023954483527864674
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,NoBosque_>35,-0.016006272600710154,0.0034439038872758087
+par,unified-all,pcoa1_pa_unified,RFG5a − B03,NoBosque_>35_banda,-0.006479613383720051,0.005362361952640015
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,todas,-0.3295482321477967,0.009967238918956244
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,banda,-0.3270613166238112,0.001741687512554622
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,Forest,-0.3338527517152962,0.01091302755617808
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,Forest_banda,-0.3262385456689857,0.0021241500579823208
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,NoBosque_30-35,-0.19636604492646592,0.015147402672393003
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,NoBosque_30-35_banda,-0.22827223312153513,0.0251335507269655
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,NoBosque_>35,-0.43435631896594123,0.013073379021169219
+par,unified-all,pcoa1_pa_unified,RFE2 − B03,NoBosque_>35_banda,-0.33147502106659205,0.009401769661472686
+modelo,unified-all,pcoa2_pa_unified,B03,todas,0.7454098215554574,0.002174624225180065
+modelo,unified-all,pcoa2_pa_unified,B03,banda,0.4650312664178508,0.0019108467006952977
+modelo,unified-all,pcoa2_pa_unified,B03,Forest,0.782828984454905,0.0026018401075761067
+modelo,unified-all,pcoa2_pa_unified,B03,Forest_banda,0.5115761054133721,0.002364595934755034
+modelo,unified-all,pcoa2_pa_unified,B03,NoBosque_30-35,0.23326271300844295,0.0478114390892304
+modelo,unified-all,pcoa2_pa_unified,B03,NoBosque_30-35_banda,0.18657601429092316,0.015270402509875968
+modelo,unified-all,pcoa2_pa_unified,B03,NoBosque_>35,0.5133219698095691,0.0140892894999666
+modelo,unified-all,pcoa2_pa_unified,B03,NoBosque_>35_banda,0.3501156417020998,0.004013712352455654
+modelo,unified-all,pcoa2_pa_unified,B01,todas,0.4326538601715342,0.001473554209096128
+modelo,unified-all,pcoa2_pa_unified,B01,banda,-0.01002376463023428,0.004918496901860046
+modelo,unified-all,pcoa2_pa_unified,B01,Forest,0.43357671338574216,0.0019424723452403446
+modelo,unified-all,pcoa2_pa_unified,B01,Forest_banda,0.02838444680996847,0.0038836967014736225
+modelo,unified-all,pcoa2_pa_unified,B01,NoBosque_30-35,-0.2038518053894928,0.018131761514829196
+modelo,unified-all,pcoa2_pa_unified,B01,NoBosque_30-35_banda,-0.2023206952251413,0.02875074938546261
+modelo,unified-all,pcoa2_pa_unified,B01,NoBosque_>35,0.14544673145496226,0.022772327799745126
+modelo,unified-all,pcoa2_pa_unified,B01,NoBosque_>35_banda,0.05124847913803465,0.015988566610431472
+modelo,unified-all,pcoa2_pa_unified,RFG5a,todas,0.78356545366342,0.001138953134211497
+modelo,unified-all,pcoa2_pa_unified,RFG5a,banda,0.5404858671599863,0.001434480610356652
+modelo,unified-all,pcoa2_pa_unified,RFG5a,Forest,0.8061313243108003,0.00019578286350579777
+modelo,unified-all,pcoa2_pa_unified,RFG5a,Forest_banda,0.5562720569637459,0.0008806220346241172
+modelo,unified-all,pcoa2_pa_unified,RFG5a,NoBosque_30-35,0.43378385468450736,0.014003001147616158
+modelo,unified-all,pcoa2_pa_unified,RFG5a,NoBosque_30-35_banda,0.36586890306912406,0.0024654148290056445
+modelo,unified-all,pcoa2_pa_unified,RFG5a,NoBosque_>35,0.573085629638103,0.004813740831316414
+modelo,unified-all,pcoa2_pa_unified,RFG5a,NoBosque_>35_banda,0.3920358462677335,0.007121052094974652
+modelo,unified-all,pcoa2_pa_unified,RFE1,todas,0.7878647744574442,0.0006512229412731618
+modelo,unified-all,pcoa2_pa_unified,RFE1,banda,0.5495082700811497,0.00163144538367518
+modelo,unified-all,pcoa2_pa_unified,RFE1,Forest,0.8113760110521505,0.0008929242364496049
+modelo,unified-all,pcoa2_pa_unified,RFE1,Forest_banda,0.5680658068408123,0.0027504223399865027
+modelo,unified-all,pcoa2_pa_unified,RFE1,NoBosque_30-35,0.42274926554426945,0.01716324760540782
+modelo,unified-all,pcoa2_pa_unified,RFE1,NoBosque_30-35_banda,0.3544892311568666,0.003448809235786049
+modelo,unified-all,pcoa2_pa_unified,RFE1,NoBosque_>35,0.5961431756345972,0.004147459047680231
+modelo,unified-all,pcoa2_pa_unified,RFE1,NoBosque_>35_banda,0.4230099113616921,0.008082643100636286
+modelo,unified-all,pcoa2_pa_unified,RFE2,todas,0.6474394364562969,0.0004073722609967273
+modelo,unified-all,pcoa2_pa_unified,RFE2,banda,0.2831881365103559,0.0006497502884434749
+modelo,unified-all,pcoa2_pa_unified,RFE2,Forest,0.6660621833776651,0.0018861302930735934
+modelo,unified-all,pcoa2_pa_unified,RFE2,Forest_banda,0.2982112239165336,0.00490342399754148
+modelo,unified-all,pcoa2_pa_unified,RFE2,NoBosque_30-35,0.21363760687785216,0.02834739221997655
+modelo,unified-all,pcoa2_pa_unified,RFE2,NoBosque_30-35_banda,0.17048574775165581,0.022721895656741178
+modelo,unified-all,pcoa2_pa_unified,RFE2,NoBosque_>35,0.32164898432577255,0.012224624339905784
+modelo,unified-all,pcoa2_pa_unified,RFE2,NoBosque_>35_banda,0.0551159339237699,0.029860534828174138
+modelo,unified-all,pcoa2_pa_unified,RFE3,todas,0.7824989474436754,0.0009242848188545735
+modelo,unified-all,pcoa2_pa_unified,RFE3,banda,0.5384635364521536,0.001028558304213465
+modelo,unified-all,pcoa2_pa_unified,RFE3,Forest,0.8055910900701053,0.00047345440380799523
+modelo,unified-all,pcoa2_pa_unified,RFE3,Forest_banda,0.555299406718146,0.0018802361307139015
+modelo,unified-all,pcoa2_pa_unified,RFE3,NoBosque_30-35,0.429090310269481,0.017854788529614918
+modelo,unified-all,pcoa2_pa_unified,RFE3,NoBosque_30-35_banda,0.3612378910021159,0.004077843320062547
+modelo,unified-all,pcoa2_pa_unified,RFE3,NoBosque_>35,0.5689684719232945,0.006710176690666603
+modelo,unified-all,pcoa2_pa_unified,RFE3,NoBosque_>35_banda,0.38725990855460807,0.008323496456377581
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,todas,0.004299320794024064,0.000718871778634319
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,banda,0.009022402921163483,0.0018507968802101771
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,Forest,0.005244686741350331,0.0010118411058541949
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,Forest_banda,0.011793749877066348,0.0023929366126331938
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,NoBosque_30-35,-0.011034589140237916,0.004062886410530452
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.011379671912257564,0.0032256333901735366
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,NoBosque_>35,0.023057545996494233,0.0044173462462850695
+par,unified-all,pcoa2_pa_unified,RFE1 − RFG5a,NoBosque_>35_banda,0.030974065093958576,0.007856782199833408
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,todas,-0.0010665062197446156,0.0007264325031252143
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,banda,-0.0020223307078326056,0.001535561315986715
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,Forest,-0.0005402342406948998,0.0006072755772470273
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,Forest_banda,-0.0009726502455998561,0.0012896072828104297
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,NoBosque_30-35,-0.0046935444150263406,0.005063844380640654
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.004631012067008222,0.004434389151093171
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,NoBosque_>35,-0.004117157714808546,0.007283603051801872
+par,unified-all,pcoa2_pa_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.004775937713125418,0.010459697876301584
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,todas,0.21478557628476266,0.0010678131027570723
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,banda,0.2932119011405902,0.004578614790762485
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,Forest,0.23248546999192302,0.0036113424801719435
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,Forest_banda,0.26982677710656516,0.0028047246159928407
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,NoBosque_30-35,0.41748941226734493,0.010840026357978443
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,NoBosque_30-35_banda,0.37280644297679705,0.006067191736770338
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,NoBosque_>35,0.17620225287081026,0.011340596578202805
+par,unified-all,pcoa2_pa_unified,RFE2 − B01,NoBosque_>35_banda,0.003867454785735247,0.019547024217196486
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,todas,0.04245495290198668,0.0015291189193889405
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,banda,0.08447700366329891,0.003484768999457558
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,Forest,0.02854702659724558,0.0019112537932046549
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,Forest_banda,0.05648970142744022,0.0004738695443876618
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,NoBosque_30-35,0.1894865525358265,0.031056821979109486
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,NoBosque_30-35_banda,0.1679132168659434,0.011834163873984147
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,NoBosque_>35,0.0828212058250281,0.009985230166241688
+par,unified-all,pcoa2_pa_unified,RFE1 − B03,NoBosque_>35_banda,0.07289426965959227,0.010637945786344683
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,todas,0.03815563210796261,0.0015327075979816147
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,banda,0.07545460074213543,0.002998739129226992
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,Forest,0.02330233985589525,0.002609029739333557
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,Forest_banda,0.04469595155037387,0.0021237046994691776
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,NoBosque_30-35,0.2005211416760644,0.03380955536787309
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,NoBosque_30-35_banda,0.17929288877820096,0.014522839850372109
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,NoBosque_>35,0.059763659828533856,0.012860173079386665
+par,unified-all,pcoa2_pa_unified,RFG5a − B03,NoBosque_>35_banda,0.04192020456563369,0.006003480596144881
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,todas,-0.0979703850991606,0.0019770941299259307
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,banda,-0.18184312990749488,0.001393287197870322
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,Forest,-0.11676680107723987,0.0021793421424606803
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,Forest_banda,-0.21336488149683844,0.0031258740407249137
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,NoBosque_30-35,-0.019625106130590802,0.02088565302453143
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,NoBosque_30-35_banda,-0.016090266539267335,0.007454315245722626
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,NoBosque_>35,-0.1916729854837966,0.005972482822018721
+par,unified-all,pcoa2_pa_unified,RFE2 − B03,NoBosque_>35_banda,-0.2949997077783299,0.03096160584256705
+modelo,unified-all,mpd_unified,B03,todas,0.25534475311905613,0.008057660541985416
+modelo,unified-all,mpd_unified,B03,banda,0.19883133442768533,0.008173831331027677
+modelo,unified-all,mpd_unified,B03,Forest,0.2628616685585057,0.009415913960859695
+modelo,unified-all,mpd_unified,B03,Forest_banda,0.21661991512172452,0.00908381109436887
+modelo,unified-all,mpd_unified,B03,NoBosque_30-35,-0.06551054160960128,0.022220908106806877
+modelo,unified-all,mpd_unified,B03,NoBosque_30-35_banda,-0.06898030312522237,0.017549533244920357
+modelo,unified-all,mpd_unified,B03,NoBosque_>35,0.21231273463761913,0.008628762340165115
+modelo,unified-all,mpd_unified,B03,NoBosque_>35_banda,0.1939976556060088,0.007520696490414484
+modelo,unified-all,mpd_unified,B01,todas,0.009792294866157217,0.010896852240356395
+modelo,unified-all,mpd_unified,B01,banda,-0.0348512108042948,0.012933530688447718
+modelo,unified-all,mpd_unified,B01,Forest,0.017182618772690523,0.011468885846289733
+modelo,unified-all,mpd_unified,B01,Forest_banda,-0.013772829101178571,0.013095295249176681
+modelo,unified-all,mpd_unified,B01,NoBosque_30-35,-0.3501586976228366,0.02775232042813497
+modelo,unified-all,mpd_unified,B01,NoBosque_30-35_banda,-0.2693246842620856,0.05059049690886456
+modelo,unified-all,mpd_unified,B01,NoBosque_>35,-0.05571150607083989,0.0037159487673910137
+modelo,unified-all,mpd_unified,B01,NoBosque_>35_banda,-0.07515663240631636,0.0051625727495009715
+modelo,unified-all,mpd_unified,RFG5a,todas,0.26010484935695355,0.0008322922285659314
+modelo,unified-all,mpd_unified,RFG5a,banda,0.20500257144586906,0.0015405837103548575
+modelo,unified-all,mpd_unified,RFG5a,Forest,0.2844574572341882,0.0031033061595089565
+modelo,unified-all,mpd_unified,RFG5a,Forest_banda,0.23691348386095526,0.003590289554080355
+modelo,unified-all,mpd_unified,RFG5a,NoBosque_30-35,-0.10568617343863451,0.03056507487540507
+modelo,unified-all,mpd_unified,RFG5a,NoBosque_30-35_banda,-0.10844080270099954,0.029711086880666166
+modelo,unified-all,mpd_unified,RFG5a,NoBosque_>35,0.1303163849875373,0.006434521251551461
+modelo,unified-all,mpd_unified,RFG5a,NoBosque_>35_banda,0.09454149411623292,0.007726189617124786
+modelo,unified-all,mpd_unified,RFE1,todas,0.2620038066248092,0.0018538197535078068
+modelo,unified-all,mpd_unified,RFE1,banda,0.206211255147547,0.0022419342378490153
+modelo,unified-all,mpd_unified,RFE1,Forest,0.2885120800132079,0.002214450488518
+modelo,unified-all,mpd_unified,RFE1,Forest_banda,0.24012763703310558,0.002516552815513986
+modelo,unified-all,mpd_unified,RFE1,NoBosque_30-35,-0.10362237963613959,0.005709688522646458
+modelo,unified-all,mpd_unified,RFE1,NoBosque_30-35_banda,-0.10544229332463691,0.009687445292305499
+modelo,unified-all,mpd_unified,RFE1,NoBosque_>35,0.11914278191057419,0.003007060259490868
+modelo,unified-all,mpd_unified,RFE1,NoBosque_>35_banda,0.08306116125985019,0.0019742556817817737
+modelo,unified-all,mpd_unified,RFE2,todas,0.10701863946913208,0.010112642004850547
+modelo,unified-all,mpd_unified,RFE2,banda,0.058171653212192864,0.009951150883776162
+modelo,unified-all,mpd_unified,RFE2,Forest,0.1150226075918294,0.010439183907224215
+modelo,unified-all,mpd_unified,RFE2,Forest_banda,0.07933429555028604,0.010055259058410693
+modelo,unified-all,mpd_unified,RFE2,NoBosque_30-35,-0.15475718963690613,0.039739967372135414
+modelo,unified-all,mpd_unified,RFE2,NoBosque_30-35_banda,-0.1517385990175295,0.04025923530748432
+modelo,unified-all,mpd_unified,RFE2,NoBosque_>35,0.016737581664285888,0.007560406412659805
+modelo,unified-all,mpd_unified,RFE2,NoBosque_>35_banda,0.009032386198843797,0.010329122328045092
+modelo,unified-all,mpd_unified,RFE3,todas,0.25448385528151923,0.0063081077732957316
+modelo,unified-all,mpd_unified,RFE3,banda,0.19903435253639987,0.007427606161992037
+modelo,unified-all,mpd_unified,RFE3,Forest,0.27991019707780557,0.00923124721078599
+modelo,unified-all,mpd_unified,RFE3,Forest_banda,0.23212155620439992,0.010093616937946987
+modelo,unified-all,mpd_unified,RFE3,NoBosque_30-35,-0.12464111271776217,0.009616917938554162
+modelo,unified-all,mpd_unified,RFE3,NoBosque_30-35_banda,-0.1243847641531346,0.008248211833507746
+modelo,unified-all,mpd_unified,RFE3,NoBosque_>35,0.12207939174468563,0.005142994330423623
+modelo,unified-all,mpd_unified,RFE3,NoBosque_>35_banda,0.08609792380497135,0.004504884907051591
+par,unified-all,mpd_unified,RFE1 − RFG5a,todas,0.0018989572678556794,0.0013629868704113507
+par,unified-all,mpd_unified,RFE1 − RFG5a,banda,0.0012086837016779632,0.0012901106562965006
+par,unified-all,mpd_unified,RFE1 − RFG5a,Forest,0.00405462277901969,0.0011166655808284578
+par,unified-all,mpd_unified,RFE1 − RFG5a,Forest_banda,0.00321415317215031,0.0011594864757403186
+par,unified-all,mpd_unified,RFE1 − RFG5a,NoBosque_30-35,0.002063793802494921,0.025468649383500387
+par,unified-all,mpd_unified,RFE1 − RFG5a,NoBosque_30-35_banda,0.002998509376362627,0.022904597339930974
+par,unified-all,mpd_unified,RFE1 − RFG5a,NoBosque_>35,-0.011173603076963134,0.00918704239156217
+par,unified-all,mpd_unified,RFE1 − RFG5a,NoBosque_>35_banda,-0.011480332856382724,0.009366372585449123
+par,unified-all,mpd_unified,RFE3 − RFG5a,todas,-0.005620994075434334,0.0055414013302107455
+par,unified-all,mpd_unified,RFE3 − RFG5a,banda,-0.005968218909469192,0.006106021668678611
+par,unified-all,mpd_unified,RFE3 − RFG5a,Forest,-0.0045472601563826265,0.006292729660021538
+par,unified-all,mpd_unified,RFE3 − RFG5a,Forest_banda,-0.004791927656555339,0.006860307629987206
+par,unified-all,mpd_unified,RFE3 − RFG5a,NoBosque_30-35,-0.018954939279127652,0.025370265943049367
+par,unified-all,mpd_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.015943961452135058,0.021557612982451263
+par,unified-all,mpd_unified,RFE3 − RFG5a,NoBosque_>35,-0.00823699324285169,0.003779622414824382
+par,unified-all,mpd_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.008443570311261564,0.0036774676381441766
+par,unified-all,mpd_unified,RFE2 − B01,todas,0.09722634460297486,0.0013673615574350305
+par,unified-all,mpd_unified,RFE2 − B01,banda,0.09302286401648767,0.0033266205391342587
+par,unified-all,mpd_unified,RFE2 − B01,Forest,0.09783998881913887,0.0013972238702568184
+par,unified-all,mpd_unified,RFE2 − B01,Forest_banda,0.0931071246514646,0.0041867211895901075
+par,unified-all,mpd_unified,RFE2 − B01,NoBosque_30-35,0.19540150798593045,0.0322822759476267
+par,unified-all,mpd_unified,RFE2 − B01,NoBosque_30-35_banda,0.11758608524455612,0.012088492713074491
+par,unified-all,mpd_unified,RFE2 − B01,NoBosque_>35,0.07244908773512578,0.009150033957842257
+par,unified-all,mpd_unified,RFE2 − B01,NoBosque_>35_banda,0.08418901860516015,0.0071338890298598065
+par,unified-all,mpd_unified,RFE1 − B03,todas,0.006659053505753095,0.0066584299010672915
+par,unified-all,mpd_unified,RFE1 − B03,banda,0.007379920719861673,0.006971067567620146
+par,unified-all,mpd_unified,RFE1 − B03,Forest,0.025650411454702187,0.008084574153224309
+par,unified-all,mpd_unified,RFE1 − B03,Forest_banda,0.023507721911381063,0.00814132614884858
+par,unified-all,mpd_unified,RFE1 − B03,NoBosque_30-35,-0.038111838026538315,0.020004563897861195
+par,unified-all,mpd_unified,RFE1 − B03,NoBosque_30-35_banda,-0.03646199019941454,0.01733421178902668
+par,unified-all,mpd_unified,RFE1 − B03,NoBosque_>35,-0.09316995272704494,0.0056873960599828025
+par,unified-all,mpd_unified,RFE1 − B03,NoBosque_>35_banda,-0.1109364943461586,0.006374772977030589
+par,unified-all,mpd_unified,RFG5a − B03,todas,0.004760096237897415,0.007941786931526564
+par,unified-all,mpd_unified,RFG5a − B03,banda,0.00617123701818371,0.008171803895810341
+par,unified-all,mpd_unified,RFG5a − B03,Forest,0.021595788675682497,0.008431363971963488
+par,unified-all,mpd_unified,RFG5a − B03,Forest_banda,0.020293568739230754,0.008472741043727326
+par,unified-all,mpd_unified,RFG5a − B03,NoBosque_30-35,-0.04017563182903324,0.018102741383914763
+par,unified-all,mpd_unified,RFG5a − B03,NoBosque_30-35_banda,-0.039460499575777165,0.018171371209415064
+par,unified-all,mpd_unified,RFG5a − B03,NoBosque_>35,-0.0819963496500818,0.014862072635405878
+par,unified-all,mpd_unified,RFG5a − B03,NoBosque_>35_banda,-0.09945616148977587,0.015183829812717927
+par,unified-all,mpd_unified,RFE2 − B03,todas,-0.14832611364992407,0.0022986365042085995
+par,unified-all,mpd_unified,RFE2 − B03,banda,-0.14065968121549247,0.0024870268209265275
+par,unified-all,mpd_unified,RFE2 − B03,Forest,-0.1478390609666763,0.0010249319168731603
+par,unified-all,mpd_unified,RFE2 − B03,Forest_banda,-0.13728561957143848,0.0011944864726166776
+par,unified-all,mpd_unified,RFE2 − B03,NoBosque_30-35,-0.08924664802730486,0.04374566680715567
+par,unified-all,mpd_unified,RFE2 − B03,NoBosque_30-35_banda,-0.08275829589230714,0.03773832166615038
+par,unified-all,mpd_unified,RFE2 − B03,NoBosque_>35,-0.19557515297333325,0.011550987073807653
+par,unified-all,mpd_unified,RFE2 − B03,NoBosque_>35_banda,-0.18496526940716498,0.01473535031150368
+modelo,unified-all,mntd_unified,B03,todas,0.13553559856740213,0.008548622005957794
+modelo,unified-all,mntd_unified,B03,banda,0.11234181229447955,0.008313411167396183
+modelo,unified-all,mntd_unified,B03,Forest,0.16106148809541151,0.007698179204323415
+modelo,unified-all,mntd_unified,B03,Forest_banda,0.14137449194489923,0.007105421022506412
+modelo,unified-all,mntd_unified,B03,NoBosque_30-35,0.010620924289816905,0.02271624470185019
+modelo,unified-all,mntd_unified,B03,NoBosque_30-35_banda,-0.10410664373145943,0.014570711884227955
+modelo,unified-all,mntd_unified,B03,NoBosque_>35,0.03125642881765556,0.00889991705399331
+modelo,unified-all,mntd_unified,B03,NoBosque_>35_banda,0.04680493860270263,0.01307503663109743
+modelo,unified-all,mntd_unified,B01,todas,-0.01865518888625887,0.010972735450258182
+modelo,unified-all,mntd_unified,B01,banda,-0.029478070178043565,0.009292154473594518
+modelo,unified-all,mntd_unified,B01,Forest,0.007113887562279264,0.006511388528170967
+modelo,unified-all,mntd_unified,B01,Forest_banda,-0.0033933492441349244,0.004921261287580729
+modelo,unified-all,mntd_unified,B01,NoBosque_30-35,-0.29156334619769114,0.0979171502184823
+modelo,unified-all,mntd_unified,B01,NoBosque_30-35_banda,-0.3631772030954299,0.0926155552882655
+modelo,unified-all,mntd_unified,B01,NoBosque_>35,-0.06327069923386874,0.004168266797441331
+modelo,unified-all,mntd_unified,B01,NoBosque_>35_banda,-0.05696215539774552,0.005373291537969956
+modelo,unified-all,mntd_unified,RFG5a,todas,0.12231177383910401,0.008640306108907718
+modelo,unified-all,mntd_unified,RFG5a,banda,0.10342674978780579,0.007441391625133393
+modelo,unified-all,mntd_unified,RFG5a,Forest,0.14321529057814206,0.005908950993880568
+modelo,unified-all,mntd_unified,RFG5a,Forest_banda,0.12530180517653,0.0046255376725556465
+modelo,unified-all,mntd_unified,RFG5a,NoBosque_30-35,0.011958206933457135,0.06313003886925508
+modelo,unified-all,mntd_unified,RFG5a,NoBosque_30-35_banda,-0.11409058213265848,0.05887953895711239
+modelo,unified-all,mntd_unified,RFG5a,NoBosque_>35,0.03736586345038632,0.01026197710356511
+modelo,unified-all,mntd_unified,RFG5a,NoBosque_>35_banda,0.03402515438258217,0.01023315794062142
+modelo,unified-all,mntd_unified,RFE1,todas,0.12135289416519075,0.00748657331313481
+modelo,unified-all,mntd_unified,RFE1,banda,0.10227021328854917,0.006251540745248115
+modelo,unified-all,mntd_unified,RFE1,Forest,0.14052200759628344,0.00514190562160656
+modelo,unified-all,mntd_unified,RFE1,Forest_banda,0.12179736826892744,0.004591717240877553
+modelo,unified-all,mntd_unified,RFE1,NoBosque_30-35,0.02187475187464812,0.06903867118736394
+modelo,unified-all,mntd_unified,RFE1,NoBosque_30-35_banda,-0.0991296908467109,0.06417771986153337
+modelo,unified-all,mntd_unified,RFE1,NoBosque_>35,0.04140057861397454,0.003789530730834224
+modelo,unified-all,mntd_unified,RFE1,NoBosque_>35_banda,0.03874047134012778,0.0047889702453744595
+modelo,unified-all,mntd_unified,RFE2,todas,0.04046308690334229,0.008290677307289971
+modelo,unified-all,mntd_unified,RFE2,banda,0.029302171279877665,0.006689223511251621
+modelo,unified-all,mntd_unified,RFE2,Forest,0.05859156824362122,0.006221888834634253
+modelo,unified-all,mntd_unified,RFE2,Forest_banda,0.0482879132132232,0.004265248069967939
+modelo,unified-all,mntd_unified,RFE2,NoBosque_30-35,-0.0768168312571537,0.05497978149791636
+modelo,unified-all,mntd_unified,RFE2,NoBosque_30-35_banda,-0.1565712761444431,0.051286877542425065
+modelo,unified-all,mntd_unified,RFE2,NoBosque_>35,-0.027440934806786183,0.0027972279914021143
+modelo,unified-all,mntd_unified,RFE2,NoBosque_>35_banda,-0.02145158723976648,0.0022898372648951
+modelo,unified-all,mntd_unified,RFE3,todas,0.1145126341112912,0.009892790307608985
+modelo,unified-all,mntd_unified,RFE3,banda,0.09552922789480574,0.008236581026144574
+modelo,unified-all,mntd_unified,RFE3,Forest,0.13605980409615312,0.004868513822989136
+modelo,unified-all,mntd_unified,RFE3,Forest_banda,0.11786170131001332,0.003212018089044978
+modelo,unified-all,mntd_unified,RFE3,NoBosque_30-35,-0.02081256998560273,0.08314959478745326
+modelo,unified-all,mntd_unified,RFE3,NoBosque_30-35_banda,-0.14844307035128698,0.08326016838025699
+modelo,unified-all,mntd_unified,RFE3,NoBosque_>35,0.03658929540824244,0.007343375087995952
+modelo,unified-all,mntd_unified,RFE3,NoBosque_>35_banda,0.032538076069374346,0.008780164105892429
+par,unified-all,mntd_unified,RFE1 − RFG5a,todas,-0.0009588796739132451,0.0074487028842157655
+par,unified-all,mntd_unified,RFE1 − RFG5a,banda,-0.0011565364992566218,0.007467405380597972
+par,unified-all,mntd_unified,RFE1 − RFG5a,Forest,-0.002693282981858595,0.007935928703816375
+par,unified-all,mntd_unified,RFE1 − RFG5a,Forest_banda,-0.003504436907602567,0.007695433450370848
+par,unified-all,mntd_unified,RFE1 − RFG5a,NoBosque_30-35,0.009916544941190986,0.007117460423152826
+par,unified-all,mntd_unified,RFE1 − RFG5a,NoBosque_30-35_banda,0.014960891285947575,0.008923154832268729
+par,unified-all,mntd_unified,RFE1 − RFG5a,NoBosque_>35,0.004034715163588221,0.006472691300853723
+par,unified-all,mntd_unified,RFE1 − RFG5a,NoBosque_>35_banda,0.004715316957545605,0.0057660543327651215
+par,unified-all,mntd_unified,RFE3 − RFG5a,todas,-0.007799139727812802,0.005910538462098993
+par,unified-all,mntd_unified,RFE3 − RFG5a,banda,-0.007897521893000045,0.006021912684386771
+par,unified-all,mntd_unified,RFE3 − RFG5a,Forest,-0.0071554864819889374,0.003583124468523133
+par,unified-all,mntd_unified,RFE3 − RFG5a,Forest_banda,-0.007440103866516686,0.0036684814572066943
+par,unified-all,mntd_unified,RFE3 − RFG5a,NoBosque_30-35,-0.032770776919059864,0.022437468129178396
+par,unified-all,mntd_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.0343524882186285,0.027689573193804877
+par,unified-all,mntd_unified,RFE3 − RFG5a,NoBosque_>35,-0.000776568042143877,0.01433411980125017
+par,unified-all,mntd_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.0014870783132078236,0.01473349955270511
+par,unified-all,mntd_unified,RFE2 − B01,todas,0.05911827578960116,0.00275728492983851
+par,unified-all,mntd_unified,RFE2 − B01,banda,0.05878024145792123,0.002679498119180118
+par,unified-all,mntd_unified,RFE2 − B01,Forest,0.05147768068134195,0.001521977422143521
+par,unified-all,mntd_unified,RFE2 − B01,Forest_banda,0.05168126245735812,0.0022548807088833786
+par,unified-all,mntd_unified,RFE2 − B01,NoBosque_30-35,0.21474651494053743,0.04333301705252832
+par,unified-all,mntd_unified,RFE2 − B01,NoBosque_30-35_banda,0.20660592695098678,0.04173029842849971
+par,unified-all,mntd_unified,RFE2 − B01,NoBosque_>35,0.03582976442708256,0.006504592771895082
+par,unified-all,mntd_unified,RFE2 − B01,NoBosque_>35_banda,0.03551056815797904,0.003135128087735112
+par,unified-all,mntd_unified,RFE1 − B03,todas,-0.014182704402211366,0.007299373148878165
+par,unified-all,mntd_unified,RFE1 − B03,banda,-0.01007159900593039,0.007668337097105441
+par,unified-all,mntd_unified,RFE1 − B03,Forest,-0.020539480499128054,0.009111947301072457
+par,unified-all,mntd_unified,RFE1 − B03,Forest_banda,-0.01957712367597179,0.009278275665817032
+par,unified-all,mntd_unified,RFE1 − B03,NoBosque_30-35,0.011253827584831214,0.04694739441912872
+par,unified-all,mntd_unified,RFE1 − B03,NoBosque_30-35_banda,0.004976952884748531,0.051798225755545164
+par,unified-all,mntd_unified,RFE1 − B03,NoBosque_>35,0.010144149796318983,0.00842890757647041
+par,unified-all,mntd_unified,RFE1 − B03,NoBosque_>35_banda,-0.008064467262574851,0.010297811996247895
+par,unified-all,mntd_unified,RFG5a − B03,todas,-0.01322382472829812,0.00014954786868562035
+par,unified-all,mntd_unified,RFG5a − B03,banda,-0.008915062506673769,0.001015788514206015
+par,unified-all,mntd_unified,RFG5a − B03,Forest,-0.017846197517269458,0.0018351637018692217
+par,unified-all,mntd_unified,RFG5a − B03,Forest_banda,-0.01607268676836922,0.002687122086959263
+par,unified-all,mntd_unified,RFG5a − B03,NoBosque_30-35,0.001337282643640229,0.0407258502835102
+par,unified-all,mntd_unified,RFG5a − B03,NoBosque_30-35_banda,-0.009983938401199044,0.0456383361550513
+par,unified-all,mntd_unified,RFG5a − B03,NoBosque_>35,0.006109434632730763,0.011184056776269427
+par,unified-all,mntd_unified,RFG5a − B03,NoBosque_>35_banda,-0.012779784220120457,0.012089058172328233
+par,unified-all,mntd_unified,RFE2 − B03,todas,-0.09507251166405983,0.002861067067423608
+par,unified-all,mntd_unified,RFE2 − B03,banda,-0.08303964101460189,0.004122549867047271
+par,unified-all,mntd_unified,RFE2 − B03,Forest,-0.10246991985179028,0.0031717462740697986
+par,unified-all,mntd_unified,RFE2 − B03,Forest_banda,-0.09308657873167603,0.004675480390857172
+par,unified-all,mntd_unified,RFE2 − B03,NoBosque_30-35,-0.0874377555469706,0.0326186529673901
+par,unified-all,mntd_unified,RFE2 − B03,NoBosque_30-35_banda,-0.05246463241298368,0.03765840072311405
+par,unified-all,mntd_unified,RFE2 − B03,NoBosque_>35,-0.058697363624441744,0.008445782315688505
+par,unified-all,mntd_unified,RFE2 − B03,NoBosque_>35_banda,-0.0682565258424691,0.01196750775466307
+modelo,unified-all,ses_mpd_unified,B03,todas,0.2704012678170583,0.007088440844112556
+modelo,unified-all,ses_mpd_unified,B03,banda,0.20198939264903293,0.007957621728974603
+modelo,unified-all,ses_mpd_unified,B03,Forest,0.27734689670950274,0.004037473651916217
+modelo,unified-all,ses_mpd_unified,B03,Forest_banda,0.22641626150306435,0.006151583000684391
+modelo,unified-all,ses_mpd_unified,B03,NoBosque_30-35,-0.1454813935287854,0.05250041502838673
+modelo,unified-all,ses_mpd_unified,B03,NoBosque_30-35_banda,-0.10058291733661935,0.02086185788744922
+modelo,unified-all,ses_mpd_unified,B03,NoBosque_>35,0.21864096694323754,0.008820532352445922
+modelo,unified-all,ses_mpd_unified,B03,NoBosque_>35_banda,0.19453751987870319,0.010101095166556436
+modelo,unified-all,ses_mpd_unified,B01,todas,0.028615008603844323,0.008066357290634029
+modelo,unified-all,ses_mpd_unified,B01,banda,-0.0316078093777327,0.008190596164231803
+modelo,unified-all,ses_mpd_unified,B01,Forest,0.026765167160308967,0.010442884483322992
+modelo,unified-all,ses_mpd_unified,B01,Forest_banda,-0.018138495929355347,0.007055748242441066
+modelo,unified-all,ses_mpd_unified,B01,NoBosque_30-35,-0.394587598530846,0.0505066084024875
+modelo,unified-all,ses_mpd_unified,B01,NoBosque_30-35_banda,-0.17725779232602426,0.014988994700620074
+modelo,unified-all,ses_mpd_unified,B01,NoBosque_>35,-0.02949672805842248,0.016591438288330436
+modelo,unified-all,ses_mpd_unified,B01,NoBosque_>35_banda,-0.05190014126495409,0.013632023448150631
+modelo,unified-all,ses_mpd_unified,RFG5a,todas,0.2824769954895597,0.0037631669360773026
+modelo,unified-all,ses_mpd_unified,RFG5a,banda,0.21358343942931834,0.004404288586042993
+modelo,unified-all,ses_mpd_unified,RFG5a,Forest,0.29771320707498333,0.0037502371890863555
+modelo,unified-all,ses_mpd_unified,RFG5a,Forest_banda,0.24221883089932658,0.002822756577613925
+modelo,unified-all,ses_mpd_unified,RFG5a,NoBosque_30-35,-0.07946907618691974,0.031130538921550613
+modelo,unified-all,ses_mpd_unified,RFG5a,NoBosque_30-35_banda,-0.042668005487117876,0.01552785333668958
+modelo,unified-all,ses_mpd_unified,RFG5a,NoBosque_>35,0.13918215399210052,0.01231819476744282
+modelo,unified-all,ses_mpd_unified,RFG5a,NoBosque_>35_banda,0.10535547232180564,0.017416081308518197
+modelo,unified-all,ses_mpd_unified,RFE1,todas,0.2826908297443527,0.004796215348682362
+modelo,unified-all,ses_mpd_unified,RFE1,banda,0.21336598505208235,0.005205726246669257
+modelo,unified-all,ses_mpd_unified,RFE1,Forest,0.30153077271927403,0.004310898878974735
+modelo,unified-all,ses_mpd_unified,RFE1,Forest_banda,0.24617086122069756,0.00394288447437118
+modelo,unified-all,ses_mpd_unified,RFE1,NoBosque_30-35,-0.09837568396404046,0.02651043789180527
+modelo,unified-all,ses_mpd_unified,RFE1,NoBosque_30-35_banda,-0.06430415876334528,0.013730916767291535
+modelo,unified-all,ses_mpd_unified,RFE1,NoBosque_>35,0.12253360492740369,0.008782301378875902
+modelo,unified-all,ses_mpd_unified,RFE1,NoBosque_>35_banda,0.09027376239769302,0.011153093180395193
+modelo,unified-all,ses_mpd_unified,RFE2,todas,0.100045794710877,0.008443014309497477
+modelo,unified-all,ses_mpd_unified,RFE2,banda,0.02822169800841819,0.007979746337578206
+modelo,unified-all,ses_mpd_unified,RFE2,Forest,0.10065593945022544,0.010719317699344047
+modelo,unified-all,ses_mpd_unified,RFE2,Forest_banda,0.04857802495667166,0.008303989990704965
+modelo,unified-all,ses_mpd_unified,RFE2,NoBosque_30-35,-0.24025484849651005,0.020895237169943078
+modelo,unified-all,ses_mpd_unified,RFE2,NoBosque_30-35_banda,-0.15415595485406283,0.016789684757503674
+modelo,unified-all,ses_mpd_unified,RFE2,NoBosque_>35,-0.0017151954105545746,0.00448790458757647
+modelo,unified-all,ses_mpd_unified,RFE2,NoBosque_>35_banda,-0.010787724250301686,0.005841139716737122
+modelo,unified-all,ses_mpd_unified,RFE3,todas,0.27842828297107824,0.005512065246255904
+modelo,unified-all,ses_mpd_unified,RFE3,banda,0.20924871776709117,0.0054320867496427195
+modelo,unified-all,ses_mpd_unified,RFE3,Forest,0.2947098739727099,0.006078621524478287
+modelo,unified-all,ses_mpd_unified,RFE3,Forest_banda,0.23883983930701405,0.005468775240787086
+modelo,unified-all,ses_mpd_unified,RFE3,NoBosque_30-35,-0.09746515629049506,0.025675015245172184
+modelo,unified-all,ses_mpd_unified,RFE3,NoBosque_30-35_banda,-0.05763893957138041,0.014499875942538492
+modelo,unified-all,ses_mpd_unified,RFE3,NoBosque_>35,0.1337503275494091,0.0020713663177144054
+modelo,unified-all,ses_mpd_unified,RFE3,NoBosque_>35_banda,0.10184691052401029,0.0034725215893125524
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,todas,0.00021383425479304385,0.001263204574361747
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,banda,-0.0002174543772360075,0.0011822836812498266
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,Forest,0.003817565644290699,0.001151621206800245
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,Forest_banda,0.003952030321370999,0.0012185321951322062
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,NoBosque_30-35,-0.01890660777712072,0.005341054665194352
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.021636153276227404,0.004346192053245374
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,NoBosque_>35,-0.016648549064696816,0.0073777630419718946
+par,unified-all,ses_mpd_unified,RFE1 − RFG5a,NoBosque_>35_banda,-0.015081709924112618,0.008349809424232477
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,todas,-0.0040487125184814525,0.002522535976121765
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,banda,-0.004334721662227185,0.0025337864501091987
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,Forest,-0.003003333102273409,0.0026775271056834085
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,Forest_banda,-0.0033789915923125116,0.0026700525943854597
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,NoBosque_30-35,-0.017996080103575302,0.005921471820402019
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.014970934084262533,0.003222147545961545
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,NoBosque_>35,-0.005431826442691394,0.013736462374390085
+par,unified-all,ses_mpd_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.003508561797795351,0.014107694132392214
+par,unified-all,ses_mpd_unified,RFE2 − B01,todas,0.07143078610703268,0.0006182395001164884
+par,unified-all,ses_mpd_unified,RFE2 − B01,banda,0.05982950738615089,0.001699284751670723
+par,unified-all,ses_mpd_unified,RFE2 − B01,Forest,0.07389077228991647,0.001910378814123505
+par,unified-all,ses_mpd_unified,RFE2 − B01,Forest_banda,0.06671652088602702,0.0017835920918421275
+par,unified-all,ses_mpd_unified,RFE2 − B01,NoBosque_30-35,0.15433275003433597,0.029822276729706484
+par,unified-all,ses_mpd_unified,RFE2 − B01,NoBosque_30-35_banda,0.023101837471961446,0.002884819585137108
+par,unified-all,ses_mpd_unified,RFE2 − B01,NoBosque_>35,0.027781532647867906,0.012696996190151012
+par,unified-all,ses_mpd_unified,RFE2 − B01,NoBosque_>35_banda,0.0411124170146524,0.015601588736836465
+par,unified-all,ses_mpd_unified,RFE1 − B03,todas,0.012289561927294431,0.0065367342197942165
+par,unified-all,ses_mpd_unified,RFE1 − B03,banda,0.01137659240304941,0.005755495124680495
+par,unified-all,ses_mpd_unified,RFE1 − B03,Forest,0.02418387600977127,0.005381898779924542
+par,unified-all,ses_mpd_unified,RFE1 − B03,Forest_banda,0.019754599717633232,0.0054008559968323905
+par,unified-all,ses_mpd_unified,RFE1 − B03,NoBosque_30-35,0.04710570956474491,0.03156941178310564
+par,unified-all,ses_mpd_unified,RFE1 − B03,NoBosque_30-35_banda,0.03627875857327408,0.014854560880401957
+par,unified-all,ses_mpd_unified,RFE1 − B03,NoBosque_>35,-0.09610736201583385,0.0036171631534842427
+par,unified-all,ses_mpd_unified,RFE1 − B03,NoBosque_>35_banda,-0.10426375748101017,0.0018726444091342978
+par,unified-all,ses_mpd_unified,RFG5a − B03,todas,0.012075727672501388,0.005716920995243557
+par,unified-all,ses_mpd_unified,RFG5a − B03,banda,0.011594046780285416,0.005088325946125323
+par,unified-all,ses_mpd_unified,RFG5a − B03,Forest,0.02036631036548057,0.00572569633933175
+par,unified-all,ses_mpd_unified,RFG5a − B03,Forest_banda,0.015802569396262234,0.00574162255133197
+par,unified-all,ses_mpd_unified,RFG5a − B03,NoBosque_30-35,0.06601231734186563,0.02653943631960092
+par,unified-all,ses_mpd_unified,RFG5a − B03,NoBosque_30-35_banda,0.05791491184950148,0.010658474943646403
+par,unified-all,ses_mpd_unified,RFG5a − B03,NoBosque_>35,-0.07945881295113703,0.0041751874221183085
+par,unified-all,ses_mpd_unified,RFG5a − B03,NoBosque_>35_banda,-0.08918204755689756,0.008042967848057435
+par,unified-all,ses_mpd_unified,RFE2 − B03,todas,-0.1703554731061813,0.011251130916146079
+par,unified-all,ses_mpd_unified,RFE2 − B03,banda,-0.17376769464061473,0.01079795761489378
+par,unified-all,ses_mpd_unified,RFE2 − B03,Forest,-0.1766909572592773,0.011335620725495989
+par,unified-all,ses_mpd_unified,RFE2 − B03,Forest_banda,-0.17783823654639266,0.010864896077496883
+par,unified-all,ses_mpd_unified,RFE2 − B03,NoBosque_30-35,-0.09477345496772467,0.03187798154194977
+par,unified-all,ses_mpd_unified,RFE2 − B03,NoBosque_30-35_banda,-0.05357303751744347,0.024817108730537947
+par,unified-all,ses_mpd_unified,RFE2 − B03,NoBosque_>35,-0.2203561623537921,0.008502116701062608
+par,unified-all,ses_mpd_unified,RFE2 − B03,NoBosque_>35_banda,-0.20532524412900488,0.0044856485033516295
+modelo,unified-all,ses_pd_unified,B03,todas,0.21039720238835055,0.008521761974931994
+modelo,unified-all,ses_pd_unified,B03,banda,0.16034012340518045,0.008301553535850279
+modelo,unified-all,ses_pd_unified,B03,Forest,0.22204469381313274,0.011400160593763566
+modelo,unified-all,ses_pd_unified,B03,Forest_banda,0.184106979748333,0.01030654444730343
+modelo,unified-all,ses_pd_unified,B03,NoBosque_30-35,-0.15605491329042417,0.008846390684928278
+modelo,unified-all,ses_pd_unified,B03,NoBosque_30-35_banda,-0.13847350805586664,0.0010696995599576565
+modelo,unified-all,ses_pd_unified,B03,NoBosque_>35,0.20518881496777244,0.002815241012147354
+modelo,unified-all,ses_pd_unified,B03,NoBosque_>35_banda,0.19923149454879918,0.0015114014684377822
+modelo,unified-all,ses_pd_unified,B01,todas,-0.0015121918349569885,0.008187275739985107
+modelo,unified-all,ses_pd_unified,B01,banda,-0.036962675259112864,0.008632305550982511
+modelo,unified-all,ses_pd_unified,B01,Forest,0.004459873698979082,0.014736634587551685
+modelo,unified-all,ses_pd_unified,B01,Forest_banda,-0.022661177323175963,0.012062080636902926
+modelo,unified-all,ses_pd_unified,B01,NoBosque_30-35,-0.37168798155772004,0.06278677212380614
+modelo,unified-all,ses_pd_unified,B01,NoBosque_30-35_banda,-0.24431258372060985,0.026664715710009668
+modelo,unified-all,ses_pd_unified,B01,NoBosque_>35,-0.010916996841263163,0.006389998292443096
+modelo,unified-all,ses_pd_unified,B01,NoBosque_>35_banda,-0.007641750534812752,0.0025366915336531497
+modelo,unified-all,ses_pd_unified,RFG5a,todas,0.21738270727340403,0.006329846831341954
+modelo,unified-all,ses_pd_unified,RFG5a,banda,0.17113510359888648,0.0075963288878894515
+modelo,unified-all,ses_pd_unified,RFG5a,Forest,0.23706376079693245,0.010424435884256532
+modelo,unified-all,ses_pd_unified,RFG5a,Forest_banda,0.19789113270100014,0.010554232103374556
+modelo,unified-all,ses_pd_unified,RFG5a,NoBosque_30-35,-0.09896824075934936,0.035497245431492866
+modelo,unified-all,ses_pd_unified,RFG5a,NoBosque_30-35_banda,-0.0803963786597562,0.011008771771970908
+modelo,unified-all,ses_pd_unified,RFG5a,NoBosque_>35,0.1314293792488069,0.00570918664442507
+modelo,unified-all,ses_pd_unified,RFG5a,NoBosque_>35_banda,0.11931952182475314,0.0007576650432616682
+modelo,unified-all,ses_pd_unified,RFE1,todas,0.21614575640693182,0.0063477927071210385
+modelo,unified-all,ses_pd_unified,RFE1,banda,0.16833265831456076,0.007173478957343096
+modelo,unified-all,ses_pd_unified,RFE1,Forest,0.23949350398513916,0.010090918099198754
+modelo,unified-all,ses_pd_unified,RFE1,Forest_banda,0.19860603227474927,0.009774329880518412
+modelo,unified-all,ses_pd_unified,RFE1,NoBosque_30-35,-0.11563741449492622,0.028625261457358418
+modelo,unified-all,ses_pd_unified,RFE1,NoBosque_30-35_banda,-0.09621128967845904,0.014420037188082921
+modelo,unified-all,ses_pd_unified,RFE1,NoBosque_>35,0.11622097964065674,0.008922990442468758
+modelo,unified-all,ses_pd_unified,RFE1,NoBosque_>35_banda,0.1046881516581154,0.004576587466465214
+modelo,unified-all,ses_pd_unified,RFE2,todas,0.06775589659355381,0.005965346968485383
+modelo,unified-all,ses_pd_unified,RFE2,banda,0.022220093385238632,0.006904138107320833
+modelo,unified-all,ses_pd_unified,RFE2,Forest,0.07759700292576373,0.010094654783881723
+modelo,unified-all,ses_pd_unified,RFE2,Forest_banda,0.043233896504462486,0.010023777077233894
+modelo,unified-all,ses_pd_unified,RFE2,NoBosque_30-35,-0.20742591995803447,0.02544937172573902
+modelo,unified-all,ses_pd_unified,RFE2,NoBosque_30-35_banda,-0.16814214758921753,0.009561408873942589
+modelo,unified-all,ses_pd_unified,RFE2,NoBosque_>35,-0.011279630411483351,0.0011790444734195256
+modelo,unified-all,ses_pd_unified,RFE2,NoBosque_>35_banda,0.011907838158359274,0.0014499664574967133
+modelo,unified-all,ses_pd_unified,RFE3,todas,0.21568162793877124,0.006732481270467312
+modelo,unified-all,ses_pd_unified,RFE3,banda,0.1691974410667628,0.008146301651636146
+modelo,unified-all,ses_pd_unified,RFE3,Forest,0.2371234321131832,0.009766996807536645
+modelo,unified-all,ses_pd_unified,RFE3,Forest_banda,0.19789054346223323,0.01016405407970234
+modelo,unified-all,ses_pd_unified,RFE3,NoBosque_30-35,-0.11217351799742355,0.02766476028961939
+modelo,unified-all,ses_pd_unified,RFE3,NoBosque_30-35_banda,-0.09262574672206199,0.00352676039455116
+modelo,unified-all,ses_pd_unified,RFE3,NoBosque_>35,0.1253375670064835,0.005978207249571432
+modelo,unified-all,ses_pd_unified,RFE3,NoBosque_>35_banda,0.11307719291997524,0.004186278059183154
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,todas,-0.0012369508664722046,0.00047365512789607927
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,banda,-0.0028024452843257164,0.000620729424505967
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,Forest,0.002429743188206731,0.0017698015626312238
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,Forest_banda,0.0007148995737491134,0.0014741820540379212
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,NoBosque_30-35,-0.01666917373557686,0.022258019957817024
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.015814911018702842,0.013426466353926853
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,NoBosque_>35,-0.015208399608150161,0.004913397329841025
+par,unified-all,ses_pd_unified,RFE1 − RFG5a,NoBosque_>35_banda,-0.014631370166637736,0.0052326599377792455
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,todas,-0.0017010793346327786,0.0011771360929072536
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,banda,-0.0019376625321236851,0.0008347036668193623
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,Forest,5.967131625076819e-05,0.0020532614268983247
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,Forest_banda,-5.892387669274394e-07,0.0013780711442822678
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,NoBosque_30-35,-0.013205277238074187,0.008030458103533469
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.01222936806230579,0.00901770429693595
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,NoBosque_>35,-0.006091812242323395,0.0035340876692781242
+par,unified-all,ses_pd_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.006242328904777901,0.00418896383715571
+par,unified-all,ses_pd_unified,RFE2 − B01,todas,0.0692680884285108,0.004167929507740324
+par,unified-all,ses_pd_unified,RFE2 − B01,banda,0.05918276864435149,0.004528460538410313
+par,unified-all,ses_pd_unified,RFE2 − B01,Forest,0.07313712922678466,0.005229812432836262
+par,unified-all,ses_pd_unified,RFE2 − B01,Forest_banda,0.06589507382763844,0.0035329317856546034
+par,unified-all,ses_pd_unified,RFE2 − B01,NoBosque_30-35,0.16426206159968557,0.038685678269750425
+par,unified-all,ses_pd_unified,RFE2 − B01,NoBosque_30-35_banda,0.07617043613139234,0.02150326701278166
+par,unified-all,ses_pd_unified,RFE2 − B01,NoBosque_>35,-0.000362633570220187,0.005235248321681546
+par,unified-all,ses_pd_unified,RFE2 − B01,NoBosque_>35_banda,0.019549588693172026,0.003817600824383321
+par,unified-all,ses_pd_unified,RFE1 − B03,todas,0.005748554018581283,0.0022905852153240285
+par,unified-all,ses_pd_unified,RFE1 − B03,banda,0.007992534909380308,0.0016645582063928449
+par,unified-all,ses_pd_unified,RFE1 − B03,Forest,0.01744881017200643,0.0025043563575157016
+par,unified-all,ses_pd_unified,RFE1 − B03,Forest_banda,0.014499052526416256,0.002624174118100857
+par,unified-all,ses_pd_unified,RFE1 − B03,NoBosque_30-35,0.04041749879549794,0.025734008823235368
+par,unified-all,ses_pd_unified,RFE1 − B03,NoBosque_30-35_banda,0.04226221837740759,0.014862267983431725
+par,unified-all,ses_pd_unified,RFE1 − B03,NoBosque_>35,-0.08896783532711572,0.007507923634213143
+par,unified-all,ses_pd_unified,RFE1 − B03,NoBosque_>35_banda,-0.09454334289068378,0.003930664569307478
+par,unified-all,ses_pd_unified,RFG5a − B03,todas,0.006985504885053488,0.0025321436089325074
+par,unified-all,ses_pd_unified,RFG5a − B03,banda,0.010794980193706024,0.0018833095132976612
+par,unified-all,ses_pd_unified,RFG5a − B03,Forest,0.015019066983799697,0.0010280576861901114
+par,unified-all,ses_pd_unified,RFG5a − B03,Forest_banda,0.013784152952667142,0.0014129734503863511
+par,unified-all,ses_pd_unified,RFG5a − B03,NoBosque_30-35,0.0570866725310748,0.027611685638993595
+par,unified-all,ses_pd_unified,RFG5a − B03,NoBosque_30-35_banda,0.05807712939611043,0.012074044421581326
+par,unified-all,ses_pd_unified,RFG5a − B03,NoBosque_>35,-0.07375943571896555,0.003256351915094436
+par,unified-all,ses_pd_unified,RFG5a − B03,NoBosque_>35_banda,-0.07991197272404604,0.0022268994920676063
+par,unified-all,ses_pd_unified,RFE2 − B03,todas,-0.14264130579479672,0.003305864353936396
+par,unified-all,ses_pd_unified,RFE2 − B03,banda,-0.1381200300199418,0.0018353976416959445
+par,unified-all,ses_pd_unified,RFE2 − B03,Forest,-0.144447690887369,0.00285612905469311
+par,unified-all,ses_pd_unified,RFE2 − B03,Forest_banda,-0.14087308324387052,0.0021730774387004577
+par,unified-all,ses_pd_unified,RFE2 − B03,NoBosque_30-35,-0.0513710066676103,0.020907320118038072
+par,unified-all,ses_pd_unified,RFE2 − B03,NoBosque_30-35_banda,-0.0296686395333509,0.010621637996592471
+par,unified-all,ses_pd_unified,RFE2 − B03,NoBosque_>35,-0.2164684453792558,0.0016811914417510147
+par,unified-all,ses_pd_unified,RFE2 − B03,NoBosque_>35_banda,-0.1873236563904399,0.0029600751487680378
+modelo,unified-all,dark_n_unified,B03,todas,0.6816956839681274,0.007172847447652615
+modelo,unified-all,dark_n_unified,B03,banda,0.3263908786463901,0.006433192037793317
+modelo,unified-all,dark_n_unified,B03,Forest,0.7505467397239091,0.0005276737936562298
+modelo,unified-all,dark_n_unified,B03,Forest_banda,0.32102159743823594,0.003731766783608336
+modelo,unified-all,dark_n_unified,B03,NoBosque_30-35,0.2961017720820168,0.03787962588332718
+modelo,unified-all,dark_n_unified,B03,NoBosque_30-35_banda,0.27334851751925626,0.014870512629559199
+modelo,unified-all,dark_n_unified,B03,NoBosque_>35,0.6526196716350539,0.008068253078549147
+modelo,unified-all,dark_n_unified,B03,NoBosque_>35_banda,0.297295186020475,0.008098522025372644
+modelo,unified-all,dark_n_unified,B01,todas,0.47190079810484403,0.008898339275500863
+modelo,unified-all,dark_n_unified,B01,banda,0.010563280946340958,0.011027014485153443
+modelo,unified-all,dark_n_unified,B01,Forest,0.5337561408839738,0.007314408508822746
+modelo,unified-all,dark_n_unified,B01,Forest_banda,-0.035075176218500724,0.00585603527635738
+modelo,unified-all,dark_n_unified,B01,NoBosque_30-35,-0.0039163090557537234,0.05653585525072869
+modelo,unified-all,dark_n_unified,B01,NoBosque_30-35_banda,-0.007850526435590624,0.025068338908100465
+modelo,unified-all,dark_n_unified,B01,NoBosque_>35,0.482232899813976,0.009493795737873139
+modelo,unified-all,dark_n_unified,B01,NoBosque_>35_banda,0.1421679908846265,0.00211973089848055
+modelo,unified-all,dark_n_unified,RFG5a,todas,0.692676269703365,0.0027668042826831667
+modelo,unified-all,dark_n_unified,RFG5a,banda,0.3393724662477753,0.0009533862319744282
+modelo,unified-all,dark_n_unified,RFG5a,Forest,0.7559906512318871,0.0010164946462726293
+modelo,unified-all,dark_n_unified,RFG5a,Forest_banda,0.32233337940531676,0.003872029315978899
+modelo,unified-all,dark_n_unified,RFG5a,NoBosque_30-35,0.3273450579039059,0.016861185604544752
+modelo,unified-all,dark_n_unified,RFG5a,NoBosque_30-35_banda,0.2559648883856316,0.005331323969120341
+modelo,unified-all,dark_n_unified,RFG5a,NoBosque_>35,0.6713689738089018,0.005566971673925379
+modelo,unified-all,dark_n_unified,RFG5a,NoBosque_>35_banda,0.3035489924240393,0.007638278880724681
+modelo,unified-all,dark_n_unified,RFE1,todas,0.6915842221057055,0.004050433761656129
+modelo,unified-all,dark_n_unified,RFE1,banda,0.3377875051347586,0.003996163628845335
+modelo,unified-all,dark_n_unified,RFE1,Forest,0.7539715349983537,0.0007062977273171183
+modelo,unified-all,dark_n_unified,RFE1,Forest_banda,0.31801765592898656,0.0013743890519612688
+modelo,unified-all,dark_n_unified,RFE1,NoBosque_30-35,0.31965234406116944,0.021447340279514913
+modelo,unified-all,dark_n_unified,RFE1,NoBosque_30-35_banda,0.24853170686519277,0.01077668740473301
+modelo,unified-all,dark_n_unified,RFE1,NoBosque_>35,0.6812970450385096,0.004499087467916778
+modelo,unified-all,dark_n_unified,RFE1,NoBosque_>35_banda,0.32377919950421763,0.005221805036394431
+modelo,unified-all,dark_n_unified,RFE2,todas,0.4702668242525458,0.00809068983828825
+modelo,unified-all,dark_n_unified,RFE2,banda,0.01216917952790634,0.010123502069395307
+modelo,unified-all,dark_n_unified,RFE2,Forest,0.5264887384541982,0.0037742809873570803
+modelo,unified-all,dark_n_unified,RFE2,Forest_banda,-0.028467746322195547,0.0054810399285129055
+modelo,unified-all,dark_n_unified,RFE2,NoBosque_30-35,-0.006041627050303644,0.05280982306541226
+modelo,unified-all,dark_n_unified,RFE2,NoBosque_30-35_banda,-0.03959414349894308,0.030841930158401684
+modelo,unified-all,dark_n_unified,RFE2,NoBosque_>35,0.5061356676625236,0.0069614586533996246
+modelo,unified-all,dark_n_unified,RFE2,NoBosque_>35_banda,0.16707368909441767,0.0059978299524820165
+modelo,unified-all,dark_n_unified,RFE3,todas,0.6910240934491224,0.003621142785071918
+modelo,unified-all,dark_n_unified,RFE3,banda,0.3360663740974559,0.0032779445935205674
+modelo,unified-all,dark_n_unified,RFE3,Forest,0.7556212203629853,0.0007421675872197738
+modelo,unified-all,dark_n_unified,RFE3,Forest_banda,0.32167384089574674,0.0007706158578670536
+modelo,unified-all,dark_n_unified,RFE3,NoBosque_30-35,0.3208871960488389,0.01787156976706324
+modelo,unified-all,dark_n_unified,RFE3,NoBosque_30-35_banda,0.24929699940413155,0.008276730780126371
+modelo,unified-all,dark_n_unified,RFE3,NoBosque_>35,0.6684298053455762,0.004811319355767016
+modelo,unified-all,dark_n_unified,RFE3,NoBosque_>35_banda,0.2982132783480728,0.0057149029127360005
+par,unified-all,dark_n_unified,RFE1 − RFG5a,todas,-0.0010920475976596844,0.0015488563283973977
+par,unified-all,dark_n_unified,RFE1 − RFG5a,banda,-0.0015849611130166845,0.003057747727369445
+par,unified-all,dark_n_unified,RFE1 − RFG5a,Forest,-0.0020191162335334947,0.001096404544170282
+par,unified-all,dark_n_unified,RFE1 − RFG5a,Forest_banda,-0.004315723476330173,0.00282752336705799
+par,unified-all,dark_n_unified,RFE1 − RFG5a,NoBosque_30-35,-0.007692713842736472,0.007100402654201848
+par,unified-all,dark_n_unified,RFE1 − RFG5a,NoBosque_30-35_banda,-0.007433181520438814,0.006697780808130368
+par,unified-all,dark_n_unified,RFE1 − RFG5a,NoBosque_>35,0.009928071229607704,0.001067908947635317
+par,unified-all,dark_n_unified,RFE1 − RFG5a,NoBosque_>35_banda,0.02023020708017831,0.0024533384531686066
+par,unified-all,dark_n_unified,RFE3 − RFG5a,todas,-0.0016521762542426321,0.0010328435683907451
+par,unified-all,dark_n_unified,RFE3 − RFG5a,banda,-0.0033060921503193694,0.002325755318996176
+par,unified-all,dark_n_unified,RFE3 − RFG5a,Forest,-0.00036943086890173227,0.001244729515680818
+par,unified-all,dark_n_unified,RFE3 − RFG5a,Forest_banda,-0.0006595385095699754,0.0032315788063622276
+par,unified-all,dark_n_unified,RFE3 − RFG5a,NoBosque_30-35,-0.006457861855066953,0.003988336623427013
+par,unified-all,dark_n_unified,RFE3 − RFG5a,NoBosque_30-35_banda,-0.006667888981500021,0.003977850687338739
+par,unified-all,dark_n_unified,RFE3 − RFG5a,NoBosque_>35,-0.002939168463325722,0.0007560283117240394
+par,unified-all,dark_n_unified,RFE3 − RFG5a,NoBosque_>35_banda,-0.0053357140759665205,0.0019687531035582468
+par,unified-all,dark_n_unified,RFE2 − B01,todas,-0.0016339738522982428,0.0012137968815610334
+par,unified-all,dark_n_unified,RFE2 − B01,banda,0.001605898581565383,0.0019455181904066412
+par,unified-all,dark_n_unified,RFE2 − B01,Forest,-0.007267402429775527,0.0035620874572353995
+par,unified-all,dark_n_unified,RFE2 − B01,Forest_banda,0.0066074298963051765,0.007352339241501063
+par,unified-all,dark_n_unified,RFE2 − B01,NoBosque_30-35,-0.002125317994549921,0.007773095808950515
+par,unified-all,dark_n_unified,RFE2 − B01,NoBosque_30-35_banda,-0.03174361706335246,0.006076105461710228
+par,unified-all,dark_n_unified,RFE2 − B01,NoBosque_>35,0.023902767848547574,0.003193124339126826
+par,unified-all,dark_n_unified,RFE2 − B01,NoBosque_>35_banda,0.02490569820979116,0.004884239971082964
+par,unified-all,dark_n_unified,RFE1 − B03,todas,0.009888538137577951,0.0032751041629488953
+par,unified-all,dark_n_unified,RFE1 − B03,banda,0.011396626488368514,0.0029727223595213278
+par,unified-all,dark_n_unified,RFE1 − B03,Forest,0.003424795274444651,0.0007512336207767948
+par,unified-all,dark_n_unified,RFE1 − B03,Forest_banda,-0.0030039415092493935,0.004889565385015775
+par,unified-all,dark_n_unified,RFE1 − B03,NoBosque_30-35,0.023550571979152595,0.01672118421176801
+par,unified-all,dark_n_unified,RFE1 − B03,NoBosque_30-35_banda,-0.024816810654063493,0.004486469746022942
+par,unified-all,dark_n_unified,RFE1 − B03,NoBosque_>35,0.028677373403455737,0.0036320118792854354
+par,unified-all,dark_n_unified,RFE1 − B03,NoBosque_>35_banda,0.02648401348374263,0.0034122145071057205
+par,unified-all,dark_n_unified,RFG5a − B03,todas,0.010980585735237636,0.004419032371099999
+par,unified-all,dark_n_unified,RFG5a − B03,banda,0.0129815876013852,0.0054983342263841516
+par,unified-all,dark_n_unified,RFG5a − B03,Forest,0.005443911507978146,0.0014972615878658911
+par,unified-all,dark_n_unified,RFG5a − B03,Forest_banda,0.001311781967080779,0.006179232613453058
+par,unified-all,dark_n_unified,RFG5a − B03,NoBosque_30-35,0.031243285821889066,0.021489991465267307
+par,unified-all,dark_n_unified,RFG5a − B03,NoBosque_30-35_banda,-0.01738362913362468,0.011172635148514822
+par,unified-all,dark_n_unified,RFG5a − B03,NoBosque_>35,0.018749302173848032,0.002608053442500395
+par,unified-all,dark_n_unified,RFG5a − B03,NoBosque_>35_banda,0.0062538064035643215,0.0017572113143735808
+par,unified-all,dark_n_unified,RFE2 − B03,todas,-0.21142885971558165,0.0016841327918088477
+par,unified-all,dark_n_unified,RFE2 − B03,banda,-0.31422169911848374,0.0036907373268066437
+par,unified-all,dark_n_unified,RFE2 − B03,Forest,-0.22405800126971068,0.004061445516365869
+par,unified-all,dark_n_unified,RFE2 − B03,Forest_banda,-0.34948934376043156,0.006992236312122764
+par,unified-all,dark_n_unified,RFE2 − B03,NoBosque_30-35,-0.30214339913232047,0.015603344488245461
+par,unified-all,dark_n_unified,RFE2 − B03,NoBosque_30-35_banda,-0.31294266101819934,0.019007735319622323
+par,unified-all,dark_n_unified,RFE2 − B03,NoBosque_>35,-0.14648400397253025,0.003864987565255435
+par,unified-all,dark_n_unified,RFE2 − B03,NoBosque_>35_banda,-0.13022149692605733,0.008219983130281024
