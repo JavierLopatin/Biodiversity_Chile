@@ -1,0 +1,289 @@
+tipo,familia,target,etiqueta,lectura,n,valor,DE
+modelo,pg_all_pcl,lcbd_count_sorensen,B03,parcelas_cl,479,0.6654830510963949,0.00878899314652479
+modelo,pg_all_pcl,lcbd_count_sorensen,B03,pcl_dentro_owner,479,-0.15876091313592933,0.026200699536449372
+modelo,pg_all_pcl,lcbd_count_sorensen,RFG4a,parcelas_cl,479,0.6916003716747313,0.008996288917843657
+modelo,pg_all_pcl,lcbd_count_sorensen,RFG4a,pcl_dentro_owner,479,-0.10166730757403471,0.023366121624530438
+modelo,pg_all_pcl,lcbd_count_sorensen,RFG5a,parcelas_cl,479,0.7038478746839192,0.003339349252616265
+modelo,pg_all_pcl,lcbd_count_sorensen,RFG5a,pcl_dentro_owner,479,-0.08877462369460609,0.009210698748151079
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT0,parcelas_cl,479,0.6783459694764522,0.005587669909843052
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT0,pcl_dentro_owner,479,-0.13621425686224486,0.015193106689952897
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT1,parcelas_cl,479,0.6578021796065924,0.011249283868728647
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT1,pcl_dentro_owner,479,-0.2093252749587892,0.030051257333841473
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT2,parcelas_cl,479,0.6769834095626779,0.01232393359867366
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT2,pcl_dentro_owner,479,-0.13786895912369745,0.03392162266372751
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT3,parcelas_cl,479,0.6676010240296519,0.011816579441694683
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT3,pcl_dentro_owner,479,-0.20166115562785905,0.038345841985080405
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT4,parcelas_cl,479,0.693458782480142,0.006149543116229253
+modelo,pg_all_pcl,lcbd_count_sorensen,RFT4,pcl_dentro_owner,479,-0.1190807425050248,0.021455931651904982
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − RFT0,parcelas_cl,479,-0.020543789869859757,0.008023915012205762
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − RFT0,pcl_dentro_owner,479,-0.07311101809654434,0.025315209182298914
+par,pg_all_pcl,lcbd_count_sorensen,RFT3 − RFT4,parcelas_cl,479,-0.02585775845049021,0.005941743708434107
+par,pg_all_pcl,lcbd_count_sorensen,RFT3 − RFT4,pcl_dentro_owner,479,-0.08258041312283426,0.01741303372727347
+par,pg_all_pcl,lcbd_count_sorensen,RFT0 − RFG4a,parcelas_cl,479,-0.01325440219827915,0.00341713729012097
+par,pg_all_pcl,lcbd_count_sorensen,RFT0 − RFG4a,pcl_dentro_owner,479,-0.03454694928821015,0.00842848760463736
+par,pg_all_pcl,lcbd_count_sorensen,RFT2 − RFG4a,parcelas_cl,479,-0.014616962112053544,0.003329907997330957
+par,pg_all_pcl,lcbd_count_sorensen,RFT2 − RFG4a,pcl_dentro_owner,479,-0.03620165154966274,0.010977140241741916
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − RFG4a,parcelas_cl,479,-0.03379819206813891,0.007253012428791171
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − RFG4a,pcl_dentro_owner,479,-0.10765796738475449,0.023796952266820718
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − B03,parcelas_cl,479,-0.007680871489802492,0.006099388705238999
+par,pg_all_pcl,lcbd_count_sorensen,RFT1 − B03,pcl_dentro_owner,479,-0.05056436182285987,0.017606213615869507
+par,pg_all_pcl,lcbd_count_sorensen,RFT3 − B03,parcelas_cl,479,0.002117972933256995,0.003734217580714425
+par,pg_all_pcl,lcbd_count_sorensen,RFT3 − B03,pcl_dentro_owner,479,-0.04290024249192973,0.013846519024356485
+par,pg_all_pcl,lcbd_count_sorensen,RFG5a − B03,parcelas_cl,479,0.03836482358752432,0.005846495371268528
+par,pg_all_pcl,lcbd_count_sorensen,RFG5a − B03,pcl_dentro_owner,479,0.06998628944132324,0.01828308500057788
+modelo,pg_all_pcl,td_inext_q0,B03,parcelas_cl,230,-0.08302968246593452,0.013435855563100608
+modelo,pg_all_pcl,td_inext_q0,B03,pcl_dentro_owner,230,-0.12390562390192288,0.011755093803712124
+modelo,pg_all_pcl,td_inext_q0,RFG4a,parcelas_cl,230,-0.13738150279443184,0.01844590220788048
+modelo,pg_all_pcl,td_inext_q0,RFG4a,pcl_dentro_owner,230,-0.15858751381847824,0.015601933410972843
+modelo,pg_all_pcl,td_inext_q0,RFG5a,parcelas_cl,230,-0.18114524357608022,0.02348843083411279
+modelo,pg_all_pcl,td_inext_q0,RFG5a,pcl_dentro_owner,230,-0.19806973699584884,0.022714009548717426
+modelo,pg_all_pcl,td_inext_q0,RFT0,parcelas_cl,230,-0.16144456928453957,0.019355680719612023
+modelo,pg_all_pcl,td_inext_q0,RFT0,pcl_dentro_owner,230,-0.1787005367517227,0.015523894807841403
+modelo,pg_all_pcl,td_inext_q0,RFT1,parcelas_cl,230,-0.14771999090281027,0.014638993148114591
+modelo,pg_all_pcl,td_inext_q0,RFT1,pcl_dentro_owner,230,-0.17161681485302874,0.017479762024442805
+modelo,pg_all_pcl,td_inext_q0,RFT2,parcelas_cl,230,-0.1471549456930791,0.025956505274067412
+modelo,pg_all_pcl,td_inext_q0,RFT2,pcl_dentro_owner,230,-0.17623371900271154,0.017606545101113154
+modelo,pg_all_pcl,td_inext_q0,RFT3,parcelas_cl,230,-0.16490375934474746,0.026262914966070455
+modelo,pg_all_pcl,td_inext_q0,RFT3,pcl_dentro_owner,230,-0.1828010575316529,0.024855608398818136
+modelo,pg_all_pcl,td_inext_q0,RFT4,parcelas_cl,230,-0.19203901959541225,0.023128006054640767
+modelo,pg_all_pcl,td_inext_q0,RFT4,pcl_dentro_owner,230,-0.20956511149291882,0.020858558288763835
+par,pg_all_pcl,td_inext_q0,RFT1 − RFT0,parcelas_cl,230,0.013724578381729321,0.008141046596159565
+par,pg_all_pcl,td_inext_q0,RFT1 − RFT0,pcl_dentro_owner,230,0.007083721898693958,0.006668863290195379
+par,pg_all_pcl,td_inext_q0,RFT3 − RFT4,parcelas_cl,230,0.02713526025066478,0.005386295119796272
+par,pg_all_pcl,td_inext_q0,RFT3 − RFT4,pcl_dentro_owner,230,0.02676405396126591,0.004096662571956746
+par,pg_all_pcl,td_inext_q0,RFT0 − RFG4a,parcelas_cl,230,-0.024063066490107737,0.001389025740310855
+par,pg_all_pcl,td_inext_q0,RFT0 − RFG4a,pcl_dentro_owner,230,-0.020113022933244462,0.0006769005954619726
+par,pg_all_pcl,td_inext_q0,RFT2 − RFG4a,parcelas_cl,230,-0.00977344289864727,0.0096703489760608
+par,pg_all_pcl,td_inext_q0,RFT2 − RFG4a,pcl_dentro_owner,230,-0.017646205184233283,0.01057394681097282
+par,pg_all_pcl,td_inext_q0,RFT1 − RFG4a,parcelas_cl,230,-0.010338488108378415,0.008295200368111816
+par,pg_all_pcl,td_inext_q0,RFT1 − RFG4a,pcl_dentro_owner,230,-0.013029301034550503,0.007334576414493114
+par,pg_all_pcl,td_inext_q0,RFT1 − B03,parcelas_cl,230,-0.06469030843687573,0.019660505678596563
+par,pg_all_pcl,td_inext_q0,RFT1 − B03,pcl_dentro_owner,230,-0.047711190951105875,0.026097390632934897
+par,pg_all_pcl,td_inext_q0,RFT3 − B03,parcelas_cl,230,-0.08187407687881294,0.023655630816884647
+par,pg_all_pcl,td_inext_q0,RFT3 − B03,pcl_dentro_owner,230,-0.05889543362973004,0.0268529514169254
+par,pg_all_pcl,td_inext_q0,RFG5a − B03,parcelas_cl,230,-0.0981155611101457,0.020855764037039363
+par,pg_all_pcl,td_inext_q0,RFG5a − B03,pcl_dentro_owner,230,-0.07416411309392597,0.025646555590140903
+modelo,pg_all_pcl,pd_inext_q0,B03,parcelas_cl,226,-0.14599983505756908,0.022696568078415358
+modelo,pg_all_pcl,pd_inext_q0,B03,pcl_dentro_owner,226,-0.22730468013369784,0.024639942763130234
+modelo,pg_all_pcl,pd_inext_q0,RFG4a,parcelas_cl,226,-0.026676476899322992,0.016137937199852827
+modelo,pg_all_pcl,pd_inext_q0,RFG4a,pcl_dentro_owner,226,-0.10815990063872534,0.01286702292323982
+modelo,pg_all_pcl,pd_inext_q0,RFG5a,parcelas_cl,226,-0.08039537840409072,0.024920839194557586
+modelo,pg_all_pcl,pd_inext_q0,RFG5a,pcl_dentro_owner,226,-0.16920930202654336,0.01812787879761885
+modelo,pg_all_pcl,pd_inext_q0,RFT0,parcelas_cl,226,-0.06173311955948635,0.015684185181041026
+modelo,pg_all_pcl,pd_inext_q0,RFT0,pcl_dentro_owner,226,-0.15158333382782718,0.015592956557434484
+modelo,pg_all_pcl,pd_inext_q0,RFT1,parcelas_cl,226,-0.003964519340793227,0.01832324858466821
+modelo,pg_all_pcl,pd_inext_q0,RFT1,pcl_dentro_owner,226,-0.0860373964425049,0.016842433060236854
+modelo,pg_all_pcl,pd_inext_q0,RFT2,parcelas_cl,226,-0.0028951702051765262,0.00930022201218605
+modelo,pg_all_pcl,pd_inext_q0,RFT2,pcl_dentro_owner,226,-0.07564345374980268,0.009400195097815207
+modelo,pg_all_pcl,pd_inext_q0,RFT3,parcelas_cl,226,-0.058312988058483096,0.011854652035643598
+modelo,pg_all_pcl,pd_inext_q0,RFT3,pcl_dentro_owner,226,-0.14394520547002868,0.011606058693012556
+modelo,pg_all_pcl,pd_inext_q0,RFT4,parcelas_cl,226,-0.09790592067199026,0.024949004761401807
+modelo,pg_all_pcl,pd_inext_q0,RFT4,pcl_dentro_owner,226,-0.18958917951580032,0.02775271636222596
+par,pg_all_pcl,pd_inext_q0,RFT1 − RFT0,parcelas_cl,226,0.05776860021869312,0.002695089938782661
+par,pg_all_pcl,pd_inext_q0,RFT1 − RFT0,pcl_dentro_owner,226,0.06554593738532229,0.0031262220558079925
+par,pg_all_pcl,pd_inext_q0,RFT3 − RFT4,parcelas_cl,226,0.03959293261350716,0.015138492422859175
+par,pg_all_pcl,pd_inext_q0,RFT3 − RFT4,pcl_dentro_owner,226,0.04564397404577162,0.017779190476896994
+par,pg_all_pcl,pd_inext_q0,RFT0 − RFG4a,parcelas_cl,226,-0.03505664266016336,0.004610851647546081
+par,pg_all_pcl,pd_inext_q0,RFT0 − RFG4a,pcl_dentro_owner,226,-0.043423433189101836,0.003342305633970663
+par,pg_all_pcl,pd_inext_q0,RFT2 − RFG4a,parcelas_cl,226,0.023781306694146465,0.009084655697221968
+par,pg_all_pcl,pd_inext_q0,RFT2 − RFG4a,pcl_dentro_owner,226,0.03251644688892267,0.005015033968466566
+par,pg_all_pcl,pd_inext_q0,RFT1 − RFG4a,parcelas_cl,226,0.022711957558529765,0.0059252957872300135
+par,pg_all_pcl,pd_inext_q0,RFT1 − RFG4a,pcl_dentro_owner,226,0.022122504196220454,0.004019688024396704
+par,pg_all_pcl,pd_inext_q0,RFT1 − B03,parcelas_cl,226,0.14203531571677586,0.0046797012082569495
+par,pg_all_pcl,pd_inext_q0,RFT1 − B03,pcl_dentro_owner,226,0.14126728369119293,0.00902213208494301
+par,pg_all_pcl,pd_inext_q0,RFT3 − B03,parcelas_cl,226,0.08768684699908598,0.011551437843525697
+par,pg_all_pcl,pd_inext_q0,RFT3 − B03,pcl_dentro_owner,226,0.08335947466366915,0.015457700521680875
+par,pg_all_pcl,pd_inext_q0,RFG5a − B03,parcelas_cl,226,0.06560445665347836,0.0027472386722973614
+par,pg_all_pcl,pd_inext_q0,RFG5a − B03,pcl_dentro_owner,226,0.05809537810715448,0.010205975747378856
+modelo,unified_all_pclm,hill_q0_unified,B03,parcelas_cl,1082,0.3250890096672881,0.003814328518246779
+modelo,unified_all_pclm,hill_q0_unified,B03,pcl_dentro_owner,1082,-0.08440781215097053,0.008110443204573938
+modelo,unified_all_pclm,hill_q0_unified,RFG4a,parcelas_cl,1082,0.28411218152474976,0.0046139121797786
+modelo,unified_all_pclm,hill_q0_unified,RFG4a,pcl_dentro_owner,1082,-0.0997259562078207,0.01963057848338853
+modelo,unified_all_pclm,hill_q0_unified,RFG5a,parcelas_cl,1082,0.3950216610164004,0.007819955199793952
+modelo,unified_all_pclm,hill_q0_unified,RFG5a,pcl_dentro_owner,1082,0.027489372366038805,0.014470410785193566
+modelo,unified_all_pclm,hill_q0_unified,RFT0,parcelas_cl,1082,0.2850555083490328,0.008078964337471843
+modelo,unified_all_pclm,hill_q0_unified,RFT0,pcl_dentro_owner,1082,-0.09854551814309305,0.01942356831679969
+modelo,unified_all_pclm,hill_q0_unified,RFT1,parcelas_cl,1082,0.28509163907161933,0.008217667563771652
+modelo,unified_all_pclm,hill_q0_unified,RFT1,pcl_dentro_owner,1082,-0.11569032866750757,0.026041840730981494
+modelo,unified_all_pclm,hill_q0_unified,RFT2,parcelas_cl,1082,0.28164600744051166,0.005856699618491507
+modelo,unified_all_pclm,hill_q0_unified,RFT2,pcl_dentro_owner,1082,-0.10984751817864942,0.02628832153060773
+modelo,unified_all_pclm,hill_q0_unified,RFT3,parcelas_cl,1082,0.40024557028359115,0.006530928417361154
+modelo,unified_all_pclm,hill_q0_unified,RFT3,pcl_dentro_owner,1082,0.039772400662492435,0.014492945471768614
+modelo,unified_all_pclm,hill_q0_unified,RFT4,parcelas_cl,1082,0.3895377729495743,0.004417750907327175
+modelo,unified_all_pclm,hill_q0_unified,RFT4,pcl_dentro_owner,1082,0.0253387381190443,0.01074333440333476
+par,unified_all_pclm,hill_q0_unified,RFT1 − RFT0,parcelas_cl,1082,3.6130722586495225e-05,0.0016389609020014135
+par,unified_all_pclm,hill_q0_unified,RFT1 − RFT0,pcl_dentro_owner,1082,-0.017144810524414522,0.008054814395330824
+par,unified_all_pclm,hill_q0_unified,RFT3 − RFT4,parcelas_cl,1082,0.01070779733401687,0.002463404816718202
+par,unified_all_pclm,hill_q0_unified,RFT3 − RFT4,pcl_dentro_owner,1082,0.014433662543448134,0.004575949850165618
+par,unified_all_pclm,hill_q0_unified,RFT0 − RFG4a,parcelas_cl,1082,0.0009433268242830343,0.003479570852233095
+par,unified_all_pclm,hill_q0_unified,RFT0 − RFG4a,pcl_dentro_owner,1082,0.0011804380647276365,0.013288760435971794
+par,unified_all_pclm,hill_q0_unified,RFT2 − RFG4a,parcelas_cl,1082,-0.002466174084238141,0.001289623220735478
+par,unified_all_pclm,hill_q0_unified,RFT2 − RFG4a,pcl_dentro_owner,1082,-0.010121561970828733,0.00922131426982325
+par,unified_all_pclm,hill_q0_unified,RFT1 − RFG4a,parcelas_cl,1082,0.0009794575468695295,0.0037181231951716716
+par,unified_all_pclm,hill_q0_unified,RFT1 − RFG4a,pcl_dentro_owner,1082,-0.015964372459686887,0.012701501550234695
+par,unified_all_pclm,hill_q0_unified,RFT1 − B03,parcelas_cl,1082,-0.0399973705956688,0.011110905321247358
+par,unified_all_pclm,hill_q0_unified,RFT1 − B03,pcl_dentro_owner,1082,-0.03128251651653705,0.018789598811166514
+par,unified_all_pclm,hill_q0_unified,RFT3 − B03,parcelas_cl,1082,0.07515656061630305,0.006090160155736298
+par,unified_all_pclm,hill_q0_unified,RFT3 − B03,pcl_dentro_owner,1082,0.12418021281346296,0.007569879046446198
+par,unified_all_pclm,hill_q0_unified,RFG5a − B03,parcelas_cl,1082,0.06993265134911227,0.0072756998867888395
+par,unified_all_pclm,hill_q0_unified,RFG5a − B03,pcl_dentro_owner,1082,0.11189718451700932,0.006414595984977423
+modelo,unified_all_pclm,lcbd_pa_unified,B03,parcelas_cl,1082,0.4076104436639554,0.0012646978469702892
+modelo,unified_all_pclm,lcbd_pa_unified,B03,pcl_dentro_owner,1082,0.22624661377458052,0.003424183028909777
+modelo,unified_all_pclm,lcbd_pa_unified,RFG4a,parcelas_cl,1082,0.5081459380276446,0.0015010269016357154
+modelo,unified_all_pclm,lcbd_pa_unified,RFG4a,pcl_dentro_owner,1082,0.3250972658734222,0.0014012625629848845
+modelo,unified_all_pclm,lcbd_pa_unified,RFG5a,parcelas_cl,1082,0.49231317833339255,0.001753141525888592
+modelo,unified_all_pclm,lcbd_pa_unified,RFG5a,pcl_dentro_owner,1082,0.30240197819352815,0.001436708967085839
+modelo,unified_all_pclm,lcbd_pa_unified,RFT0,parcelas_cl,1082,0.5018272769965968,0.0010837931792305978
+modelo,unified_all_pclm,lcbd_pa_unified,RFT0,pcl_dentro_owner,1082,0.3215054504876637,0.0037431922686990567
+modelo,unified_all_pclm,lcbd_pa_unified,RFT1,parcelas_cl,1082,0.4786101262902008,0.0016551648619968376
+modelo,unified_all_pclm,lcbd_pa_unified,RFT1,pcl_dentro_owner,1082,0.2985567301425962,0.00101759898761931
+modelo,unified_all_pclm,lcbd_pa_unified,RFT2,parcelas_cl,1082,0.4792555606111895,0.002794779055238693
+modelo,unified_all_pclm,lcbd_pa_unified,RFT2,pcl_dentro_owner,1082,0.29797833055989037,0.003981209115611348
+modelo,unified_all_pclm,lcbd_pa_unified,RFT3,parcelas_cl,1082,0.4760938441042395,0.0005320695969424545
+modelo,unified_all_pclm,lcbd_pa_unified,RFT3,pcl_dentro_owner,1082,0.2862562715470727,0.0022974153739552883
+modelo,unified_all_pclm,lcbd_pa_unified,RFT4,parcelas_cl,1082,0.49549548178410596,0.004048034113419461
+modelo,unified_all_pclm,lcbd_pa_unified,RFT4,pcl_dentro_owner,1082,0.30439737939321415,0.004293518478979541
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − RFT0,parcelas_cl,1082,-0.023217150706396,0.0013525208346168317
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − RFT0,pcl_dentro_owner,1082,-0.02294872034506749,0.003869160063100937
+par,unified_all_pclm,lcbd_pa_unified,RFT3 − RFT4,parcelas_cl,1082,-0.019401637679866506,0.004493423307788145
+par,unified_all_pclm,lcbd_pa_unified,RFT3 − RFT4,pcl_dentro_owner,1082,-0.018141107846141424,0.0033540081930544317
+par,unified_all_pclm,lcbd_pa_unified,RFT0 − RFG4a,parcelas_cl,1082,-0.006318661031047723,0.0014601936702032096
+par,unified_all_pclm,lcbd_pa_unified,RFT0 − RFG4a,pcl_dentro_owner,1082,-0.0035918153857585158,0.002356021121759477
+par,unified_all_pclm,lcbd_pa_unified,RFT2 − RFG4a,parcelas_cl,1082,-0.02889037741645495,0.0018774326749890068
+par,unified_all_pclm,lcbd_pa_unified,RFT2 − RFG4a,pcl_dentro_owner,1082,-0.02711893531353186,0.0042901930402531804
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − RFG4a,parcelas_cl,1082,-0.029535811737443723,0.0003653817823479882
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − RFG4a,pcl_dentro_owner,1082,-0.026540535730826004,0.0016280924735893511
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − B03,parcelas_cl,1082,0.07099968262624538,0.0004220639273269917
+par,unified_all_pclm,lcbd_pa_unified,RFT1 − B03,pcl_dentro_owner,1082,0.0723101163680157,0.002459299556873609
+par,unified_all_pclm,lcbd_pa_unified,RFT3 − B03,parcelas_cl,1082,0.06848340044028407,0.0013696776437693388
+par,unified_all_pclm,lcbd_pa_unified,RFT3 − B03,pcl_dentro_owner,1082,0.060009657772492196,0.0048712084835148385
+par,unified_all_pclm,lcbd_pa_unified,RFG5a − B03,parcelas_cl,1082,0.08470273466943719,0.0014274651646473764
+par,unified_all_pclm,lcbd_pa_unified,RFG5a − B03,pcl_dentro_owner,1082,0.07615536441894766,0.0020843849260679054
+modelo,unified_all_pclm,pcoa1_pa_unified,B03,parcelas_cl,1082,0.37880863589751773,0.01081565187448229
+modelo,unified_all_pclm,pcoa1_pa_unified,B03,pcl_dentro_owner,1082,0.19606662107952852,0.007300405033044106
+modelo,unified_all_pclm,pcoa1_pa_unified,RFG4a,parcelas_cl,1082,0.4680719594170632,0.007179171076325181
+modelo,unified_all_pclm,pcoa1_pa_unified,RFG4a,pcl_dentro_owner,1082,0.3053760359080541,0.00897364654595551
+modelo,unified_all_pclm,pcoa1_pa_unified,RFG5a,parcelas_cl,1082,0.4944172205844952,0.004504417437293071
+modelo,unified_all_pclm,pcoa1_pa_unified,RFG5a,pcl_dentro_owner,1082,0.32183473549021235,0.008249418619385574
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT0,parcelas_cl,1082,0.4658857795035563,0.005045111267111446
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT0,pcl_dentro_owner,1082,0.30613682574727324,0.008805385428886425
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT1,parcelas_cl,1082,0.44604061515416943,0.004232785849811709
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT1,pcl_dentro_owner,1082,0.2899252879988377,0.006519113754720521
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT2,parcelas_cl,1082,0.439334304573211,0.006120668328815089
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT2,pcl_dentro_owner,1082,0.28240982124885666,0.008640008148282157
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT3,parcelas_cl,1082,0.47908675575572396,0.0025490033858577
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT3,pcl_dentro_owner,1082,0.3084135334150991,0.004775893669996845
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT4,parcelas_cl,1082,0.49553026351107254,0.0010142943866506301
+modelo,unified_all_pclm,pcoa1_pa_unified,RFT4,pcl_dentro_owner,1082,0.321135710025743,0.006383049875896453
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − RFT0,parcelas_cl,1082,-0.01984516434938684,0.002410650290557138
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − RFT0,pcl_dentro_owner,1082,-0.016211537748435496,0.004468896103118162
+par,unified_all_pclm,pcoa1_pa_unified,RFT3 − RFT4,parcelas_cl,1082,-0.016443507755348603,0.0029948127604226254
+par,unified_all_pclm,pcoa1_pa_unified,RFT3 − RFT4,pcl_dentro_owner,1082,-0.012722176610643898,0.0025532263917620373
+par,unified_all_pclm,pcoa1_pa_unified,RFT0 − RFG4a,parcelas_cl,1082,-0.0021861799135068916,0.0047297245743716425
+par,unified_all_pclm,pcoa1_pa_unified,RFT0 − RFG4a,pcl_dentro_owner,1082,0.0007607898392191226,0.0056847676656754335
+par,unified_all_pclm,pcoa1_pa_unified,RFT2 − RFG4a,parcelas_cl,1082,-0.028737654843852194,0.0023552058373526525
+par,unified_all_pclm,pcoa1_pa_unified,RFT2 − RFG4a,pcl_dentro_owner,1082,-0.02296621465919746,0.0007951732239518183
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − RFG4a,parcelas_cl,1082,-0.022031344262893732,0.003186029809119479
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − RFG4a,pcl_dentro_owner,1082,-0.015450747909216375,0.002672328660446332
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − B03,parcelas_cl,1082,0.06723197925665177,0.014612243930963236
+par,unified_all_pclm,pcoa1_pa_unified,RFT1 − B03,pcl_dentro_owner,1082,0.09385866691930922,0.01380626495757957
+par,unified_all_pclm,pcoa1_pa_unified,RFT3 − B03,parcelas_cl,1082,0.1002781198582063,0.008371932349767599
+par,unified_all_pclm,pcoa1_pa_unified,RFT3 − B03,pcl_dentro_owner,1082,0.11234691233557055,0.009202253989605455
+par,unified_all_pclm,pcoa1_pa_unified,RFG5a − B03,parcelas_cl,1082,0.11560858468697754,0.013831084690562335
+par,unified_all_pclm,pcoa1_pa_unified,RFG5a − B03,pcl_dentro_owner,1082,0.12576811441068383,0.015477793220779716
+modelo,unified_all_pclm,pcoa2_pa_unified,B03,parcelas_cl,1082,0.31895128234392184,0.004730198740305239
+modelo,unified_all_pclm,pcoa2_pa_unified,B03,pcl_dentro_owner,1082,0.1024530313662722,0.005442788758475755
+modelo,unified_all_pclm,pcoa2_pa_unified,RFG4a,parcelas_cl,1082,0.3241290933854866,0.002656627189524888
+modelo,unified_all_pclm,pcoa2_pa_unified,RFG4a,pcl_dentro_owner,1082,0.1543761769589863,0.00599344880486297
+modelo,unified_all_pclm,pcoa2_pa_unified,RFG5a,parcelas_cl,1082,0.4404072284058263,0.003684556891928817
+modelo,unified_all_pclm,pcoa2_pa_unified,RFG5a,pcl_dentro_owner,1082,0.24602669950418873,0.005569723631938814
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT0,parcelas_cl,1082,0.3297078184863775,0.0014445830498904732
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT0,pcl_dentro_owner,1082,0.16283408739077712,0.002404933165696986
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT1,parcelas_cl,1082,0.30991273491120014,0.005705013136966841
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT1,pcl_dentro_owner,1082,0.14756516000841657,0.005028590786380056
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT2,parcelas_cl,1082,0.29849299761363374,0.0047157690498707714
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT2,pcl_dentro_owner,1082,0.13844646329880897,0.0026243042421481523
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT3,parcelas_cl,1082,0.4310276213586503,0.0021002145545013667
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT3,pcl_dentro_owner,1082,0.24377497328463438,0.0009110862926351069
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT4,parcelas_cl,1082,0.4403576711018928,0.004425378982450148
+modelo,unified_all_pclm,pcoa2_pa_unified,RFT4,pcl_dentro_owner,1082,0.24313713295576145,0.004029584061063493
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − RFT0,parcelas_cl,1082,-0.019795083575177303,0.004924765466897012
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − RFT0,pcl_dentro_owner,1082,-0.015268927382360556,0.0029626470996545777
+par,unified_all_pclm,pcoa2_pa_unified,RFT3 − RFT4,parcelas_cl,1082,-0.009330049743242474,0.004470404956198728
+par,unified_all_pclm,pcoa2_pa_unified,RFT3 − RFT4,pcl_dentro_owner,1082,0.0006378403288729295,0.004086792108445919
+par,unified_all_pclm,pcoa2_pa_unified,RFT0 − RFG4a,parcelas_cl,1082,0.005578725100890858,0.0016435756597804412
+par,unified_all_pclm,pcoa2_pa_unified,RFT0 − RFG4a,pcl_dentro_owner,1082,0.00845791043179082,0.0036286093372597792
+par,unified_all_pclm,pcoa2_pa_unified,RFT2 − RFG4a,parcelas_cl,1082,-0.025636095771852885,0.006640644194280894
+par,unified_all_pclm,pcoa2_pa_unified,RFT2 − RFG4a,pcl_dentro_owner,1082,-0.01592971366017733,0.003722826960123903
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − RFG4a,parcelas_cl,1082,-0.014216358474286447,0.006031160059796513
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − RFG4a,pcl_dentro_owner,1082,-0.006811016950569737,0.0030842262561499127
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − B03,parcelas_cl,1082,-0.0090385474327217,0.010375093670310523
+par,unified_all_pclm,pcoa2_pa_unified,RFT1 − B03,pcl_dentro_owner,1082,0.04511212864214439,0.002724971125322503
+par,unified_all_pclm,pcoa2_pa_unified,RFT3 − B03,parcelas_cl,1082,0.11207633901472842,0.004808670931317704
+par,unified_all_pclm,pcoa2_pa_unified,RFT3 − B03,pcl_dentro_owner,1082,0.1413219419183622,0.0045579528616728135
+par,unified_all_pclm,pcoa2_pa_unified,RFG5a − B03,parcelas_cl,1082,0.12145594606190446,0.0031610789394684808
+par,unified_all_pclm,pcoa2_pa_unified,RFG5a − B03,pcl_dentro_owner,1082,0.14357366813791653,0.0009605306890490891
+modelo,unified_all_pclm,mpd_unified,B03,parcelas_cl,965,0.01088682375494802,0.011077502140370956
+modelo,unified_all_pclm,mpd_unified,B03,pcl_dentro_owner,965,-0.04753953895971449,0.009498772928877292
+modelo,unified_all_pclm,mpd_unified,RFG4a,parcelas_cl,965,0.08583880079096269,0.007238909425276858
+modelo,unified_all_pclm,mpd_unified,RFG4a,pcl_dentro_owner,965,0.00468525740213821,0.00932485153874269
+modelo,unified_all_pclm,mpd_unified,RFG5a,parcelas_cl,965,0.09093711112382119,0.002156232901687794
+modelo,unified_all_pclm,mpd_unified,RFG5a,pcl_dentro_owner,965,-0.0029423963539756772,0.0028570718398321844
+modelo,unified_all_pclm,mpd_unified,RFT0,parcelas_cl,965,0.09748189911957961,0.0052437918910760006
+modelo,unified_all_pclm,mpd_unified,RFT0,pcl_dentro_owner,965,0.01097860996870518,0.005306608537029189
+modelo,unified_all_pclm,mpd_unified,RFT1,parcelas_cl,965,0.09039997809972178,0.011357429964359206
+modelo,unified_all_pclm,mpd_unified,RFT1,pcl_dentro_owner,965,0.003575638085926758,0.013487200389475755
+modelo,unified_all_pclm,mpd_unified,RFT2,parcelas_cl,965,0.077662635765597,0.006399595201234612
+modelo,unified_all_pclm,mpd_unified,RFT2,pcl_dentro_owner,965,-0.00966665924022377,0.008017161470026523
+modelo,unified_all_pclm,mpd_unified,RFT3,parcelas_cl,965,0.09462025119629185,0.006199770125660458
+modelo,unified_all_pclm,mpd_unified,RFT3,pcl_dentro_owner,965,0.00011383833748383292,0.007668539970453952
+modelo,unified_all_pclm,mpd_unified,RFT4,parcelas_cl,965,0.09357112821995661,0.00691673826131272
+modelo,unified_all_pclm,mpd_unified,RFT4,pcl_dentro_owner,965,9.131131020549225e-05,0.007807090874922447
+par,unified_all_pclm,mpd_unified,RFT1 − RFT0,parcelas_cl,965,-0.007081921019857829,0.009405456120118094
+par,unified_all_pclm,mpd_unified,RFT1 − RFT0,pcl_dentro_owner,965,-0.007402971882778424,0.01006278348412363
+par,unified_all_pclm,mpd_unified,RFT3 − RFT4,parcelas_cl,965,0.0010491229763352299,0.0021115373612422845
+par,unified_all_pclm,mpd_unified,RFT3 − RFT4,pcl_dentro_owner,965,2.252702727834066e-05,0.0021368761972473966
+par,unified_all_pclm,mpd_unified,RFT0 − RFG4a,parcelas_cl,965,0.01164309832861691,0.0058135997277057655
+par,unified_all_pclm,mpd_unified,RFT0 − RFG4a,pcl_dentro_owner,965,0.006293352566566972,0.006988302033192046
+par,unified_all_pclm,mpd_unified,RFT2 − RFG4a,parcelas_cl,965,-0.008176165025365703,0.0017879652140709043
+par,unified_all_pclm,mpd_unified,RFT2 − RFG4a,pcl_dentro_owner,965,-0.01435191664236198,0.0015955858413431482
+par,unified_all_pclm,mpd_unified,RFT1 − RFG4a,parcelas_cl,965,0.004561177308759083,0.004138440672500799
+par,unified_all_pclm,mpd_unified,RFT1 − RFG4a,pcl_dentro_owner,965,-0.001109619316211452,0.004408860930449185
+par,unified_all_pclm,mpd_unified,RFT1 − B03,parcelas_cl,965,0.07951315434477375,0.009376528533668257
+par,unified_all_pclm,mpd_unified,RFT1 − B03,pcl_dentro_owner,965,0.051115177045641245,0.005192814747516683
+par,unified_all_pclm,mpd_unified,RFT3 − B03,parcelas_cl,965,0.08373342744134382,0.00927352647062929
+par,unified_all_pclm,mpd_unified,RFT3 − B03,pcl_dentro_owner,965,0.04765337729719832,0.006220582365136374
+par,unified_all_pclm,mpd_unified,RFG5a − B03,parcelas_cl,965,0.08005028736887317,0.010415293584981541
+par,unified_all_pclm,mpd_unified,RFG5a − B03,pcl_dentro_owner,965,0.044597142605738806,0.008679425200590563
+modelo,unified_all_pclm,ses_mpd_unified,B03,parcelas_cl,965,0.05172207013496133,0.009737400729035107
+modelo,unified_all_pclm,ses_mpd_unified,B03,pcl_dentro_owner,965,-0.025186619358207762,0.006544881907449584
+modelo,unified_all_pclm,ses_mpd_unified,RFG4a,parcelas_cl,965,0.07533434973821655,0.0023991696674647523
+modelo,unified_all_pclm,ses_mpd_unified,RFG4a,pcl_dentro_owner,965,0.02071909403844885,0.0047675315603228465
+modelo,unified_all_pclm,ses_mpd_unified,RFG5a,parcelas_cl,965,0.13700454127291453,0.002194871687410758
+modelo,unified_all_pclm,ses_mpd_unified,RFG5a,pcl_dentro_owner,965,0.05047064420594586,0.005027083800339424
+modelo,unified_all_pclm,ses_mpd_unified,RFT0,parcelas_cl,965,0.08593754736319892,0.00241997976063814
+modelo,unified_all_pclm,ses_mpd_unified,RFT0,pcl_dentro_owner,965,0.020661667533986166,0.003541268210810267
+modelo,unified_all_pclm,ses_mpd_unified,RFT1,parcelas_cl,965,0.07883369960866811,0.010058396713743034
+modelo,unified_all_pclm,ses_mpd_unified,RFT1,pcl_dentro_owner,965,0.014728291215336217,0.009446069240275417
+modelo,unified_all_pclm,ses_mpd_unified,RFT2,parcelas_cl,965,0.054837121053611826,0.005107038009919689
+modelo,unified_all_pclm,ses_mpd_unified,RFT2,pcl_dentro_owner,965,-0.01083644002715515,0.003799266231082432
+modelo,unified_all_pclm,ses_mpd_unified,RFT3,parcelas_cl,965,0.12967136962150613,0.0015698932793118078
+modelo,unified_all_pclm,ses_mpd_unified,RFT3,pcl_dentro_owner,965,0.0436805982980177,0.0015748676300344077
+modelo,unified_all_pclm,ses_mpd_unified,RFT4,parcelas_cl,965,0.13842746094504674,0.002362621218201818
+modelo,unified_all_pclm,ses_mpd_unified,RFT4,pcl_dentro_owner,965,0.05118557752466727,0.004445467037910221
+par,unified_all_pclm,ses_mpd_unified,RFT1 − RFT0,parcelas_cl,965,-0.007103847754530805,0.0077545539875920975
+par,unified_all_pclm,ses_mpd_unified,RFT1 − RFT0,pcl_dentro_owner,965,-0.005933376318649948,0.009119540699578566
+par,unified_all_pclm,ses_mpd_unified,RFT3 − RFT4,parcelas_cl,965,-0.008756091323540605,0.003863149053418134
+par,unified_all_pclm,ses_mpd_unified,RFT3 − RFT4,pcl_dentro_owner,965,-0.007504979226649573,0.0031113221709711566
+par,unified_all_pclm,ses_mpd_unified,RFT0 − RFG4a,parcelas_cl,965,0.010603197624982371,0.003218642114913075
+par,unified_all_pclm,ses_mpd_unified,RFT0 − RFG4a,pcl_dentro_owner,965,-5.74265044626839e-05,0.0024420346396179615
+par,unified_all_pclm,ses_mpd_unified,RFT2 − RFG4a,parcelas_cl,965,-0.020497228684604723,0.006857418620495262
+par,unified_all_pclm,ses_mpd_unified,RFT2 − RFG4a,pcl_dentro_owner,965,-0.031555534065604,0.006566501491247097
+par,unified_all_pclm,ses_mpd_unified,RFT1 − RFG4a,parcelas_cl,965,0.003499349870451566,0.010714261026517187
+par,unified_all_pclm,ses_mpd_unified,RFT1 − RFG4a,pcl_dentro_owner,965,-0.005990802823112633,0.011540973687960273
+par,unified_all_pclm,ses_mpd_unified,RFT1 − B03,parcelas_cl,965,0.027111629473706784,0.001972529020596579
+par,unified_all_pclm,ses_mpd_unified,RFT1 − B03,pcl_dentro_owner,965,0.03991491057354398,0.0038990763162916227
+par,unified_all_pclm,ses_mpd_unified,RFT3 − B03,parcelas_cl,965,0.07794929948654479,0.008584905238480342
+par,unified_all_pclm,ses_mpd_unified,RFT3 − B03,pcl_dentro_owner,965,0.06886721765622546,0.0063438740979913375
+par,unified_all_pclm,ses_mpd_unified,RFG5a − B03,parcelas_cl,965,0.08528247113795322,0.011205204776078732
+par,unified_all_pclm,ses_mpd_unified,RFG5a − B03,pcl_dentro_owner,965,0.07565726356415363,0.009840237200792683

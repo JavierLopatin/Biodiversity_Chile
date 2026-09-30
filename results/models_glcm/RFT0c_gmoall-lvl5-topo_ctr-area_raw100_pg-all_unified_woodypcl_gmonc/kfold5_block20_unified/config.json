@@ -1,0 +1,39 @@
+{
+  "run_id": "RFT0c_gmoall-lvl5-topo_ctr-area_raw100_pg-all_unified_woodypcl_gmonc",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "gmoall+lvl5+topo_ctr+area",
+  "substrate": "",
+  "index": "",
+  "target_set": "pg_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "gm + nivel de la ventana 5x5 (sin textura)",
+  "git": "58cd609b19a35458df037181373ad48a07f71d49-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:lcbd_count_sorensen_unified_padded_woodypcl": "lcbd_count_sorensen_unified_padded_woodypcl.parquet:9c8f39897de8",
+    "target:pd_inext_coverage_unified_padded_woodypcl": "pd_inext_coverage_unified_padded_woodypcl.parquet:3f3906502859",
+    "target:td_inext_coverage_unified_padded_woodypcl": "td_inext_coverage_unified_padded_woodypcl.parquet:bd0e6e9f0c62"
+  }
+}

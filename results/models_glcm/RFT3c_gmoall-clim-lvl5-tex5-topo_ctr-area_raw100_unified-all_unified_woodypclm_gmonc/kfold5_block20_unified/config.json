@@ -1,0 +1,39 @@
+{
+  "run_id": "RFT3c_gmoall-clim-lvl5-tex5-topo_ctr-area_raw100_unified-all_unified_woodypclm_gmonc",
+  "family": "RF",
+  "scheme": "kfold5_block20_unified",
+  "features": "gmoall+clim+lvl5+tex5+topo_ctr+area",
+  "substrate": "",
+  "index": "",
+  "target_set": "unified_all",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "fusion": "none",
+  "model": "RF",
+  "params": {
+    "px": "center"
+  },
+  "notes": "gm + clima + nivel + textura GLCM 5x5",
+  "git": "930743fe828bab9ff3ac72902ade6a11b3220283-dirty",
+  "versions": {
+    "python": "3.11.6",
+    "numpy": "1.24.4",
+    "pandas": "1.5.3",
+    "scipy": "1.10.0",
+    "scikit-learn": "1.3.1",
+    "torch": "2.0.1+cu117",
+    "cuda": "True"
+  },
+  "data_sha1": {
+    "curves": "phenoshape_by_index_raw100_unified.parquet:fbec029a716b",
+    "lspu": "lsp_unified_v2lin.parquet:506ea28150e1",
+    "gmo": "gm_center_nc.parquet:ab62d6d24f8f",
+    "cube_lt": "cube_predictors_living_trees.parquet:2be4cd127356",
+    "target:unified_diversity_responses_woodypclm": "unified_diversity_responses_woodypclm.parquet:4905d9adeda0",
+    "target:unified_phylo_responses_woodypclm": "unified_phylo_responses_woodypclm.parquet:e0f713faa639",
+    "target:unified_dark_diversity_woodypclm": "unified_dark_diversity_woodypclm.parquet:f35389307ba7"
+  }
+}
