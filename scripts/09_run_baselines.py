@@ -123,6 +123,19 @@ MODELS: dict[str, dict] = {
                  note="gm + clima + coordenadas + SPI"),
     "RFC4": dict(family="RF", spec="curve+coords+topo+area", per_index=True, curve_px="center",
                  note="curva + coordenadas (la curva es lo que funciona en NoBosque)"),
+    # GLCM on the per-pixel geomedian (scripts/123), PCL only: a discard test read within
+    # PCL (BIODIV_TARGETS=_woodypcl). The window level goes in beside the texture, never the
+    # texture alone, and RFT0/RFT4 carry the level without texture to split the two.
+    "RFT0": dict(family="RF", spec="gmoall+lvl5+topo+area", per_index=False, curve_px="center",
+                 note="gm + nivel de la ventana 5x5 (sin textura)"),
+    "RFT1": dict(family="RF", spec="gmoall+lvl5+tex5+topo+area", per_index=False, curve_px="center",
+                 note="gm + nivel + textura GLCM 5x5"),
+    "RFT2": dict(family="RF", spec="gmoall+lvl3+tex3+topo+area", per_index=False, curve_px="center",
+                 note="gm + nivel + textura GLCM 3x3 (sensibilidad)"),
+    "RFT3": dict(family="RF", spec="gmoall+clim+lvl5+tex5+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + nivel + textura GLCM 5x5"),
+    "RFT4": dict(family="RF", spec="gmoall+clim+lvl5+topo+area", per_index=False, curve_px="center",
+                 note="gm + clima + nivel de la ventana 5x5 (sin textura)"),
     "RFG7": dict(family="RF", spec="lspu+topo+area", per_index=True, curve_px="center",
                  note="compuerta LSP: metricas fenologicas unificadas, pixel central"),
     "RFG8": dict(family="RF", spec="lspu+clim+topo+area", per_index=True, curve_px="center",

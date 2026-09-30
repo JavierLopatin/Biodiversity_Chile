@@ -379,6 +379,20 @@ def _block_spi(t: Tables, ids: pd.Index) -> pd.DataFrame:
     return s[["spi12_win_mean", "spi24_win_mean"]].add_prefix("spi_")
 
 
+def _block_glcm(t: Tables, ids: pd.Index, kind: str, w: int) -> pd.DataFrame:
+    """GLCM texture (``tex``) or window level (``lvl``) of the per-pixel geomedian, scripts/123.
+    Parcelas-CL only (Living Trees has no per-pixel series), so every LT row is NaN and the
+    _isna indicator would separate the two sources exactly: use only with PCL-only targets.
+    ``sumavg`` is left out of ``tex``: for a symmetric GLCM it is twice the mean grey level,
+    i.e. level, not texture."""
+    g = pd.read_parquet(Path(t.derived) / "glcm_pcl.parquet").set_index(ID_COL).reindex(ids)
+    if kind == "tex":
+        cols = [c for c in g.columns if c.startswith(f"tex{w}_") and not c.endswith("_sumavg")]
+    else:
+        cols = [c for c in g.columns if c.startswith(f"lvl{w}_")]
+    return g[cols]
+
+
 def _block_coords(t: Tables, ids: pd.Index) -> pd.DataFrame:
     p = t.plots.set_index(ID_COL).reindex(ids)
     return pd.DataFrame({
@@ -651,6 +665,8 @@ def build_design(spec: str, index: str | None = None, derived: str = "data/deriv
             parts.append(_block_seas(t, ids, index=index, agg=agg))
         elif name == "seas_all":
             parts.append(_block_seas(t, ids, index=None, agg=agg))
+        elif name in ("tex5", "tex3", "lvl5", "lvl3"):
+            parts.append(_block_glcm(t, ids, name[:3], int(name[3])))
         elif name == "svh":
             parts.append(_block_svh(t, ids))
         elif name == "clim":
