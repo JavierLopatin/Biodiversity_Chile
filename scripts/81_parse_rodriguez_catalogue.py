@@ -46,6 +46,23 @@ HABIT = re.compile(
 #: Nombre en cursiva simple dentro del bloque de sinonimos.
 SYNONYM = re.compile(r"_([A-ZÁÉÍÓÚÑ][a-záéíóúñ\-]+)\s+([a-záéíóúñ\-]+)_")
 
+#: Rango altitudinal y regiones administrativas. El catalogo los declara con etiqueta propia,
+#: asi que se anclan a la etiqueta y no a la posicion: el orden de los campos varia entre
+#: entradas y anclarse a la posicion parsearia mal justo las entradas largas.
+#:
+#: De aqui sale la amplitud de nicho, que es el motivo de extraerlos. Agrupar las lenosas por
+#: terciles de amplitud altitudinal da el unico eje composicional encontrado hasta ahora que NO
+#: reproduce el gradiente latitudinal: la correlacion del primer eje con la latitud cae de 0,825
+#: a nivel de especie a 0,221, conservando mas informacion de especie que agrupar por habito,
+#: por origen o por familia. Es el sustituto chileno de un valor indicador tipo Ellenberg,
+#: derivado de catalogo en vez de consenso de expertos -- y Chile no tiene un sistema
+#: equivalente en uso.
+#:
+#: Cautela para quien lo use: es un atributo de especie a escala pais, no una medicion local.
+#: Es un rasgo, y hay que declararlo como tal.
+ALTITUDE = re.compile(r"Rango altitudinal:\s*(\d+)\s*-\s*(\d+)\s*m")
+REGIONS = re.compile(r"Distribución:\s*([A-Z, ]+?)\.")
+
 #: Subarbusto cuenta como lenosa: los censos de lenosas del pool los registran
 #: (Baccharis, Haplopappus, Euphorbia collina, Tetraglochin).
 WOODY_HEAD = {"Árbol pequeño", "Árbol", "Arbusto", "Subarbusto", "Palma"}
@@ -86,9 +103,19 @@ def parse(md_path: Path) -> pd.DataFrame:
         estatus = ("introducida" if re.search(r"\bIntroducid", block) else
                    "endemica" if re.search(r"\bEndémic", block) else
                    "nativa" if re.search(r"\bNativ", block) else "")
+        # Amplitud de nicho. Van en el mismo bloque y se heredan a los sinonimos igual que el
+        # habito, porque describen al taxon, no al nombre.
+        alt = ALTITUDE.search(block)
+        reg = REGIONS.search(block)
+        regs = [x.strip() for x in reg.group(1).split(",") if x.strip()] if reg else []
+        nicho = dict(alt_min=int(alt.group(1)) if alt else None,
+                     alt_max=int(alt.group(2)) if alt else None,
+                     amp_alt=int(alt.group(2)) - int(alt.group(1)) if alt else None,
+                     n_regiones=len(regs) or None,
+                     regiones=";".join(regs) or None)
         rows.append(dict(species=accepted, nombre_normalizado=normalize(accepted),
                          habito_raw=habito, forma=forma, estatus=estatus,
-                         es_sinonimo=False, aceptado=accepted))
+                         es_sinonimo=False, aceptado=accepted, **nicho))
         # El catalogo lista los sinonimos de cada taxon. La base de parcelas usa varios
         # de ellos (Lithraea/Lithrea, Vachellia/Acacia, Neltuma/Prosopis), asi que se
         # indexan como entradas propias que heredan el habito del nombre aceptado.
@@ -98,7 +125,7 @@ def parse(md_path: Path) -> pd.DataFrame:
                 continue
             rows.append(dict(species=sname, nombre_normalizado=normalize(sname),
                              habito_raw=habito, forma=forma, estatus=estatus,
-                             es_sinonimo=True, aceptado=accepted))
+                             es_sinonimo=True, aceptado=accepted, **nicho))
     df = pd.DataFrame(rows)
     # Un taxon puede aparecer mas de una vez (infraespecificos). Se queda el primero,
     # y se marca si sus repeticiones discrepan en forma de crecimiento.
@@ -124,6 +151,27 @@ def main() -> None:
     print("\nhabitos crudos mas frecuentes:")
     print(cat.habito_raw.value_counts().head(12).to_string())
     print(f"\ninconsistentes entre repeticiones: {int(cat.forma_inconsistente.sum())}")
+
+    print("\namplitud de nicho, cobertura sobre el propio catalogo:")
+    for c, lab in [("amp_alt", "rango altitudinal"), ("n_regiones", "distribucion")]:
+        n = int(cat[c].notna().sum())
+        print(f"   {lab:20s} {n:6d}/{len(cat)}  ({100 * n / len(cat):.0f} %)")
+
+    # Cobertura sobre lo que de verdad importa: las lenosas del pool. Se reporta aqui y no en
+    # un script aparte porque un rasgo que cubre la mitad de las especies no se puede usar sin
+    # declararlo, y el sitio donde alguien lo va a leer es la salida del parseo.
+    lk = OUT / "growth_form_lookup.csv"
+    if lk.exists():
+        w = pd.read_csv(lk).query("forma == 'lenosa'")[["species"]]
+        m = w.merge(cat[["species", "habito_raw", "amp_alt", "n_regiones"]],
+                    on="species", how="left")
+        print(f"\ncobertura sobre las {len(w)} lenosas del pool unificado:")
+        for c, lab in [("habito_raw", "habito"), ("amp_alt", "rango altitudinal"),
+                       ("n_regiones", "distribucion")]:
+            n = int(m[c].notna().sum())
+            print(f"   {lab:20s} {n:4d}/{len(w)}  ({100 * n / len(w):.0f} %)")
+        print("   lo que falta son taxones que el catalogo trae solo a nivel de genero, o cuyo\n"
+              "   nombre aceptado no esta ni como aceptado ni como sinonimo indexado.")
 
 
 if __name__ == "__main__":

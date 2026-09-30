@@ -24,8 +24,14 @@ es su composición, cuán húmedo está— es lo que el sensor puede ver.
 
 ### Lo que la sostiene
 
-Todo con el piso de coordenadas (`B03c`: lon, lat, elevación) y dentro de bandas de 2° de
-latitud, que es la lectura defendible. `sobre coords` es la columna que importa.
+> **Cambio de encuadre (2026-09-30, decisión del autor).** El piso de coordenadas (`B03c`) sale
+> de la estructura del paper. Lo que se reporta es el **R² centrado dentro de bandas de 2° de
+> latitud**, que sigue siendo el control del gradiente y ya está en todas las tablas; y la
+> Discusión declara la correlación alta entre las facetas y el gradiente latitudinal (rho hasta
+> 0,83 con la latitud en el primer eje de ordenación), esperable por el efecto climático.
+>
+> Las columnas `piso coords` que siguen abajo quedan como **referencia interna**, no como
+> resultado del paper. Lo que se pierde al sacarlas está anotado en §4b.
 
 **Donde el satélite aporta:**
 
@@ -115,9 +121,10 @@ el paper con las dos versiones lado a lado.
 2. **LCBD como la faceta de composición**, en sus tres variantes. Margen consistente +0,086 a
    +0,101.
 3. **El nulo filogenético**, bien controlado. Se predice a 0,21 pero **es todo geografía**.
-4. **El piso de coordenadas.** Es la contribución metodológica más fuerte y hoy no está en el
-   texto. Casi toda la literatura del campo reporta R² agrupados sin ese control; aquí tres
-   números de geografía dan 0,702 contra 0,704 del modelo completo en PCoA 1.
+4. **El control de latitud**, como R² centrado dentro de bandas de 2°, aplicado a todas las
+   facetas. En la Discusión: las facetas correlacionan fuerte con el gradiente latitudinal, lo
+   que es esperable por el gradiente climático que corre con él, y por eso ningún R² agrupado se
+   interpreta sin el centrado.
 5. **El contraste de sequía** como el mecanismo del resultado principal, no como sección aparte.
 6. **La descripción de composición en las parcelas** (ver §5), que es la capa ecológica que hoy
    falta.
@@ -176,7 +183,7 @@ cada gradiente?".
 
 ---
 
-## 4b. RF contra CNN: la arquitectura profunda no supera a tres coordenadas
+## 4b. RF contra CNN
 
 Comparación sobre el mismo pool y el mismo target (LCBD Sørensen, pg_all leñoso,
 `kfold5_block20_unified`):
@@ -190,21 +197,20 @@ Comparación sobre el mismo pool y el mismo target (LCBD Sørensen, pg_all leño
 | RF sobre la curva | 0,447 | 0,002 | 0,132 |
 | RF gm + clima | 0,502 | 0,000 | 0,210 |
 
-Dos lecturas que no hay que mezclar:
+Lo que va al paper: **comparación justa de arquitectura**, mismo insumo (la curva de kNDVI).
+RF 0,447 / 0,132 contra CNN 0,431 / 0,115. RF gana poco pero de forma consistente en las tres
+variantes de CNN, con desviación entre semillas de 0,002 a 0,010.
 
-1. **Arquitectura, comparación justa** — mismo insumo, la curva de kNDVI: RF 0,447 / 0,132
-   contra CNN 0,431 / 0,115. RF gana poco pero de forma consistente en las tres variantes de
-   CNN, con desviación entre semillas de 0,002 a 0,010.
-2. **Las tres CNN empatan con tres coordenadas.** Agrupado quedan por debajo del piso (0,427–
-   0,431 contra 0,437); dentro de banda, en 0,109–0,115 contra 0,109. El aporte de la
-   arquitectura profunda sobre lon/lat/elevación es **cero**.
-
-Esto sólo se ve porque existe el piso de coordenadas, y es una instancia independiente de lo
-que arXiv [2609.28194](https://arxiv.org/abs/2609.28194) reporta para los embeddings
-fundacionales: las representaciones complejas lucen bien bajo validación débil y se colapsan
-bajo validación espacial. Ellos con AlphaEarth contra Sentinel; aquí con una CNN contra un RF
-y contra tres coordenadas. Que aparezca dos veces con arquitecturas distintas es lo que lo
-convierte en argumento y no en anécdota.
+> **Lo que se pierde al sacar el piso de coordenadas.** Con él, el resultado era mucho más
+> fuerte y mucho más difícil de descartar: las tres CNN quedan agrupadas **por debajo** del piso
+> (0,427–0,431 contra 0,437) y empatadas dentro de banda (0,109–0,115 contra 0,109), o sea el
+> aporte de la arquitectura profunda sobre lon/lat/elevación es **cero**. Eso además era una
+> instancia independiente de lo que arXiv [2609.28194](https://arxiv.org/abs/2609.28194)
+> reporta para los embeddings fundacionales — las representaciones complejas lucen bien bajo
+> validación débil y se colapsan bajo validación espacial.
+>
+> Sin el piso queda "RF le gana a la CNN por 0,016", que es pequeño y fácil de atribuir a
+> afinado. Queda anotado por si se quiere recuperar en revisión.
 
 > ### DECISIÓN PENDIENTE: el modelo del mapa
 >
@@ -212,8 +218,9 @@ convierte en argumento y no en anécdota.
 > sobre todas las parcelas (decisión del 2026-09-02, ejecutada en rapidita). Es exactamente el
 > que empata con el piso de coordenadas.
 >
-> Publicar un mapa producido por un modelo que no supera a lon/lat/elevación es indefendible si
-> alguien hace la comparación, y ahora está hecha. Las opciones:
+> **DECIDIDO (2026-09-30): el mapa sale del paper.** Razón del autor: con ajustes tan bajos no
+> vale la pena el producto, y la historia es de análisis. El paper lo declara en vez de omitirlo
+> en silencio. Las opciones que se consideraron:
 >
 > 1. **Cambiar el modelo del mapa a RF gm+clima** (0,502 / 0,210, +0,101 sobre el piso). Exige
 >    refitar sobre todas las parcelas y rehacer la inferencia, pero es el único bloque con

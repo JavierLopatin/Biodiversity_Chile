@@ -1,0 +1,65 @@
+cuartil,nivel,taxon,frac_parcelas
+Q1 mejor,genero,Nothofagus,0.5488
+Q1 mejor,genero,Drimys,0.2016
+Q1 mejor,genero,Lithraea,0.1824
+Q1 mejor,genero,Cryptocarya,0.1712
+Q1 mejor,genero,Lomatia,0.1504
+Q1 mejor,genero,Gevuina,0.1488
+Q1 mejor,genero,Laureliopsis,0.1328
+Q1 mejor,genero,Quillaja,0.1248
+Q1 mejor,species,Drimys winteri,0.2016
+Q1 mejor,species,Lithraea caustica,0.1824
+Q1 mejor,species,Cryptocarya alba,0.1712
+Q1 mejor,species,Nothofagus obliqua,0.1616
+Q1 mejor,species,Gevuina avellana,0.1488
+Q1 mejor,species,Nothofagus dombeyi,0.1424
+Q1 mejor,species,Laureliopsis philippiana,0.1328
+Q1 mejor,species,Quillaja saponaria,0.1248
+Q2,genero,Nothofagus,0.6096
+Q2,genero,Drimys,0.1984
+Q2,genero,Cryptocarya,0.1712
+Q2,genero,Laureliopsis,0.1664
+Q2,genero,Lithraea,0.152
+Q2,genero,Lomatia,0.1488
+Q2,genero,Gevuina,0.128
+Q2,genero,Amomyrtus,0.1264
+Q2,species,Drimys winteri,0.1984
+Q2,species,Nothofagus obliqua,0.1712
+Q2,species,Cryptocarya alba,0.1712
+Q2,species,Laureliopsis philippiana,0.1664
+Q2,species,Nothofagus dombeyi,0.16
+Q2,species,Lithraea caustica,0.152
+Q2,species,Nothofagus pumilio,0.128
+Q2,species,Gevuina avellana,0.128
+Q3,genero,Nothofagus,0.7291666666666666
+Q3,genero,Drimys,0.23717948717948717
+Q3,genero,Gevuina,0.17307692307692307
+Q3,genero,Laureliopsis,0.16185897435897437
+Q3,genero,Lomatia,0.15384615384615385
+Q3,genero,Amomyrtus,0.13782051282051283
+Q3,genero,Podocarpus,0.11057692307692307
+Q3,genero,Persea,0.10897435897435898
+Q3,species,Drimys winteri,0.23717948717948717
+Q3,species,Nothofagus dombeyi,0.19230769230769232
+Q3,species,Nothofagus obliqua,0.1778846153846154
+Q3,species,Gevuina avellana,0.17307692307692307
+Q3,species,Laureliopsis philippiana,0.16185897435897437
+Q3,species,Nothofagus pumilio,0.16025641025641027
+Q3,species,Amomyrtus luma,0.12179487179487179
+Q3,species,Nothofagus nitida,0.1201923076923077
+Q4 peor,genero,Nothofagus,0.7728
+Q4 peor,genero,Drimys,0.216
+Q4 peor,genero,Laureliopsis,0.1536
+Q4 peor,genero,Lomatia,0.1472
+Q4 peor,genero,Gevuina,0.1408
+Q4 peor,genero,Amomyrtus,0.1216
+Q4 peor,genero,Luma,0.1184
+Q4 peor,genero,Eucryphia,0.0976
+Q4 peor,species,Nothofagus dombeyi,0.2944
+Q4 peor,species,Drimys winteri,0.216
+Q4 peor,species,Nothofagus obliqua,0.1968
+Q4 peor,species,Laureliopsis philippiana,0.1536
+Q4 peor,species,Nothofagus pumilio,0.1536
+Q4 peor,species,Gevuina avellana,0.1408
+Q4 peor,species,Luma apiculata,0.1152
+Q4 peor,species,Amomyrtus luma,0.1104
