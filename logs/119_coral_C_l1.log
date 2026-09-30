@@ -1,0 +1,2 @@
+    C1D01_curve1d_kndvi_raw100_pg-all_unified_woody_coral1_ctr: 14,535 parameters, input (1, 100)
+  C1D01_curve1d_kndvi_raw100_pg-all_unified_woody_coral1_ctr kfold5_block20_unified [  6.4m] lcbd_count_sorensen=+0.415 pd_inext_q0=+0.037 pd_inext_q1=+0.112 pd_inext_q2=+0.094 td_inext_q0=-0.048 td_inext_q1=+0.058 td_inext_q2=+0.075
