@@ -236,6 +236,49 @@ variantes de CNN, con desviación entre semillas de 0,002 a 0,010.
 
 ---
 
+## 4c. Cuatro negativos que convergen: el límite son los predictores
+
+Cuatro vías de mejora, medidas y todas negativas. Van juntas en el suplemento porque separadas
+parecen anécdotas y juntas son un argumento.
+
+| vía | efecto sobre LCBD dentro de banda | dónde |
+|---|---|---|
+| regularizar el RF (hoja 2 → 50) | −0,049 | `scripts/114` |
+| CORAL superficial sobre el RF | −0,041 (todo el barrido de λ) | `scripts/114` |
+| arquitectura profunda (CNN contra RF) | −0,016 | §4b |
+| **Deep CORAL sobre la CNN** | **+0,006 ± 0,013** (criterio: +0,02) | `scripts/120` |
+
+El de Deep CORAL es el más informativo porque su diagnóstico distingue dos negativos muy
+distintos. La trayectoria de la pérdida:
+
+| brazo | CORAL epoch 0 | CORAL mejor epoch | λ·CORAL | Huber |
+|---|---|---|---|---|
+| A, control λ=0 | 8,9e-5 | 6,3e-5 | 0 | 0,719 |
+| E, λ* = 11.480 | 3,1e-5 | **2,4e-7** | 0,0027 | 0,738 |
+
+La red alinea el embedding tres órdenes de magnitud pagando un 2,6 % de pérdida supervisada, y
+no cambia nada. **No había desalineamiento que corregir**: en el control ya valía 6,3e-5 sin
+hacer nada. No es que la adaptación falle, es que no había dominio que adaptar en la
+representación de la curva.
+
+Encaja con el presupuesto de R²: la pérdida por cambiar de zona (OOB → test) es solo 0,063 en
+LCBD, así que el techo de cualquier adaptación espacial era esa cifra.
+
+Cuatro detalles que van declarados:
+- **AdaBN sola** (brazo B, λ=0 con BatchNorm actualizado por el destino) tampoco mueve nada:
+  +0,004. Se midió aparte a propósito, porque de lo contrario habría contaminado el control sin
+  que se viera.
+- **λ = 1 y λ = 10 son inertes por escala** y se declaran así: con la pérdida CORAL en 1e-4 y la
+  Huber en 0,74, pesan 1e-4 y 1e-3 de la supervisada. λ* sale de la regla de los propios autores
+  (que las dos pérdidas sean comparables al final), calibrada **solo con pérdidas de
+  entrenamiento del control**, sin mirar test.
+- Sirven además de piso de ruido: en `td_inext_q0` se mueven hasta ±0,02 sin efecto real, así
+  que el umbral de +0,02 era estricto pero razonable.
+- **Es transductivo**: usa los predictores del bloque de test al entrenar. Legítimo para mapeo
+  —siempre se tiene la imagen del área a mapear— pero hay que decirlo en Métodos.
+
+---
+
 ## 5. La capa ecológica que falta: describir, sin abrir pregunta nueva
 
 Hoy el paper tiene R² y no tiene ecología. La versión acotada que **sirve a la historia** es
