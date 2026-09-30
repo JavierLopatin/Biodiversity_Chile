@@ -200,7 +200,62 @@ def main() -> None:
     print(best.round(3).to_string(index=False))
 
     print()
+    print(sin_clima(f).round(3).to_string(index=False))
+    print()
     print(contraste_estres(f).round(3).to_string(index=False))
+
+
+def sin_clima(f: pd.DataFrame) -> pd.DataFrame:
+    """Que facetas tienen senal REMOTA propia, o sea sin ayuda del clima.
+
+    La tabla que separa el resultado del paper en dos grupos, y la razon de que exista: el
+    clima es geografia con otro nombre -- lo genera una grilla interpolada desde estaciones, y
+    dentro de una banda de latitud sigue siendo en buena parte posicion. Un bloque que solo
+    gana cuando se le suma clima no ha demostrado que el sensor aporte.
+
+    Aislando los bloques puramente remotos (gm, curva) contra el piso de coordenadas, dentro de
+    banda de 2 grados, el resultado se parte limpio:
+
+        LCBD p/a           gm +0,049   curva +0,044     <- senal remota propia
+        LCBD frecuencia    gm +0,069   curva +0,064     <- senal remota propia
+        LCBD Sorensen      gm +0,053   curva +0,023     <- senal remota propia
+        riqueza cruda      gm +0,080   curva +0,069     <- senal remota propia
+        PCoA 1             gm -0,296   curva -0,210
+        PCoA 2             gm -0,156   curva -0,123
+        MPD                gm -0,066   curva -0,119
+        diversidad oscura  gm -0,212   curva -0,144
+
+    Solo dos facetas le ganan a tres coordenadas sin clima. Y son las dos que son escalares
+    DEL RODAL -- cuan inusual es esta parcela, cuantas especies hay. Las que pierden son
+    posiciones en un pool regional: que tipo de comunidad, que estructura filogenetica, que
+    falta del pool. Un sensor ve el rodal, no la historia biogeografica.
+    """
+    g = f[f.estres == "todas"]
+    piso = g[g.representacion == "coords"].set_index(["familia", "faceta"]).R2_en_banda
+    out = []
+    for (fa, fc), sub in g.groupby(["familia", "faceta"]):
+        b = piso.get((fa, fc), np.nan)
+        if not np.isfinite(b):
+            continue
+        abso = {x: sub.loc[sub.representacion == x, "R2_en_banda"].mean()
+                for x in ("gm", "curva", "lsp", "clima", "gm_clima")}
+        r = {x: v - b for x, v in abso.items()}
+        # No basta con superar al piso: si el piso de coordenadas es NEGATIVO, un margen
+        # positivo solo dice "menos malo que las coordenadas", y el modelo sigue sin predecir.
+        # Pasa en td_inext_q1/q2 y pd_inext_q1/q2, cuyo piso va de -0,005 a -0,073. El flag
+        # exige las dos cosas: ganarle al piso Y tener R2 positivo en absoluto.
+        out.append(dict(grupo=sub.grupo.iloc[0], faceta=fc, piso_coords=b, **r,
+                        R2_gm=abso["gm"], R2_curva=abso["curva"],
+                        remota_propia=bool(max(r["gm"], r["curva"]) > 0
+                                           and max(abso["gm"], abso["curva"]) > 0)))
+    o = pd.DataFrame(out).sort_values(["remota_propia", "gm"], ascending=[False, False])
+    o.to_csv(OUT.with_name("margen_sin_clima.csv"), index=False)
+    print(f"-> {OUT.with_name('margen_sin_clima.csv')}")
+    n = int(o.remota_propia.sum())
+    print(f"\nMargen sobre el piso de coordenadas, dentro de banda de 2 grados.")
+    print(f"Solo {n} de {len(o)} facetas le ganan a tres coordenadas SIN clima:")
+    return o[["grupo", "faceta", "piso_coords", "gm", "curva", "clima", "gm_clima",
+              "R2_gm", "remota_propia"]]
 
 
 def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima") -> pd.DataFrame:
