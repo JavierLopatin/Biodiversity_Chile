@@ -88,11 +88,16 @@ TARGET_SOURCE = (
 #: Richness + presence/absence beta, all 3,102 plots (`lcbd_pa_unified` etc. NaN on 8
 #: plots with zero species -- `scripts/52`, not by design the way the cover tier is).
 TARGETS_MAIN_UNIFIED = ["hill_q0_unified", "lcbd_pa_unified", "pcoa1_pa_unified",
-                        "pcoa2_pa_unified"]
+                        "pcoa2_pa_unified", "isomap1_pa_unified", "isomap2_pa_unified",
+                        "isomap3_pa_unified"]
 
 #: Frequency-weighted beta (row-relativized cover/counts/basal-area), 3,040 plots --
 #: NaN on the presence-only stratum, same masking contract as `TARGETS_COVER`.
-TARGETS_FREQ_UNIFIED = ["lcbd_freq_unified", "pcoa1_freq_unified", "pcoa2_freq_unified"]
+#: Isomap axes (scripts/52, k = 30, 3 axes, on the same distance as the PCoA): the
+#: Jaccard distance saturates on this pool (4.2 species per plot, 77.6% of pairs share
+#: none) and PCoA spends its axes on it (13% in two); geodesic kNN distances do not.
+TARGETS_FREQ_UNIFIED = ["lcbd_freq_unified", "pcoa1_freq_unified", "pcoa2_freq_unified",
+                        "isomap1_freq_unified", "isomap2_freq_unified", "isomap3_freq_unified"]
 
 #: Phylogenetic, 2,539 plots (563 NaN, <2 species in the 610-tip tree -- picante's own
 #: handling, not filtered by hand).
@@ -165,7 +170,8 @@ FACET_OF = {t: f for f, ts in FACETS.items() for t in ts}
 #: facets into FACETS/FACET_OF would silently widen both and break that invariant.
 FACETS_UNIFIED = {
     "alpha_unified":     ["hill_q0_unified"],
-    "beta_pa_unified":   ["lcbd_pa_unified", "pcoa1_pa_unified", "pcoa2_pa_unified"],
+    "beta_pa_unified":   ["lcbd_pa_unified", "pcoa1_pa_unified", "pcoa2_pa_unified",
+                          "isomap1_pa_unified", "isomap2_pa_unified", "isomap3_pa_unified"],
     "beta_freq_unified": TARGETS_FREQ_UNIFIED,
     "phylo_unified":     TARGETS_PHYLO_UNIFIED,
     "dark_unified":      TARGETS_DARK_UNIFIED,

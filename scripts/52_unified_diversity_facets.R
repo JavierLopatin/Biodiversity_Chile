@@ -30,6 +30,10 @@ suppressPackageStartupMessages({
 ROOT <- getwd()
 DERIVED <- file.path(ROOT, "data", "derived")
 K_AXES <- 2
+ISO_AXES <- 3
+ISO_K <- 30
+ISO_K_SENS <- c(10, 80)   # sensibilidad a k, a un CSV aparte
+iso_sens <- list()
 
 occ <- as.data.frame(arrow::read_parquet(file.path(DERIVED, "occurrences_unified.parquet")))
 occ_ids_all <- unique(occ$PlotObservationID)   # antes del filtro lenoso
@@ -119,11 +123,38 @@ run_facet <- function(comm_beta, comm_nmds, method_beta, dist_method, label) {
                      label, 100 * var_explained, k))
   }
 
+  # Isomap sobre la MISMA distancia. Con 4,2 especies por parcela y el 77,6% de los pares
+  # sin ninguna especie en común, la distancia se satura y una ordenación lineal gasta sus
+  # ejes representando una distancia que dejó de variar (PCoA: 13% en 2 ejes). Isomap usa
+  # distancias geodésicas en el grafo kNN, que no se saturan. 3 ejes, k = 30.
+  # fragmentedOK: si el grafo no fuera conexo, las parcelas fuera de la componente
+  # principal quedan NA (se cuenta abajo) en vez de abortar.
+  iso_axes <- function(k) {
+    iso <- vegan::isomap(d, k = k, ndim = ISO_AXES, fragmentedOK = TRUE)
+    pts <- iso$points[, seq_len(ISO_AXES), drop = FALSE]
+    out <- matrix(NA_real_, nrow(comm_beta), ISO_AXES, dimnames = list(rownames(comm_beta), NULL))
+    out[rownames(pts), ] <- pts
+    colnames(out) <- paste0("isomap", seq_len(ISO_AXES))
+    out
+  }
+  log_step("[%s] Isomap (k=%d) ...", label, ISO_K)
+  iso <- iso_axes(ISO_K)
+  cat(sprintf("[%s] Isomap k=%d: %d de %d parcelas en la componente principal\n",
+              label, ISO_K, sum(!is.na(iso[, 1])), nrow(iso)))
+  for (kk in ISO_K_SENS) {
+    ik <- iso_axes(kk)
+    iso_sens[[length(iso_sens) + 1]] <<- data.frame(
+      PlotObservationID = rownames(ik), facet = label, k = kk, ik, row.names = NULL)
+    cat(sprintf("[%s] Isomap k=%d (sensibilidad): %d en la componente principal\n",
+                label, kk, sum(!is.na(ik[, 1]))))
+  }
+
   data.frame(
     PlotObservationID = rownames(comm_beta),
     lcbd = as.numeric(bd$LCBD),
     p_lcbd = as.numeric(bd$p.LCBD),
     sc,
+    as.data.frame(iso),
     row.names = NULL
   )
 }
@@ -179,4 +210,7 @@ cat(sprintf("filas: %d, NA en *_freq_unified: %d (esperado = fuera de abundancia
 
 out_path <- file.path(DERIVED, paste0("unified_diversity_responses", SFX, ".parquet"))
 arrow::write_parquet(resp, out_path)
+sens_path <- file.path(DERIVED, paste0("unified_isomap_k_sensitivity", SFX, ".csv"))
+write.csv(do.call(rbind, iso_sens), sens_path, row.names = FALSE)
+cat(sprintf("escrito: %s\n", sens_path))
 cat(sprintf("\nescrito: %s\n", out_path))
