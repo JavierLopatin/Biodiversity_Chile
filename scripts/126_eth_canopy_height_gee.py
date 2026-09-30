@@ -64,7 +64,7 @@ def probar(ee) -> None:
     print("muestra:", img.sample(pt, scale=10).first().getInfo())
 
 
-def parcelas(ee, out: Path, limit: int = 0) -> None:
+def parcelas(ee, out: Path, limit: int = 0, threads: int = 12) -> None:
     plots = pd.read_parquet(ROOT / "data/derived/plots_unified.parquet")[[ID, "lon", "lat"]]
     if limit:
         plots = plots.sample(limit, random_state=0).reset_index(drop=True)
@@ -73,29 +73,37 @@ def parcelas(ee, out: Path, limit: int = 0) -> None:
     dx, dy = tr[0], tr[4]
     img = image(ee).toFloat()
     arr = np.full((len(plots), 2, WIN, WIN), np.nan, np.float32)
-    corners = []
-    for k, r in enumerate(plots.itertuples()):
+    corners = [None] * len(plots)
+
+    def one(k: int) -> None:
+        pid, lon, lat = plots.iloc[k]
         # esquina de la ventana alineada a la grilla nativa (EPSG:4326 en el activo)
-        cx = tr[2] + np.floor((r.lon - tr[2]) / dx) * dx
-        cy = tr[5] + np.floor((r.lat - tr[5]) / dy) * dy
+        cx = tr[2] + np.floor((lon - tr[2]) / dx) * dx
+        cy = tr[5] + np.floor((lat - tr[5]) / dy) * dy
         x0, y0 = cx - (WIN // 2) * dx, cy - (WIN // 2) * dy
         req = {"expression": img, "fileFormat": "NPY",
                "grid": {"dimensions": {"width": WIN, "height": WIN},
                         "affineTransform": {"scaleX": dx, "shearX": 0, "translateX": x0,
                                             "shearY": 0, "scaleY": dy, "translateY": y0},
                         "crsCode": crs}}
-        for intento in range(5):
+        for intento in range(6):
             try:
                 a = np.load(io.BytesIO(ee.data.computePixels(req)))
                 arr[k, 0], arr[k, 1] = a["height"], a["sd"]
                 break
             except Exception as e:                     # cuotas o cortes: reintenta
-                if intento == 4:
-                    print(f"  {r[1]}: {str(e)[:120]}")
+                if intento == 5:
+                    print(f"  {pid}: {str(e)[:120]}", flush=True)
                 time.sleep(2 ** intento)
-        corners.append((r[1], x0, y0))
-        if k % 200 == 0:
-            print(f"  {k}/{len(plots)}")
+        corners[k] = (pid, x0, y0)
+
+    # computePixels es una petición por ventana; en paralelo baja de ~50 a ~5 minutos
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(threads) as ex:
+        for n, _ in enumerate(ex.map(one, range(len(plots))), 1):
+            if n % 500 == 0:
+                print(f"  {n}/{len(plots)}", flush=True)
+    arr[~np.isfinite(arr)] = np.nan                   # EE entrega los píxeles enmascarados como -inf
     np.savez_compressed(out, windows=arr, dx=dx, dy=dy, crs=crs)
     pd.DataFrame(corners, columns=[ID, "x0", "y0"]).to_parquet(out.with_suffix(".parquet"), index=False)
     ok = np.isfinite(arr[:, 0, WIN // 2, WIN // 2]).sum()
@@ -125,6 +133,7 @@ def main() -> None:
     ap.add_argument("--project", required=True, help="proyecto de Google Cloud registrado en Earth Engine")
     ap.add_argument("--modo", choices=["parcelas", "chile"], default="parcelas")
     ap.add_argument("--probar", action="store_true")
+    ap.add_argument("--threads", type=int, default=12)
     ap.add_argument("--limit", type=int, default=0, help="modo parcelas: solo N parcelas al azar (prueba)")
     ap.add_argument("--drive-folder", default="ETH_CH_Chile")
     ap.add_argument("--out", default=str(ROOT / "data/derived/eth_canopy_windows.npz"))
@@ -138,7 +147,7 @@ def main() -> None:
     if a.probar:
         probar(ee)
     elif a.modo == "parcelas":
-        parcelas(ee, Path(a.out), a.limit)
+        parcelas(ee, Path(a.out), a.limit, a.threads)
     else:
         chile(ee, a.drive_folder)
 
