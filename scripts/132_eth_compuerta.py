@@ -73,7 +73,11 @@ def main() -> None:
     plots = pd.read_parquet(ROOT / "data/derived/plots_unified.parquet")[[ID, "lat"]]
     mb = pd.read_parquet(ROOT / "data/derived/mapbiomas_class_unified.parquet")[[ID, "mb_class"]]
     plots = plots.merge(mb, on=ID, how="left")
-    plots["estrato"] = np.where(plots.mb_class.fillna("").str.contains("Forest"), "Forest", "NoBosque")
+    forest = plots.mb_class.fillna("").str.contains("Forest")
+    # NoBosque se parte en 30-35°S (donde D2 mostró SD > altura en el 57 %) y el resto (>35°S,
+    # razón 0,52-0,86): leerlo agrupado mezclaría una zona donde la altura es ruido con otra
+    # donde es señal. Forest es homogéneo (razón 0,40-0,75) y va entero.
+    plots["estrato"] = np.where(forest, "Forest", np.where(plots.lat >= -35, "NoBosque_30-35", "NoBosque_>35"))
     fams = {"pg-all": ["lcbd_count_sorensen", "td_inext_q0", "pd_inext_q0"],
             "unified-all": ["hill_q0_unified", "lcbd_pa_unified", "lcbd_freq_unified", "pcoa1_pa_unified",
                             "pcoa2_pa_unified", "mpd_unified", "mntd_unified", "ses_mpd_unified",
@@ -99,7 +103,8 @@ def main() -> None:
     out.to_csv(ROOT / "results/tables/eth_compuerta.csv", index=False)
     pd.set_option("display.width", 250)
     x = out[out.tipo == "par"].pivot_table(index=["familia", "target", "etiqueta"], columns="lectura", values="valor")
-    print(x[["todas", "banda", "Forest", "Forest_banda", "NoBosque", "NoBosque_banda"]].round(3).to_string())
+    print(x[[c for c in ["todas", "banda", "Forest", "Forest_banda", "NoBosque_30-35", "NoBosque_30-35_banda",
+             "NoBosque_>35", "NoBosque_>35_banda"] if c in x]].round(3).to_string())
 
 
 if __name__ == "__main__":
