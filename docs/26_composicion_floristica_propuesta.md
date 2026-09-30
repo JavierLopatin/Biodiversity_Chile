@@ -53,11 +53,30 @@ contra latitud dentro del año de censo, descontando al bloque remoto el cambio 
 entre los mismos terciles: **17 de 20 facetas mejoran en año húmedo**. Los tres negativos son
 chicos (−0,024 a −0,074).
 
-El mecanismo: si la señal funciona porque la vegetación **se expresa** —verdor, estructura,
-amplitud fenológica—, en año seco se expresa menos, la separación espectral entre comunidades se
-colapsa, y el predictor pierde información aunque la comunidad no haya cambiado. El control del
-piso descarta la explicación aburrida: si fuera varianza del target, el piso se movería igual, y
-no se mueve.
+El control del piso descarta la explicación aburrida: si fuera varianza del target, el piso se
+movería igual entre terciles, y no se mueve. **El patrón es sólido.**
+
+> **PERO NO HAY MECANISMO, y el más obvio está descartado.** La explicación que se propuso —que
+> en año seco la vegetación se expresa menos, la separación espectral entre comunidades se
+> colapsa, y el predictor pierde información sin que la comunidad cambie— se puede medir sin
+> modelar, y falla. `scripts/110_mecanismo_sequia.py`, sobre Living Trees, entre pares dentro de
+> la misma banda de 2°:
+>
+> | tercil | rho(espectro, Jaccard) | dispersión espectral | NDVI mediano |
+> |---|---|---|---|
+> | seco | 0,124 | 0,0757 | 0,821 |
+> | medio | 0,124 | 0,0739 | 0,834 |
+> | húmedo | 0,130 | 0,0761 | 0,781 |
+>
+> El acoplamiento espectro–composición es el mismo, la dispersión espectral también, y el NDVI va
+> **al revés** de lo que la hipótesis pide. (Cautela: el tercil es SPI residualizado contra
+> latitud dentro del año, o sea seco *respecto de sus vecinos ese año*, no seco en absoluto —
+> eso explica que el NDVI no ordene, pero los otros dos contrastes son dentro de banda y tampoco
+> ordenan.)
+>
+> El paper puede **reportar el patrón**, que está bien controlado, pero **no puede afirmar la
+> causa**. Una correlación de rango entre pares es un instrumento marginal y débil, así que esto
+> no prueba que no exista ningún mecanismo espectral: prueba que el más obvio no se sostiene.
 
 Eso explica además por qué el geomediano le gana a la fenología: en un sistema limitado por agua
 la fenología es errática, y Feilhauer et al. 2013 ya reportó que lo multiestacional ayuda de
@@ -154,6 +173,59 @@ Ver `docs/27`. Está implementado (`scripts/21_run_gdm.py`, `src/biodiv/gdm.py`)
 (ρ +0,492 contra el techo de +0,465 de conocer los dos ejes verdaderos), y contesta una pregunta
 distinta: no "¿se puede predecir?" sino "¿qué impulsa el recambio, y a qué tasa a lo largo de
 cada gradiente?".
+
+---
+
+## 4b. RF contra CNN: la arquitectura profunda no supera a tres coordenadas
+
+Comparación sobre el mismo pool y el mismo target (LCBD Sørensen, pg_all leñoso,
+`kfold5_block20_unified`):
+
+| modelo | R² agrupado | sd entre semillas | **dentro de banda** |
+|---|---|---|---|
+| CNN 1D sobre la curva | 0,427 | 0,004 | 0,112 |
+| CNN 2D serpentine | 0,429 | 0,006 | 0,109 |
+| **CNN 2D + MAE** (el desplegado) | 0,431 | 0,010 | **0,115** |
+| **piso de coordenadas** (`B03c`) | 0,437 | 0,003 | **0,109** |
+| RF sobre la curva | 0,447 | 0,002 | 0,132 |
+| RF gm + clima | 0,502 | 0,000 | 0,210 |
+
+Dos lecturas que no hay que mezclar:
+
+1. **Arquitectura, comparación justa** — mismo insumo, la curva de kNDVI: RF 0,447 / 0,132
+   contra CNN 0,431 / 0,115. RF gana poco pero de forma consistente en las tres variantes de
+   CNN, con desviación entre semillas de 0,002 a 0,010.
+2. **Las tres CNN empatan con tres coordenadas.** Agrupado quedan por debajo del piso (0,427–
+   0,431 contra 0,437); dentro de banda, en 0,109–0,115 contra 0,109. El aporte de la
+   arquitectura profunda sobre lon/lat/elevación es **cero**.
+
+Esto sólo se ve porque existe el piso de coordenadas, y es una instancia independiente de lo
+que arXiv [2609.28194](https://arxiv.org/abs/2609.28194) reporta para los embeddings
+fundacionales: las representaciones complejas lucen bien bajo validación débil y se colapsan
+bajo validación espacial. Ellos con AlphaEarth contra Sentinel; aquí con una CNN contra un RF
+y contra tres coordenadas. Que aparezca dos veces con arquitecturas distintas es lo que lo
+convierte en argumento y no en anécdota.
+
+> ### DECISIÓN PENDIENTE: el modelo del mapa
+>
+> El modelo desplegado para los mapas multitemporales es **C2D02 serpentine + MAE**, refitado
+> sobre todas las parcelas (decisión del 2026-09-02, ejecutada en rapidita). Es exactamente el
+> que empata con el piso de coordenadas.
+>
+> Publicar un mapa producido por un modelo que no supera a lon/lat/elevación es indefendible si
+> alguien hace la comparación, y ahora está hecha. Las opciones:
+>
+> 1. **Cambiar el modelo del mapa a RF gm+clima** (0,502 / 0,210, +0,101 sobre el piso). Exige
+>    refitar sobre todas las parcelas y rehacer la inferencia, pero es el único bloque con
+>    margen real.
+> 2. **Publicar el mapa con la comparación declarada** y el piso de coordenadas como capa de
+>    referencia. Honesto, pero debilita el producto.
+> 3. **No publicar mapa en este paper.** La historia de §1 no lo necesita: es sobre cuándo y
+>    dónde aporta el satélite, no sobre producir una capa.
+>
+> Recomendación: opción 1 si hay máquina, opción 3 si no. La 2 deja al lector preguntándose por
+> qué se publicó.
+
 
 ---
 
