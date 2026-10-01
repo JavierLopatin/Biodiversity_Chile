@@ -56,7 +56,26 @@ plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10, "axes.titlesize": 1
 COL = {"composicion": BLUE, "riqueza": GREEN, "filogenetica": PURPLE}
 GRUPO_EN = {"composicion": "Composition", "riqueza": "Richness",
             "filogenetica": "Phylogenetic"}
-#: Rotulos en ingles. Los seis ejes de Isomap no aparecen: van al suplemento.
+#: Orden por FAMILIA de faceta, no por margen. Ordenar por el resultado agrupa facetas que no
+#: se comparan entre si (una TD junto a un eje de ordenacion) y rompe la lectura: el lector
+#: quiere ver las tres TD juntas, las tres PD juntas, y despues las de composicion. El orden
+#: dentro de cada familia es q0, q1, q2, que es el orden del parametro de Hill.
+#: Los seis ejes de Isomap no aparecen: por decision del 2026-09-30 la ordenacion del texto
+#: principal es PCoA e Isomap va al suplemento.
+FAMILIAS = [
+    ("Taxonomic richness", ["hill_q0_unified", "td_inext_q0", "td_inext_q1", "td_inext_q2"]),
+    ("Phylogenetic", ["pd_inext_q0", "pd_inext_q1", "pd_inext_q2",
+                      "mpd_unified", "mntd_unified",
+                      "ses_pd_unified", "ses_mpd_unified", "ses_mntd_unified"]),
+    ("Compositional uniqueness", ["lcbd_count_sorensen", "lcbd_pa_unified",
+                                  "lcbd_freq_unified"]),
+    ("Dark diversity", ["dark_n_unified"]),
+    ("Floristic composition (ordination)", ["pcoa1_pa_unified", "pcoa2_pa_unified",
+                                            "pcoa1_freq_unified", "pcoa2_freq_unified"]),
+]
+ORDEN = [f for _, fs in FAMILIAS for f in fs]
+
+#: Rotulos en ingles.
 LAB = {
     "lcbd_count_sorensen": "LCBD Sørensen", "lcbd_pa_unified": "LCBD (p/a)",
     "lcbd_freq_unified": "LCBD (freq.)", "pcoa1_pa_unified": "PCoA 1 (p/a)",
@@ -103,10 +122,16 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
                         f"+{r[col_r2] - r.piso_coords:.3f}", va="center", fontsize=8.5,
                         color=WIN, fontweight="bold")
 
+    # separador entre familias: sin el, veinte filas seguidas se leen como una lista plana
+    i = 0
+    for nombre, fs in FAMILIAS:
+        i += len(fs)
+        if i < len(d):
+            ax.axhline(i - 0.5, color="#BBBBBB", lw=0.8, ls="-", zorder=1)
+
     ax.axvline(0, color=DARK, lw=0.7, zorder=1)
     ax.set_yticks(y)
     ax.set_yticklabels([LAB.get(k, k) for k in d.faceta])
-    ax.invert_yaxis()
     ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bands")
     ax.set_title(titulo, loc="left", fontweight="bold")
     ax.grid(axis="x", lw=0.4, color="#DDDDDD", zorder=0)
@@ -118,12 +143,23 @@ def main() -> None:
     t = pd.read_csv(TAB)
     t = t[t.faceta.isin(LAB)].copy()          # fuera los ejes Isomap
     t["R2_gm_clima"] = t.piso_coords + t.gm_clima
-    # orden: por lo que el sensor SOLO le saca a la geografia, que es el mensaje del panel a
-    t = t.sort_values("gm", ascending=True).reset_index(drop=True)
+    t["orden"] = t.faceta.map({k: i for i, k in enumerate(ORDEN)})
+    t = t.sort_values("orden").reset_index(drop=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.0), sharey=True)
     panel(axes[0], t, "R2_gm", "a  Satellite alone (geomedian, no climate)", True)
     panel(axes[1], t, "R2_gm_clima", "b  Satellite + climate", False)
+
+    # una sola inversion, despues de dibujar los dos paneles: con sharey=True, invertir
+    # dentro de cada panel se aplica dos veces y se cancela
+    axes[0].invert_yaxis()
+    axes[0].set_ylim(len(t) - 0.4, -1.3)      # hueco arriba para el primer rotulo
+
+    i = 0
+    for nombre, fs in FAMILIAS:
+        axes[0].text(-0.105, i - 0.62, nombre.upper(), fontsize=7.8, style="italic",
+                     color="#777777", va="center", ha="left", zorder=5)
+        i += len(fs)
 
     n = int(t.remota_propia.sum())
     axes[0].text(0.985, 0.42,
