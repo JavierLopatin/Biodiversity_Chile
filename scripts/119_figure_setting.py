@@ -115,7 +115,11 @@ def main() -> None:
     d = datos()
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
 
-    fig = plt.figure(figsize=(8.0, 8.4))
+    # Alta y angosta a proposito. Con cajas iguales y el mapa sin distorsionar, el rango de
+    # longitud que se dibuja sale de la forma de la caja: una figura mas baja obliga a estirar
+    # la longitud y Chile queda chico dentro de mucho oceano. 25 grados de latitud sobre una
+    # caja de ~7,9 por ~3,4 pulgadas pide unos 11 de longitud, que es el ancho real del pais.
+    fig = plt.figure(figsize=(7.8, 9.9))
     gs = GridSpec(1, 2, width_ratios=[1.0, 1.0], wspace=0.025, figure=fig)
     ax_map = fig.add_subplot(gs[0, 0])
     ax_f = fig.add_subplot(gs[0, 1], sharey=ax_map)
@@ -123,16 +127,22 @@ def main() -> None:
     # --- a  mapa
     lineas_banda(ax_map)
     chile.plot(ax=ax_map, facecolor="#F4F4F4", edgecolor="#BBBBBB", linewidth=0.3, zorder=2)
+    marcas = []
     for src, color, etiqueta in FUENTES:
         s = d[d.source == src]
-        ax_map.scatter(s.lon, s.lat, s=5, alpha=0.55, color=color, lw=0, zorder=3,
-                       label=f"{etiqueta} ($n$={len(s):,})")
+        ax_map.scatter(s.lon, s.lat, s=5, alpha=0.55, color=color, lw=0, zorder=3)
+        marcas.append(Line2D([], [], marker="o", ls="none", ms=6, color=color,
+                             label=f"{etiqueta} ($n$={len(s):,})"))
+    # `adjustable="datalim"` en vez de encoger la caja: con aspecto igual, matplotlib por
+    # defecto achica el EJE hasta que la forma del dato le calce, y eso dejaba un hueco grande
+    # entre los dos paneles que ningun `wspace` cerraba. Asi la caja se queda del tamano que le
+    # dio el GridSpec y es el rango de longitud el que se estira para llenarla.
+    ax_map.set_aspect("equal", adjustable="datalim")
     ax_map.set(xlabel="Longitude (°)", ylabel="Latitude (°)")
     ax_map.set_title("a  Plot network", loc="left", fontweight="bold")
     # arriba a la izquierda: con el panel angosto la leyenda no cabia abajo sin salirse, y
     # esa esquina es oceano en todo el tramo de 30 a 36 S
-    ax_map.legend(loc="upper left", fontsize=7, framealpha=0.95, markerscale=2.0,
-                  handletextpad=0.35, borderpad=0.45, borderaxespad=0.4)
+
 
 
     # --- b  facetas tipificadas, suavizadas contra la latitud
@@ -157,21 +167,17 @@ def main() -> None:
     ax_f.grid(axis="x", lw=0.4, color="#EEEEEE", zorder=0)
     ax_f.set_axisbelow(True)
     handles = [h for _, h in sorted(handles, key=lambda t: -t[0])]
-    ax_f.legend(handles=handles, fontsize=8, loc="lower right", framealpha=0.95,
-                labelspacing=0.4, handlelength=2.4)
 
     ax_map.set_ylim(LAT_MIN, LAT_MAX)
-    fig.subplots_adjust(left=0.085, right=0.99, top=0.945, bottom=0.075)
+    ax_map.set_xlim(float(d.lon.median()) - 0.1, float(d.lon.median()) + 0.1)
 
-    # Los dos paneles ocupan cajas identicas, y el mapa conserva su aspecto real. Para que las
-    # dos cosas sean ciertas a la vez hay que DEDUCIR el rango de longitud de la forma de la
-    # caja en vez de fijarlo a mano: con aspecto igual, el mapa llena su caja solo si
-    # delta_lon / delta_lat es la razon ancho/alto de la caja en pulgadas.
-    fig.canvas.draw()
-    caja = ax_map.get_window_extent()
-    d_lon = (LAT_MAX - LAT_MIN) * caja.width / caja.height
-    centro = float(d.lon.median())
-    ax_map.set_xlim(centro - d_lon / 2, centro + d_lon / 2)
+    # Una sola leyenda al pie, para los dos paneles: son una figura, no dos, y repetir el marco
+    # de la leyenda dos veces dentro de los ejes lo negaba. Ademas libera las dos esquinas que
+    # las leyendas ocupaban, que es justo donde caen los datos.
+    fig.legend(handles=marcas + handles, ncol=4, fontsize=8, loc="lower center",
+               bbox_to_anchor=(0.5, -0.005), frameon=False, columnspacing=1.8,
+               handletextpad=0.5, handlelength=2.2)
+    fig.subplots_adjust(left=0.085, right=0.99, top=0.955, bottom=0.125)
 
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig01_setting.{ext}", dpi=DPI, bbox_inches="tight")
