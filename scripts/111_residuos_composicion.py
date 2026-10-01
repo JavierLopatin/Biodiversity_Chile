@@ -112,6 +112,13 @@ def main() -> None:
             cobertura_rasgo=len(con) / len(o) if len(o) else np.nan,
             frac_estrecho=(con.nicho == "estrecho").mean() if len(con) else np.nan,
             frac_amplio=(con.nicho == "amplio").mean() if len(con) else np.nan))
+    # --- tabla POR PARCELA, para que la figura pueda mostrar distribuciones y no cuatro medias
+    estr = (occ[occ.nicho.notna()].groupby("PlotObservationID").nicho
+            .apply(lambda v: (v == "estrecho").mean()).rename("frac_estrecho"))
+    pp = m.merge(estr, on="PlotObservationID", how="left")
+    pp.to_csv(OUT.with_name("residuos_por_parcela.csv"), index=False)
+    print(f"-> {OUT.with_name('residuos_por_parcela.csv')}  ({len(pp)} parcelas)")
+
     t = pd.DataFrame(filas)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     t.to_csv(OUT, index=False)

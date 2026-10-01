@@ -22,17 +22,26 @@ incomparables -- riqueza de 0 a 26, LCBD del orden de 1e-4, MPD en millones de a
 cada una se tipifica sobre todas sus parcelas y se suaviza contra la latitud con LOWESS. El
 recorrido de cada curva, en desviaciones estandar, va en la leyenda.
 
-El resultado medido es que TODAS son fuertemente latitudinales: el recorrido va de 1,5 DE en
-TD q0 estandarizada a 2,9 en la diversidad oscura, con la riqueza cruda en 1,9. Importa decirlo
-asi y no al reves. Un panel por faceta en escala original sugiere que las facetas donde la
-reflectancia aporta son mas planas que las otras, y eso es un artefacto de comparar escalas
-distintas lado a lado: tipificadas, no lo son. Entonces el gradiente latitudinal NO explica que
-facetas gana el sensor, y esta figura justifica el modelo nulo geografico y el centrado por
-banda sin adelantar el resultado.
+El numero de la leyenda es ETA CUADRADO: la fraccion de la varianza de la faceta que esta
+ENTRE bandas de 2 grados, de un ANOVA de un factor con la banda como factor. Se eligio sobre el
+recorrido de la curva por tres razones. Es adimensional y acotado, asi que no depende de como se
+escale la faceta para dibujarla; no depende de la ventana del suavizado; y mide directamente lo
+que el panel pregunta, que es cuanto de la faceta es latitud.
 
-El recorrido depende de FRAC y hay que leerlo como una magnitud, no como una cifra: con 0,25
-iba de 1,2 a 2,7 y con 0,15 va de 1,5 a 2,9, porque LOWESS tiene pocos puntos en los extremos.
-Lo que no cambia con la ventana es la conclusion: las seis estan en el mismo orden de magnitud.
+El recorrido de la curva, que es lo que esta figura mostraba antes, resulta ser una mala medida
+de eso: comprime. Medido, los recorridos van de 1,5 a 2,9 DE -- un factor de dos-- mientras que
+eta cuadrado va de 0,046 a 0,540, un factor de doce:
+
+    diversidad oscura  0,540      MPD                 0,080
+    LCBD Sorensen      0,382      SES PD              0,075
+    riqueza cruda      0,112      TD q0 estandarizada 0,046
+
+Entonces NO es cierto que las seis sean igual de latitudinales, como el recorrido sugeria. Lo
+que sigue siendo cierto, y es lo que esta figura tiene que dejar dicho, es que ese orden no
+predice cual gana el sensor: la riqueza cruda tiene el mayor margen sobre el nulo de las 22
+facetas con un eta cuadrado de 0,112, y la diversidad oscura tiene el peor margen con 0,540. El
+gradiente latitudinal justifica el modelo nulo y el centrado por banda; no adelanta el
+resultado.
 
 Entre 31 y 37 S las curvas se ondulan. Ahi esta la mayor densidad de parcelas Y la franja donde
 los dos inventarios coexisten, asi que parte de esa estructura puede ser el limite entre
@@ -48,6 +57,7 @@ Uso:
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import geopandas as gpd
@@ -111,7 +121,26 @@ def lineas_banda(ax) -> None:
         ax.axhline(b, color="#E4E4E4", lw=0.5, zorder=0)
 
 
+def escalar(v: pd.Series, modo: str) -> np.ndarray:
+    """Tipifica por DE, o lleva a 0-1 por el rango observado.
+
+    Las dos responden la misma pregunta -- cuanto se mueve la faceta con la latitud-- en
+    unidades distintas. En DE el recorrido se lee contra la dispersion de la faceta; en 0-1,
+    contra su rango total, asi que dice que FRACCION del rango observado cubre el gradiente
+    latitudinal. El 0-1 usa los percentiles 1 y 99 y no el minimo y el maximo: con colas
+    largas -- MPD llega a 650 contra una mediana de 250-- dos parcelas extremas fijarian la
+    escala de toda la curva.
+    """
+    if modo == "sd":
+        return ((v - v.mean()) / v.std()).to_numpy()
+    lo, hi = np.nanpercentile(v, [1, 99])
+    return ((v - lo) / (hi - lo)).to_numpy()
+
+
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--escala", choices=["sd", "01"], default="sd")
+    a = ap.parse_args()
     d = datos()
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
 
@@ -151,17 +180,25 @@ def main() -> None:
     vistos, handles = {}, []
     for col, _, etiqueta, color in FACETAS:
         s = d[np.isfinite(d[col])]
-        z = ((s[col] - s[col].mean()) / s[col].std()).to_numpy()
+        z = escalar(s[col], a.escala)
         sm_fit = sm.nonparametric.lowess(z, s.lat.to_numpy(), frac=FRAC, return_sorted=True)
         lat_s, z_s = sm_fit[:, 0], sm_fit[:, 1]
         ls = ESTILO[vistos.get(color, 0)]
         vistos[color] = vistos.get(color, 0) + 1
         ax_f.plot(z_s, lat_s, color=color, lw=2.2, ls=ls, zorder=4, solid_capstyle="round")
-        rango = float(z_s.max() - z_s.min())
-        handles.append((rango, Line2D([], [], color=color, lw=2.2, ls=ls,
-                                      label=f"{etiqueta}  ({rango:.1f} SD)")))
+        # eta cuadrado sobre los datos, no sobre la curva: no depende del suavizado
+        v = s[col].to_numpy(float)
+        gm = v.mean()
+        entre = sum(len(g) * (g[col].mean() - gm) ** 2 for _, g in s.groupby("banda"))
+        eta2 = float(entre / ((v - gm) ** 2).sum())
+        handles.append((eta2, Line2D([], [], color=color, lw=2.2, ls=ls,
+                                     label=f"{etiqueta}  ($\\eta^2$ = {eta2:.2f})")))
 
-    ax_f.set_xlabel("Facet value (SD), smoothed against latitude")
+    ax_f.set_xlabel("Facet value (SD), smoothed against latitude" if a.escala == "sd"
+                    else "Facet value (0–1 of observed range), smoothed against latitude")
+    ax_f.text(0.985, 0.012, "$\\eta^2$ = variance between 2° latitude bins",
+              transform=ax_f.transAxes, ha="right", va="bottom", fontsize=7.5,
+              color="#777777")
     ax_f.set_title("b  Latitudinal biodiversity distribution", loc="left", fontweight="bold")
     ax_f.tick_params(labelleft=False)
     ax_f.grid(axis="x", lw=0.4, color="#EEEEEE", zorder=0)
@@ -182,9 +219,10 @@ def main() -> None:
                handletextpad=0.5, handlelength=2.2, labelspacing=0.35)
 
     for ext in ("png", "pdf"):
-        fig.savefig(FIG / f"fig01_setting.{ext}", dpi=DPI, bbox_inches="tight")
+        fig.savefig(FIG / f"fig01_setting{'' if a.escala == 'sd' else '_01'}.{ext}",
+                    dpi=DPI, bbox_inches="tight")
     plt.close(fig)
-    print(f"-> {FIG / 'fig01_setting'}.{{png,pdf}}")
+    print(f"-> {FIG / ('fig01_setting' + ('' if a.escala == 'sd' else '_01'))}.{{png,pdf}}")
 
     t = d.pivot_table(index="banda", columns="source", aggfunc="size", fill_value=0)
     sol = t[(t.parcelas_cl > 0) & (t.living_trees > 0)]
