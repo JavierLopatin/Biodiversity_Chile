@@ -23,19 +23,21 @@ Los titulos dicen "reflectance" y no "geomedian": que el resumen temporal sea un
 seis bandas es un detalle de implementacion que va en la leyenda y en Metodos, no en el titulo
 de un panel, donde solo compite con el mensaje.
 
-El contraste entre los dos paneles ES el resultado. En (a) solo cuatro facetas superan a la
-geografia: las tres variantes de LCBD y la riqueza cruda. En (b) muchas mas, porque el clima
-las levanta -- pero el clima sale de una grilla interpolada desde estaciones y dentro de una
-banda de latitud sigue siendo en buena parte posicion. Un bloque que solo gana con clima no ha
-demostrado que el sensor aporte.
+El contraste entre los dos paneles ES el resultado, y cada panel se colorea con SUS PROPIOS
+numeros: en (a) cinco facetas de veintidos superan al modelo nulo geografico, en (b) diecinueve.
+Esa diferencia es el argumento -- pero el clima sale de una grilla interpolada desde estaciones y
+dentro de una banda de latitud sigue siendo en buena parte posicion, asi que un bloque que solo
+gana con clima no ha demostrado que el sensor aporte. Eso se dice en el texto y en el pie, no
+escondido en el color: colorear (b) con el criterio de (a) hacia que la leyenda mintiera, porque
+mancuernas que caen claramente a la derecha del nulo salian en gris.
 
 La separacion tiene lectura directa: lo que gana en (a) son escalares DEL RODAL -- cuan inusual
 es esta parcela, cuantas especies hay. Lo que pierde son posiciones en un pool regional: que
 tipo de comunidad, que estructura filogenetica, que falta del pool. Un sensor ve el rodal, no la
 historia biogeografica.
 
-Los ejes de Isomap quedan fuera: por decision del 2026-09-30 la ordenacion del texto principal
-es PCoA, e Isomap va al suplemento.
+La ordenacion del texto principal es ISOMAP (decision del 2026-10-01); los ejes de PCoA van al
+suplemento (`figS8`), con los diez juntos.
 
 Todo sale de `results/tables/margen_sin_clima.csv` (`scripts/107`). Ningun numero esta escrito
 a mano.
@@ -58,18 +60,16 @@ TAB = ROOT / "results" / "tables" / "margen_sin_clima.csv"
 FIG = ROOT / "results" / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 
-BLUE, GREEN, PURPLE, GREY = "#4C78A8", "#54A24B", "#B279A2", "#888888"
+BLUE, GREY = "#4C78A8", "#888888"
 DARK, WIN = "#333333", "#B4451F"
 DPI = 300
 plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10.5, "axes.titlesize": 12.5,
                      "xtick.labelsize": 9, "ytick.labelsize": 9.5})
 
-#: Un solo color para "gana", no uno por grupo: la familia de cada faceta ya la dice el
-#: rotulo del bloque, asi que el color por grupo era informacion repetida que alargaba la
-#: leyenda a cinco entradas.
-COL = {"composicion": BLUE, "riqueza": BLUE, "filogenetica": BLUE}
-GRUPO_EN = {"composicion": "Composition", "riqueza": "Richness",
-            "filogenetica": "Phylogenetic"}
+#: Un solo color para "gana", no uno por grupo: la familia de cada faceta ya la dice el rotulo
+#: del bloque, asi que el color por grupo era informacion repetida que alargaba la leyenda a
+#: cinco entradas -- y el diccionario por grupo no cubria "otra", el grupo de los ejes de
+#: Isomap, que ahora si puede ganar en el panel de clima.
 #: Orden por FAMILIA de faceta, no por margen. Ordenar por el resultado agrupa facetas que no
 #: se comparan entre si (una TD junto a un eje de ordenacion) y rompe la lectura: el lector
 #: quiere ver las tres TD juntas, las tres PD juntas, y despues las de composicion. El orden
@@ -134,7 +134,8 @@ LAB = {
 }
 
 
-def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) -> None:
+def panel(ax, d: pd.DataFrame, col_r2: str, col_margen: str, titulo: str,
+          marca_ganadores: bool) -> None:
     """Mancuerna: piso de coordenadas -> bloque, una fila por faceta.
 
     La mancuerna y no barras porque lo que importa es la DISTANCIA entre dos numeros, no el
@@ -144,13 +145,17 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
     Y, SEP = posiciones()
     y = [Y[k] for k in d.faceta]
     for i, (_, r) in zip(y, d.iterrows()):
-        # Dos estados: gana o no. "Gana" exige margen positivo Y R2 absoluto positivo --
-        # si el modelo nulo geografico es negativo, superarlo solo dice "menos malo que la
-        # geografia" y el modelo sigue sin predecir (TD q1/q2, PD q0/q2, con nulo de -0,005
-        # a -0,073). Esos casos van en gris como cualquier otro que no gana; la geometria de
-        # la mancuerna sigue mostrando de que lado cae el punto, y el pie lo aclara.
-        gana = bool(r.remota_propia)
-        c = COL[r.grupo] if gana else GREY
+        # Dos estados: gana o no, decidido con las columnas DE ESTE PANEL. El flag
+        # `remota_propia` de la tabla mira solo los bloques sin clima, asi que servia para (a)
+        # y no para (b): usarlo en los dos dejaba en gris mancuernas del panel de clima que
+        # caen a la derecha del nulo, justo lo que la leyenda llama ganancia.
+        #
+        # "Gana" sigue exigiendo las dos condiciones: margen positivo Y R2 absoluto positivo.
+        # Si el nulo geografico es negativo, superarlo solo dice "menos malo que la geografia"
+        # y el modelo sigue sin predecir. Con clima, TD q1/q2 cruzan el cero por +0,004: pasan
+        # el criterio, pero la mancuerna queda pegada al cero y eso se ve.
+        gana = bool(r[col_margen] > 0 and r[col_r2] > 0)
+        c = BLUE if gana else GREY
         ax.plot([r.piso_coords, r[col_r2]], [i, i], color=c,
                 lw=2.8 if gana else 1.6, alpha=1.0 if gana else 0.5, zorder=2,
                 solid_capstyle="round")
@@ -160,7 +165,7 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
 
     if marca_ganadores:
         for i, (_, r) in zip(y, d.iterrows()):
-            if r.remota_propia:
+            if r[col_margen] > 0 and r[col_r2] > 0:
                 ax.text(max(r[col_r2], r.piso_coords) + 0.02, i,
                         f"+{r[col_r2] - r.piso_coords:.3f}", va="center", fontsize=8.5,
                         color=WIN, fontweight="bold")
@@ -189,8 +194,8 @@ def main() -> None:
     t = t.sort_values("orden").reset_index(drop=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.6), sharey=True)
-    panel(axes[0], t, "R2_gm", "a  Reflectance alone", True)
-    panel(axes[1], t, "R2_gm_clima", "b  Reflectance + climate", False)
+    panel(axes[0], t, "R2_gm", "gm", "a  Reflectance alone", True)
+    panel(axes[1], t, "R2_gm_clima", "gm_clima", "b  Reflectance + climate", False)
 
     # una sola inversion, despues de dibujar los dos paneles: con sharey=True, invertir
     # dentro de cada panel se aplica dos veces y se cancela
@@ -204,9 +209,10 @@ def main() -> None:
         axes[0].text(-0.108, Y[fs[0]] - 0.52, nombre.upper(), fontsize=8, style="italic",
                      color="#777777", va="center", ha="left", zorder=5)
 
-    # El conteo "n de 20" va en el pie de figura, no dentro de los ejes: es una lectura del
+    # El conteo "n de 22" va en el pie de figura, no dentro de los ejes: es una lectura del
     # grafico, no un dato, y dentro compite con los margenes rotulados.
-    n = int(t.remota_propia.sum())
+    gana = {c: ((t[m] > 0) & (t[c] > 0)) for c, m in (("R2_gm", "gm"),
+                                                      ("R2_gm_clima", "gm_clima"))}
 
     h = [Line2D([], [], marker="o", ls="-", ms=6, color=BLUE, lw=2.4,
                 label="model gain over geographic null model"),
@@ -227,9 +233,13 @@ def main() -> None:
         fig.savefig(FIG / f"fig03_remote_vs_geography.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"-> {FIG / 'fig03_remote_vs_geography'}.{{png,pdf}}")
-    print(f"\n{n} de {len(t)} facetas le ganan a tres coordenadas sin clima:")
-    print(t.loc[t.remota_propia, ["grupo", "faceta", "piso_coords", "gm", "R2_gm"]]
-          .round(3).to_string(index=False))
+    for col, mar, que in (("R2_gm", "gm", "reflectancia sola"),
+                          ("R2_gm_clima", "gm_clima", "reflectancia + clima")):
+        g = gana[col]
+        print(f"\n{int(g.sum())} de {len(t)} facetas le ganan al modelo nulo geografico "
+              f"con {que}:")
+        print(t.loc[g, ["grupo", "faceta", "piso_coords", mar, col]]
+              .round(3).to_string(index=False))
 
 
 if __name__ == "__main__":
