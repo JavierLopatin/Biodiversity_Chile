@@ -39,8 +39,14 @@ historia biogeografica.
 La ordenacion del texto principal es ISOMAP (decision del 2026-10-01); los ejes de PCoA van al
 suplemento (`figS8`), con los diez juntos.
 
-Todo sale de `results/tables/margen_sin_clima.csv` (`scripts/107`). Ningun numero esta escrito
-a mano.
+Los asteriscos salen de `results/tables/significancia_margen.csv` (`scripts/118`): bootstrap
+por bloques de 20 km sobre la diferencia pareada de errores cuadraticos contra el nulo, con
+Benjamini-Hochberg sobre las 52 pruebas. No es un F-test ni un t-test; por que ninguno de los
+dos aplica esta en `scripts/118`. En el panel (b) va el asterisco solo, sin el numero, porque
+ese panel no rotula margenes.
+
+Todo lo demas sale de `results/tables/margen_sin_clima.csv` (`scripts/107`). Ningun numero esta
+escrito a mano.
 
 Uso:
     python scripts/115_figure_remote_vs_geography.py
@@ -57,6 +63,7 @@ from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[1]
 TAB = ROOT / "results" / "tables" / "margen_sin_clima.csv"
+SIG = ROOT / "results" / "tables" / "significancia_margen.csv"
 FIG = ROOT / "results" / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 
@@ -134,8 +141,18 @@ LAB = {
 }
 
 
+def significancia() -> dict:
+    """`(faceta, modelo) -> asteriscos` de `scripts/118`. Sin la tabla la figura sale igual."""
+    try:
+        sg = pd.read_csv(SIG).fillna({"sig": ""})
+    except FileNotFoundError:
+        print("[aviso] falta significancia_margen.csv: figura sin asteriscos")
+        return {}
+    return {(r.faceta, r.modelo): str(r.sig) for _, r in sg.iterrows()}
+
+
 def panel(ax, d: pd.DataFrame, col_r2: str, col_margen: str, titulo: str,
-          marca_ganadores: bool) -> None:
+          marca_ganadores: bool, est: dict) -> None:
     """Mancuerna: piso de coordenadas -> bloque, una fila por faceta.
 
     La mancuerna y no barras porque lo que importa es la DISTANCIA entre dos numeros, no el
@@ -163,12 +180,17 @@ def panel(ax, d: pd.DataFrame, col_r2: str, col_margen: str, titulo: str,
         ax.plot(r[col_r2], i, "o", ms=7 if gana else 5, color=c,
                 mec="white", mew=0.8, zorder=4)
 
-    if marca_ganadores:
-        for i, (_, r) in zip(y, d.iterrows()):
-            if r[col_margen] > 0 and r[col_r2] > 0:
-                ax.text(max(r[col_r2], r.piso_coords) + 0.02, i,
-                        f"+{r[col_r2] - r.piso_coords:.3f}", va="center", fontsize=8.5,
-                        color=WIN, fontweight="bold")
+    for i, (_, r) in zip(y, d.iterrows()):
+        if not (r[col_margen] > 0 and r[col_r2] > 0):
+            continue
+        a = est.get((r.faceta, col_margen), "")
+        x = max(r[col_r2], r.piso_coords) + 0.02
+        if marca_ganadores:
+            ax.text(x, i, f"+{r[col_r2] - r.piso_coords:.3f}{a}", va="center", fontsize=8.5,
+                    color=WIN, fontweight="bold")
+        elif a:
+            # panel sin rotulos de margen: el asterisco solo, pegado al marcador
+            ax.text(x, i, a, va="center", fontsize=9.5, color=WIN, fontweight="bold")
 
     # separador entre familias: sin el, veinte filas seguidas se leen como una lista plana
     for sy in SEP:
@@ -194,8 +216,9 @@ def main() -> None:
     t = t.sort_values("orden").reset_index(drop=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.6), sharey=True)
-    panel(axes[0], t, "R2_gm", "gm", "a  Reflectance alone", True)
-    panel(axes[1], t, "R2_gm_clima", "gm_clima", "b  Reflectance + climate", False)
+    est = significancia()
+    panel(axes[0], t, "R2_gm", "gm", "a  Reflectance alone", True, est)
+    panel(axes[1], t, "R2_gm_clima", "gm_clima", "b  Reflectance + climate", False, est)
 
     # una sola inversion, despues de dibujar los dos paneles: con sharey=True, invertir
     # dentro de cada panel se aplica dos veces y se cancela
@@ -225,6 +248,13 @@ def main() -> None:
     # de los ejes de ordenacion, que en el panel b caen justo en esa esquina.
     axes[1].legend(handles=h, fontsize=8.5, loc="lower left", framealpha=0.95,
                    handletextpad=0.5, borderpad=0.6, labelspacing=0.45)
+
+    fig.text(0.008, -0.015,
+             "Significance of the margin over the null model: * $q$ < 0.05   ** $q$ < 0.01   "
+             "*** $q$ < 0.001.  One-sided block bootstrap over the same 20 km blocks that "
+             "define the cross-validation,\non the paired difference in squared error; "
+             "Benjamini–Hochberg across the 52 tests. See Methods.",
+             fontsize=7.5, color="#555555", ha="left", va="top")
 
     # sin titulo general: el mensaje va en el pie de figura, y los titulos de panel ya
     # dicen que contrasta cada uno

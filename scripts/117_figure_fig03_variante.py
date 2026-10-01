@@ -23,9 +23,10 @@ absoluto positivo. Ese segundo criterio existe porque cuando el nulo es negativo
 dice "menos malo que la geografia", y el modelo sigue sin predecir (TD q1/q2 y PD q2 sin clima).
 Pero codificarlo en el color producia mancuernas grises que se extienden a la DERECHA del nulo,
 que es exactamente lo que la leyenda llama ganancia: una regla escondida contradiciendo a la
-leyenda. La zona muerta se dibuja en vez de codificarse -- el fondo sombreado marca R2 <= 0,
-donde el modelo no explica nada aunque le gane al nulo-- y asi las dos cosas se ven por separado
-en vez de colapsarse en un color.
+leyenda. Aqui las dos cosas se leen por separado y ninguna va en el color: el margen lo dice la
+geometria de la mancuerna, y la falta de capacidad predictiva la dice la LINEA PUNTEADA EN
+CERO -- TD q1/q2 y PD q2 caen enteras a su izquierda. El pie de figura tiene que decirlo, porque
+la linea sola no lo explica.
 
 Los asteriscos salen de `scripts/118`: bootstrap por bloques de 20 km sobre la diferencia de
 errores cuadraticos contra el nulo, con Benjamini-Hochberg sobre las 52 pruebas. No es un
@@ -143,12 +144,11 @@ def main() -> None:
                         f"+{r[mar]:.3f}{est.get((r.faceta, mar), '')}",
                         va="center", fontsize=8, color=c, fontweight="bold")
 
-    # zona muerta: a la izquierda de 0 el modelo no explica nada, le gane o no al nulo
-    ax.axvspan(-0.13, 0.0, color="#E9E9E9", zorder=0)
-
     for sy in SEP:
         ax.axhline(sy, color="#BBBBBB", lw=0.8, zorder=1)
-    ax.axvline(0, color=DARK, lw=0.7, zorder=1)
+    # punteada y no solida: marca el limite de la capacidad predictiva (a su izquierda el
+    # modelo no explica nada), no un valor mas de la grilla
+    ax.axvline(0, color=DARK, lw=1.0, ls=(0, (4, 3)), zorder=1)
 
     ax.set_yticks([Y[k] for k in t.faceta])
     ax.set_yticklabels([LAB.get(k, k) for k in t.faceta])
@@ -156,9 +156,6 @@ def main() -> None:
     ax.grid(axis="x", lw=0.4, color="#DDDDDD", zorder=0)
     ax.set_axisbelow(True)
     ax.set_xlim(-0.13, 0.82)
-    ax.text(-0.125, max(Y.values()) + 0.45, "$R^2 \\leq 0$: no predictive skill",
-            fontsize=7.5, style="italic", color="#8A8A8A", va="center", ha="left",
-            rotation=0, zorder=5)
     ax.invert_yaxis()
     ax.set_ylim(max(Y.values()) + 0.8, -1.2)
 
