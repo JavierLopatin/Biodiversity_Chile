@@ -181,3 +181,11 @@ logs/.status_loop.pid
 # anterior a este commit todavia los contiene: sacarlos de ahi seria una
 # reescritura con filter-repo, que no se ha hecho.
 paper/
+
+# Herramientas y notas locales, no parte del proyecto
+.serena/
+ai-skills/
+PLAN.md
+PLAN-REVIEW-LOG.md
+texput.log
+20602096/
