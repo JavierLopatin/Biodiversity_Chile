@@ -66,6 +66,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 from matplotlib.gridspec import GridSpec
+from statsmodels.gam.api import BSplines, GLMGam
 from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,11 +78,17 @@ BLUE, ORANGE, DARK = "#4C78A8", "#E8832A", "#333333"
 DPI = 300
 BANDA = 2.0
 LAT_MIN, LAT_MAX = -56.0, -29.0
-#: Ventana del suavizado, como fraccion de las parcelas. 0,15 sobre 25 grados de recorrido da
-#: una ventana de unos 4 grados, el doble de la banda de centrado. Mas gruesa aplana el giro
-#: del extremo austral, que es real; mas fina empieza a seguir el ruido de las bandas con 19
-#: parcelas.
+#: Ventana del suavizado LOWESS, como fraccion de las parcelas. 0,15 sobre 25 grados de
+#: recorrido da una ventana de unos 4 grados, el doble de la banda de centrado. Mas gruesa
+#: aplana el giro del extremo austral, que es real; mas fina empieza a seguir el ruido de las
+#: bandas con 19 parcelas.
 FRAC = 0.15
+#: Grados de libertad de la base del GAM. Diez nodos sobre 25 grados dan una flexibilidad
+#: comparable a la ventana de LOWESS. La penalizacion de curvatura la elige la validacion
+#: cruzada generalizada, no se fija a mano -- aunque sobre estos datos casi no importa: las
+#: curvas con y sin penalizar correlacionan 0,987-0,999 y sus recorridos difieren en menos de
+#: 0,1 DE, porque con diez grados de libertad la base ya es bastante restrictiva.
+GAM_DF = 10
 plt.rcParams.update({"font.size": 9, "axes.labelsize": 9.5, "axes.titlesize": 10.5,
                      "xtick.labelsize": 8, "ytick.labelsize": 8.5})
 
@@ -137,9 +144,42 @@ def escalar(v: pd.Series, modo: str) -> np.ndarray:
     return ((v - lo) / (hi - lo)).to_numpy()
 
 
+def suavizar(z: np.ndarray, lat: np.ndarray, metodo: str) -> tuple[np.ndarray, np.ndarray]:
+    """Curva suavizada contra la latitud. Devuelve (latitud ordenada, valor).
+
+    LOWESS es local y sin supuesto de forma; el GAM es una spline penalizada, o sea un modelo
+    global con una penalizacion de curvatura elegida por validacion cruzada generalizada.
+
+    Las dos dan la misma lectura, que es lo que hay que comprobar antes de leerle estructura
+    fina a ninguna. Difieren en dos cosas y conviene saberlas. El GAM suprime la ondulacion que
+    LOWESS muestra entre 31 y 37 S, que es justo donde coinciden la mayor densidad de parcelas
+    y la franja en que los dos inventarios coexisten -- o sea, donde esa estructura es mas
+    sospechosa de ser el limite entre inventarios. Y el GAM se estira mas en los extremos,
+    donde las bandas tienen 19 a 57 parcelas: por debajo de 50 S la cola de la curva no se
+    interpreta, venga del metodo que venga.
+
+    El numero de la leyenda, eta cuadrado, NO depende de esta eleccion: sale de los datos, no
+    de la curva.
+    """
+    if metodo == "lowess":
+        fit = sm.nonparametric.lowess(z, lat, frac=FRAC, return_sorted=True)
+        return fit[:, 0], fit[:, 1]
+    bs = BSplines(lat, df=[GAM_DF], degree=[3])
+    gm = GLMGam(z, exog=np.ones((len(z), 1)), smoother=bs)
+    # `select_penweight` consulta `self.scale` antes de que `fit` lo haya definido, y revienta
+    # en esta version de statsmodels. Fijarlo en 1 es inocuo aqui: la respuesta esta tipificada,
+    # asi que su escala ES 1, y el criterio solo compara penalizaciones entre si.
+    gm.scale = 1.0
+    alpha = np.atleast_1d(gm.select_penweight(criterion="gcv")[0])
+    g = GLMGam(z, exog=np.ones((len(z), 1)), smoother=bs, alpha=alpha).fit()
+    o = np.argsort(lat)
+    return lat[o], g.fittedvalues[o]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--escala", choices=["sd", "01"], default="sd")
+    ap.add_argument("--suavizado", choices=["lowess", "gam"], default="lowess")
     a = ap.parse_args()
     d = datos()
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
@@ -181,8 +221,7 @@ def main() -> None:
     for col, _, etiqueta, color in FACETAS:
         s = d[np.isfinite(d[col])]
         z = escalar(s[col], a.escala)
-        sm_fit = sm.nonparametric.lowess(z, s.lat.to_numpy(), frac=FRAC, return_sorted=True)
-        lat_s, z_s = sm_fit[:, 0], sm_fit[:, 1]
+        lat_s, z_s = suavizar(z, s.lat.to_numpy(float), a.suavizado)
         ls = ESTILO[vistos.get(color, 0)]
         vistos[color] = vistos.get(color, 0) + 1
         ax_f.plot(z_s, lat_s, color=color, lw=2.2, ls=ls, zorder=4, solid_capstyle="round")
@@ -194,7 +233,8 @@ def main() -> None:
         handles.append((eta2, Line2D([], [], color=color, lw=2.2, ls=ls,
                                      label=f"{etiqueta}  ($\\eta^2$ = {eta2:.2f})")))
 
-    ax_f.set_xlabel("Facet value (SD), smoothed against latitude" if a.escala == "sd"
+    ax_f.set_xlabel(f"Facet value (SD), {a.suavizado.upper()} against latitude"
+                    if a.escala == "sd"
                     else "Facet value (0–1 of observed range), smoothed against latitude")
     ax_f.text(0.985, 0.012, "$\\eta^2$ = variance between 2° latitude bins",
               transform=ax_f.transAxes, ha="right", va="bottom", fontsize=7.5,
@@ -219,10 +259,11 @@ def main() -> None:
                handletextpad=0.5, handlelength=2.2, labelspacing=0.35)
 
     for ext in ("png", "pdf"):
-        fig.savefig(FIG / f"fig01_setting{'' if a.escala == 'sd' else '_01'}.{ext}",
-                    dpi=DPI, bbox_inches="tight")
+        sufijo = ('' if a.escala == 'sd' else '_01') + \
+                 ('' if a.suavizado == 'lowess' else '_gam')
+        fig.savefig(FIG / f"fig01_setting{sufijo}.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
-    print(f"-> {FIG / ('fig01_setting' + ('' if a.escala == 'sd' else '_01'))}.{{png,pdf}}")
+    print(f"-> {FIG / ('fig01_setting' + sufijo)}.{{png,pdf}}")
 
     t = d.pivot_table(index="banda", columns="source", aggfunc="size", fill_value=0)
     sol = t[(t.parcelas_cl > 0) & (t.living_trees > 0)]
