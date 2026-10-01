@@ -1,0 +1,44 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\caption{What each predictor block adds over knowing where the plot is.}
+\label{tab:margins}
+\begin{tabular}{lrrrrrr}
+\toprule
+Facet & Null $R^2$ & Climate & Phenology & LSP & Reflectance & Reflectance + climate \\
+\midrule
+\multicolumn{7}{l}{\textit{Taxonomic richness}} \\
+Richness $q_0$ (raw) & $0.231$ & $+0.149$\textsuperscript{***} & $+0.069$ & $+0.046$ & $+0.080$\textsuperscript{*} & $+0.154$\textsuperscript{***} \\
+TD $q_0$ & $-0.012$ & $-0.012$ & $-0.015$ & $+0.009$ & $-0.054$ & $-0.037$ \\
+TD $q_1$ & $-0.069$ & $+0.073$\textsuperscript{*} & $+0.065$ & $+0.089$\textsuperscript{*} & $+0.056$\textsuperscript{*} & $+0.074$\textsuperscript{***} \\
+TD $q_2$ & $-0.073$ & $+0.077$\textsuperscript{*} & $+0.065$ & $+0.079$\textsuperscript{*} & $+0.056$\textsuperscript{*} & $+0.077$\textsuperscript{***} \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Phylogenetic}} \\
+PD $q_0$ & $-0.010$ & $+0.024$ & $-0.008$ & $-0.009$ & $-0.013$ & $+0.040$ \\
+PD $q_1$ & $-0.005$ & $+0.088$\textsuperscript{*} & $+0.004$ & $+0.016$ & $+0.021$ & $+0.081$\textsuperscript{*} \\
+PD $q_2$ & $-0.020$ & $+0.070$ & $+0.004$ & $+0.016$ & $+0.020$ & $+0.061$\textsuperscript{*} \\
+MPD & $0.199$ & $-0.035$ & $-0.119$ & $-0.117$ & $-0.066$ & $+0.006$ \\
+MNTD & $0.112$ & $-0.052$ & $-0.074$ & $-0.072$ & $-0.043$ & $-0.009$ \\
+SES PD & $0.160$ & $-0.016$ & $-0.095$ & $-0.103$ & $-0.050$ & $+0.011$ \\
+SES MPD & $0.202$ & $-0.024$ & $-0.109$ & $-0.120$ & $-0.064$ & $+0.012$ \\
+SES MNTD & $0.104$ & $-0.014$ & $-0.055$ & $-0.067$ & $-0.033$ & $+0.008$ \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Compositional uniqueness}} \\
+LCBD S\o{}rensen & $0.109$ & $+0.034$ & $+0.023$ & $+0.022$ & $+0.053$ & $+0.101$\textsuperscript{***} \\
+LCBD (p/a) & $0.215$ & $+0.057$ & $+0.044$ & $+0.018$ & $+0.049$ & $+0.099$\textsuperscript{**} \\
+LCBD (freq.) & $0.151$ & $+0.033$ & $+0.064$ & $+0.044$ & $+0.069$\textsuperscript{*} & $+0.093$\textsuperscript{**} \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Dark diversity}} \\
+Dark diversity & $0.326$ & $-0.021$ & $-0.144$ & $-0.161$ & $-0.212$ & $+0.013$ \\
+\addlinespace
+\multicolumn{7}{l}{\textit{Floristic composition}} \\
+Isomap 1 (p/a) & $0.458$ & $+0.006$ & $-0.222$ & $-0.235$ & $-0.329$ & $+0.051$ \\
+Isomap 2 (p/a) & $0.663$ & $-0.009$ & $-0.027$ & $-0.051$ & $-0.073$ & $+0.032$ \\
+Isomap 3 (p/a) & $0.430$ & $+0.026$ & $-0.181$ & $-0.215$ & $-0.230$ & $+0.065$\textsuperscript{**} \\
+Isomap 1 (freq.) & $0.417$ & $-0.043$ & $-0.247$ & $-0.247$ & $-0.360$ & $-0.009$ \\
+Isomap 2 (freq.) & $0.455$ & $-0.008$ & $-0.033$ & $-0.065$ & $-0.079$ & $+0.077$\textsuperscript{***} \\
+Isomap 3 (freq.) & $0.514$ & $-0.036$ & $-0.118$ & $-0.130$ & $-0.154$ & $+0.033$\textsuperscript{*} \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{\textwidth}\footnotesize\vspace{2pt}Margin in out-of-fold $R^2$ over the geographic null model (longitude, latitude, elevation), with observed and predicted values centred within 2\textdegree{} latitude bins. Positive values mean the block adds over knowing where the plot is. Significance from a one-sided block bootstrap over the same 20\,km blocks that define the cross-validation, Benjamini--Hochberg within each question: \textsuperscript{*}$q<0.05$, \textsuperscript{**}$q<0.01$, \textsuperscript{***}$q<0.001$.\end{minipage}
+\end{table}
