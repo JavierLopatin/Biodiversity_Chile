@@ -112,8 +112,8 @@ def main() -> None:
     d = datos()
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
 
-    fig = plt.figure(figsize=(9.6, 8.4))
-    gs = GridSpec(1, 2, width_ratios=[1.0, 1.55], wspace=0.08, figure=fig)
+    fig = plt.figure(figsize=(8.0, 8.4))
+    gs = GridSpec(1, 2, width_ratios=[1.0, 1.0], wspace=0.07, figure=fig)
     ax_map = fig.add_subplot(gs[0, 0])
     ax_f = fig.add_subplot(gs[0, 1], sharey=ax_map)
 
@@ -125,11 +125,10 @@ def main() -> None:
         s = d[d.source == src]
         ax_map.scatter(s.lon, s.lat, s=5, alpha=0.55, color=color, lw=0, zorder=3,
                        label=f"{etiqueta} ($n$ = {len(s):,})")
-    ax_map.set(xlabel="Longitude (°)", ylabel="Latitude (°)", xlim=(-76.5, -65.5))
+    ax_map.set(xlabel="Longitude (°)", ylabel="Latitude (°)")
     ax_map.set_title("a  Plot network", loc="left", fontweight="bold")
     ax_map.legend(loc="lower left", fontsize=8, framealpha=0.95, markerscale=2.2)
-    ax_map.text(-66.0, np.mean(SOLAPE), "both\ninventories", fontsize=7.5, style="italic",
-                color="#8A8A8A", ha="right", va="center", zorder=4)
+
 
     # --- b  facetas tipificadas, suavizadas contra la latitud
     lineas_banda(ax_f)
@@ -147,7 +146,7 @@ def main() -> None:
         handles.append((rango, Line2D([], [], color=color, lw=2.2, ls=ls,
                                       label=f"{etiqueta}  ({rango:.1f} SD)")))
 
-    ax_f.set_xlabel("Facet value, in standard deviations (LOWESS against latitude)")
+    ax_f.set_xlabel("Facet value (SD), smoothed against latitude")
     ax_f.set_title("b  How latitudinal each facet is", loc="left", fontweight="bold")
     ax_f.tick_params(labelleft=False)
     ax_f.grid(axis="x", lw=0.4, color="#EEEEEE", zorder=0)
@@ -157,7 +156,19 @@ def main() -> None:
                 labelspacing=0.4, handlelength=2.4)
 
     ax_map.set_ylim(LAT_MIN, LAT_MAX)
-    fig.subplots_adjust(left=0.075, right=0.99, top=0.945, bottom=0.075)
+    fig.subplots_adjust(left=0.085, right=0.99, top=0.945, bottom=0.075)
+
+    # Los dos paneles ocupan cajas identicas, y el mapa conserva su aspecto real. Para que las
+    # dos cosas sean ciertas a la vez hay que DEDUCIR el rango de longitud de la forma de la
+    # caja en vez de fijarlo a mano: con aspecto igual, el mapa llena su caja solo si
+    # delta_lon / delta_lat es la razon ancho/alto de la caja en pulgadas.
+    fig.canvas.draw()
+    caja = ax_map.get_window_extent()
+    d_lon = (LAT_MAX - LAT_MIN) * caja.width / caja.height
+    centro = float(d.lon.median())
+    ax_map.set_xlim(centro - d_lon / 2, centro + d_lon / 2)
+    ax_map.text(ax_map.get_xlim()[0] + 0.25, np.mean(SOLAPE), "both\ninventories",
+                fontsize=7.5, style="italic", color="#8A8A8A", ha="left", va="center", zorder=4)
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig01_setting.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
