@@ -52,7 +52,7 @@ COLOURS = {"clima": BLUE, "curva": ORANGE, "lsp": "#C7A23C",
 def panel_gate(ax, lat: pd.DataFrame) -> None:
     m = lat[(lat.target == "lcbd_count_sorensen") & (lat.banda == "todas")]
     w = m.pivot_table(index="bloque", columns="lectura", values="R2_mean")
-    lects = [("global", "Pooled"), ("dentro_de_banda", "Within 2° latitude bands")]
+    lects = [("global", "Pooled"), ("dentro_de_banda", "Within 2° latitude bins")]
 
     x = np.arange(len(lects))
     n = len(BLOCKS)

@@ -7,6 +7,13 @@ La pregunta no es "cuanto predice el modelo" sino "cuanto predice MAS QUE tres c
 Casi toda la literatura de este campo reporta R2 agrupados sin ese control, y aqui tres numeros
 -- lon, lat, elevacion-- reproducen el 0,702 del PCoA 1 contra el 0,704 del modelo completo.
 
+Terminologia: "bin" y no "band" para los grupos de latitud. En teledeteccion "band" es banda
+espectral, y la leyenda de esta misma figura dice "six-band geometric median" -- dos
+centimetros debajo pondria "2 deg latitude bands". "Block" y "window" tampoco servian: el
+manuscrito los usa ya para el CV espacial de 20 km y para las ventanas causales y de pixeles.
+"Bin" esta libre y nombra la operacion, que es agrupar por latitud; "belt" tambien estaba
+libre pero sugiere una zona ecologica real, y estas no lo son.
+
 Dos paneles, las mismas 20 facetas en el mismo orden:
 
     a  el piso de coordenadas contra la REFLECTANCIA SOLA (sin clima)
@@ -136,7 +143,7 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
     ax.axvline(0, color=DARK, lw=0.7, zorder=1)
     ax.set_yticks(y)
     ax.set_yticklabels([LAB.get(k, k) for k in d.faceta])
-    ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bands")
+    ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bins")
     ax.set_title(titulo, loc="left", fontweight="bold")
     ax.grid(axis="x", lw=0.4, color="#DDDDDD", zorder=0)
     ax.set_axisbelow(True)

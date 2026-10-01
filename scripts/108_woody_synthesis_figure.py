@@ -85,7 +85,7 @@ def panel_facetas(ax, r: pd.DataFrame) -> None:
     ax.set_yticks(y)
     ax.set_yticklabels([FACETAS[k] for k in orden])
     ax.invert_yaxis()
-    ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bands")
+    ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bins")
     ax.set_title("a  What the woody pool predicts, facet by facet", loc="left",
                  fontweight="bold")
     # la barra ancha se colorea por QUE bloque gano esa faceta, asi que la leyenda tiene que
@@ -104,7 +104,8 @@ def panel_facetas(ax, r: pd.DataFrame) -> None:
 
 
 def panel_bloques(ax, f: pd.DataFrame) -> None:
-    g = f[(f.estres == "todas") & (f.representacion != "area_sola")]
+    g = f[(f.estres == "todas") & (f.representacion != "area_sola")
+          & f.grupo.isin(dict(GRUPOS))]
     reps = ["piso", "clima", "curva", "lsp", "gm", "gm_clima"]
     x = np.arange(len(GRUPOS))
     for i, rep in enumerate(reps):
@@ -115,7 +116,7 @@ def panel_bloques(ax, f: pd.DataFrame) -> None:
     ax.axhline(0, color="#333333", lw=0.8)
     ax.set_xticks(x)
     ax.set_xticklabels([lab for _, lab in GRUPOS])
-    ax.set_ylabel("mean $R^2$ across facets\n(within 2° latitude bands)")
+    ax.set_ylabel("mean $R^2$ across facets\n(within 2° latitude bins)")
     ax.set_title("b  Geomedian+climate wins in every facet group", loc="left",
                  fontweight="bold")
     ax.legend(fontsize=7.5, ncol=2, framealpha=0.95)
@@ -124,7 +125,9 @@ def panel_bloques(ax, f: pd.DataFrame) -> None:
 
 
 def panel_estres(ax, c: pd.DataFrame) -> None:
-    c = c.sort_values("neto")
+    # Fuera los ejes Isomap (grupo "otra"): desde que se anadieron como targets, la tabla los
+    # trae y esta figura no los contempla. Por decision del 2026-09-30 van al suplemento.
+    c = c[c.grupo.isin(dict(GRUPOS))].sort_values("neto")
     y = np.arange(len(c))
     col = {"composicion": BLUE, "riqueza": GREEN, "filogenetica": PURPLE}
     ax.barh(y, c.neto, height=0.68, color=[col[g] for g in c.grupo], zorder=3)
