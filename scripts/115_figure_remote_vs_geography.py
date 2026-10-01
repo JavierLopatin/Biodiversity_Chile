@@ -9,8 +9,12 @@ Casi toda la literatura de este campo reporta R2 agrupados sin ese control, y aq
 
 Dos paneles, las mismas 20 facetas en el mismo orden:
 
-    a  el piso de coordenadas contra el bloque REMOTO SOLO (geomediano, sin clima)
-    b  el piso de coordenadas contra geomediano + clima
+    a  el piso de coordenadas contra la REFLECTANCIA SOLA (sin clima)
+    b  el piso de coordenadas contra reflectancia + clima
+
+Los titulos dicen "reflectance" y no "geomedian": que el resumen temporal sea un geomediano de
+seis bandas es un detalle de implementacion que va en la leyenda y en Metodos, no en el titulo
+de un panel, donde solo compite con el mensaje.
 
 El contraste entre los dos paneles ES el resultado. En (a) solo cuatro facetas superan a la
 geografia: las tres variantes de LCBD y la riqueza cruda. En (b) muchas mas, porque el clima
@@ -50,8 +54,8 @@ FIG.mkdir(parents=True, exist_ok=True)
 BLUE, GREEN, PURPLE, GREY = "#4C78A8", "#54A24B", "#B279A2", "#888888"
 DARK, WIN = "#333333", "#B4451F"
 DPI = 300
-plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10, "axes.titlesize": 10.5,
-                     "xtick.labelsize": 9, "ytick.labelsize": 9})
+plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10.5, "axes.titlesize": 12.5,
+                     "xtick.labelsize": 9, "ytick.labelsize": 9.5})
 
 COL = {"composicion": BLUE, "riqueza": GREEN, "filogenetica": PURPLE}
 GRUPO_EN = {"composicion": "Composition", "riqueza": "Richness",
@@ -147,8 +151,8 @@ def main() -> None:
     t = t.sort_values("orden").reset_index(drop=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.0), sharey=True)
-    panel(axes[0], t, "R2_gm", "a  Satellite alone (geomedian, no climate)", True)
-    panel(axes[1], t, "R2_gm_clima", "b  Satellite + climate", False)
+    panel(axes[0], t, "R2_gm", "a  Reflectance alone", True)
+    panel(axes[1], t, "R2_gm_clima", "b  Reflectance + climate", False)
 
     # una sola inversion, despues de dibujar los dos paneles: con sharey=True, invertir
     # dentro de cada panel se aplica dos veces y se cancela
@@ -166,17 +170,18 @@ def main() -> None:
     n = int(t.remota_propia.sum())
 
     h = [Line2D([], [], marker="o", ls="none", ms=6, color="white", mec=DARK, mew=1.4,
-                label="geography floor (lon, lat, elevation)")]
+                label="geography floor: longitude, latitude, elevation"),
+         Line2D([], [], ls="none", label="reflectance: six-band geometric median")]
     h += [Line2D([], [], marker="o", ls="none", ms=6, color=COL[g],
-                 label=GRUPO_EN[g] + " — satellite wins") for g in COL]
+                 label=GRUPO_EN[g] + " — reflectance wins") for g in COL]
     h += [Line2D([], [], marker="o", ls=":", ms=5, color=GREY, lw=1.6,
                  label="margin over a negative floor ($R^2<0$)"),
           Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
-                 label="satellite loses to geography")]
-    axes[1].legend(handles=h, fontsize=8, loc="lower right", framealpha=0.95)
+                 label="reflectance loses to geography")]
+    axes[1].legend(handles=h, fontsize=8.5, loc="lower right", framealpha=0.95)
 
-    fig.suptitle("What a satellite adds over knowing where you are",
-                 fontsize=12.5, y=0.985)
+    fig.suptitle("What reflectance adds over knowing where you are",
+                 fontsize=14.5, y=0.985)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig03_remote_vs_geography.{ext}", dpi=DPI, bbox_inches="tight")
