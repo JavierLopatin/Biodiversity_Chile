@@ -110,22 +110,35 @@ def parcelas(ee, out: Path, limit: int = 0, threads: int = 12) -> None:
     print(f"-> {out}: {ok}/{len(plots)} parcelas con altura en el píxel central")
 
 
-def chile(ee, folder: str) -> None:
-    """Chile continental: el polígono GAUL incluye Isla de Pascua y Juan Fernández, cuyo
-    recuadro llegaría a -109° de longitud, así que se intersecta con -76..-66 / -56..-17.
-    Grilla nativa del activo (EPSG:4326, 1/12000°), sin remuestrear."""
-    cont = ee.Geometry.Rectangle([-76.0, -56.0, -66.0, -17.0], "EPSG:4326", False)
-    region = (ee.FeatureCollection("FAO/GAUL/2015/level0")
-              .filter(ee.Filter.eq("ADM0_NAME", "Chile")).geometry().intersection(cont, 100))
+#: Franjas de latitud de la exportación de Chile. Una sola tarea por banda para todo Chile se
+#: quedó congelada al 55 % tras 18 h (2026-09-30); en franjas de 4° las tareas corren en
+#: paralelo, se siguen por separado y una que se trabe se relanza sola.
+STRIPS = [(-56, -52), (-52, -48), (-48, -44), (-44, -40), (-40, -36), (-36, -32), (-32, -28),
+          (-28, -24), (-24, -20), (-20, -17)]
+
+
+def chile(ee, folder: str, only: list[str] | None = None) -> None:
+    """Chile continental en franjas: el polígono GAUL incluye Isla de Pascua y Juan Fernández,
+    así que se intersecta con -76..-66 de longitud. Grilla nativa del activo (EPSG:4326,
+    1/12000°), sin remuestrear. ``only`` relanza solo esas descripciones de tarea."""
+    chile_geom = (ee.FeatureCollection("FAO/GAUL/2015/level0")
+                  .filter(ee.Filter.eq("ADM0_NAME", "Chile")).geometry())
     tr = ee.Image(H).projection().getInfo()["transform"]
-    for band, asset in (("height", H), ("sd", SD)):
-        task = ee.batch.Export.image.toDrive(
-            image=ee.Image(asset).clip(region), description=f"ETH_CH_{band}_Chile",
-            folder=folder, fileNamePrefix=f"ETH_CH_{band}_Chile", region=region.bounds(),
-            crs="EPSG:4326", crsTransform=tr, maxPixels=1e11, fileDimensions=32768,
-            fileFormat="GeoTIFF", formatOptions={"cloudOptimized": True})
-        task.start()
-        print(f"tarea {band}: {task.id}  (seguir en https://code.earthengine.google.com/tasks)")
+    for lo, hi in STRIPS:
+        cont = ee.Geometry.Rectangle([-76.0, lo, -66.0, hi], "EPSG:4326", False)
+        region = chile_geom.intersection(cont, 100)
+        for band, asset in (("height", H), ("sd", SD)):
+            name = f"ETH_CH_{band}_Chile_S{abs(lo)}-{abs(hi)}"
+            if only and name not in only:
+                continue
+            task = ee.batch.Export.image.toDrive(
+                image=ee.Image(asset).clip(region), description=name, folder=folder,
+                fileNamePrefix=name, region=region.bounds(), crs="EPSG:4326", crsTransform=tr,
+                maxPixels=1e11, fileDimensions=32768, fileFormat="GeoTIFF",
+                formatOptions={"cloudOptimized": True})
+            task.start()
+            print(f"tarea {name}: {task.id}", flush=True)
+    print("seguir en https://code.earthengine.google.com/tasks")
 
 
 def main() -> None:
@@ -136,6 +149,7 @@ def main() -> None:
     ap.add_argument("--threads", type=int, default=12)
     ap.add_argument("--limit", type=int, default=0, help="modo parcelas: solo N parcelas al azar (prueba)")
     ap.add_argument("--drive-folder", default="ETH_CH_Chile")
+    ap.add_argument("--only", nargs="+", default=None, help="modo chile: relanzar solo estas tareas")
     ap.add_argument("--out", default=str(ROOT / "data/derived/eth_canopy_windows.npz"))
     a = ap.parse_args()
     import ee
@@ -149,7 +163,7 @@ def main() -> None:
     elif a.modo == "parcelas":
         parcelas(ee, Path(a.out), a.limit, a.threads)
     else:
-        chile(ee, a.drive_folder)
+        chile(ee, a.drive_folder, a.only)
 
 
 if __name__ == "__main__":

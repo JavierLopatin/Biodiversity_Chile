@@ -20,7 +20,7 @@ from pathlib import Path
 import requests
 
 DEST = "/mnt/rapidita_4T/datos/ETH_GlobalCanopyHeight_10m_2020_version1"
-TASKS = ("ETH_CH_height_Chile", "ETH_CH_sd_Chile")
+PREFIX = "ETH_CH_"            # todas las franjas de scripts/126 --modo chile
 API = "https://www.googleapis.com/drive/v3/files"
 
 
@@ -32,14 +32,20 @@ def token(ee):
 
 
 def wait_tasks(ee, poll: int) -> None:
+    """Espera a las franjas lanzadas por scripts/126; para cada descripción vale su tarea más
+    reciente (las canceladas de antes no cuentan si se relanzaron)."""
     while True:
-        st = {t["description"]: t["state"] for t in ee.data.getTaskList()
-              if t.get("description") in TASKS}
-        latest = {d: st.get(d) for d in TASKS}
-        print(time.strftime("%H:%M"), latest, flush=True)
-        if any(s == "FAILED" or s == "CANCELLED" for s in latest.values()):
-            raise SystemExit(f"tarea fallida: {latest}")
-        if all(s == "COMPLETED" for s in latest.values()):
+        latest = {}
+        for t in ee.data.getTaskList():                 # más reciente primero
+            d = t.get("description", "")
+            if d.startswith(PREFIX) and "_S" in d and d not in latest:
+                latest[d] = t["state"]
+        n = {s: sum(v == s for v in latest.values()) for s in set(latest.values())}
+        print(time.strftime("%H:%M"), f"{len(latest)} franjas", n, flush=True)
+        bad = [d for d, s in latest.items() if s in ("FAILED", "CANCELLED")]
+        if bad:
+            raise SystemExit(f"franjas fallidas, relanzar con scripts/126 --only: {bad}")
+        if latest and all(s == "COMPLETED" for s in latest.values()):
             return
         time.sleep(poll)
 
