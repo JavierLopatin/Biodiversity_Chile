@@ -7,13 +7,15 @@ parcelas y como cada faceta se mueve con la latitud. El gradiente que el modelo 
 geografico explota queda a la vista antes de que el texto lo nombre, y con el la razon de
 centrar dentro de bandas de 2 grados.
 
-    a  mapa, parcelas por inventario, con la franja donde los dos coexisten
+    a  mapa, parcelas por inventario
     b  seis facetas contra la latitud, tipificadas, con suavizado local
 
-La franja sombreada del mapa no es decorativa: los dos inventarios solo coexisten entre 30 y
-38 S -- cuatro bandas, 1.584 parcelas-- y de 38 S al sur no hay ninguna parcela de Parcelas-CL.
-Esa es la confusion declarada entre procedencia y latitud, y es la segunda razon del centrado
-por banda; la primera es el gradiente del panel b.
+El mapa ya no sombrea la franja donde los dos inventarios coexisten: sobrecargaba un panel que
+tiene que leerse de un vistazo. El dato sigue siendo parte del argumento y va al pie de figura
+y a Metodos -- los dos inventarios solo coexisten entre 30 y 38 S, cuatro bandas y 1.584
+parcelas, y de 38 S al sur no hay ninguna parcela de Parcelas-CL. Esa es la confusion declarada
+entre procedencia y latitud, y es la segunda razon del centrado por banda; la primera es el
+gradiente del panel b. El script la imprime al correr para que no se pierda.
 
 El panel b lleva una linea por faceta y no un panel por faceta. Las facetas estan en escalas
 incomparables -- riqueza de 0 a 26, LCBD del orden de 1e-4, MPD en millones de anos-- asi que
@@ -73,7 +75,8 @@ FRAC = 0.15
 plt.rcParams.update({"font.size": 9, "axes.labelsize": 9.5, "axes.titlesize": 10.5,
                      "xtick.labelsize": 8, "ytick.labelsize": 8.5})
 
-FUENTES = [("parcelas_cl", BLUE, "Parcelas-CL"), ("living_trees", ORANGE, "Living Trees Chile")]
+#: Rotulos cortos a proposito: el panel es angosto y la leyenda va dentro de sus ejes.
+FUENTES = [("parcelas_cl", BLUE, "Parcelas-CL"), ("living_trees", ORANGE, "Living Trees")]
 SOLAPE = (-38.0, -30.0)     #: bandas donde los dos inventarios coexisten, medido en `datos()`
 
 #: (columna, fichero, rotulo, color). Una o dos por familia, donde el contraste importa.
@@ -113,21 +116,23 @@ def main() -> None:
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
 
     fig = plt.figure(figsize=(8.0, 8.4))
-    gs = GridSpec(1, 2, width_ratios=[1.0, 1.0], wspace=0.07, figure=fig)
+    gs = GridSpec(1, 2, width_ratios=[1.0, 1.0], wspace=0.025, figure=fig)
     ax_map = fig.add_subplot(gs[0, 0])
     ax_f = fig.add_subplot(gs[0, 1], sharey=ax_map)
 
     # --- a  mapa
     lineas_banda(ax_map)
-    ax_map.axhspan(*SOLAPE, color=DARK, alpha=0.055, zorder=1)
     chile.plot(ax=ax_map, facecolor="#F4F4F4", edgecolor="#BBBBBB", linewidth=0.3, zorder=2)
     for src, color, etiqueta in FUENTES:
         s = d[d.source == src]
         ax_map.scatter(s.lon, s.lat, s=5, alpha=0.55, color=color, lw=0, zorder=3,
-                       label=f"{etiqueta} ($n$ = {len(s):,})")
+                       label=f"{etiqueta} ($n$={len(s):,})")
     ax_map.set(xlabel="Longitude (°)", ylabel="Latitude (°)")
     ax_map.set_title("a  Plot network", loc="left", fontweight="bold")
-    ax_map.legend(loc="lower left", fontsize=8, framealpha=0.95, markerscale=2.2)
+    # arriba a la izquierda: con el panel angosto la leyenda no cabia abajo sin salirse, y
+    # esa esquina es oceano en todo el tramo de 30 a 36 S
+    ax_map.legend(loc="upper left", fontsize=7, framealpha=0.95, markerscale=2.0,
+                  handletextpad=0.35, borderpad=0.45, borderaxespad=0.4)
 
 
     # --- b  facetas tipificadas, suavizadas contra la latitud
@@ -147,7 +152,7 @@ def main() -> None:
                                       label=f"{etiqueta}  ({rango:.1f} SD)")))
 
     ax_f.set_xlabel("Facet value (SD), smoothed against latitude")
-    ax_f.set_title("b  How latitudinal each facet is", loc="left", fontweight="bold")
+    ax_f.set_title("b  Latitudinal biodiversity distribution", loc="left", fontweight="bold")
     ax_f.tick_params(labelleft=False)
     ax_f.grid(axis="x", lw=0.4, color="#EEEEEE", zorder=0)
     ax_f.set_axisbelow(True)
@@ -167,8 +172,7 @@ def main() -> None:
     d_lon = (LAT_MAX - LAT_MIN) * caja.width / caja.height
     centro = float(d.lon.median())
     ax_map.set_xlim(centro - d_lon / 2, centro + d_lon / 2)
-    ax_map.text(ax_map.get_xlim()[0] + 0.25, np.mean(SOLAPE), "both\ninventories",
-                fontsize=7.5, style="italic", color="#8A8A8A", ha="left", va="center", zorder=4)
+
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig01_setting.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
