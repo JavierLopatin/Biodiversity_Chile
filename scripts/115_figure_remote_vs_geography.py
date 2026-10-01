@@ -161,11 +161,9 @@ def main() -> None:
                      color="#777777", va="center", ha="left", zorder=5)
         i += len(fs)
 
+    # El conteo "n de 20" va en el pie de figura, no dentro de los ejes: es una lectura del
+    # grafico, no un dato, y dentro compite con los margenes rotulados.
     n = int(t.remota_propia.sum())
-    axes[0].text(0.985, 0.42,
-                 f"{n} of {len(t)} facets beat three coordinates\nwithout help from climate",
-                 transform=axes[0].transAxes, fontsize=9.5, color=WIN, fontweight="bold",
-                 va="center", ha="right")
 
     h = [Line2D([], [], marker="o", ls="none", ms=6, color="white", mec=DARK, mew=1.4,
                 label="geography floor (lon, lat, elevation)")]
