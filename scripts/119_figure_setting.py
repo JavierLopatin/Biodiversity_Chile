@@ -19,8 +19,15 @@ gradiente del panel b. El script la imprime al correr para que no se pierda.
 
 El panel b lleva una linea por faceta y no un panel por faceta. Las facetas estan en escalas
 incomparables -- riqueza de 0 a 26, LCBD del orden de 1e-4, MPD en millones de anos-- asi que
-cada una se tipifica sobre todas sus parcelas y se suaviza contra la latitud con LOWESS. El
-recorrido de cada curva, en desviaciones estandar, va en la leyenda.
+cada una se lleva a 0-1 de su propio rango observado, entre los percentiles 1 y 99, y se suaviza
+contra la latitud con un GAM. Esa es la version del paper; `--escala sd` y `--suavizado lowess`
+dejan las otras tres combinaciones en disco con sufijo, y el eta cuadrado de la leyenda es el
+mismo en las cuatro porque sale de los datos y no de la curva.
+
+Se usan percentiles y no el minimo y el maximo porque con colas largas -- MPD llega a 650 contra
+una mediana de 250-- dos parcelas extremas fijarian la escala de toda la curva. Y en 0-1 no se
+dibuja linea de referencia vertical: el cero seria el percentil 1, que no significa lo mismo
+para dos facetas distintas.
 
 El numero de la leyenda es ETA CUADRADO: la fraccion de la varianza de la faceta que esta
 ENTRE bandas de 2 grados, de un ANOVA de un factor con la banda como factor. Se eligio sobre el
@@ -178,8 +185,11 @@ def suavizar(z: np.ndarray, lat: np.ndarray, metodo: str) -> tuple[np.ndarray, n
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--escala", choices=["sd", "01"], default="sd")
-    ap.add_argument("--suavizado", choices=["lowess", "gam"], default="lowess")
+    # Los defaults SON la version del paper (decision del 2026-10-01): 0-1 del rango observado
+    # y GAM. El sufijo del archivo marca las desviaciones respecto de esa combinacion, para que
+    # `fig01_setting.png` sea siempre la figura que entra al manuscrito.
+    ap.add_argument("--escala", choices=["sd", "01"], default="01")
+    ap.add_argument("--suavizado", choices=["lowess", "gam"], default="gam")
     a = ap.parse_args()
     d = datos()
     chile = gpd.read_file(ROOT / "shapefiles" / "regiones_chile.shp").to_crs("EPSG:4326")
@@ -216,7 +226,11 @@ def main() -> None:
 
     # --- b  facetas tipificadas, suavizadas contra la latitud
     lineas_banda(ax_f)
-    ax_f.axvline(0, color=DARK, lw=0.8, zorder=2)
+    # En DE el cero es la media de cada faceta y sirve de referencia comun a las seis curvas.
+    # En 0-1 seria el percentil 1, que no significa lo mismo para dos facetas distintas, asi
+    # que no se dibuja: una linea de referencia que no referencia nada confunde.
+    if a.escala == "sd":
+        ax_f.axvline(0, color=DARK, lw=0.8, zorder=2)
     vistos, handles = {}, []
     for col, _, etiqueta, color in FACETAS:
         s = d[np.isfinite(d[col])]
@@ -258,8 +272,8 @@ def main() -> None:
                handletextpad=0.5, handlelength=2.2, labelspacing=0.35)
 
     for ext in ("png", "pdf"):
-        sufijo = ('' if a.escala == 'sd' else '_01') + \
-                 ('' if a.suavizado == 'lowess' else '_gam')
+        sufijo = ('' if a.escala == '01' else '_sd') + \
+                 ('' if a.suavizado == 'gam' else '_lowess')
         fig.savefig(FIG / f"fig01_setting{sufijo}.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
     print(f"-> {FIG / ('fig01_setting' + sufijo)}.{{png,pdf}}")
