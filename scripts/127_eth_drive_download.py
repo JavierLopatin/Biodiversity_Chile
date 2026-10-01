@@ -47,13 +47,16 @@ def wait_tasks(ee, poll: int) -> None:
 def list_files(ee, folder: str) -> list[dict]:
     h = token(ee)
     q = f"name = '{folder}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
-    fid = requests.get(API, params={"q": q, "fields": "files(id)"}, headers=h, timeout=60).json()["files"]
-    if not fid:
+    fids = requests.get(API, params={"q": q, "fields": "files(id)"}, headers=h, timeout=60).json()["files"]
+    if not fids:
         raise SystemExit(f"no está la carpeta {folder!r} en Drive")
+    # Earth Engine puede crear más de una carpeta con el mismo nombre (una por tarea que
+    # arranca a la vez), así que se buscan los archivos en todas.
+    parents = " or ".join(f"'{f['id']}' in parents" for f in fids)
     out, page = [], None
     while True:
         r = requests.get(API, headers=h, timeout=60, params={
-            "q": f"'{fid[0]['id']}' in parents and trashed = false and name contains 'ETH_CH_'",
+            "q": f"({parents}) and trashed = false and name contains 'ETH_CH_'",
             "fields": "nextPageToken, files(id, name, size)", "pageSize": 1000, "pageToken": page}).json()
         out += r["files"]
         page = r.get("nextPageToken")
