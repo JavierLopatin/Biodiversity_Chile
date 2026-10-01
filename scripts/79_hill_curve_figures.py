@@ -7,9 +7,15 @@ reparte los paneles segun lo que el texto principal reporta, en vez de mostrar l
 completa de q. Mismo estilo de ploteo: paleta, DPI y salida PNG+PDF.
 
 Taxonomica y filogenetica vienen de la rarefaccion/extrapolacion de iNEXT sobre el pool
-(`unified_hill_curves.csv`); el tercer panel es la componente beta de la particion de Hill
-(`unified_beta_freq_curve.csv`), que es el recambio regional que LCBD reparte entre
-parcelas -- LCBD es por parcela y no tiene curva de acumulacion propia.
+(`unified_hill_curves.csv`).
+
+La figura del texto principal llevaba un TERCER panel con la componente beta de la particion
+de Hill, puesta ahi como sustituto de LCBD porque LCBD es por parcela y no tiene curva de
+acumulacion propia. Sale (decision del 2026-10-01). Un sustituto que no es la cantidad que el
+paper reporta invita a leer la curva beta como si dijera algo sobre LCBD, y no lo dice: la
+componente beta describe el recambio del POOL a medida que se acumulan parcelas, mientras que
+LCBD describe cuanto se aparta UNA parcela del resto. El suplemento (figS6) la conserva, donde
+el panel acompana a q=1 y q=2 y no compite con una faceta de titular.
 
 Cada panel lleva tres lineas: Parcelas-CL, Living Trees y el pool agrupado. El agrupado
 esta porque es sobre el que se ajusta el modelo; las dos por separado estan porque sin
@@ -113,11 +119,11 @@ def main() -> None:
     hc = hc[hc["dataset"] == "unificado analisis"]
     bc = pd.read_csv(DERIVED / f"unified_beta_freq_curve{sfx}.csv")
 
-    # Texto principal: solo q=0, las tres facetas que el manuscrito reporta.
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4.6))
+    # Texto principal: solo q=0, y solo las dos facetas que tienen curva de acumulacion
+    # propia. La componente beta queda para el suplemento.
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 4.6))
     hill_panel(axes[0], hc, "taxonomica", 0)
     hill_panel(axes[1], hc, "filogenetica_meanPD", 0)
-    beta_panel(axes[2], bc, 0)
     _legend(axes[0])
     fig.tight_layout()
     for ext in ("png", "pdf"):
