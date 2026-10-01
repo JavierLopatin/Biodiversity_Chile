@@ -86,6 +86,23 @@ FAMILIAS = [
 ]
 ORDEN = [f for _, fs in FAMILIAS for f in fs]
 
+#: Hueco entre familias, en unidades de fila. Sin el, el rotulo de familia no cabe entre la
+#: linea separadora y la primera mancuerna del grupo, y pisa los datos.
+HUECO = 1.0
+
+
+def posiciones() -> tuple[dict, list]:
+    """y de cada faceta y de cada separador, con un hueco entre familias."""
+    y, sep, cur = {}, [], 0.0
+    for k, (_, fs) in enumerate(FAMILIAS):
+        if k:
+            sep.append(cur - HUECO / 2)
+            cur += HUECO
+        for fa in fs:
+            y[fa] = cur
+            cur += 1.0
+    return y, sep
+
 #: Rotulos en ingles.
 LAB = {
     "lcbd_count_sorensen": "LCBD Sørensen", "lcbd_pa_unified": "LCBD (p/a)",
@@ -109,8 +126,9 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
     valor de ninguno: una barra invita a leer la altura, que aqui no significa nada sin el piso
     al lado.
     """
-    y = np.arange(len(d))
-    for i, (_, r) in enumerate(d.iterrows()):
+    Y, SEP = posiciones()
+    y = [Y[k] for k in d.faceta]
+    for i, (_, r) in zip(y, d.iterrows()):
         # Tres estados, no dos. Superar al piso NO basta: si el piso de coordenadas es
         # negativo, un margen positivo solo dice "menos malo que la geografia" y el modelo
         # sigue sin predecir. Pasa en TD q1/q2 y PD q0/q2, con piso de -0,005 a -0,073.
@@ -127,27 +145,24 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
                 mec="white", mew=0.8, zorder=4)
 
     if marca_ganadores:
-        for i, (_, r) in enumerate(d.iterrows()):
+        for i, (_, r) in zip(y, d.iterrows()):
             if r.remota_propia:
                 ax.text(max(r[col_r2], r.piso_coords) + 0.02, i,
                         f"+{r[col_r2] - r.piso_coords:.3f}", va="center", fontsize=8.5,
                         color=WIN, fontweight="bold")
 
     # separador entre familias: sin el, veinte filas seguidas se leen como una lista plana
-    i = 0
-    for nombre, fs in FAMILIAS:
-        i += len(fs)
-        if i < len(d):
-            ax.axhline(i - 0.5, color="#BBBBBB", lw=0.8, ls="-", zorder=1)
+    for sy in SEP:
+        ax.axhline(sy, color="#BBBBBB", lw=0.8, ls="-", zorder=1)
 
     ax.axvline(0, color=DARK, lw=0.7, zorder=1)
-    ax.set_yticks(y)
+    ax.set_yticks(list(y))
     ax.set_yticklabels([LAB.get(k, k) for k in d.faceta])
     ax.set_xlabel("out-of-fold $R^2$, centred within 2° latitude bins")
     ax.set_title(titulo, loc="left", fontweight="bold")
     ax.grid(axis="x", lw=0.4, color="#DDDDDD", zorder=0)
     ax.set_axisbelow(True)
-    ax.set_xlim(-0.12, 0.78)
+    ax.set_xlim(-0.12, 0.60)
 
 
 def main() -> None:
@@ -163,14 +178,15 @@ def main() -> None:
 
     # una sola inversion, despues de dibujar los dos paneles: con sharey=True, invertir
     # dentro de cada panel se aplica dos veces y se cancela
+    Y, _ = posiciones()
     axes[0].invert_yaxis()
-    axes[0].set_ylim(len(t) - 0.4, -1.3)      # hueco arriba para el primer rotulo
+    axes[0].set_ylim(max(Y.values()) + 0.6, -1.0)
 
-    i = 0
+    # el rotulo va en el hueco, debajo del separador y encima de la primera fila del grupo:
+    # con el eje invertido "debajo" es y mayor
     for nombre, fs in FAMILIAS:
-        axes[0].text(-0.105, i - 0.62, nombre.upper(), fontsize=7.8, style="italic",
+        axes[0].text(-0.108, Y[fs[0]] - 0.52, nombre.upper(), fontsize=8, style="italic",
                      color="#777777", va="center", ha="left", zorder=5)
-        i += len(fs)
 
     # El conteo "n de 20" va en el pie de figura, no dentro de los ejes: es una lectura del
     # grafico, no un dato, y dentro compite con los margenes rotulados.
@@ -185,11 +201,15 @@ def main() -> None:
                  label="margin over a negative floor ($R^2<0$)"),
           Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
                  label="reflectance loses to geography")]
-    axes[1].legend(handles=h, fontsize=8.5, loc="lower right", framealpha=0.95)
+    # leyenda fuera de los ejes: dentro competia con los datos del panel b y obligaba a
+    # reservarle una esquina vacia que el grafico no tiene
+    fig.legend(handles=h, fontsize=9, loc="lower center", ncol=3,
+               bbox_to_anchor=(0.5, -0.005), frameon=False, columnspacing=2.2,
+               handletextpad=0.6)
 
     fig.suptitle("What reflectance adds over knowing where you are",
                  fontsize=14.5, y=0.985)
-    fig.tight_layout(rect=(0, 0, 1, 0.97))
+    fig.tight_layout(rect=(0, 0.075, 1, 0.97))
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig03_remote_vs_geography.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
