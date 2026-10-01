@@ -39,9 +39,21 @@ Dos p-valores por modelo, los dos de una cola:
     p_r2       fraccion de replicas con R2 <= 0       -> "no predice nada"
 
 El asterisco de la figura usa `q_margen`: `p_margen` corregido por Benjamini-Hochberg sobre
-las 52 pruebas de la tabla (26 facetas x 2 modelos; las 22 de la figura mas los cuatro ejes de
-PCoA, que van al suplemento pero son parte del mismo analisis). Sin corregir, con 52 pruebas se
-esperan ~3 falsos positivos a 0,05, y esto se lee como una bateria de pruebas, no como una sola.
+cada FAMILIA DE PRUEBAS por separado, y la familia es la PREGUNTA, no el fichero:
+
+    margen          gm y gm+clima sobre las 26 facetas (52 pruebas). Es la afirmacion central
+                    del paper y la que dibuja la figura 2.
+    representacion  clima, curva y LSP sobre las 26 (78 pruebas). Otra pregunta: que resumen
+                    temporal describe mejor, no si el sensor aporta sobre la geografia.
+    arquitectura    las tres redes convolucionales sobre las 7 facetas de `pg-all` (21).
+
+Corregir las tres juntas seria corregir entre afirmaciones que no se apoyan una en otra, y
+castigaria la central por el solo hecho de que el paper tambien compare representaciones.
+
+La eleccion mueve cifras de titular, asi que va declarada y no escondida. Con una sola familia
+de 151 pruebas, LCBD de frecuencia pasa de q = 0,031 a 0,054 con reflectancia sola y deja de
+ser significativa; con familia por modelo (26 cada una) pasa a 0,059 y tampoco lo es. Las dos
+alternativas estan a una linea de distancia en el codigo.
 BH y no Bonferroni porque las facetas estan fuertemente correlacionadas entre si -- varias son
 transformaciones de la misma matriz de comunidad-- y controlar la tasa de error por familia
 seria absurdamente conservador.
@@ -82,10 +94,29 @@ SCHEME = "kfold5_block20_unified"
 BANDA = 2.0
 BLOQUE_KM = 20.0
 
+GATE_CNN = ROOT / "results" / "models_unified_woody"
 NULO = "B03c_coords_raw100"
-MODELOS = {"gm": "RFG4c_gm-topo_ctr-area_raw100",
+#: Los bloques de predictores del Random Forest, todos contra el mismo nulo geografico. El
+#: orden es el de la tabla del paper: lo que no es teledeteccion primero.
+MODELOS = {"clima": "RFG1c_clim-topo_ctr-area_raw100",
+           "curva": "RFG2c_curve-topo_ctr-area_kndvi_raw100",
+           "lsp": "RFG7c_lspu-topo_ctr-area_kndvi_raw100",
+           "gm": "RFG4c_gm-topo_ctr-area_raw100",
            "gm_clima": "RFG5c_gm-clim-topo_ctr-area_raw100"}
+#: Las redes convolucionales, que viven en otro directorio y solo existen para `pg-all`. Van
+#: aqui y no en una tabla aparte porque la pregunta es la misma -- cuanto le ganan al nulo-- y
+#: separarlas invitaria a compararlas entre si en vez de contra la referencia.
+CNN = {"cnn_1d": "C1D01_curve1d_kndvi_raw100",
+       "cnn_2d": "C2D02_serpentine_kndvi_raw100",
+       "cnn_2d_mae": "C2D02_serpentine_kndvi_raw100"}
+CNN_SUFIJO = {"cnn_1d": "_ctr", "cnn_2d": "_ctr", "cnn_2d_mae": "_maekndvi_m06_ctr"}
 FAMILIAS = ["pg-all_unified_woody", "unified-all_unified_woody"]
+#: A que familia de pruebas pertenece cada modelo, para la correccion de Benjamini-Hochberg.
+FAMILIA_PRUEBA = {"gm": "margen", "gm_clima": "margen",
+                  "clima": "representacion", "curva": "representacion",
+                  "lsp": "representacion",
+                  "cnn_1d": "arquitectura", "cnn_2d": "arquitectura",
+                  "cnn_2d_mae": "arquitectura"}
 
 
 def contexto() -> pd.DataFrame:
@@ -97,8 +128,10 @@ def contexto() -> pd.DataFrame:
                          "bloque": cvmod.add_block_key(g, BLOQUE_KM)})
 
 
-def oof(run: str, fam: str) -> pd.DataFrame | None:
-    f = GATE / f"{run}_{fam}" / SCHEME / "oof_predictions.csv"
+def oof(run: str, fam: str, cnn: str | None = None) -> pd.DataFrame | None:
+    base = GATE_CNN if cnn else GATE
+    nombre = f"{run}_{fam}{CNN_SUFIJO[cnn]}" if cnn else f"{run}_{fam}"
+    f = base / nombre / SCHEME / "oof_predictions.csv"
     return pd.read_csv(f) if f.exists() else None
 
 
@@ -164,10 +197,11 @@ def main() -> None:
             print(f"[salto] sin corrida nula para {fam}")
             continue
         targets = sorted(c[:-4] for c in dn.columns if c.endswith("_obs"))
-        for nombre, run in MODELOS.items():
-            dm = oof(run, fam)
+        todos = [(k, v, None) for k, v in MODELOS.items()] + \
+                [(k, v, k) for k, v in CNN.items()]
+        for nombre, run, cnn in todos:
+            dm = oof(run, fam, cnn)
             if dm is None:
-                print(f"[salto] sin {run} para {fam}")
                 continue
             for t in targets:
                 bn, bm = por_bloque(dn, t, ctx), por_bloque(dm, t, ctx)
@@ -179,17 +213,18 @@ def main() -> None:
     f = pd.DataFrame(filas)
     # BH sobre el conjunto de pruebas que la figura muestra: las dos columnas por separado
     # serian dos familias distintas, y la figura las presenta juntas
-    f["q_margen"] = bh(f.p_margen.to_numpy())
-    f["q_r2"] = bh(f.p_r2.to_numpy())
+    f["familia_prueba"] = f.modelo.map(FAMILIA_PRUEBA)
+    f["q_margen"] = f.groupby("familia_prueba").p_margen.transform(lambda v: bh(v.to_numpy()))
+    f["q_r2"] = f.groupby("familia_prueba").p_r2.transform(lambda v: bh(v.to_numpy()))
     f["sig"] = pd.cut(f.q_margen, [-0.01, 0.001, 0.01, 0.05, 1.0],
                       labels=["***", "**", "*", ""]).astype(str).replace("nan", "")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     f.to_csv(OUT, index=False)
     print(f"-> {OUT}   ({a.n_boot} replicas de bootstrap por bloques de "
           f"{int(BLOQUE_KM)} km)\n")
-    for m in MODELOS:
+    for m in f.modelo.unique():
         s = f[f.modelo == m].sort_values("margen", ascending=False)
-        print(f"--- {m} ---")
+        print(f"--- {m}  ({len(s)} facetas) ---")
         print(s[["faceta", "R2_nulo", "R2", "margen", "margen_lo", "margen_hi",
                  "p_margen", "q_margen", "sig", "p_r2", "q_r2"]].round(4).to_string(index=False))
         print()
