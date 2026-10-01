@@ -233,9 +233,8 @@ def main() -> None:
         handles.append((eta2, Line2D([], [], color=color, lw=2.2, ls=ls,
                                      label=f"{etiqueta}  ($\\eta^2$ = {eta2:.2f})")))
 
-    ax_f.set_xlabel(f"Facet value (SD), {a.suavizado.upper()} against latitude"
-                    if a.escala == "sd"
-                    else "Facet value (0–1 of observed range), smoothed against latitude")
+    unidad = "SD" if a.escala == "sd" else "0–1 of observed range"
+    ax_f.set_xlabel(f"Facet value ({unidad}), {a.suavizado.upper()} against latitude")
     ax_f.text(0.985, 0.012, "$\\eta^2$ = variance between 2° latitude bins",
               transform=ax_f.transAxes, ha="right", va="bottom", fontsize=7.5,
               color="#777777")
