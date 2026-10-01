@@ -31,6 +31,11 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 TAB = ROOT / "results" / "tables"
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from biodiv import facetas_paper as FP          # noqa: E402
+
+
 #: Columnas de T2: clave interna -> encabezado. El orden va de lo que no es teledeteccion a lo
 #: que si, para que la tabla se lea como una escalera.
 COLS_T2 = [("clima", "Climate"), ("curva", "Phenology"), ("lsp", "LSP"),
@@ -38,31 +43,8 @@ COLS_T2 = [("clima", "Climate"), ("curva", "Phenology"), ("lsp", "LSP"),
 COLS_T3 = [("gm_clima", "Random Forest"), ("cnn_1d", "CNN 1D"),
            ("cnn_2d", "CNN 2D"), ("cnn_2d_mae", "CNN 2D (MAE)")]
 
-FAMILIAS = [
-    ("Taxonomic richness", ["hill_q0_unified", "td_inext_q0", "td_inext_q1", "td_inext_q2"]),
-    ("Phylogenetic", ["pd_inext_q0", "pd_inext_q1", "pd_inext_q2", "mpd_unified",
-                      "mntd_unified", "ses_pd_unified", "ses_mpd_unified",
-                      "ses_mntd_unified"]),
-    ("Compositional uniqueness", ["lcbd_count_sorensen", "lcbd_pa_unified",
-                                  "lcbd_freq_unified"]),
-    ("Dark diversity", ["dark_n_unified"]),
-    ("Floristic composition", ["isomap1_pa_unified", "isomap2_pa_unified",
-                               "isomap3_pa_unified", "isomap1_freq_unified",
-                               "isomap2_freq_unified", "isomap3_freq_unified"]),
-]
-LAB = {
-    "hill_q0_unified": r"Richness $q_0$ (raw)", "td_inext_q0": r"TD $q_0$",
-    "td_inext_q1": r"TD $q_1$", "td_inext_q2": r"TD $q_2$",
-    "pd_inext_q0": r"PD $q_0$", "pd_inext_q1": r"PD $q_1$", "pd_inext_q2": r"PD $q_2$",
-    "mpd_unified": "MPD", "mntd_unified": "MNTD", "ses_pd_unified": "SES PD",
-    "ses_mpd_unified": "SES MPD", "ses_mntd_unified": "SES MNTD",
-    "lcbd_count_sorensen": r"LCBD S\o{}rensen", "lcbd_pa_unified": "LCBD (p/a)",
-    "lcbd_freq_unified": "LCBD (freq.)",
-    "dark_n_unified": "Dark diversity",
-    **{f"{m}{i}_{v}_unified": f"{'Isomap' if m == 'isomap' else 'PCoA'} {i} "
-       f"({'p/a' if v == 'pa' else 'freq.'})"
-       for m in ("isomap", "pcoa") for i in (1, 2, 3) for v in ("pa", "freq")},
-}
+FAMILIAS = FP.FAMILIAS
+LAB = FP.LAB
 
 
 def celda(r: pd.Series | None) -> str:

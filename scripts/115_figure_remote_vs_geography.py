@@ -67,6 +67,11 @@ SIG = ROOT / "results" / "tables" / "significancia_margen.csv"
 FIG = ROOT / "results" / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from biodiv import facetas_paper as FP          # noqa: E402
+
+
 BLUE, GREY = "#4C78A8", "#888888"
 DARK, WIN = "#333333", "#B4451F"
 DPI = 300
@@ -91,19 +96,8 @@ plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10.5, "axes.titlesize":
 #: que la eleccion no se apoya en los ejes 2 y 3, que si se mueven (0,70 y 0,83).
 #: Los cuatro ejes de PCoA van al suplemento (figS8), con los diez juntos para que el lector
 #: pueda comprobar cualquier criterio.
-FAMILIAS = [
-    ("Taxonomic richness", ["hill_q0_unified", "td_inext_q0", "td_inext_q1", "td_inext_q2"]),
-    ("Phylogenetic", ["pd_inext_q0", "pd_inext_q1", "pd_inext_q2",
-                      "mpd_unified", "mntd_unified",
-                      "ses_pd_unified", "ses_mpd_unified", "ses_mntd_unified"]),
-    ("Compositional uniqueness", ["lcbd_count_sorensen", "lcbd_pa_unified",
-                                  "lcbd_freq_unified"]),
-    ("Dark diversity", ["dark_n_unified"]),
-    ("Floristic composition (ordination)", ["isomap1_pa_unified", "isomap2_pa_unified",
-                                            "isomap3_pa_unified", "isomap1_freq_unified",
-                                            "isomap2_freq_unified", "isomap3_freq_unified"]),
-]
-ORDEN = [f for _, fs in FAMILIAS for f in fs]
+FAMILIAS = FP.FAMILIAS
+ORDEN = FP.ORDEN
 
 #: Hueco entre familias, en unidades de fila. Sin el, el rotulo de familia no cabe entre la
 #: linea separadora y la primera mancuerna del grupo, y pisa los datos.
@@ -122,23 +116,7 @@ def posiciones() -> tuple[dict, list]:
             cur += 1.0
     return y, sep
 
-#: Rotulos en ingles.
-LAB = {
-    "lcbd_count_sorensen": "LCBD Sørensen", "lcbd_pa_unified": "LCBD (p/a)",
-    "lcbd_freq_unified": "LCBD (freq.)", "pcoa1_pa_unified": "PCoA 1 (p/a)",
-    "pcoa2_pa_unified": "PCoA 2 (p/a)", "pcoa1_freq_unified": "PCoA 1 (freq.)",
-    "pcoa2_freq_unified": "PCoA 2 (freq.)",
-    "isomap1_pa_unified": "Isomap 1 (p/a)", "isomap2_pa_unified": "Isomap 2 (p/a)",
-    "isomap3_pa_unified": "Isomap 3 (p/a)", "isomap1_freq_unified": "Isomap 1 (freq.)",
-    "isomap2_freq_unified": "Isomap 2 (freq.)", "isomap3_freq_unified": "Isomap 3 (freq.)",
-    "hill_q0_unified": "Richness $q_0$ (raw)", "dark_n_unified": "Dark diversity",
-    "td_inext_q0": "TD $q_0$ (cov.-std.)", "td_inext_q1": "TD $q_1$ (cov.-std.)",
-    "td_inext_q2": "TD $q_2$ (cov.-std.)",
-    "mpd_unified": "MPD", "mntd_unified": "MNTD", "ses_pd_unified": "SES PD",
-    "ses_mpd_unified": "SES MPD", "ses_mntd_unified": "SES MNTD",
-    "pd_inext_q0": "PD $q_0$ (cov.-std.)", "pd_inext_q1": "PD $q_1$ (cov.-std.)",
-    "pd_inext_q2": "PD $q_2$ (cov.-std.)",
-}
+LAB = FP.LAB
 
 
 def significancia() -> dict:
@@ -147,8 +125,9 @@ def significancia() -> dict:
         sg = pd.read_csv(SIG).fillna({"sig": ""})
     except FileNotFoundError:
         print("[aviso] falta significancia_margen.csv: figura sin asteriscos")
-        return {}
-    return {(r.faceta, r.modelo): str(r.sig) for _, r in sg.iterrows()}
+        return {}, 0
+    return ({(r.faceta, r.modelo): str(r.sig) for _, r in sg.iterrows()},
+            int((sg.familia_prueba == "margen").sum()))
 
 
 def panel(ax, d: pd.DataFrame, col_r2: str, col_margen: str, titulo: str,
@@ -216,7 +195,7 @@ def main() -> None:
     t = t.sort_values("orden").reset_index(drop=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.6), sharey=True)
-    est = significancia()
+    est, n_pruebas = significancia()
     panel(axes[0], t, "R2_gm", "gm", "a  Reflectance alone", True, est)
     panel(axes[1], t, "R2_gm_clima", "gm_clima", "b  Reflectance + climate", False, est)
 
@@ -253,7 +232,7 @@ def main() -> None:
              "Significance of the margin over the null model: * $q$ < 0.05   ** $q$ < 0.01   "
              "*** $q$ < 0.001.  One-sided block bootstrap over the same 20 km blocks that "
              "define the cross-validation,\non the paired difference in squared error; "
-             "Benjamini–Hochberg across the 52 tests. See Methods.",
+             f"Benjamini–Hochberg across the {n_pruebas} tests of this question. See Methods.",
              fontsize=7.5, color="#555555", ha="left", va="top")
 
     # sin titulo general: el mensaje va en el pie de figura, y los titulos de panel ya

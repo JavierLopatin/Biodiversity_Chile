@@ -37,6 +37,8 @@ from scipy.stats import binomtest, wilcoxon
 
 ROOT = Path(__file__).resolve().parents[1]
 FIG = ROOT / "results" / "figures"
+sys.path.insert(0, str(ROOT / "src"))
+from biodiv import facetas_paper as FP          # noqa: E402
 BLUE, RED, DARK, GREY = "#4C78A8", "#C0392B", "#333333", "#9A9A9A"
 DPI = 300
 CALIPERS = (0.25, 0.5, 1.0, 2.0)
@@ -142,7 +144,8 @@ def main() -> None:
 
     # ------------------------------------------------------- c  pares emparejados
     e = m21.errores(pd.Index(d.PlotObservationID))
-    facetas = [c for c in e.columns if not c.startswith("__obs__")]
+    facetas = [c for c in e.columns if not c.startswith("__obs__")
+               and c not in FP.EXCLUIDAS]
     ids_s = d.loc[pares.i_seco, "PlotObservationID"].to_numpy()
     ids_h = d.loc[pares.i_humedo, "PlotObservationID"].to_numpy()
     filas = []

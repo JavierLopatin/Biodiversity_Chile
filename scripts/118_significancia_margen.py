@@ -90,6 +90,8 @@ from biodiv import cv as cvmod          # noqa: E402
 DERIVED = ROOT / "data" / "derived"
 GATE = ROOT / "results" / "models_gate"
 OUT = ROOT / "results" / "tables" / "significancia_margen.csv"
+sys.path.insert(0, str(ROOT / "src"))
+from biodiv import facetas_paper as FP          # noqa: E402
 SCHEME = "kfold5_block20_unified"
 BANDA = 2.0
 BLOQUE_KM = 20.0
@@ -196,7 +198,10 @@ def main() -> None:
         if dn is None:
             print(f"[salto] sin corrida nula para {fam}")
             continue
-        targets = sorted(c[:-4] for c in dn.columns if c.endswith("_obs"))
+        # Las facetas que el paper NO reporta no entran: inflarian la familia de
+        # Benjamini-Hochberg sin que ninguna afirmacion dependa de ellas.
+        targets = sorted(c[:-4] for c in dn.columns if c.endswith("_obs")
+                         and c[:-4] not in FP.EXCLUIDAS)
         todos = [(k, v, None) for k, v in MODELOS.items()] + \
                 [(k, v, k) for k, v in CNN.items()]
         for nombre, run, cnn in todos:
