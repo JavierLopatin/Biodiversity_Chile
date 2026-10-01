@@ -8,12 +8,12 @@ una pregunta de RESIDUOS y no una exploracion: "en que zonas funciona" se convie
 Las 2.499 parcelas con LCBD se parten en cuartiles del residuo absoluto del mejor bloque
 (geomediano + clima), y cada cuartil se describe. Seis paneles, en el orden del argumento:
 
-    a  el eje            el residuo absoluto crece diez veces de Q1 a Q4
-    b  EL CONTROL        el LCBD observado es plano, asi que no es regresion a la media
-    c  estructura        el peor cuartil tiene menos especies
-    d  estructura        y una dominante que se lleva mas
-    e  nicho             y mas especialistas de rango altitudinal estrecho
-    f  quienes           Nothofagus pasa del 55 % al 77 % de las parcelas
+    a  el eje        el residuo absoluto crece diez veces de Q1 a Q4
+    b  el motor      la media del LCBD observado es plana pero la dispersion no
+    c  EL CONTROL    que patrones sobreviven al condicionar por esa dispersion
+    d  estructura    el peor cuartil tiene una dominante que se lleva mas
+    e  nicho         y mas especialistas de rango altitudinal estrecho
+    f  quienes       Nothofagus pasa del 55 % al 77 % de las parcelas
 
 EL PANEL B ES EL QUE DECIDE, Y NO DICE LO QUE PARECE. El residuo absoluto mezcla dos cosas:
 parcelas cuyo LCBD es extremo y el modelo regresa a la media, y parcelas donde el predictor no
@@ -23,18 +23,25 @@ Q4-- pero la DISPERSION no: la desviacion absoluta respecto de la media global p
 O sea la regresion a la media SI esta, y de hecho es el correlato mas fuerte del residuo:
 rho = +0,347, contra -0,173 del numero de especies y +0,171 de la dominancia.
 
-Condicionando por quintiles de |LCBD - media|, que es la forma de separarlas:
+El panel c es ese control y es lo que la figura tenia que mostrar y no mostraba. Condicionando
+por quintiles de |LCBD - media|:
 
     numero de especies        NO sobrevive: -0,21, -0,06, +0,06, +0,01, -0,17 -- cambia de signo
-    dominancia                sobrevive debil y consistente: +0,13, +0,10, +0,02, +0,08, +0,09
-    especialistas estrechos   sobrevive y SE FORTALECE donde el LCBD es extremo:
-                              +0,04, +0,08, +0,08, +0,25, +0,34
+    dominancia                sobrevive debil y uniforme: +0,13, +0,10, +0,02, +0,08, +0,09
+    especialistas estrechos   sobrevive y SE FORTALECE: +0,04, +0,08, +0,08, +0,25, +0,34
+    Nothofagus presente       igual: +0,02, -0,01, +0,02, +0,19, +0,62
 
-Una regresion por rangos lo confirma: la extremidad sola da R2 = 0,114 y sumarle la estructura
-lo lleva a 0,157. Hay senal ecologica por encima de la regresion a la media, pero es la parte
-chica, y el panel c -- menos especies-- es el que NO aguanta el control. Esto hay que escribirlo
-asi en la Discusion: el modelo falla sobre todo donde el LCBD es extremo, y ademas, algo, donde
-dominan los especialistas de rango estrecho.
+Los dos ultimos no son efectos principales sino INTERACCIONES con la extremidad, y eso cambia
+la lectura. No es que el modelo falle donde hay menos especies -- ese patron es marginal y se
+disuelve-- sino que DONDE LA COMUNIDAD ES INUSUAL falla especificamente en los rodales de
+Nothofagus con especialistas de rango estrecho. En el quintil mas extremo el residuo medio es
+2,4e-5 con Nothofagus contra 1,0e-5 sin el. Y no es el confundido al reves: la extremidad media
+es MENOR en las parcelas con Nothofagus (1,68e-5 contra 2,03e-5), asi que el condicionamiento
+revela el patron en vez de crearlo.
+
+Por eso el panel de "menos especies" se fue: el numero de especies aparece ahora solo en el
+panel c, como la linea que cruza el cero. Los paneles con distribucion son los patrones que
+sobreviven.
 
 El panel e usa el rasgo de rango altitudinal del catalogo de Rodriguez et al. 2018
 (`scripts/81`) como DESCRIPCION, no como respuesta nueva a modelar. El rasgo cubre el 90-93 %
@@ -56,6 +63,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
+from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[1]
 TAB = ROOT / "results" / "tables"
@@ -94,6 +102,10 @@ def violines(ax, d: pd.DataFrame, col: str, escala: float = 1.0, log: bool = Fal
 def main() -> None:
     d = pd.read_csv(TAB / "residuos_por_parcela.csv")
     d["cuartil"] = pd.Categorical(d.cuartil, ORDEN, ordered=True)
+    occ = pd.read_parquet(ROOT / "data" / "derived" /
+                          "occurrences_unified_counts_woody.parquet")
+    noto = set(occ.loc[occ.species.str.startswith("Nothofagus"), "PlotObservationID"])
+    d["noto"] = d.PlotObservationID.isin(noto).astype(float)
     tx = pd.read_csv(TAB / "residuos_taxones.csv")
     print(f"{len(d)} parcelas, {d.groupby('cuartil', observed=True).size().to_dict()}")
 
@@ -113,13 +125,32 @@ def main() -> None:
                xy=(0.5, 0.03), xycoords="axes fraction", ha="center", fontsize=8,
                color="#555555")
 
-    violines(c, d, "n_sp")
-    c.set_ylabel("woody species per plot")
-    c.set_title("c  Fewer species", loc="left", fontweight="bold")
+    # --- c  EL CONTROL: que sobrevive al condicionar por la extremidad del LCBD
+    gm2 = d.obs.mean()
+    d["ext"] = (d.obs - gm2).abs()
+    d["q_ext"] = pd.qcut(d.ext, 5, labels=[f"E{i+1}" for i in range(5)])
+    series = [("n_sp", "species per plot", "#4C78A8", "-"),
+              ("dom", "dominance", "#54A24B", "-"),
+              ("frac_estrecho", "narrow-range fraction", "#B279A2", "-"),
+              ("noto", "$\\it{Nothofagus}$ present", COLORES[-1], "-")]
+    c.axhline(0, color=DARK, lw=0.9, zorder=2)
+    for col, etq, color, ls in series:
+        r = [spearmanr(g.res, g[col], nan_policy="omit").statistic
+             for _, g in d.groupby("q_ext", observed=True)]
+        c.plot(range(5), r, ls, color=color, lw=2.2, marker="o", ms=5, label=etq, zorder=3)
+    c.set_xticks(range(5))
+    c.set_xticklabels([f"E{i+1}" for i in range(5)])
+    c.set_xlabel("quintile of $|$LCBD $-$ mean$|$")
+    c.set_ylabel(r"$\rho$ with the residual")
+    c.set_title("c  The control: what survives", loc="left", fontweight="bold")
+    c.legend(fontsize=7.5, loc="upper left", framealpha=0.95, labelspacing=0.3)
+    c.grid(axis="y", lw=0.4, color="#EEEEEE", zorder=0)
+    c.set_axisbelow(True)
 
     violines(e, d, "dom")
     e.set_ylabel("share of the dominant species")
     e.set_title("d  More dominated", loc="left", fontweight="bold")
+    e.set_xlabel("quartile of absolute residual")
 
     violines(f, d, "frac_estrecho")
     f.set_ylabel("narrow-range species in the plot")
