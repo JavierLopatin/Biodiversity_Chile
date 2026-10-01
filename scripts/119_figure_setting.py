@@ -174,10 +174,12 @@ def main() -> None:
     # Una sola leyenda al pie, para los dos paneles: son una figura, no dos, y repetir el marco
     # de la leyenda dos veces dentro de los ejes lo negaba. Ademas libera las dos esquinas que
     # las leyendas ocupaban, que es justo donde caen los datos.
-    fig.legend(handles=marcas + handles, ncol=4, fontsize=8, loc="lower center",
-               bbox_to_anchor=(0.5, -0.005), frameon=False, columnspacing=1.8,
-               handletextpad=0.5, handlelength=2.2)
-    fig.subplots_adjust(left=0.085, right=0.99, top=0.955, bottom=0.125)
+    fig.subplots_adjust(left=0.085, right=0.99, top=0.955, bottom=0.092)
+    # Anclada por ARRIBA y justo debajo del rotulo del eje x, no al pie de la figura: anclarla
+    # abajo dejaba el sobrante entre el rotulo y la leyenda, que es donde mas se nota.
+    fig.legend(handles=marcas + handles, ncol=4, fontsize=8, loc="upper center",
+               bbox_to_anchor=(0.5, 0.040), frameon=False, columnspacing=1.8,
+               handletextpad=0.5, handlelength=2.2, labelspacing=0.35)
 
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig01_setting.{ext}", dpi=DPI, bbox_inches="tight")
