@@ -107,7 +107,7 @@ def r2_en_banda(g: pd.DataFrame, oc: str, pc: str) -> float:
 
 def contexto() -> pd.DataFrame:
     p = pd.read_parquet(DERIVED / "plots_unified.parquet")[
-        ["PlotObservationID", "lat", "Year", "source"]]
+        ["PlotObservationID", "lon", "lat", "elevation", "Year", "source"]]
     spi = pd.read_parquet(DERIVED / "spi_unified.parquet")
     if spi.index.name:
         spi = spi.reset_index()
@@ -116,13 +116,46 @@ def contexto() -> pd.DataFrame:
                    how="left").rename(columns={col: "spi"})
 
 
-def terciles(g: pd.DataFrame) -> pd.Series:
-    """Tercil de SPI dentro del ano de censo, quitado antes el gradiente latitudinal."""
+#: Ejes sobre los que se quita el gradiente de SPI antes de partir en terciles. Son los mismos
+#: tres predictores del modelo nulo geografico, y no por casualidad: el tercil tiene que ser una
+#: anomalia HIDRICA y no un lugar.
+EJES_DETREND = ("lon", "lat", "elevation")
+
+
+def terciles(g: pd.DataFrame, ejes: tuple[str, ...] = EJES_DETREND) -> pd.Series:
+    """Tercil de SPI dentro del ano de censo, quitado antes el gradiente geografico.
+
+    Por que no basta quitar la latitud. En Chile la precipitacion tiene un gradiente
+    oeste-este tan fuerte como el norte-sur, porque la cordillera lo impone, asi que un
+    residuo que solo descuenta la latitud deja el tercil seco sistematicamente mas alto y mas
+    andino. Medido sobre las 1.815 parcelas de Living Trees con SPI, descontando solo la
+    latitud: rho del tercil con la elevacion -0,286 y con la longitud -0,198, y el tercil seco
+    a 729 m contra 411 m del humedo. Eso ya no es un contraste entre estados hidricos sino
+    entre la cordillera y el valle.
+
+    Descontando los tres ejes a la vez, las mismas correlaciones caen a -0,029 y +0,044 -- el
+    tercil deja de ser un lugar-- y el contraste de SPI se conserva casi entero: la media pasa
+    de -0,56 en el seco a -0,20 en el humedo, contra -0,60 y -0,16 de antes.
+
+    El ano se controla por construccion, porque los terciles se calculan DENTRO de cada ano de
+    censo: rho del tercil con el ano es 0,000 en las dos versiones. La muestra son seis anos,
+    2012 a 2017, todos de Living Trees.
+
+    Lo que sigue sin poder hacerse es el diseno que compararia anos dentro de un mismo bloque
+    espacial, porque no hay con que: de los 531 bloques de 20 km con parcelas, 263 tienen dos o
+    mas anos de censo pero solo DOS llegan a veinte parcelas, y un R2 por bloque y tercil
+    necesita decenas. El descuento del modelo nulo geografico en `contraste_estres` es lo que
+    hace de control en su lugar.
+    """
     out = pd.Series(index=g.index, dtype="float64")
+    cols = list(ejes)
     for _, gy in g.groupby("Year"):
-        if len(gy) < 3 * MIN_N_TERCIL or gy.lat.nunique() < 3:
+        gy = gy[gy[cols].notna().all(1) & gy.spi.notna()]
+        if len(gy) < 3 * MIN_N_TERCIL:
             continue
-        res = gy.spi - np.polyval(np.polyfit(gy.lat, gy.spi, 1), gy.lat)
+        X = np.c_[np.ones(len(gy)), gy[cols].to_numpy(float)]
+        beta, *_ = np.linalg.lstsq(X, gy.spi.to_numpy(float), rcond=None)
+        res = gy.spi.to_numpy(float) - X @ beta
         out.loc[gy.index] = pd.qcut(res, 3, labels=[0, 1, 2]).astype(float)
     return out
 
@@ -151,17 +184,24 @@ def main() -> None:
                                  n=z.PlotObservationID.nunique(), n_seeds=nseeds,
                                  R2=float(np.mean(per)),
                                  R2_sd=float(np.std(per, ddof=1)) if len(per) > 1 else 0.0,
-                                 R2_en_banda=float(np.mean(ban))))
+                                 R2_en_banda=float(np.mean(ban)), detrend="todas"))
                 lt = z[(z.source == "living_trees") & z.spi.notna()].copy()
-                lt["t"] = terciles(lt)
-                for k, nombre in enumerate(["seco", "medio", "humedo"]):
+                # Dos definiciones del tercil, las dos en la tabla: la canonica descuenta el
+                # gradiente en lon+lat+elevacion y la otra solo en latitud, que es la que el
+                # proyecto uso antes. La segunda esta para que `scripts/120` pueda mostrar que
+                # el efecto de sequia que se reportaba era el confundido de elevacion, no un
+                # efecto hidrico.
+                asignacion = {"geo": terciles(lt), "lat": terciles(lt, ejes=("lat",))}
+                for detrend, tt in asignacion.items():
+                  lt["t"] = tt
+                  for k, nombre in enumerate(["seco", "medio", "humedo"]):
                     s = lt[lt.t == k]
                     if s.PlotObservationID.nunique() < MIN_N_TERCIL:
                         continue
                     per = [r2(g[oc], g[pc]) for _, g in s.groupby("seed")]
                     ban = [r2_en_banda(g, oc, pc) for _, g in s.groupby("seed")]
                     rows.append(dict(familia=familia, faceta=t, grupo=GRUPO.get(t, "otra"),
-                                     representacion=rep, estres=nombre,
+                                     representacion=rep, estres=nombre, detrend=detrend,
                                      n=s.PlotObservationID.nunique(), n_seeds=nseeds,
                                      R2=float(np.mean(per)),
                                      R2_sd=float(np.std(per, ddof=1)) if len(per) > 1 else 0.0,
@@ -262,7 +302,7 @@ def sin_clima(f: pd.DataFrame) -> pd.DataFrame:
 
 def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima",
                      nulo: str = "coords", metrica: str = "R2_en_banda",
-                     escribir: bool = True) -> pd.DataFrame:
+                     detrend: str = "geo", escribir: bool = True) -> pd.DataFrame:
     """Seco contra humedo, descontando al piso su propio cambio entre terciles.
 
     El nulo es el MODELO NULO GEOGRAFICO (lon, lat, elevacion) y la metrica es el R2 dentro de
@@ -281,7 +321,7 @@ def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima",
     la idea de que la sequia se invierte entre riqueza y composicion. Su piso se mueve -0,132, o
     sea MAS, asi que el neto es +0,049 y apunta al mismo lado que todo lo demas.
     """
-    w = f[f.estres.isin(["seco", "humedo"])]
+    w = f[f.estres.isin(["seco", "humedo"]) & (f.detrend == detrend)]
     piso = w[w.representacion == nulo].set_index(["faceta", "estres"])[metrica]
     r = w[w.representacion == bloque].set_index(["faceta", "estres"])
     out = []
@@ -292,7 +332,7 @@ def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima",
         except KeyError:
             continue
         out.append(dict(faceta=fc, grupo=r.loc[(fc, "seco"), "grupo"], bloque=bloque,
-                        nulo=nulo, metrica=metrica,
+                        nulo=nulo, metrica=metrica, detrend=detrend,
                         R2_seco=bs, R2_humedo=bh, bruto=bh - bs,
                         piso_seco=ps, piso_humedo=ph, piso_delta=ph - ps,
                         margen_seco=bs - ps, margen_humedo=bh - ph,
