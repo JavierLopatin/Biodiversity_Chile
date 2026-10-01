@@ -27,6 +27,11 @@ leyenda. La zona muerta se dibuja en vez de codificarse -- el fondo sombreado ma
 donde el modelo no explica nada aunque le gane al nulo-- y asi las dos cosas se ven por separado
 en vez de colapsarse en un color.
 
+Los asteriscos salen de `scripts/118`: bootstrap por bloques de 20 km sobre la diferencia de
+errores cuadraticos contra el nulo, con Benjamini-Hochberg sobre las 52 pruebas. No es un
+F-test ni un t-test -- ninguno de los dos aplica a un R2 fuera de muestra de un bosque
+aleatorio con residuos espacialmente autocorrelacionados; el detalle esta en `scripts/118`.
+
 Uso:
     python scripts/117_figure_fig03_variante.py
 """
@@ -41,6 +46,7 @@ from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[1]
 TAB = ROOT / "results" / "tables" / "margen_sin_clima.csv"
+SIG = ROOT / "results" / "tables" / "significancia_margen.csv"
 FIG = ROOT / "results" / "figures"
 FIG.mkdir(parents=True, exist_ok=True)
 
@@ -107,6 +113,15 @@ def main() -> None:
     t["orden"] = t.faceta.map({k: i for i, k in enumerate(ORDEN)})
     t = t.sort_values("orden").reset_index(drop=True)
 
+    # asteriscos: q de Benjamini-Hochberg sobre el margen (`scripts/118`). Si la tabla no
+    # existe la figura sale igual, sin asteriscos, en vez de reventar.
+    try:
+        sg = pd.read_csv(SIG).fillna({"sig": ""})
+        est = {(r.faceta, r.modelo): str(r.sig) for _, r in sg.iterrows()}
+    except FileNotFoundError:
+        print("[aviso] falta significancia_margen.csv: figura sin asteriscos")
+        est = {}
+
     Y, SEP = posiciones()
     fig, ax = plt.subplots(figsize=(9.2, 9.6))
 
@@ -124,7 +139,8 @@ def main() -> None:
             ax.plot(r[col], i + dy, mk, ms=7 if gana else 5.5, color=c,
                     mec="white", mew=0.8, zorder=4)
             if gana:
-                ax.text(max(r[col], r.piso_coords) + 0.018, i + dy, f"+{r[mar]:.3f}",
+                ax.text(max(r[col], r.piso_coords) + 0.018, i + dy,
+                        f"+{r[mar]:.3f}{est.get((r.faceta, mar), '')}",
                         va="center", fontsize=8, color=c, fontweight="bold")
 
     # zona muerta: a la izquierda de 0 el modelo no explica nada, le gane o no al nulo
@@ -163,6 +179,13 @@ def main() -> None:
     # figura. A la altura de las TD el lado derecho esta vacio.
     ax.legend(handles=h, fontsize=8.5, loc="upper right", bbox_to_anchor=(0.998, 0.935),
               framealpha=0.95, handletextpad=0.6, borderpad=0.6, labelspacing=0.45)
+
+    fig.text(0.008, -0.012,
+             "Significance of the margin over the null model: * $q$ < 0.05   ** $q$ < 0.01   "
+             "*** $q$ < 0.001.  One-sided block bootstrap over the same 20 km blocks that "
+             "define the\ncross-validation, on the paired difference in squared error; "
+             "Benjamini–Hochberg across the 52 tests. See Methods.",
+             fontsize=7.5, color="#555555", ha="left", va="top")
 
     fig.tight_layout()
     for ext in ("png", "pdf"):
