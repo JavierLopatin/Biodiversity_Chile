@@ -141,17 +141,16 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
     Y, SEP = posiciones()
     y = [Y[k] for k in d.faceta]
     for i, (_, r) in zip(y, d.iterrows()):
-        # Tres estados, no dos. Superar al piso NO basta: si el piso de coordenadas es
-        # negativo, un margen positivo solo dice "menos malo que la geografia" y el modelo
-        # sigue sin predecir. Pasa en TD q1/q2 y PD q0/q2, con piso de -0,005 a -0,073.
-        # Pintarlas como ganadoras seria reintroducir en la figura la trampa que la tabla
-        # evita exigiendo margen positivo Y R2 absoluto positivo.
+        # Dos estados: gana o no. "Gana" exige margen positivo Y R2 absoluto positivo --
+        # si el modelo nulo geografico es negativo, superarlo solo dice "menos malo que la
+        # geografia" y el modelo sigue sin predecir (TD q1/q2, PD q0/q2, con nulo de -0,005
+        # a -0,073). Esos casos van en gris como cualquier otro que no gana; la geometria de
+        # la mancuerna sigue mostrando de que lado cae el punto, y el pie lo aclara.
         gana = bool(r.remota_propia)
-        margen_vacio = (r[col_r2] > r.piso_coords) and not gana
         c = COL[r.grupo] if gana else GREY
         ax.plot([r.piso_coords, r[col_r2]], [i, i], color=c,
                 lw=2.8 if gana else 1.6, alpha=1.0 if gana else 0.5, zorder=2,
-                ls=":" if margen_vacio else "-", solid_capstyle="round")
+                solid_capstyle="round")
         ax.plot(r.piso_coords, i, "o", ms=5.5, color="white", mec=DARK, mew=1.4, zorder=3)
         ax.plot(r[col_r2], i, "o", ms=7 if gana else 5, color=c,
                 mec="white", mew=0.8, zorder=4)
@@ -207,23 +206,22 @@ def main() -> None:
     n = int(t.remota_propia.sum())
 
     h = [Line2D([], [], marker="o", ls="none", ms=6, color="white", mec=DARK, mew=1.4,
-                label="geographic null model: longitude, latitude, elevation"),
-         Line2D([], [], ls="none", label="reflectance: six-band geometric median")]
+                label="geographic null model")]
     h += [Line2D([], [], marker="o", ls="none", ms=6, color=COL[g],
-                 label=GRUPO_EN[g] + " — reflectance wins") for g in COL]
-    h += [Line2D([], [], marker="o", ls=":", ms=5, color=GREY, lw=1.6,
-                 label="margin over a negative floor ($R^2<0$)"),
-          Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
-                 label="reflectance loses to geography")]
-    # leyenda fuera de los ejes: dentro competia con los datos del panel b y obligaba a
-    # reservarle una esquina vacia que el grafico no tiene
-    fig.legend(handles=h, fontsize=9, loc="lower center", ncol=3,
-               bbox_to_anchor=(0.5, -0.005), frameon=False, columnspacing=2.2,
-               handletextpad=0.6)
+                 label=GRUPO_EN[g]) for g in COL]
+    h += [Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
+                 label="no gain over it")]
+    # dentro del panel b, abajo a la izquierda: con dos estados la leyenda es corta y ahi
+    # queda hueco, porque las facetas de esa zona (los ejes de ordenacion) caen a la derecha
+    # etiquetas cortas a proposito: el detalle (lon/lat/elevacion, geomediano de seis
+    # bandas) va al pie de figura. Con los textos largos la leyenda tapaba las mancuernas
+    # de los ejes de ordenacion, que en el panel b caen justo en esa esquina.
+    axes[1].legend(handles=h, fontsize=8.5, loc="lower left", framealpha=0.95,
+                   handletextpad=0.5, borderpad=0.6, labelspacing=0.45)
 
     # sin titulo general: el mensaje va en el pie de figura, y los titulos de panel ya
     # dicen que contrasta cada uno
-    fig.tight_layout(rect=(0, 0.075, 1, 1.0))
+    fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig03_remote_vs_geography.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
