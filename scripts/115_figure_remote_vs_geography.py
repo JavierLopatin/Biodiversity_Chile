@@ -64,7 +64,10 @@ DPI = 300
 plt.rcParams.update({"font.size": 9.5, "axes.labelsize": 10.5, "axes.titlesize": 12.5,
                      "xtick.labelsize": 9, "ytick.labelsize": 9.5})
 
-COL = {"composicion": BLUE, "riqueza": GREEN, "filogenetica": PURPLE}
+#: Un solo color para "gana", no uno por grupo: la familia de cada faceta ya la dice el
+#: rotulo del bloque, asi que el color por grupo era informacion repetida que alargaba la
+#: leyenda a cinco entradas.
+COL = {"composicion": BLUE, "riqueza": BLUE, "filogenetica": BLUE}
 GRUPO_EN = {"composicion": "Composition", "riqueza": "Richness",
             "filogenetica": "Phylogenetic"}
 #: Orden por FAMILIA de faceta, no por margen. Ordenar por el resultado agrupa facetas que no
@@ -205,12 +208,10 @@ def main() -> None:
     # grafico, no un dato, y dentro compite con los margenes rotulados.
     n = int(t.remota_propia.sum())
 
-    h = [Line2D([], [], marker="o", ls="none", ms=6, color="white", mec=DARK, mew=1.4,
-                label="geographic null model")]
-    h += [Line2D([], [], marker="o", ls="none", ms=6, color=COL[g],
-                 label=GRUPO_EN[g]) for g in COL]
-    h += [Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
-                 label="no gain over it")]
+    h = [Line2D([], [], marker="o", ls="-", ms=6, color=BLUE, lw=2.4,
+                label="model gain over geographic null model"),
+         Line2D([], [], marker="o", ls="-", ms=5, color=GREY, lw=1.6,
+                label="model loss over geographic null model")]
     # dentro del panel b, abajo a la izquierda: con dos estados la leyenda es corta y ahi
     # queda hueco, porque las facetas de esa zona (los ejes de ordenacion) caen a la derecha
     # etiquetas cortas a proposito: el detalle (lon/lat/elevacion, geomediano de seis
