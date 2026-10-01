@@ -159,11 +159,13 @@ def main() -> None:
                     if s.PlotObservationID.nunique() < MIN_N_TERCIL:
                         continue
                     per = [r2(g[oc], g[pc]) for _, g in s.groupby("seed")]
+                    ban = [r2_en_banda(g, oc, pc) for _, g in s.groupby("seed")]
                     rows.append(dict(familia=familia, faceta=t, grupo=GRUPO.get(t, "otra"),
                                      representacion=rep, estres=nombre,
                                      n=s.PlotObservationID.nunique(), n_seeds=nseeds,
                                      R2=float(np.mean(per)),
-                                     R2_sd=float(np.std(per, ddof=1)) if len(per) > 1 else 0.0))
+                                     R2_sd=float(np.std(per, ddof=1)) if len(per) > 1 else 0.0,
+                                     R2_en_banda=float(np.mean(ban))))
 
     f = pd.DataFrame(rows)
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -202,7 +204,7 @@ def main() -> None:
     print()
     print(sin_clima(f).round(3).to_string(index=False))
     print()
-    print(contraste_estres(f).round(3).to_string(index=False))
+    contraste_estres(f)
 
 
 def sin_clima(f: pd.DataFrame) -> pd.DataFrame:
@@ -258,8 +260,17 @@ def sin_clima(f: pd.DataFrame) -> pd.DataFrame:
               "R2_gm", "remota_propia"]]
 
 
-def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima") -> pd.DataFrame:
+def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima",
+                     nulo: str = "coords", metrica: str = "R2_en_banda",
+                     escribir: bool = True) -> pd.DataFrame:
     """Seco contra humedo, descontando al piso su propio cambio entre terciles.
+
+    El nulo es el MODELO NULO GEOGRAFICO (lon, lat, elevacion) y la metrica es el R2 dentro de
+    banda de 2 grados, las dos cosas por consistencia con la figura central del paper: asi
+    `neto` es el cambio DEL MISMO MARGEN que esa figura reporta, medido entre terciles de
+    estres hidrico, y las dos lecturas se pueden poner una al lado de la otra. Antes el nulo
+    era el piso de topografia + area y la metrica el R2 agrupado, que respondian a un encuadre
+    anterior del paper.
 
     La columna que se lee es `neto`, no `bruto`. El bruto de una faceta puede cambiar porque
     cambia la varianza del target entre terciles, y eso arrastraria al piso igual que al bloque
@@ -271,25 +282,33 @@ def contraste_estres(f: pd.DataFrame, bloque: str = "gm_clima") -> pd.DataFrame:
     sea MAS, asi que el neto es +0,049 y apunta al mismo lado que todo lo demas.
     """
     w = f[f.estres.isin(["seco", "humedo"])]
-    piso = w[w.representacion == "piso"].set_index(["faceta", "estres"]).R2
+    piso = w[w.representacion == nulo].set_index(["faceta", "estres"])[metrica]
     r = w[w.representacion == bloque].set_index(["faceta", "estres"])
     out = []
     for fc in r.index.get_level_values(0).unique():
         try:
-            bs, bh = r.loc[(fc, "seco"), "R2"], r.loc[(fc, "humedo"), "R2"]
+            bs, bh = r.loc[(fc, "seco"), metrica], r.loc[(fc, "humedo"), metrica]
             ps, ph = piso.loc[(fc, "seco")], piso.loc[(fc, "humedo")]
         except KeyError:
             continue
         out.append(dict(faceta=fc, grupo=r.loc[(fc, "seco"), "grupo"], bloque=bloque,
+                        nulo=nulo, metrica=metrica,
                         R2_seco=bs, R2_humedo=bh, bruto=bh - bs,
                         piso_seco=ps, piso_humedo=ph, piso_delta=ph - ps,
+                        margen_seco=bs - ps, margen_humedo=bh - ph,
                         neto=(bh - ph) - (bs - ps)))
     o = pd.DataFrame(out).sort_values("neto", ascending=False)
+    if not escribir:
+        # `scripts/120` la llama cuatro veces para el panel de robustez; sin esto, la ultima
+        # especificacion pisaria la tabla canonica del paper con una variante
+        return o
     o.to_csv(OUT.with_name("contraste_estres_lenoso.csv"), index=False)
     print(f"-> {OUT.with_name('contraste_estres_lenoso.csv')}")
     print(f"\nSeco contra humedo, {bloque}, descontado el piso "
           f"({int((o.neto > 0).sum())} de {len(o)} facetas mejoran en humedo):")
-    return o[["grupo", "faceta", "R2_seco", "R2_humedo", "bruto", "piso_delta", "neto"]]
+    print(o[["grupo", "faceta", "R2_seco", "R2_humedo", "bruto", "piso_delta",
+             "neto"]].round(3).to_string(index=False))
+    return o
 
 
 if __name__ == "__main__":
