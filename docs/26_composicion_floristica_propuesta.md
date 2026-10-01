@@ -279,6 +279,84 @@ Cuatro detalles que van declarados:
 
 ---
 
+## 4d. Terminología y precedentes del control geográfico
+
+Tres decisiones de vocabulario, con la literatura que las respalda. Importa unificarlas antes de
+escribir, porque el paper usa los tres dispositivos y hoy los nombra de tres formas distintas.
+
+### El esquema de validación: *spatial block cross-validation*
+
+Es el término establecido (Roberts et al. 2017, *Ecography* 40:913; implementado en `blockCV`,
+Valavi et al. 2019). Las variantes con nombre propio son *spatial buffering* (buffered LOO) y
+*environmental blocking*. Ya lo usamos bien; no cambiar.
+
+### El modelo de solo-geografía: *geographic null model*, no "piso"
+
+**Ploton et al. 2020** (*Nature Communications* 11:4540, ya en `refs.bib`) hace exactamente lo
+nuestro y lo llama **modelo nulo**. Su conclusión es la nuestra, con otro dato:
+
+> los modelos no aprendieron relaciones señal-satélite–biomasa, sino que aprendieron
+> indirectamente el espacio geográfico a partir de los datos satelitales, y cómo se distribuyen
+> en él los valores
+
+`B03c` (lon, lat, elevación) es un *geographic null model* en ese sentido exacto, y conviene
+llamarlo así en vez de "piso" o "baseline": conecta con un precedente en *Nature Communications*
+y le dice al lector qué está viendo sin que haya que explicarlo.
+
+### El centrado por bin: no tiene nombre establecido en ecología
+
+En econometría de panel es la **transformación "within"** (quitar la media del grupo) y lo que
+reportamos es el **within-R²** de una especificación con efectos fijos de latitud. En ecología
+y en cartografía digital de suelos no hay término fijo; lo más cercano es reportar por estrato.
+
+Han et al. 2022 (*EJSS*, cartografía digital de suelos) plantea el problema que esto resuelve
+con la formulación más clara que he encontrado:
+
+> las técnicas típicas de validación comprobarían la capacidad del modelo de predecir
+> **tendencias amplias de los valores más pequeños a los más grandes, en vez de la variabilidad
+> más fina dentro de una región pequeña**
+
+Propuesta: llamarlo **within-bin $R^2$** y definirlo una vez en Métodos, citando esa distinción.
+Y **"bin" y no "band"**: en teledetección *band* es banda espectral, y *block*, *window* y
+*strata* ya están ocupados en este manuscrito (CV espacial, ventanas causales y de píxeles,
+estratos de MapBiomas).
+
+### Y una crítica que hay que citar aunque no nos aplique
+
+**Wadoux et al. 2021** (*Ecological Modelling* 457:109692, añadida a `refs.bib`),
+*"Spatial cross-validation is not the right way to evaluate map accuracy"*: para estimar la
+exactitud de un mapa, el CV espacial sesga hacia abajo y lo correcto es un muestreo
+probabilístico del área.
+
+No nos aplica, y conviene decir por qué en una frase: **no estamos estimando la exactitud de un
+mapa** —se decidió no publicar mapa— sino preguntando si la reflectancia aporta información más
+allá de la geografía. Para esa pregunta el bloqueo espacial es lo correcto, y Wadoux no lo
+discute. Pero un revisor que conozca ese paper lo va a sacar si no está citado.
+
+### Qué dispositivo hace el trabajo, medido
+
+El modelo nulo y el centrado se solapan, y medirlo cambia cómo presentarlos. Margen de la
+reflectancia sobre `B03c`, de las dos formas:
+
+| faceta | agrupado | within-bin | diferencia |
+|---|---|---|---|
+| riqueza cruda | +0,059 | +0,080 | +0,021 |
+| LCBD (p/a) | +0,042 | +0,049 | +0,007 |
+| LCBD (frecuencia) | +0,055 | +0,069 | +0,014 |
+| PCoA 1 (p/a) | −0,312 | −0,296 | +0,016 |
+| PCoA 2 (p/a) | −0,098 | −0,156 | −0,058 |
+| diversidad oscura | −0,161 | −0,212 | −0,052 |
+
+**Ninguna faceta cambia de signo.** El modelo nulo hace el trabajo pesado; el centrado corrige
+entre −0,06 y +0,02 y no altera ninguna conclusión.
+
+Consecuencia para el texto: el protagonismo es del **modelo nulo geográfico**, que tiene
+precedente citable, y el within-bin $R^2$ se presenta como comprobación secundaria, con esta
+tabla como evidencia de que no cambia nada. Es más honesto y más fácil de defender que
+presentar el centrado como el dispositivo central.
+
+---
+
 ## 5. La capa ecológica que falta: describir, sin abrir pregunta nueva
 
 Hoy el paper tiene R² y no tiene ecología. La versión acotada que **sirve a la historia** es
