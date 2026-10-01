@@ -5,12 +5,24 @@ Isomap preserva mucha mas estructura de la disimilitud que el PCoA -- con DOS ej
 PCoA de OCHO (techo de reconstruccion 0,577 contra 0,502; `scripts/113`). La pregunta de esta
 figura es otra: si esa ventaja de representacion se traduce en ventaja de PREDICCION.
 
-No se traduce de forma robusta, y por eso el texto principal se queda con PCoA (decision del
-2026-09-30). El criterio prerregistrado era que el margen de Isomap sobre el modelo nulo
-geografico superara al de PCoA; segun se calcule el R2 dentro de bin sobre el pool entero o
-solo sobre Living Trees, Isomap gana o pierde, y el desacuerdo (0,04) es del mismo orden que
-los margenes comparados. A eso se suma que los ejes 2 y 3 de p/a son inestables al parametro k
-(rho 0,70 y 0,83 entre k=30 y k=80).
+El texto principal usa ISOMAP (decision del 2026-10-01), elegido sobre PCoA por los dos
+criterios que esta figura y `scripts/113` reportan:
+
+  ACUMULACION DE INFORMACION  Isomap con 2 ejes supera a PCoA con 8 en el techo de
+                              reconstruccion del Jaccard observado (0,577 contra 0,502).
+  DESEMPENO                   eje 1 contra eje 1, margen sobre el modelo nulo geografico:
+                              +0,051 contra -0,003 en p/a, -0,009 contra -0,030 en frecuencia.
+                              Isomap gana en las dos variantes.
+
+La comparacion eje-1-contra-eje-1 es la natural y usa ademas el eje ESTABLE: el primero de
+Isomap da rho 0,94 entre k=30 y k=80, frente a 0,70 y 0,83 de los ejes 2 y 3. Asi que la
+eleccion no se apoya en los ejes inestables.
+
+Esta figura muestra los DIEZ ejes -- seis de Isomap y cuatro de PCoA-- para que el lector
+pueda comprobar cualquier otro criterio. Por el mejor eje de cada metodo los dos empatan
+(en p/a gana PCoA, +0,075 contra +0,065; en frecuencia gana Isomap, +0,077 contra +0,031);
+por la media entre ejes y por el numero de ejes utiles gana Isomap (5 de 6 positivos con
+clima, contra 2 de 4).
 
 Mismo lenguaje visual que fig03: mancuerna del modelo nulo geografico al bloque, dos paneles
 (reflectancia sola y reflectancia + clima), y las mismas reglas de color.
@@ -123,8 +135,7 @@ def main() -> None:
     fig.legend(handles=h, fontsize=9, loc="lower center", ncol=2,
                bbox_to_anchor=(0.5, -0.01), frameon=False, columnspacing=2.2)
 
-    fig.suptitle("Isomap preserves more of the dissimilarity structure, "
-                 "but neither ordination beats geography on reflectance alone",
+    fig.suptitle("Neither ordination beats geography on reflectance alone",
                  fontsize=13, y=0.985)
     fig.tight_layout(rect=(0, 0.11, 1, 0.96))
     for ext in ("png", "pdf"):

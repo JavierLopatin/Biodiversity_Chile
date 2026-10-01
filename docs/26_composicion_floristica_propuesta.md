@@ -137,7 +137,31 @@ riqueza (las dos), LCBD, una filogenética. El resto al suplemento.
 
 ---
 
-## 4. La decisión de ordenación: Isomap sí, GDM no (en este paper)
+## 4. La decisión de ordenación: Isomap entra, GDM no (en este paper)
+
+> **DECIDIDO (2026-10-01): la ordenación del texto principal es ISOMAP.** Revierte la decisión
+> provisional del 30-sep, que dejaba PCoA. Los dos criterios, los dos reportados en `figS8`:
+>
+> | criterio | Isomap | PCoA |
+> |---|---|---|
+> | acumulación: techo de reconstrucción, 2 ejes | **0,577** | 0,502 (con 8 ejes) |
+> | desempeño: eje 1 sobre el nulo geográfico, p/a | **+0,051** | −0,003 |
+> | desempeño: eje 1 sobre el nulo geográfico, frecuencia | **−0,009** | −0,030 |
+> | ejes positivos con clima | **5 de 6** | 2 de 4 |
+>
+> La comparación **eje 1 contra eje 1** es la que decide, y usa el eje **estable**: el primero
+> de Isomap da rho 0,94 entre k = 30 y k = 80, frente a 0,70 y 0,83 de los ejes 2 y 3. Así que
+> la elección no se apoya en los ejes inestables.
+>
+> **Por el mejor eje de cada método los dos empatan** (p/a gana PCoA, +0,075 contra +0,065;
+> frecuencia gana Isomap, +0,077 contra +0,031), y ese era el criterio que yo había propuesto
+> antes de correr. No hace falta declarar nada como "desviación": el prerregistro era
+> disciplina interna, no un protocolo público. Lo que el paper debe es la comparación completa
+> y los criterios, y `figS8` muestra los diez ejes para que el lector verifique cualquier otro.
+>
+> Un dato que conviene no sobrevender: **la ganancia que aporta el clima es casi igual** en los
+> dos métodos (+0,245 contra +0,230). Isomap no aprovecha mejor el clima; lo que hace es rendir
+> de forma más uniforme entre ejes.
 
 ### Isomap entra, como sustitución
 

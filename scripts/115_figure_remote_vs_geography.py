@@ -71,8 +71,16 @@ GRUPO_EN = {"composicion": "Composition", "riqueza": "Richness",
 #: se comparan entre si (una TD junto a un eje de ordenacion) y rompe la lectura: el lector
 #: quiere ver las tres TD juntas, las tres PD juntas, y despues las de composicion. El orden
 #: dentro de cada familia es q0, q1, q2, que es el orden del parametro de Hill.
-#: Los seis ejes de Isomap no aparecen: por decision del 2026-09-30 la ordenacion del texto
-#: principal es PCoA e Isomap va al suplemento.
+#: La ordenacion del texto principal es ISOMAP (decision del 2026-10-01). Se eligio sobre PCoA
+#: por los dos criterios que el suplemento reporta en detalle:
+#:   acumulacion de informacion  Isomap con 2 ejes supera a PCoA con 8 en el techo de
+#:                               reconstruccion del Jaccard observado (0,577 contra 0,502)
+#:   desempeno                   eje 1 contra eje 1 sobre el modelo nulo geografico:
+#:                               +0,051 contra -0,003 en p/a, -0,009 contra -0,030 en frecuencia
+#: El eje 1 de Isomap es ademas el estable al parametro k (rho 0,94 entre k=30 y k=80), asi
+#: que la eleccion no se apoya en los ejes 2 y 3, que si se mueven (0,70 y 0,83).
+#: Los cuatro ejes de PCoA van al suplemento (figS8), con los diez juntos para que el lector
+#: pueda comprobar cualquier criterio.
 FAMILIAS = [
     ("Taxonomic richness", ["hill_q0_unified", "td_inext_q0", "td_inext_q1", "td_inext_q2"]),
     ("Phylogenetic", ["pd_inext_q0", "pd_inext_q1", "pd_inext_q2",
@@ -81,8 +89,9 @@ FAMILIAS = [
     ("Compositional uniqueness", ["lcbd_count_sorensen", "lcbd_pa_unified",
                                   "lcbd_freq_unified"]),
     ("Dark diversity", ["dark_n_unified"]),
-    ("Floristic composition (ordination)", ["pcoa1_pa_unified", "pcoa2_pa_unified",
-                                            "pcoa1_freq_unified", "pcoa2_freq_unified"]),
+    ("Floristic composition (ordination)", ["isomap1_pa_unified", "isomap2_pa_unified",
+                                            "isomap3_pa_unified", "isomap1_freq_unified",
+                                            "isomap2_freq_unified", "isomap3_freq_unified"]),
 ]
 ORDEN = [f for _, fs in FAMILIAS for f in fs]
 
@@ -109,6 +118,9 @@ LAB = {
     "lcbd_freq_unified": "LCBD (freq.)", "pcoa1_pa_unified": "PCoA 1 (p/a)",
     "pcoa2_pa_unified": "PCoA 2 (p/a)", "pcoa1_freq_unified": "PCoA 1 (freq.)",
     "pcoa2_freq_unified": "PCoA 2 (freq.)",
+    "isomap1_pa_unified": "Isomap 1 (p/a)", "isomap2_pa_unified": "Isomap 2 (p/a)",
+    "isomap3_pa_unified": "Isomap 3 (p/a)", "isomap1_freq_unified": "Isomap 1 (freq.)",
+    "isomap2_freq_unified": "Isomap 2 (freq.)", "isomap3_freq_unified": "Isomap 3 (freq.)",
     "hill_q0_unified": "Richness $q_0$ (raw)", "dark_n_unified": "Dark diversity",
     "td_inext_q0": "TD $q_0$ (cov.-std.)", "td_inext_q1": "TD $q_1$ (cov.-std.)",
     "td_inext_q2": "TD $q_2$ (cov.-std.)",
@@ -162,17 +174,19 @@ def panel(ax, d: pd.DataFrame, col_r2: str, titulo: str, marca_ganadores: bool) 
     ax.set_title(titulo, loc="left", fontweight="bold")
     ax.grid(axis="x", lw=0.4, color="#DDDDDD", zorder=0)
     ax.set_axisbelow(True)
-    ax.set_xlim(-0.12, 0.60)
+    # 0,75 y no 0,60: con los ejes de Isomap el maximo sube a 0,695 (Isomap 2 p/a con
+    # clima), asi que 0,60 truncaba datos
+    ax.set_xlim(-0.12, 0.75)
 
 
 def main() -> None:
     t = pd.read_csv(TAB)
-    t = t[t.faceta.isin(LAB)].copy()          # fuera los ejes Isomap
+    t = t[t.faceta.isin(ORDEN)].copy()        # PCoA queda fuera: va al suplemento
     t["R2_gm_clima"] = t.piso_coords + t.gm_clima
     t["orden"] = t.faceta.map({k: i for i, k in enumerate(ORDEN)})
     t = t.sort_values("orden").reset_index(drop=True)
 
-    fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.0), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(13.2, 7.6), sharey=True)
     panel(axes[0], t, "R2_gm", "a  Reflectance alone", True)
     panel(axes[1], t, "R2_gm_clima", "b  Reflectance + climate", False)
 
@@ -193,7 +207,7 @@ def main() -> None:
     n = int(t.remota_propia.sum())
 
     h = [Line2D([], [], marker="o", ls="none", ms=6, color="white", mec=DARK, mew=1.4,
-                label="geography floor: longitude, latitude, elevation"),
+                label="geographic null model: longitude, latitude, elevation"),
          Line2D([], [], ls="none", label="reflectance: six-band geometric median")]
     h += [Line2D([], [], marker="o", ls="none", ms=6, color=COL[g],
                  label=GRUPO_EN[g] + " — reflectance wins") for g in COL]
@@ -207,9 +221,9 @@ def main() -> None:
                bbox_to_anchor=(0.5, -0.005), frameon=False, columnspacing=2.2,
                handletextpad=0.6)
 
-    fig.suptitle("What reflectance adds over knowing where you are",
-                 fontsize=14.5, y=0.985)
-    fig.tight_layout(rect=(0, 0.075, 1, 0.97))
+    # sin titulo general: el mensaje va en el pie de figura, y los titulos de panel ya
+    # dicen que contrasta cada uno
+    fig.tight_layout(rect=(0, 0.075, 1, 1.0))
     for ext in ("png", "pdf"):
         fig.savefig(FIG / f"fig03_remote_vs_geography.{ext}", dpi=DPI, bbox_inches="tight")
     plt.close(fig)
