@@ -20,18 +20,22 @@ incomparables -- riqueza de 0 a 26, LCBD del orden de 1e-4, MPD en millones de a
 cada una se tipifica sobre todas sus parcelas y se suaviza contra la latitud con LOWESS. El
 recorrido de cada curva, en desviaciones estandar, va en la leyenda.
 
-El resultado medido es que TODAS son fuertemente latitudinales: el recorrido va de 1,2 DE en
-TD q0 estandarizada a 2,7 en la diversidad oscura, con la riqueza cruda en 1,9. Importa decirlo
+El resultado medido es que TODAS son fuertemente latitudinales: el recorrido va de 1,5 DE en
+TD q0 estandarizada a 2,9 en la diversidad oscura, con la riqueza cruda en 1,9. Importa decirlo
 asi y no al reves. Un panel por faceta en escala original sugiere que las facetas donde la
 reflectancia aporta son mas planas que las otras, y eso es un artefacto de comparar escalas
-distintas lado a lado: tipificadas, no lo son -- la riqueza cruda, que tiene el mayor margen
-sobre el nulo de las 22 facetas, recorre MAS que MPD, que le pierde. Entonces el gradiente
-latitudinal NO explica que facetas gana el sensor, y esta figura justifica el modelo nulo
-geografico y el centrado por banda sin adelantar el resultado.
+distintas lado a lado: tipificadas, no lo son. Entonces el gradiente latitudinal NO explica que
+facetas gana el sensor, y esta figura justifica el modelo nulo geografico y el centrado por
+banda sin adelantar el resultado.
 
-Los recorridos no coinciden exactamente con los de la media por banda que esta figura dibujaba
-antes (riqueza 1,7, MPD 2,1): LOWESS tiene menos puntos en los extremos y ahi la curva se
-estira o se aplana segun la faceta. La lectura cualitativa no cambia.
+El recorrido depende de FRAC y hay que leerlo como una magnitud, no como una cifra: con 0,25
+iba de 1,2 a 2,7 y con 0,15 va de 1,5 a 2,9, porque LOWESS tiene pocos puntos en los extremos.
+Lo que no cambia con la ventana es la conclusion: las seis estan en el mismo orden de magnitud.
+
+Entre 31 y 37 S las curvas se ondulan. Ahi esta la mayor densidad de parcelas Y la franja donde
+los dos inventarios coexisten, asi que parte de esa estructura puede ser el limite entre
+inventarios y no ecologia. Con FRAC = 0,25 desaparece. Se deja a 0,15 porque el giro del extremo
+austral es real y una ventana gruesa lo aplana, pero la ondulacion del centro no se interpreta.
 
 No hay ejes de Isomap: una ordenacion no es una faceta de diversidad sino una coordenada
 derivada de la matriz de comunidad, y su signo y escala son arbitrarios.
@@ -61,10 +65,11 @@ BLUE, ORANGE, DARK = "#4C78A8", "#E8832A", "#333333"
 DPI = 300
 BANDA = 2.0
 LAT_MIN, LAT_MAX = -56.0, -29.0
-#: Ventana del suavizado, como fraccion de las parcelas. 0,25 sobre 25 grados de recorrido da
-#: una ventana de unos 6 grados: mas fina persigue el ruido de las bandas con 19 parcelas, mas
-#: gruesa aplana el giro del extremo austral, que es real.
-FRAC = 0.25
+#: Ventana del suavizado, como fraccion de las parcelas. 0,15 sobre 25 grados de recorrido da
+#: una ventana de unos 4 grados, el doble de la banda de centrado. Mas gruesa aplana el giro
+#: del extremo austral, que es real; mas fina empieza a seguir el ruido de las bandas con 19
+#: parcelas.
+FRAC = 0.15
 plt.rcParams.update({"font.size": 9, "axes.labelsize": 9.5, "axes.titlesize": 10.5,
                      "xtick.labelsize": 8, "ytick.labelsize": 8.5})
 
